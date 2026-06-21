@@ -9,6 +9,10 @@ This repository indexes a curated and constantly updated set of FPV drone strike
 - Thumbnail prefix: `thumbnails/`
 - Video count: 96 MP4 files
 
+## License
+
+Repository metadata, manifests, and documentation are released under [CC0 1.0 Universal](LICENSE). The referenced videos and thumbnails are third-party media materials and are not licensed by this repository; see [MEDIA_NOTICE.md](MEDIA_NOTICE.md).
+
 ## Videos
 
 | Date | Image | Description | Link |
