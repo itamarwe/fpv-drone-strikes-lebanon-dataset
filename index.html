@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>FPV Drone Strikes Lebanon – Timeline Heatmap / Cluster Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
+<style>
+:root {
+  --bg:#06111f; --panel:#0c1c31; --panel2:#10263f; --text:#eaf4ff; --muted:#9db5cc;
+  --accent:#56d7ff; --accent2:#ffd166; --line:#24435e; --danger:#ff7b7b;
+}
+html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; }
+#map { height:100vh; width:100vw; background:#08111c; }
+.panel {
+  position:absolute; z-index:1000; left:18px; right:18px; bottom:18px;
+  background:linear-gradient(180deg, rgba(12,28,49,.94), rgba(16,38,63,.94));
+  border:1px solid var(--line); border-radius:18px; box-shadow:0 18px 44px rgba(0,0,0,.38);
+  padding:14px 16px;
+}
+.top {
+  position:absolute; z-index:1000; left:18px; top:18px; max-width:540px;
+  background:linear-gradient(180deg, rgba(12,28,49,.94), rgba(16,38,63,.92));
+  border:1px solid var(--line); border-radius:18px; box-shadow:0 18px 44px rgba(0,0,0,.32);
+  padding:16px 18px;
+}
+h1 { margin:0 0 6px; font-size:20px; letter-spacing:-.02em; }
+.sub { color:var(--muted); font-size:13px; line-height:1.35; }
+.row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.controls { display:grid; grid-template-columns: 1fr auto auto auto auto; gap:12px; align-items:center; }
+input[type=range] { width:100%; }
+button, select {
+  background:#0b1727; color:var(--text); border:1px solid var(--line); border-radius:999px;
+  padding:9px 13px; font-weight:700; cursor:pointer;
+}
+button.active, .pill.active { background:var(--accent); color:#03111c; border-color:var(--accent); }
+.stat {
+  background:#081827; border:1px solid var(--line); border-radius:13px; padding:8px 10px; min-width:86px;
+}
+.stat b { font-size:18px; }
+.stat span { display:block; color:var(--muted); font-size:11px; }
+#dateLabel { font-weight:900; font-size:20px; min-width:112px; text-align:center; }
+.legend {
+  position:absolute; z-index:1000; right:18px; top:18px; background:rgba(12,28,49,.92); border:1px solid var(--line);
+  border-radius:16px; padding:12px 14px; color:var(--text); box-shadow:0 14px 34px rgba(0,0,0,.28);
+}
+.grad { height:10px; width:170px; border-radius:999px; background:linear-gradient(90deg, #1d4ed8, #22c55e, #facc15, #f97316, #ef4444); margin:8px 0 5px; }
+.legend small { color:var(--muted); display:flex; justify-content:space-between; }
+.marker-count {
+  width:34px; height:34px; line-height:34px; text-align:center; border-radius:50%;
+  background:#ffd166; color:#08111f; font-weight:900; border:2px solid white;
+  box-shadow:0 3px 12px rgba(0,0,0,.35);
+}
+.cluster-count {
+  border-radius:50%; background:rgba(86,215,255,.92); color:#03111c; border:3px solid rgba(255,255,255,.94);
+  display:flex; align-items:center; justify-content:center; font-weight:900; box-shadow:0 4px 16px rgba(0,0,0,.35);
+}
+.popup { min-width:260px; }
+.popup img { width:230px; max-width:100%; border-radius:10px; display:block; margin:6px 0 8px; }
+.popup a { color:#006d9b; font-weight:800; }
+.modeText { color:var(--muted); font-size:12px; margin-top:7px; }
+@media (max-width:850px) {
+  #map { height:100dvh; }
+  .legend { display:none; }
+
+  .top {
+    left:10px;
+    right:10px;
+    top:10px;
+    max-width:none;
+    padding:10px 12px;
+    border-radius:14px;
+  }
+
+  .topHeader h1 {
+    font-size:15px;
+    line-height:1.15;
+    margin:0;
+  }
+
+  #infoToggle {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:54px;
+  }
+
+  .top:not(.expanded) .infoContent {
+    display:none;
+  }
+
+  .top.expanded .infoContent {
+    display:block;
+    max-height:38dvh;
+    overflow:auto;
+    margin-top:8px;
+    padding-right:3px;
+  }
+
+  .sub {
+    font-size:12px;
+    line-height:1.35;
+  }
+
+  .statsRow {
+    margin-top:8px !important;
+    display:flex;
+    gap:6px;
+  }
+
+  .stat {
+    min-width:0;
+    flex:1;
+    padding:6px 7px;
+    border-radius:10px;
+  }
+
+  .stat b {
+    font-size:15px;
+  }
+
+  .stat span {
+    font-size:10px;
+  }
+
+  .panel {
+    left:10px;
+    right:10px;
+    bottom:10px;
+    padding:10px;
+    border-radius:14px;
+  }
+
+  .controls {
+    grid-template-columns: 1fr 72px;
+    gap:8px;
+  }
+
+  #dateSlider {
+    grid-column: 1 / -1;
+  }
+
+  #dateLabel {
+    font-size:15px;
+    min-width:0;
+    text-align:left;
+  }
+
+  button, select {
+    padding:8px 9px;
+    font-size:12px;
+  }
+
+  #playBtn, #modeBtn, #timeMode {
+    width:100%;
+  }
+
+  .modeText {
+    display:none;
+  }
+
+  .popup {
+    min-width:210px;
+    max-width:250px;
+  }
+
+  .popup img {
+    width:200px;
+  }
+}
+
+@media (max-width:420px) {
+  .controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #dateLabel {
+    grid-column: 1 / -1;
+    text-align:center;
+  }
+
+  #timeMode {
+    grid-column: 1 / -1;
+  }
+}
+
+.topHeader { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+#infoToggle { display:none; padding:7px 11px; font-size:12px; line-height:1; }
+.statsRow { gap:10px; }
+
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="top">
+  <div class="topHeader"><h1>FPV Drone Strikes Lebanon Dataset</h1><button id="infoToggle" type="button">Info</button></div>
+  <div class="infoContent"><div class="sub">Timeline map from the updated README table. Default mode is heatmap. Toggle to cluster mode to inspect exact video rows and open video links. Unknown-site rows are excluded from the map.<br><br>Generated by <b>MiddleEastBuka</b>, based on data from <a href="https://github.com/itamarwe/fpv-drone-strikes-lebanon-dataset" target="_blank" rel="noopener" style="color:#56d7ff;font-weight:800;">fpv-drone-strikes-lebanon-dataset</a> by <b>Itamar Weiss</b> <a href="https://x.com/itamarwe" target="_blank" rel="noopener" style="color:#56d7ff;font-weight:800;">@itamarwe</a>.</div></div>
+  <div class="row statsRow" style="margin-top:12px">
+    <div class="stat"><b id="shownCount">0</b><span>shown rows</span></div>
+    <div class="stat"><b>150</b><span>mapped / 157</span></div>
+    <div class="stat"><b>7</b><span>unknown</span></div>
+  </div>
+</div>
+
+<div class="legend">
+  <b>Heat intensity</b>
+  <div class="grad"></div>
+  <small><span>low</span><span>high</span></small>
+</div>
+
+<div class="panel">
+  <div class="controls">
+    <input type="range" id="dateSlider" min="0" max="0" value="0" step="1"/>
+    <div id="dateLabel">2026-06-14</div>
+    <button id="playBtn">▶ Play</button>
+    <button id="modeBtn" class="active">Heatmap</button>
+    <select id="timeMode">
+      <option value="cumulative" selected>Cumulative</option>
+      <option value="daily">Daily only</option>
+    </select>
+  </div>
+  <div class="modeText">Tip: in cumulative mode, the map shows all videos up to the selected date. In daily mode, it shows only videos from that date.</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+let allRecords = [];
+let dates = [];
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let field = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    const next = text[i + 1];
+
+    if (inQuotes) {
+      if (c === '"' && next === '"') {
+        field += '"';
+        i++;
+      } else if (c === '"') {
+        inQuotes = false;
+      } else {
+        field += c;
+      }
+    } else {
+      if (c === '"') {
+        inQuotes = true;
+      } else if (c === ',') {
+        row.push(field);
+        field = '';
+      } else if (c === '
+') {
+        row.push(field);
+        rows.push(row);
+        row = [];
+        field = '';
+      } else if (c !== '
+') {
+        field += c;
+      }
+    }
+  }
+
+  if (field.length || row.length) {
+    row.push(field);
+    rows.push(row);
+  }
+
+  if (!rows.length) return [];
+  const headers = rows[0].map(h => h.trim());
+
+  return rows.slice(1)
+    .filter(r => r.some(v => String(v || '').trim() !== ''))
+    .map(r => {
+      const obj = {};
+      headers.forEach((h, idx) => obj[h] = r[idx] ?? '');
+      return obj;
+    });
+}
+
+async function loadRecords() {
+  const response = await fetch('geo/fpv_drone_map_records.csv');
+  const csvText = await response.text();
+  allRecords = parseCsv(csvText).map(r => ({
+    row: Number(r.row),
+    date: r.date,
+    description: r.description,
+    thumbnail_url: r.thumbnail_url,
+    image_alt: r.description,
+    video_url: r.video_url,
+    confirmed_site: r.town,
+    lat: Number(r.lat),
+    lon: Number(r.lon),
+    status: r.status
+  })).filter(r => Number.isFinite(r.lat) && Number.isFinite(r.lon));
+
+  dates = [...new Set(allRecords.map(r => r.date))].sort();
+  const slider = document.getElementById('dateSlider');
+  slider.min = 0;
+  slider.max = Math.max(0, dates.length - 1);
+  slider.value = Math.max(0, dates.length - 1);
+  document.getElementById('dateLabel').textContent = dates[dates.length - 1] || '';
+}
+let currentMode = 'heat';
+let playing = false;
+let timer = null;
+let heatLayer = null;
+let clusterLayer = null;
+
+const map = L.map('map', { preferCanvas:true }).setView([33.17, 35.34], 10);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+function markerIcon(count) {
+  return L.divIcon({
+    html: `<div class="marker-count">${count}</div>`,
+    className: '',
+    iconSize: [34,34],
+    iconAnchor: [17,17]
+  });
+}
+
+function clusterIconCreate(c) {
+  let sum = c.getAllChildMarkers().length;
+  const size = sum >= 20 ? 62 : sum >= 10 ? 52 : 42;
+  return L.divIcon({
+    html: `<div class="cluster-count" style="width:${size}px;height:${size}px;">${sum}</div>`,
+    className: '',
+    iconSize: [size,size],
+    iconAnchor: [size/2,size/2]
+  });
+}
+
+function filteredRecords() {
+  const idx = parseInt(document.getElementById('dateSlider').value, 10);
+  const selectedDate = dates[idx];
+  const mode = document.getElementById('timeMode').value;
+  document.getElementById('dateLabel').textContent = selectedDate;
+  if (mode === 'daily') {
+    return allRecords.filter(r => r.date === selectedDate);
+  }
+  return allRecords.filter(r => r.date <= selectedDate);
+}
+
+function clearLayers() {
+  if (heatLayer) { map.removeLayer(heatLayer); heatLayer = null; }
+  if (clusterLayer) { map.removeLayer(clusterLayer); clusterLayer = null; }
+}
+
+function render() {
+  const rows = filteredRecords();
+  document.getElementById('shownCount').textContent = rows.length;
+  clearLayers();
+
+  if (currentMode === 'heat') {
+    const heatData = rows.map(r => [parseFloat(r.lat), parseFloat(r.lon), 1.0]);
+    heatLayer = L.heatLayer(heatData, {
+      radius: 34,
+      blur: 25,
+      maxZoom: 13,
+      minOpacity: 0.32,
+      max: Math.max(8, Math.ceil(rows.length / 8))
+    }).addTo(map);
+  } else {
+    clusterLayer = L.markerClusterGroup({ iconCreateFunction: clusterIconCreate });
+    rows.forEach(r => {
+      const popup = `<div class="popup">
+        <b>#${r.row} — ${r.date}</b><br/>
+        <b>${r.confirmed_site}</b><br/>
+        <span>${r.description}</span>
+        ${r.thumbnail_url ? `<img src="${r.thumbnail_url}" alt="">` : ''}
+        <a href="${r.video_url}" target="_blank" rel="noopener">Open video</a><br/>
+        <small>${r.lat.toFixed(6)}, ${r.lon.toFixed(6)}</small>
+      </div>`;
+      const m = L.marker([parseFloat(r.lat), parseFloat(r.lon)], { icon: markerIcon(1) });
+      m.bindPopup(popup);
+      clusterLayer.addLayer(m);
+    });
+    map.addLayer(clusterLayer);
+  }
+}
+
+document.getElementById('dateSlider').addEventListener('input', render);
+document.getElementById('timeMode').addEventListener('change', render);
+document.getElementById('modeBtn').addEventListener('click', () => {
+  currentMode = currentMode === 'heat' ? 'cluster' : 'heat';
+  const btn = document.getElementById('modeBtn');
+  btn.textContent = currentMode === 'heat' ? 'Heatmap' : 'Cluster';
+  btn.classList.toggle('active', currentMode === 'heat');
+  render();
+});
+document.getElementById('playBtn').addEventListener('click', () => {
+  const slider = document.getElementById('dateSlider');
+  if (!playing) {
+    playing = true;
+    document.getElementById('playBtn').textContent = '⏸ Pause';
+    timer = setInterval(() => {
+      let v = parseInt(slider.value, 10);
+      v = (v + 1) % dates.length;
+      slider.value = v;
+      render();
+    }, 900);
+  } else {
+    playing = false;
+    document.getElementById('playBtn').textContent = '▶ Play';
+    if (timer) clearInterval(timer);
+  }
+});
+
+
+const topPanel = document.querySelector('.top');
+const infoToggle = document.getElementById('infoToggle');
+if (infoToggle && topPanel) {
+  infoToggle.addEventListener('click', () => {
+    topPanel.classList.toggle('expanded');
+    infoToggle.textContent = topPanel.classList.contains('expanded') ? 'Hide' : 'Info';
+  });
+}
+
+loadRecords().then(render);
+</script>
+</body>
+</html>
