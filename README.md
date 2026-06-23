@@ -7,7 +7,7 @@ This repository indexes a curated and constantly updated set of FPV drone strike
 - Bucket: `s3://fpv-drone-strikes-lebanon-dataset`
 - Video prefix: `videos/`
 - Thumbnail prefix: `thumbnails/`
-- Video count: 159 MP4 files
+- Video count: 161 MP4 files
 
 ## License
 
@@ -17,6 +17,7 @@ Repository metadata, manifests, and documentation are released under [CC0 1.0 Un
 
 | Date | Image | Description | Link |
 |---|---|---|---|
+| 2026-06-17 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-17_force_position_kfar_tebnit_mmirleb_17592.jpg" alt="force position kfar tebnit" width="180"> | force position kfar tebnit | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-17_force_position_kfar_tebnit_mmirleb_17592.mp4) |
 | 2026-06-14 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-14_engineering_vehicle_arnoun_ababil_drone.jpg" alt="Engineering vehicle arnoun ababil drone" width="180"> | Engineering vehicle arnoun ababil drone | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-14_engineering_vehicle_arnoun_ababil_drone.mp4) |
 | 2026-06-13 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_command_center_beaufort_castle_mmirleb_17582.jpg" alt="command center beaufort castle" width="180"> | command center beaufort castle | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_command_center_beaufort_castle_mmirleb_17582.mp4) |
 | 2026-06-13 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17588.jpg" alt="namer vehicle hamammas hill khiam" width="180"> | namer vehicle hamammas hill khiam | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17588.mp4) |
@@ -24,6 +25,7 @@ Repository metadata, manifests, and documentation are released under [CC0 1.0 Un
 | 2026-06-13 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_logistics_position_bayyadah_mmirleb_17436.jpg" alt="logistics position bayyadah" width="180"> | logistics position bayyadah | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_logistics_position_bayyadah_mmirleb_17436.mp4) |
 | 2026-06-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_merkava_tank_yahmor_al_shqif.jpg" alt="Merkava tank yahmor al shqif" width="180"> | Merkava tank yahmor al shqif | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_merkava_tank_yahmor_al_shqif.mp4) |
 | 2026-06-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.jpg" alt="D9 armored bulldozer tayr harfa ababil drone" width="180"> | D9 armored bulldozer tayr harfa ababil drone | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.mp4) |
+| 2026-06-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17597.jpg" alt="merkava tank beaufort castle" width="180"> | merkava tank beaufort castle | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17597.mp4) |
 | 2026-06-11 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.jpg" alt="Merkava tank tayr harfa ababil drone" width="180"> | Merkava tank tayr harfa ababil drone | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.mp4) |
 | 2026-06-10 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-10_merkava_tank_beaufort_castle.jpg" alt="Merkava tank beaufort castle" width="180"> | Merkava tank beaufort castle | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_merkava_tank_beaufort_castle.mp4) |
 | 2026-06-10 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-10_humvee_yahmar_al_shaqif.jpg" alt="Humvee yahmar al shaqif" width="180"> | Humvee yahmar al shaqif | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_humvee_yahmar_al_shaqif.mp4) |
