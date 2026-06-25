@@ -7,7 +7,7 @@ This repository indexes a curated and constantly updated set of FPV drone strike
 - Bucket: `s3://fpv-drone-strikes-lebanon-dataset`
 - Video prefix: `videos/`
 - Thumbnail prefix: `thumbnails/`
-- Video count: 162 MP4 files
+- Video count: 163 MP4 files
 
 ## License
 
@@ -26,7 +26,8 @@ Repository metadata, manifests, and documentation are released under [CC0 1.0 Un
 | 2026-06-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_merkava_tank_yahmor_al_shqif.jpg" alt="Merkava tank yahmor al shqif" width="180"> | Merkava tank yahmor al shqif | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_merkava_tank_yahmor_al_shqif.mp4) |
 | 2026-06-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.jpg" alt="D9 armored bulldozer tayr harfa ababil drone" width="180"> | D9 armored bulldozer tayr harfa ababil drone | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.mp4) |
 | 2026-06-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17597.jpg" alt="merkava tank beaufort castle" width="180"> | merkava tank beaufort castle | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17597.mp4) |
-| 2026-06-11 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_israeli_soldiers_adaissah_mmirleb_17604.jpg" alt="israeli soldiers adaissah temporary low quality" width="180"> | israeli soldiers adaissah (temporary low-quality public MP4; replace with high/medium when Telegram access is available) | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_israeli_soldiers_adaissah_mmirleb_17604.mp4) |
+| 2026-06-11 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.jpg" alt="d9 engineering vehicle beaufort castle" width="180"> | d9 engineering vehicle beaufort castle | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.mp4) |
+| 2026-06-11 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.jpg" alt="israeli soldiers adaissah" width="180"> | israeli soldiers adaissah | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.mp4) |
 | 2026-06-11 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.jpg" alt="Merkava tank tayr harfa ababil drone" width="180"> | Merkava tank tayr harfa ababil drone | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.mp4) |
 | 2026-06-10 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-10_merkava_tank_beaufort_castle.jpg" alt="Merkava tank beaufort castle" width="180"> | Merkava tank beaufort castle | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_merkava_tank_beaufort_castle.mp4) |
 | 2026-06-10 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-10_humvee_yahmar_al_shaqif.jpg" alt="Humvee yahmar al shaqif" width="180"> | Humvee yahmar al shaqif | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_humvee_yahmar_al_shaqif.mp4) |
