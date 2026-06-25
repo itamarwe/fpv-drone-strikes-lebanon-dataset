@@ -1,151 +1,162 @@
-row,date,description,town,lat,lon,status
-1,14/06/2026,Engineering vehicle arnoun ababil drone,Arnoun,33.33168333,35.52566667,mapped
-2,13/06/2026,Excavator majdal zoun,Majdal Zoun,33.15143056,35.22584444,mapped
-3,13/06/2026,logistics position bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-4,12/06/2026,Merkava tank yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-5,12/06/2026,D9 armored bulldozer tayr harfa ababil drone,Tayr Harfa,33.126925,35.21875556,mapped
-6,11/06/2026,Merkava tank tayr harfa ababil drone,Tayr Harfa,33.126925,35.21875556,mapped
-7,10/06/2026,Merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped
-8,10/06/2026,Humvee yahmar al shaqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-9,09/06/2026,401 Brigade Hq Debel,Dibel / Debel,33.12090278,35.36613611,mapped
-10,09/06/2026,Namer apc metula southern outskirts khiam,Khiam,33.32690833,35.61120556,mapped
-11,08/06/2026,Strike on enemy vehicles near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-12,08/06/2026,Command and control vehicle beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped
-13,08/06/2026,soldiers gathering naqoura,Naqoura,33.118975,35.14008333,mapped
-14,07/06/2026,Soldiers gathering beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped
-15,07/06/2026,Merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped
-16,07/06/2026,Command namer vehicle yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-17,06/06/2026,Sholef howitzer adaissah,Adaissah,33.25556389,35.54078056,mapped
-19,06/06/2026,artillery vehicle adaissah,Adaissah,33.25556389,35.54078056,mapped
-20,05/06/2026,Humvee near khiam,Khiam,33.32690833,35.61120556,mapped
-21,05/06/2026,soldiers khiam,Khiam,33.32690833,35.61120556,mapped
-22,05/06/2026,merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped
-23,04/06/2026,Merkava tank beaufort castle 02,Beaufort Castle,33.32401389,35.53186389,mapped
-24,04/06/2026,Merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped
-25,03/06/2026,Merkava tank zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped
-26,03/06/2026,personnel carrier zawtar al sharqiyah mmirleb 17494,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped
-27,03/06/2026,personnel carrier zawtar al sharqiyah mmirleb 17523,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped
-28,03/06/2026,M113 apc beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped
-29,03/06/2026,Humvee zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped
-30,02/06/2026,Targeting israeli soldiers eastern outskirts zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped
-31,02/06/2026,Soldiers and namer vehicle near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-32,02/06/2026,Namer vehicle near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-33,02/06/2026,Merkava tank near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-34,01/06/2026,Soldiers near yahmor al shqif 02,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-35,01/06/2026,Soldiers near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-36,01/06/2026,Merkava tank near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped
-37,31/05/2026,Soldiers gathering near border site,Beaufort Castle,33.32401389,35.53186389,mapped
-38,31/05/2026,Namer vehicle and apc in dibel,Dibel / Debel,33.12090278,35.36613611,mapped
-39,31/05/2026,Humvee vehicle at al assi,Border area opposite Mays al-Jabal,33.17205556,35.53799167,mapped
-40,30/05/2026,Merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped
-41,30/05/2026,technical equipment rashaf,Rachaf / Rashaf,33.14407222,35.36260833,mapped
-42,29/05/2026,Soldier at misgav am,Misgav Am,33.24803333,35.54877778,mapped
-43,29/05/2026,Namer apc in ainata,Ainata,33.12971111,35.43543889,mapped
-44,28/05/2026,Iron technical platform at al raheb,Khiam,33.32690833,35.61120556,mapped
-45,28/05/2026,iron dome launcher vehicle khiam,Khiam,33.32690833,35.61120556,mapped
-46,28/05/2026,merkava tank zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped
-47,27/05/2026,Merkava tank on military route,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped
-48,27/05/2026,Iron technical platform at jal al alam,Border near Rosh HaNikra,33.08693889,35.15468611,mapped
-51,26/05/2026,Vehicle And Soldier Gatherings Biranit,Border near Rmaych,33.06221389,35.34233889,mapped
-52,26/05/2026,Merkava tank in rashaf,Rachaf / Rashaf,33.14407222,35.36260833,mapped
-53,26/05/2026,Humvee vehicle in wadi near dibel,Dibel / Debel,33.12090278,35.36613611,mapped
-54,26/05/2026,Communications equipment at al assi,Border area opposite Mays al-Jabal,33.17205556,35.53799167,mapped
-55,26/05/2026,Anti drone platform barashit 02,Border near Rmaych,33.06221389,35.34233889,mapped
-56,26/05/2026,Anti drone platform barashit,Border near Rmaych,33.06221389,35.34233889,mapped
-57,26/05/2026,humvee zawtar al sharqiyah riverbed,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped
-58,26/05/2026,d9 bulldozer zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped
-59,25/05/2026,Two israeli army vehicles,Naqoura,33.118975,35.14008333,mapped
-61,25/05/2026,Command room tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped
-62,24/05/2026,Namer apc taybeh,Taybeh,33.27614167,35.52115278,mapped
-63,24/05/2026,humvee manara,Manara,33.19809722,35.54392778,mapped
-64,23/05/2026,Soldier Gathering Bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-65,23/05/2026,Two iron dome platforms ramim,Ramim Ridge,33.19026667,35.54089722,mapped
-66,23/05/2026,Soldiers taybeh,Taybeh,33.27614167,35.52115278,mapped
-67,23/05/2026,Anti drone system jardah,Border Israel in front of Alma al-Shaab,33.09190833,35.18313611,mapped
-68,22/05/2026,Soldier manara,Manara,33.19809722,35.54392778,mapped
-69,22/05/2026,Merkava tank markaba,Markaba,33.23274722,35.51663333,mapped
-70,21/05/2026,Engineering vehicle khallet al raj deir siryan,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-71,20/05/2026,Namer apc hadatha,Haddatha,33.16537778,35.39011389,mapped
-72,20/05/2026,Armored brigade 401 hq debel,Dibel / Debel,33.12090278,35.36613611,mapped
-73,19/05/2026,Military vehicle misgav am,Misgav Am,33.24803333,35.54877778,mapped
-74,19/05/2026,iron dome platform misgav am,Misgav Am,33.24803333,35.54877778,mapped
-75,19/05/2026,iron dome platform jal al alam,Border near Rosh HaNikra,33.08693889,35.15468611,mapped
-76,19/05/2026,communications vehicle taybeh,Taybeh,33.27614167,35.52115278,mapped
-77,19/05/2026,engineering vehicle khiam,Khiam,33.32690833,35.61120556,mapped
-78,18/05/2026,Iron dome platform shomera,"Near Shomera (Israel), approx",33.09319722,35.28620556,mapped
-79,18/05/2026,brigade 300 commander vehicle shomera,"Near Shomera (Israel), approx",33.09319722,35.28620556,mapped
-80,18/05/2026,engineering vehicle deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-81,17/05/2026,Buggy iskandarounah naqoura,Naqoura,33.118975,35.14008333,mapped
-82,17/05/2026,logistics position bayyadah iskandarounah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-83,17/05/2026,military vehicle bayyadah iskandarounah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-84,16/05/2026,Hummer iskandarounah bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-85,16/05/2026,engineering vehicle deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-86,16/05/2026,merkava tank bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-87,16/05/2026,namer vehicle taybeh,Taybeh,33.27614167,35.52115278,mapped
-88,15/05/2026,Engineering vehicle khiam,Khiam,33.32690833,35.61120556,mapped
-89,15/05/2026,personnel carrier deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-90,14/05/2026,Strike on military tanker near bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped
-91,14/05/2026,merkava tank bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped
-92,14/05/2026,Merkava tank taybeh,Taybeh,33.27614167,35.52115278,mapped
-94,14/05/2026,soldiers gathering naqoura ras naqoura,Naqoura,33.118975,35.14008333,mapped
-95,14/05/2026,namer vehicle rashaf,Rachaf / Rashaf,33.14407222,35.36260833,mapped
-96,14/05/2026,humvee tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped
-97,13/05/2026,Strike on merkava tank near aita al shaab,Ayta ash Shab / Aita al-Shaab,33.09846111,35.33781389,mapped
-98,13/05/2026,Strike on armored personnel carrier,Bint Jbeil,33.12122222,35.43349722,mapped
-100,12/05/2026,Strike on namer apc near houla,Houla,33.20943611,35.515425,mapped
-101,12/05/2026,Strike on humvee,Naqoura,33.118975,35.14008333,mapped
-102,12/05/2026,Strike on engineering vehicle near tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped
-103,12/05/2026,merkava tank manara khirbet al manara,Manara,33.19809722,35.54392778,mapped
-104,12/05/2026,soldier manara khirbet al manara,Manara,33.19809722,35.54392778,mapped
-105,12/05/2026,humvee naqoura naqoura iskandarounah road,Naqoura,33.118975,35.14008333,mapped
-106,11/05/2026,Strike on soldier near dhayra,Dhayra,33.10703056,35.21939444,mapped
-107,11/05/2026,Strike on logistics vehicle near tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped
-108,11/05/2026,Strike on engineering vehicle near khiam,Khiam,33.32690833,35.61120556,mapped
-109,11/05/2026,Strike on d9 engineering vehicle near naqoura,Naqoura,33.118975,35.14008333,mapped
-110,10/05/2026,Merkava tank bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-111,10/05/2026,Strike on d9 engineering vehicle near deir siryan,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-112,10/05/2026,Strike on bulldozer near ramiya,Rmaych,33.07546111,35.36408889,mapped
-113,10/05/2026,headquarters bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-114,10/05/2026,soldiers position house tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped
-115,09/05/2026,Strike on soldiers near shlomi,Shlomi,33.07429444,35.14379167,mapped
-116,09/05/2026,Strike on soldiers near deir mimas,Deir Mimas,33.30303333,35.54612778,mapped
-117,09/05/2026,Strike on soldiers,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-118,09/05/2026,Strike on israeli military vehicle,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-119,09/05/2026,soldiers gathering shlomi,Shlomi,33.07429444,35.14379167,mapped
-120,09/05/2026,soldiers gathering jal al alam,Border Israel opposite Alma al-Shaab,33.09506944,35.1746,mapped
-121,09/05/2026,tent deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-122,09/05/2026,humvee bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-123,09/05/2026,soldiers deir siryan,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-124,09/05/2026,target deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-125,08/05/2026,Strike on merkava tank near namr al jamal,Border Israel opposite Alma al-Shaab,33.09506944,35.1746,mapped
-126,08/05/2026,merkava tank bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-127,08/05/2026,Strike on merkava tank,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-128,08/05/2026,Strike on humvee in naqoura,Naqoura,33.118975,35.14008333,mapped
-129,08/05/2026,Resistance strikes enemy forces kfar kila,Kafr Kela,33.2772,35.55606111,mapped
-130,08/05/2026,humvee bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-131,07/05/2026,Strike on iron dome launcher at jal al alam,Border Israel opposite Alma al-Shaab,33.09506944,35.1746,mapped
-132,06/05/2026,Strike on soldier group,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-133,06/05/2026,Strike on namer apc near qouzah,Qouzah,33.12077222,35.34090833,mapped
-134,06/05/2026,Strike on namer apc near deir siryan,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped
-135,06/05/2026,Strike on namer apc in bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped
-136,06/05/2026,Strike on enemy position,Taybeh,33.27614167,35.52115278,mapped
-137,06/05/2026,soldiers gathering aita al shaab,Ayta ash Shab / Aita al-Shaab,33.09846111,35.33781389,mapped
-138,06/05/2026,position point taybeh,Taybeh,33.27614167,35.52115278,mapped
-139,06/05/2026,d9 engineering vehicle houla,Houla,33.20943611,35.515425,mapped
-140,05/05/2026,Strike on merkava tank,Qouzah,33.12077222,35.34090833,mapped
-142,04/05/2026,Strike on engineering vehicle,Manara,33.19809722,35.54392778,mapped
-143,04/05/2026,hemtt logistics vehicle manara,Manara,33.19809722,35.54392778,mapped
-144,03/05/2026,Strike on surveillance camera,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-145,03/05/2026,Strike on company commander tank,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-146,03/05/2026,company commander tank bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-147,02/05/2026,Strike on namer apc in bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped
-148,02/05/2026,Strike on drone control system,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-149,01/05/2026,Vehicle And Soldier Gathering Bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-150,01/05/2026,Strike on soldiers,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-151,01/05/2026,Strike on humvee,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped
-152,01/05/2026,namer vehicle bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped
-153,01/05/2026,merkava tank rashaf,Rachaf / Rashaf,33.14407222,35.36260833,mapped
-154,30/04/2026,Strike on humvee in naqoura,Naqoura,33.118975,35.14008333,mapped
-155,29/04/2026,Strike on merkava tank,Beit Lif,33.13361111,35.33277778,mapped
-156,28/04/2026,Vehicles and soldiers namr al jamal alma al shaab,Border Israel opposite Alma al-Shaab,33.09506944,35.1746,mapped
-157,24/04/2026,D9 engineering vehicle between taybeh and deir siryan,Taybeh,33.27614167,35.52115278,mapped
+row,date,description,town,lat,lon,status,thumbnail_url,video_url
+1,2026-06-17,force position kfar tebnit,Kfar Tebnit,33.35306,35.51333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-17_force_position_kfar_tebnit_mmirleb_17590.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-17_force_position_kfar_tebnit_mmirleb_17590.mp4
+2,2026-06-14,Engineering vehicle arnoun ababil drone,Arnoun,33.33168333,35.52566667,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-14_engineering_vehicle_arnoun_ababil_drone.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-14_engineering_vehicle_arnoun_ababil_drone.mp4
+3,2026-06-13,command center beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_command_center_beaufort_castle_mmirleb_17580.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_command_center_beaufort_castle_mmirleb_17580.mp4
+4,2026-06-13,namer vehicle hamammas hill khiam,Khiam,33.32690833,35.61120556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17588.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17588.mp4
+5,2026-06-13,Excavator majdal zoun,Majdal Zoun,33.15143056,35.22584444,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_excavator_majdal_zoun.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_excavator_majdal_zoun.mp4
+6,2026-06-13,logistics position bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_logistics_position_bayyadah_mmirleb_17436.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_logistics_position_bayyadah_mmirleb_17436.mp4
+7,2026-06-12,Merkava tank yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_merkava_tank_yahmor_al_shqif.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_merkava_tank_yahmor_al_shqif.mp4
+8,2026-06-12,D9 armored bulldozer tayr harfa ababil drone,Tayr Harfa,33.126925,35.21875556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.mp4
+9,2026-06-12,merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595.mp4
+10,2026-06-11,d9 engineering vehicle beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.mp4
+11,2026-06-11,israeli soldiers adaissah,Adaissah,33.25556389,35.54078056,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.mp4
+12,2026-06-11,Merkava tank tayr harfa ababil drone,Tayr Harfa,33.126925,35.21875556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.mp4
+13,2026-06-10,Merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-10_merkava_tank_beaufort_castle.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_merkava_tank_beaufort_castle.mp4
+14,2026-06-10,Humvee yahmar al shaqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-10_humvee_yahmar_al_shaqif.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_humvee_yahmar_al_shaqif.mp4
+15,2026-06-09,401 Brigade Hq Debel,Dibel / Debel,33.12090278,35.36613611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-09_401_brigade_hq_debel.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-09_401_brigade_hq_debel.mp4
+16,2026-06-09,Namer apc metula southern outskirts khiam,Khiam,33.32690833,35.61120556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-09_namer_apc_metula_southern_outskirts_khiam.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-09_namer_apc_metula_southern_outskirts_khiam.mp4
+17,2026-06-08,Strike on enemy vehicles near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif.mp4
+18,2026-06-08,Command and control vehicle beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-08_command_and_control_vehicle_beaufort_castle.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-08_command_and_control_vehicle_beaufort_castle.mp4
+19,2026-06-08,soldiers gathering naqoura,Naqoura,33.118975,35.14008333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-08_soldiers_gathering_naqoura_mmirleb_17431.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-08_soldiers_gathering_naqoura_mmirleb_17431.mp4
+20,2026-06-07,Soldiers gathering beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-07_soldiers_gathering_beaufort_castle.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-07_soldiers_gathering_beaufort_castle.mp4
+21,2026-06-07,Merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-07_merkava_tank_beaufort_castle.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-07_merkava_tank_beaufort_castle.mp4
+22,2026-06-07,Command namer vehicle yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-07_command_namer_vehicle_yahmor_al_shqif.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-07_command_namer_vehicle_yahmor_al_shqif.mp4
+23,2026-06-06,Sholef howitzer adaissah,Adaissah,33.25556389,35.54078056,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-06_sholef_howitzer_adaissah.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-06_sholef_howitzer_adaissah.mp4
+24,2026-06-06,Merkava tank blat position,Unknown Site,,,unmapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-06_merkava_tank_blat_position.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-06_merkava_tank_blat_position.mp4
+25,2026-06-06,artillery vehicle adaissah,Adaissah,33.25556389,35.54078056,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-06_artillery_vehicle_adaissah_mmirleb_17506.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-06_artillery_vehicle_adaissah_mmirleb_17506.mp4
+26,2026-06-05,Humvee near khiam,Khiam,33.32690833,35.61120556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-05_humvee_near_khiam.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-05_humvee_near_khiam.mp4
+27,2026-06-05,soldiers khiam,Khiam,33.32690833,35.61120556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-05_soldiers_khiam_mmirleb_17317.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-05_soldiers_khiam_mmirleb_17317.mp4
+28,2026-06-05,merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-05_merkava_tank_beaufort_castle_mmirleb_17449.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-05_merkava_tank_beaufort_castle_mmirleb_17449.mp4
+29,2026-06-04,Merkava tank beaufort castle 02,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-04_merkava_tank_beaufort_castle_02.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-04_merkava_tank_beaufort_castle_02.mp4
+30,2026-06-04,Merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-04_merkava_tank_beaufort_castle.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-04_merkava_tank_beaufort_castle.mp4
+31,2026-06-03,Merkava tank zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_merkava_tank_zawtar_al_sharqiyah.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_merkava_tank_zawtar_al_sharqiyah.mp4
+32,2026-06-03,personnel carrier zawtar al sharqiyah mmirleb 17494,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17494.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17494.mp4
+33,2026-06-03,personnel carrier zawtar al sharqiyah mmirleb 17523,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17523.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17523.mp4
+34,2026-06-03,M113 apc beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_m113_apc_beaufort_castle.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_m113_apc_beaufort_castle.mp4
+35,2026-06-03,Humvee zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_humvee_zawtar_al_sharqiyah.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_humvee_zawtar_al_sharqiyah.mp4
+36,2026-06-02,Targeting israeli soldiers eastern outskirts zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah.mp4
+37,2026-06-02,Soldiers and namer vehicle near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif.mp4
+38,2026-06-02,Namer vehicle near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-02_namer_vehicle_near_yahmor_al_shqif.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_namer_vehicle_near_yahmor_al_shqif.mp4
+39,2026-06-02,Merkava tank near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-02_merkava_tank_near_yahmor_al_shqif.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_merkava_tank_near_yahmor_al_shqif.mp4
+40,2026-06-01,Soldiers near yahmor al shqif 02,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-01_soldiers_near_yahmor_al_shqif_02.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-01_soldiers_near_yahmor_al_shqif_02.mp4
+41,2026-06-01,Soldiers near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-01_soldiers_near_yahmor_al_shqif.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-01_soldiers_near_yahmor_al_shqif.mp4
+42,2026-06-01,Merkava tank near yahmor al shqif,Yahmor al-Shaqif,33.30935556,35.51621944,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-01_merkava_tank_near_yahmor_al_shqif.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-06-01_merkava_tank_near_yahmor_al_shqif.mp4
+43,2026-05-31,Soldiers gathering near border site,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-31_soldiers_gathering_near_border_site.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-31_soldiers_gathering_near_border_site.mp4
+44,2026-05-31,Namer vehicle and apc in dibel,Dibel / Debel,33.12090278,35.36613611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-31_namer_vehicle_and_apc_in_dibel.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-31_namer_vehicle_and_apc_in_dibel.mp4
+45,2026-05-31,Humvee vehicle at al assi,Border area opposite Mays al-Jabal,33.17205556,35.53799167,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-31_humvee_vehicle_at_al_assi.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-31_humvee_vehicle_at_al_assi.mp4
+46,2026-05-30,Merkava tank beaufort castle,Beaufort Castle,33.32401389,35.53186389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-30_merkava_tank_in_border_area.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-30_merkava_tank_in_border_area.mp4
+47,2026-05-30,technical equipment rashaf,Rachaf / Rashaf,33.14407222,35.36260833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-30_technical_equipment_rashaf_mmirleb_17062.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-30_technical_equipment_rashaf_mmirleb_17062.mp4
+48,2026-05-29,Soldier at misgav am,Misgav Am,33.24803333,35.54877778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-29_soldier_at_misgav_am.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-29_soldier_at_misgav_am.mp4
+49,2026-05-29,Namer apc in ainata,Ainata,33.12971111,35.43543889,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-29_namer_apc_in_ainata.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-29_namer_apc_in_ainata.mp4
+50,2026-05-28,Iron technical platform at al raheb,Khiam,33.32690833,35.61120556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-28_iron_technical_platform_at_al_raheb.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-28_iron_technical_platform_at_al_raheb.mp4
+51,2026-05-28,iron dome launcher vehicle khiam,Khiam,33.32690833,35.61120556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16995.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16995.mp4
+52,2026-05-28,merkava tank zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17156.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17156.mp4
+53,2026-05-27,Merkava tank on military route,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_merkava_tank_on_military_route.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_merkava_tank_on_military_route.mp4
+54,2026-05-27,Iron technical platform at jal al alam,Border near Rosh HaNikra,33.08693889,35.15468611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_iron_technical_platform_at_jal_al_alam.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_iron_technical_platform_at_jal_al_alam.mp4
+55,2026-05-27,Enemy vehicle in northern settlement,Shomera,33.08247,35.281962,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_enemy_vehicle_in_northern_settlement.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_enemy_vehicle_in_northern_settlement.mp4
+56,2026-05-26,Vehicle And Soldier Gatherings Biranit,Border near Rmaych,33.06221389,35.34233889,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_vehicle_and_soldier_gatherings_biranit.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_vehicle_and_soldier_gatherings_biranit.mp4
+57,2026-05-26,Merkava tank in rashaf,Rachaf / Rashaf,33.14407222,35.36260833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_merkava_tank_in_rashaf.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_merkava_tank_in_rashaf.mp4
+58,2026-05-26,Humvee vehicle in wadi near dibel,Dibel / Debel,33.12090278,35.36613611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_humvee_vehicle_in_wadi_near_dibel.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_humvee_vehicle_in_wadi_near_dibel.mp4
+59,2026-05-26,Communications equipment at al assi,Border area opposite Mays al-Jabal,33.17205556,35.53799167,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_communications_equipment_at_al_assi.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_communications_equipment_at_al_assi.mp4
+60,2026-05-26,Anti drone platform barashit 02,Border near Rmaych,33.06221389,35.34233889,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_anti_drone_platform_barashit_02.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_anti_drone_platform_barashit_02.mp4
+61,2026-05-26,Anti drone platform barashit,Border near Rmaych,33.06221389,35.34233889,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_anti_drone_platform_barashit.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_anti_drone_platform_barashit.mp4
+62,2026-05-26,humvee zawtar al sharqiyah riverbed,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17070.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17070.mp4
+63,2026-05-26,d9 bulldozer zawtar al sharqiyah,Zawtar al-Sharqiyah,33.3213,35.47325833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17145.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17145.mp4
+64,2026-05-25,Two israeli army vehicles,Naqoura,33.118975,35.14008333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-25_two_israeli_army_vehicles.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-25_two_israeli_army_vehicles.mp4
+65,2026-05-25,Soldiers position tent hadab al bustan,Unknown (Israel),,,unmapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-25_soldiers_position_tent_hadab_al_bustan.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-25_soldiers_position_tent_hadab_al_bustan.mp4
+66,2026-05-25,Command room tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-25_command_room_tayr_harfa.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-25_command_room_tayr_harfa.mp4
+67,2026-05-24,Namer apc taybeh,Taybeh,33.27614167,35.52115278,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-24_namer_apc_taybeh.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-24_namer_apc_taybeh.mp4
+68,2026-05-24,humvee manara,Manara,33.19809722,35.54392778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-24_humvee_manara_mmirleb_16825.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-24_humvee_manara_mmirleb_16825.mp4
+69,2026-05-23,Soldier Gathering Bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-23_soldier_gathering_bayyadah.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-23_soldier_gathering_bayyadah.mp4
+70,2026-05-23,Two iron dome platforms ramim,Ramim Ridge,33.19026667,35.54089722,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-23_two_iron_dome_platforms_ramim.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-23_two_iron_dome_platforms_ramim.mp4
+71,2026-05-23,Soldiers taybeh,Taybeh,33.27614167,35.52115278,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-23_soldiers_taybeh.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-23_soldiers_taybeh.mp4
+72,2026-05-23,Anti drone system jardah,Border Israel in front of Alma al-Shaab,33.09190833,35.18313611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-23_anti_drone_system_jardah.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-23_anti_drone_system_jardah.mp4
+73,2026-05-22,Soldier manara,Manara,33.19809722,35.54392778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-22_soldier_manara.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-22_soldier_manara.mp4
+74,2026-05-22,Merkava tank markaba,Markaba,33.23274722,35.51663333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-22_merkava_tank_markaba.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-22_merkava_tank_markaba.mp4
+75,2026-05-21,Engineering vehicle khallet al raj deir siryan,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan.mp4
+76,2026-05-20,Namer apc hadatha,Haddatha,33.16537778,35.39011389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-20_namer_apc_hadatha.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-20_namer_apc_hadatha.mp4
+77,2026-05-20,Armored brigade 401 hq debel,Dibel / Debel,33.12090278,35.36613611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-20_armored_brigade_401_hq_debel.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-20_armored_brigade_401_hq_debel.mp4
+78,2026-05-19,Military vehicle misgav am,Misgav Am,33.24803333,35.54877778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_military_vehicle_misgav_am.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_military_vehicle_misgav_am.mp4
+79,2026-05-19,iron dome platform misgav am,Misgav Am,33.24803333,35.54877778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_iron_dome_platform_misgav_am_mmirleb_16699.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_iron_dome_platform_misgav_am_mmirleb_16699.mp4
+80,2026-05-19,iron dome platform jal al alam,Border near Rosh HaNikra,33.08693889,35.15468611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16397.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16397.mp4
+81,2026-05-19,communications vehicle taybeh,Taybeh,33.27614167,35.52115278,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_communications_vehicle_taybeh_mmirleb_16554.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_communications_vehicle_taybeh_mmirleb_16554.mp4
+82,2026-05-19,engineering vehicle khiam,Khiam,33.32690833,35.61120556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_engineering_vehicle_khiam_mmirleb_16769.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_engineering_vehicle_khiam_mmirleb_16769.mp4
+83,2026-05-18,Iron dome platform shomera,"Near Shomera (Israel), approx",33.09319722,35.28620556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-18_iron_dome_platform_shomera.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-18_iron_dome_platform_shomera.mp4
+84,2026-05-18,brigade 300 commander vehicle shomera,"Near Shomera (Israel), approx",33.09319722,35.28620556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-18_brigade_300_commander_vehicle_shomera_mmirleb_16518.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-18_brigade_300_commander_vehicle_shomera_mmirleb_16518.mp4
+85,2026-05-18,engineering vehicle deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16560.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16560.mp4
+86,2026-05-17,Buggy iskandarounah naqoura,Naqoura,33.118975,35.14008333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-17_buggy_iskandarounah_naqoura.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-17_buggy_iskandarounah_naqoura.mp4
+87,2026-05-17,logistics position bayyadah iskandarounah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-17_logistics_position_bayyadah_iskandarounah_mmirleb_16415.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-17_logistics_position_bayyadah_iskandarounah_mmirleb_16415.mp4
+88,2026-05-17,military vehicle bayyadah iskandarounah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16445.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16445.mp4
+89,2026-05-16,Hummer iskandarounah bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-16_hummer_iskandarounah_naqoura.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-16_hummer_iskandarounah_naqoura.mp4
+90,2026-05-16,engineering vehicle deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16320.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16320.mp4
+91,2026-05-16,merkava tank bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-16_merkava_tank_bayyadah_mmirleb_16353.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-16_merkava_tank_bayyadah_mmirleb_16353.mp4
+92,2026-05-16,namer vehicle taybeh,Taybeh,33.27614167,35.52115278,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-16_namer_vehicle_taybeh_mmirleb_16533.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-16_namer_vehicle_taybeh_mmirleb_16533.mp4
+93,2026-05-15,Engineering vehicle khiam,Khiam,33.32690833,35.61120556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-15_engineering_vehicle_khiam.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-15_engineering_vehicle_khiam.mp4
+94,2026-05-15,personnel carrier deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16303.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16303.mp4
+95,2026-05-14,Strike on military tanker near bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_strike_on_military_tanker_near_bint_jbeil.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_strike_on_military_tanker_near_bint_jbeil.mp4
+96,2026-05-14,merkava tank bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_merkava_tank_bint_jbeil_mmirleb_16495.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_merkava_tank_bint_jbeil_mmirleb_16495.mp4
+97,2026-05-14,Merkava tank taybeh,Taybeh,33.27614167,35.52115278,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_merkava_tank_aytaroun.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_merkava_tank_aytaroun.mp4
+98,2026-05-14,wireless communications system blat,Unknown (Israel),,,unmapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_wireless_communications_system_blat_mmirleb_16287.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_wireless_communications_system_blat_mmirleb_16287.mp4
+99,2026-05-14,soldiers gathering naqoura ras naqoura,Naqoura,33.118975,35.14008333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_soldiers_gathering_naqoura_ras_naqoura_mmirleb_16295.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_soldiers_gathering_naqoura_ras_naqoura_mmirleb_16295.mp4
+100,2026-05-14,namer vehicle rashaf,Rachaf / Rashaf,33.14407222,35.36260833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_namer_vehicle_rashaf_mmirleb_16314.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_namer_vehicle_rashaf_mmirleb_16314.mp4
+101,2026-05-14,humvee tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_humvee_tayr_harfa_mmirleb_16339.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_humvee_tayr_harfa_mmirleb_16339.mp4
+102,2026-05-13,Strike on merkava tank near aita al shaab,Ayta ash Shab / Aita al-Shaab,33.09846111,35.33781389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-13_strike_on_merkava_tank_near_aita_al_shaab.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-13_strike_on_merkava_tank_near_aita_al_shaab.mp4
+103,2026-05-13,Strike on armored personnel carrier,Bint Jbeil,33.12122222,35.43349722,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-13_strike_on_armored_personnel_carrier.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-13_strike_on_armored_personnel_carrier.mp4
+104,2026-05-12,Strike on soldiers and vehicles,Margaliot,33.216474,35.544354,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_soldiers_and_vehicles.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_soldiers_and_vehicles.mp4
+105,2026-05-12,Strike on namer apc near houla,Houla,33.20943611,35.515425,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_namer_apc_near_houla.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_namer_apc_near_houla.mp4
+106,2026-05-12,Strike on humvee,Naqoura,33.118975,35.14008333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_humvee.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_humvee.mp4
+107,2026-05-12,Strike on engineering vehicle near tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa.mp4
+108,2026-05-12,merkava tank manara khirbet al manara,Manara,33.19809722,35.54392778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16108.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16108.mp4
+109,2026-05-12,soldier manara khirbet al manara,Manara,33.19809722,35.54392778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16120.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16120.mp4
+110,2026-05-12,humvee naqoura naqoura iskandarounah road,Naqoura,33.118975,35.14008333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16263.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16263.mp4
+111,2026-05-11,Strike on soldier near dhayra,Dhayra,33.10703056,35.21939444,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-11_strike_on_soldier_near_dhayra.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-11_strike_on_soldier_near_dhayra.mp4
+112,2026-05-11,Strike on logistics vehicle near tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-11_strike_on_logistics_vehicle_near_tayr_harfa.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-11_strike_on_logistics_vehicle_near_tayr_harfa.mp4
+113,2026-05-11,Strike on engineering vehicle near khiam,Khiam,33.32690833,35.61120556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-11_strike_on_engineering_vehicle_near_khiam.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-11_strike_on_engineering_vehicle_near_khiam.mp4
+114,2026-05-11,Strike on d9 engineering vehicle near naqoura,Naqoura,33.118975,35.14008333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-11_strike_on_d9_engineering_vehicle_near_naqoura.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-11_strike_on_d9_engineering_vehicle_near_naqoura.mp4
+115,2026-05-10,Merkava tank bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_strike_on_merkava_tank.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_strike_on_merkava_tank.mp4
+116,2026-05-10,Strike on d9 engineering vehicle near deir siryan,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_strike_on_d9_engineering_vehicle_near_deir_siryan.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_strike_on_d9_engineering_vehicle_near_deir_siryan.mp4
+117,2026-05-10,Strike on bulldozer near ramiya,Rmaych,33.07546111,35.36408889,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_strike_on_bulldozer_near_ramiya.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_strike_on_bulldozer_near_ramiya.mp4
+118,2026-05-10,headquarters bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_headquarters_bayyadah_mmirleb_16037.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_headquarters_bayyadah_mmirleb_16037.mp4
+119,2026-05-10,soldiers position house tayr harfa,Tayr Harfa,33.126925,35.21875556,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16058.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16058.mp4
+120,2026-05-09,Strike on soldiers near shlomi,Shlomi,33.07429444,35.14379167,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_strike_on_soldiers_near_shlomi.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_soldiers_near_shlomi.mp4
+121,2026-05-09,Strike on soldiers near deir mimas,Deir Mimas,33.30303333,35.54612778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_strike_on_soldiers_near_deir_mimas.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_soldiers_near_deir_mimas.mp4
+122,2026-05-09,Strike on soldiers,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_strike_on_soldiers.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_soldiers.mp4
+123,2026-05-09,Strike on israeli military vehicle,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_strike_on_israeli_military_vehicle.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_israeli_military_vehicle.mp4
+124,2026-05-09,soldiers gathering shlomi,Shlomi,33.07429444,35.14379167,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_soldiers_gathering_shlomi_mmirleb_15972.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_soldiers_gathering_shlomi_mmirleb_15972.mp4
+125,2026-05-09,soldiers gathering jal al alam,Border Israel opposite Alma al-Shaab,33.09506944,35.1746,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15990.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15990.mp4
+126,2026-05-09,tent deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16067.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16067.mp4
+127,2026-05-09,humvee bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_humvee_bayyadah_mmirleb_16095.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_humvee_bayyadah_mmirleb_16095.mp4
+128,2026-05-09,soldiers deir siryan,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_soldiers_deir_siryan_mmirleb_16170.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_soldiers_deir_siryan_mmirleb_16170.mp4
+129,2026-05-09,target deir siryan khallet al raj,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16251.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16251.mp4
+130,2026-05-08,Strike on merkava tank near namr al jamal,Border Israel opposite Alma al-Shaab,33.09506944,35.1746,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_strike_on_merkava_tank_near_namr_al_jamal.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_strike_on_merkava_tank_near_namr_al_jamal.mp4
+131,2026-05-08,merkava tank bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_merkava_tank_bayyadah_mmirleb_16053.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_merkava_tank_bayyadah_mmirleb_16053.mp4
+132,2026-05-08,Strike on merkava tank,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_strike_on_merkava_tank.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_strike_on_merkava_tank.mp4
+133,2026-05-08,Strike on humvee in naqoura,Naqoura,33.118975,35.14008333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_strike_on_humvee_in_naqoura.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_strike_on_humvee_in_naqoura.mp4
+134,2026-05-08,Resistance strikes enemy forces kfar kila,Kafr Kela,33.2772,35.55606111,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_resistance_strikes_enemy_forces_kfar_kila.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_resistance_strikes_enemy_forces_kfar_kila.mp4
+135,2026-05-08,humvee bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_humvee_bayyadah_mmirleb_16050.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_humvee_bayyadah_mmirleb_16050.mp4
+136,2026-05-07,Strike on iron dome launcher at jal al alam,Border Israel opposite Alma al-Shaab,33.09506944,35.1746,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.mp4
+137,2026-05-06,Strike on soldier group,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_soldier_group.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_soldier_group.mp4
+138,2026-05-06,Strike on namer apc near qouzah,Qouzah,33.12077222,35.34090833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_namer_apc_near_qouzah.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_namer_apc_near_qouzah.mp4
+139,2026-05-06,Strike on namer apc near deir siryan,Deir Seryan / Khallet al-Raj,33.291775,35.50118611,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_namer_apc_near_deir_siryan.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_namer_apc_near_deir_siryan.mp4
+140,2026-05-06,Strike on namer apc in bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_namer_apc_in_bint_jbeil.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_namer_apc_in_bint_jbeil.mp4
+141,2026-05-06,Strike on enemy position,Taybeh,33.27614167,35.52115278,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_enemy_position.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_enemy_position.mp4
+142,2026-05-06,soldiers gathering aita al shaab,Ayta ash Shab / Aita al-Shaab,33.09846111,35.33781389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15843.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15843.mp4
+143,2026-05-06,position point taybeh,Taybeh,33.27614167,35.52115278,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_position_point_taybeh_mmirleb_16212.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_position_point_taybeh_mmirleb_16212.mp4
+144,2026-05-06,d9 engineering vehicle houla,Houla,33.20943611,35.515425,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16349.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16349.mp4
+145,2026-05-05,Strike on merkava tank,Qouzah,33.12077222,35.34090833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-05_strike_on_merkava_tank.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-05_strike_on_merkava_tank.mp4
+146,2026-05-04,Strike on troop transport vehicle,Unknown (Israel),,,unmapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_strike_on_troop_transport_vehicle.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_strike_on_troop_transport_vehicle.mp4
+147,2026-05-04,Strike on engineering vehicle,Manara,33.19809722,35.54392778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_strike_on_engineering_vehicle.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_strike_on_engineering_vehicle.mp4
+148,2026-05-04,hemtt logistics vehicle manara,Manara,33.19809722,35.54392778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16530.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16530.mp4
+149,2026-05-03,Strike on surveillance camera,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-03_strike_on_surveillance_camera.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-03_strike_on_surveillance_camera.mp4
+150,2026-05-03,Strike on company commander tank,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-03_strike_on_company_commander_tank.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-03_strike_on_company_commander_tank.mp4
+151,2026-05-03,company commander tank bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-03_company_commander_tank_bayyadah_mmirleb_16009.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-03_company_commander_tank_bayyadah_mmirleb_16009.mp4
+152,2026-05-02,Strike on namer apc in bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-02_strike_on_namer_apc_in_bint_jbeil.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-02_strike_on_namer_apc_in_bint_jbeil.mp4
+153,2026-05-02,Strike on drone control system,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-02_strike_on_drone_control_system.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-02_strike_on_drone_control_system.mp4
+154,2026-05-01,Vehicle And Soldier Gathering Bayyadah,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-01_vehicle_and_soldier_gathering_bayyadah.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_vehicle_and_soldier_gathering_bayyadah.mp4
+155,2026-05-01,Strike on soldiers,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-01_strike_on_soldiers.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_strike_on_soldiers.mp4
+156,2026-05-01,Strike on humvee,Al Bayada / Bayyadah,33.16242222,35.18071389,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-01_strike_on_humvee.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_strike_on_humvee.mp4
+157,2026-05-01,namer vehicle bint jbeil,Bint Jbeil,33.12122222,35.43349722,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-01_namer_vehicle_bint_jbeil_mmirleb_15900.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_namer_vehicle_bint_jbeil_mmirleb_15900.mp4
+158,2026-05-01,merkava tank rashaf,Rachaf / Rashaf,33.14407222,35.36260833,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-01_merkava_tank_rashaf_mmirleb_15952.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_merkava_tank_rashaf_mmirleb_15952.mp4
+159,2026-04-30,Strike on humvee in naqoura,Naqoura,33.118975,35.14008333,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-04-30_strike_on_humvee_in_naqoura.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-04-30_strike_on_humvee_in_naqoura.mp4
+160,2026-04-29,Strike on merkava tank,Beit Lif,33.13361111,35.33277778,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-04-29_strike_on_merkava_tank.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-04-29_strike_on_merkava_tank.mp4
+161,2026-04-24,D9 engineering vehicle between taybeh and deir siryan,Taybeh,33.27614167,35.52115278,mapped,https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-04-24_d9_engineering_vehicle_between_taybeh_and_deir_siryan.jpg,https://d2fioemadmrru3.cloudfront.net/videos/2026-04-24_d9_engineering_vehicle_between_taybeh_and_deir_siryan.mp4
