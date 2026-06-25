@@ -9,11 +9,15 @@ An interactive map view is available in [index.html](index.html). It is backed b
 - Bucket: `s3://fpv-drone-strikes-lebanon-dataset`
 - Video prefix: `videos/`
 - Thumbnail prefix: `thumbnails/`
-- Video count: 162 MP4 files
+- Video count: 161 MP4 files
 
 ## License
 
 Repository metadata, manifests, and documentation are released under [CC0 1.0 Universal](LICENSE). The referenced videos and thumbnails are third-party media materials and are not licensed by this repository; see [MEDIA_NOTICE.md](MEDIA_NOTICE.md).
+
+## Heatmap Preview
+
+![FPV drone strike heatmap](assets/heatmap-preview.png)
 
 ## Videos
 
@@ -73,8 +77,7 @@ Repository metadata, manifests, and documentation are released under [CC0 1.0 Un
 | 2026-05-28 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17156.jpg" alt="merkava tank zawtar al sharqiyah" width="180"> | merkava tank zawtar al sharqiyah | Zawtar al-Sharqiyah | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17156.mp4) |
 | 2026-05-27 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_merkava_tank_on_military_route.jpg" alt="Merkava tank on military route" width="180"> | Merkava tank on military route | Zawtar al-Sharqiyah | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_merkava_tank_on_military_route.mp4) |
 | 2026-05-27 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_iron_technical_platform_at_jal_al_alam.jpg" alt="Iron technical platform at jal al alam" width="180"> | Iron technical platform at jal al alam | Border near Rosh HaNikra | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_iron_technical_platform_at_jal_al_alam.mp4) |
-| 2026-05-27 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_enemy_vehicle_in_northern_settlement.jpg" alt="Enemy vehicle in northern settlement" width="180"> | Enemy vehicle in northern settlement | Unknown (Israel) | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_enemy_vehicle_in_northern_settlement.mp4) |
-| 2026-05-27 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_target_galilee_forest_mmirleb_16897.jpg" alt="target galilee forest" width="180"> | target galilee forest | Unknown (Israel) | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_target_galilee_forest_mmirleb_16897.mp4) |
+| 2026-05-27 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_enemy_vehicle_in_northern_settlement.jpg" alt="Enemy vehicle in northern settlement" width="180"> | Enemy vehicle in northern settlement | Shomera | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_enemy_vehicle_in_northern_settlement.mp4) |
 | 2026-05-26 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_vehicle_and_soldier_gatherings_biranit.jpg" alt="Vehicle And Soldier Gatherings Biranit" width="180"> | Vehicle And Soldier Gatherings Biranit | Border near Rmaych | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_vehicle_and_soldier_gatherings_biranit.mp4) |
 | 2026-05-26 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_merkava_tank_in_rashaf.jpg" alt="Merkava tank in rashaf" width="180"> | Merkava tank in rashaf | Rachaf / Rashaf | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_merkava_tank_in_rashaf.mp4) |
 | 2026-05-26 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_humvee_vehicle_in_wadi_near_dibel.jpg" alt="Humvee vehicle in wadi near dibel" width="180"> | Humvee vehicle in wadi near dibel | Dibel / Debel | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_humvee_vehicle_in_wadi_near_dibel.mp4) |
@@ -123,7 +126,7 @@ Repository metadata, manifests, and documentation are released under [CC0 1.0 Un
 | 2026-05-14 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_humvee_tayr_harfa_mmirleb_16339.jpg" alt="humvee tayr harfa" width="180"> | humvee tayr harfa | Tayr Harfa | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_humvee_tayr_harfa_mmirleb_16339.mp4) |
 | 2026-05-13 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-13_strike_on_merkava_tank_near_aita_al_shaab.jpg" alt="Strike on merkava tank near aita al shaab" width="180"> | Strike on merkava tank near aita al shaab | Ayta ash Shab / Aita al-Shaab | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-13_strike_on_merkava_tank_near_aita_al_shaab.mp4) |
 | 2026-05-13 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-13_strike_on_armored_personnel_carrier.jpg" alt="Strike on armored personnel carrier" width="180"> | Strike on armored personnel carrier | Bint Jbeil | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-13_strike_on_armored_personnel_carrier.mp4) |
-| 2026-05-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_soldiers_and_vehicles.jpg" alt="Strike on soldiers and vehicles" width="180"> | Strike on soldiers and vehicles | Unknown (Israel) | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_soldiers_and_vehicles.mp4) |
+| 2026-05-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_soldiers_and_vehicles.jpg" alt="Strike on soldiers and vehicles" width="180"> | Strike on soldiers and vehicles | Margaliot | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_soldiers_and_vehicles.mp4) |
 | 2026-05-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_namer_apc_near_houla.jpg" alt="Strike on namer apc near houla" width="180"> | Strike on namer apc near houla | Houla | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_namer_apc_near_houla.mp4) |
 | 2026-05-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_humvee.jpg" alt="Strike on humvee" width="180"> | Strike on humvee | Naqoura | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_humvee.mp4) |
 | 2026-05-12 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa.jpg" alt="Strike on engineering vehicle near tayr harfa" width="180"> | Strike on engineering vehicle near tayr harfa | Tayr Harfa | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa.mp4) |
