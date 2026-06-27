@@ -1,0 +1,29 @@
+{
+  "name": "segment_detection_15_seed_20260627",
+  "description": "Deterministic 15-video split for automatic FPV segment boundary detection experiments.",
+  "seed": 20260627,
+  "source": "annotations/*.json on branch claude/fpv-video-annotator-3in2c6",
+  "notes": [
+    "The annotations branch currently contains more than 15 annotation files. This split fixes the requested 10 train / 5 test subset explicitly so future experiments are reproducible.",
+    "Each entry is an annotation JSON filename under annotations/."
+  ],
+  "train": [
+    "2026-06-04_merkava_tank_beaufort_castle_02_annotations.json",
+    "2026-06-05_humvee_near_khiam_annotations.json",
+    "2026-06-06_merkava_tank_blat_position_annotations.json",
+    "2026-06-09_namer_apc_metula_southern_outskirts_khiam_annotations.json",
+    "2026-06-10_humvee_yahmar_al_shaqif_annotations.json",
+    "2026-06-10_merkava_tank_beaufort_castle_annotations.json",
+    "2026-06-11_israeli_soldiers_adaissah_mmirleb_17602_annotations.json",
+    "2026-06-11_merkava_tank_tayr_harfa_ababil_drone_annotations.json",
+    "2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595_annotations.json",
+    "2026-06-14_engineering_vehicle_arnoun_ababil_drone_annotations.json"
+  ],
+  "test": [
+    "2026-06-03_merkava_tank_zawtar_al_sharqiyah_annotations.json",
+    "2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447_annotations.json",
+    "2026-06-06_artillery_vehicle_adaissah_mmirleb_17504_annotations.json",
+    "2026-06-12_merkava_tank_yahmor_al_shqif_annotations.json",
+    "2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586_annotations.json"
+  ]
+}
