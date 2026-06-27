@@ -1,0 +1,122 @@
+{
+  "video_file": "2026-06-06_merkava_tank_blat_position.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-06_merkava_tank_blat_position.mp4",
+  "description": "Merkava tank blat position",
+  "date": "2026-06-06",
+  "town": "Jabal Blat",
+  "annotated_at": "2026-06-27T11:10:36.293Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 14.167,
+      "time_formatted": "0:14.2",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 14.767,
+      "time_formatted": "0:14.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 20.767,
+      "time_formatted": "0:20.8",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 21.167,
+      "time_formatted": "0:21.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 25.756,
+      "time_formatted": "0:25.8",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 26.189,
+      "time_formatted": "0:26.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 30.038,
+      "time_formatted": "0:30.0",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 30.505,
+      "time_formatted": "0:30.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 39.918,
+      "time_formatted": "0:39.9",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 40.385,
+      "time_formatted": "0:40.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 65.486,
+      "time_formatted": "1:05.5",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 70.12,
+      "time_formatted": "1:10.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 74.653,
+      "time_formatted": "1:14.7",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "video_file": "2026-06-13_logistics_position_bayyadah_mmirleb_17434.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_logistics_position_bayyadah_mmirleb_17434.mp4",
+  "description": "logistics position bayyadah",
+  "date": "2026-06-13",
+  "town": "Al Bayada / Bayyadah",
+  "annotated_at": "2026-06-27T10:43:46.731Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.433,
+      "time_formatted": "0:00.4",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.433,
+      "time_formatted": "0:08.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 14.567,
+      "time_formatted": "0:14.6",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 15.267,
+      "time_formatted": "0:15.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 21.067,
+      "time_formatted": "0:21.1",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 21.767,
+      "time_formatted": "0:21.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 30.233,
+      "time_formatted": "0:30.2",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 35.333,
+      "time_formatted": "0:35.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 37.933,
+      "time_formatted": "0:37.9",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

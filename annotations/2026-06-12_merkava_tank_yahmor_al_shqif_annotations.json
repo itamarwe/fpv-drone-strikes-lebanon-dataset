@@ -1,0 +1,66 @@
+{
+  "video_file": "2026-06-12_merkava_tank_yahmor_al_shqif.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_merkava_tank_yahmor_al_shqif.mp4",
+  "description": "Merkava tank yahmor al shqif",
+  "date": "2026-06-12",
+  "town": "Yahmor al-Shaqif",
+  "annotated_at": "2026-06-27T10:45:20.378Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 7.933,
+      "time_formatted": "0:07.9",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 17.767,
+      "time_formatted": "0:17.8",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 18.4,
+      "time_formatted": "0:18.4",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 25.733,
+      "time_formatted": "0:25.7",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 31.067,
+      "time_formatted": "0:31.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 37.833,
+      "time_formatted": "0:37.8",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

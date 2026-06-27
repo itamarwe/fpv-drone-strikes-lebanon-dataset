@@ -1,0 +1,66 @@
+{
+  "video_file": "2026-06-05_soldiers_khiam_mmirleb_17315.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-05_soldiers_khiam_mmirleb_17315.mp4",
+  "description": "soldiers khiam",
+  "date": "2026-06-05",
+  "town": "Khiam",
+  "annotated_at": "2026-06-27T11:17:27.975Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.07,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 16.761,
+      "time_formatted": "0:16.8",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 20.12,
+      "time_formatted": "0:20.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 43.192,
+      "time_formatted": "0:43.2",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 45.656,
+      "time_formatted": "0:45.7",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 48.121,
+      "time_formatted": "0:48.1",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

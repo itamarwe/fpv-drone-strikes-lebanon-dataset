@@ -1,0 +1,59 @@
+{
+  "video_file": "2026-06-13_excavator_majdal_zoun.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_excavator_majdal_zoun.mp4",
+  "description": "Excavator majdal zoun",
+  "date": "2026-06-13",
+  "town": "Majdal Zoun",
+  "annotated_at": "2026-06-27T10:39:08.521Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 24.533,
+      "time_formatted": "0:24.5",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 25.167,
+      "time_formatted": "0:25.2",
+      "type": "new_flight_start",
+      "label": "New Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 31.567,
+      "time_formatted": "0:31.6",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 36.667,
+      "time_formatted": "0:36.7",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 39.767,
+      "time_formatted": "0:39.8",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

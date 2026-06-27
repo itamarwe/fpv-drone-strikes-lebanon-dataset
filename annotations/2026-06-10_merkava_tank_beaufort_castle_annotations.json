@@ -1,0 +1,52 @@
+{
+  "video_file": "2026-06-10_merkava_tank_beaufort_castle.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_merkava_tank_beaufort_castle.mp4",
+  "description": "Merkava tank beaufort castle",
+  "date": "2026-06-10",
+  "town": "Beaufort Castle",
+  "annotated_at": "2026-06-27T10:56:31.611Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.467,
+      "time_formatted": "0:00.5",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.333,
+      "time_formatted": "0:08.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 16.367,
+      "time_formatted": "0:16.4",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 21.533,
+      "time_formatted": "0:21.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 45.833,
+      "time_formatted": "0:45.8",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}
