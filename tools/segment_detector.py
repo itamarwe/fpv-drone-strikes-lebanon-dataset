@@ -44,11 +44,14 @@ EVENT_LABELS = {
 CANDIDATE_STRATEGIES = (
     "dense",
     "pixel",
+    "ssim",
+    "block",
     "histogram",
     "luminance",
     "edge",
     "visual",
     "audio",
+    "audio_flux",
     "combined",
     "visual_or_audio",
 )
@@ -61,10 +64,13 @@ class FrameFeatures:
     score: np.ndarray
     visual_score: np.ndarray
     pixel_score: np.ndarray
+    ssim_score: np.ndarray
+    block_score: np.ndarray
     hist_score: np.ndarray
     luminance_delta_score: np.ndarray
     edge_delta_score: np.ndarray
     audio_score: np.ndarray
+    audio_flux_score: np.ndarray
     audio_rms: np.ndarray
     luminance: np.ndarray
     saturation: np.ndarray
@@ -187,27 +193,71 @@ def audio_features_at_times(
     audio: np.ndarray,
     times: np.ndarray,
     sample_rate: int = 8000,
-) -> tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     if len(audio) == 0:
         zeros = np.zeros(len(times), dtype=np.float32)
-        return zeros, zeros
+        return zeros, zeros, zeros
 
     hop_seconds = float(np.median(np.diff(times))) if len(times) > 1 else 0.25
     hop = max(1, int(round(sample_rate * hop_seconds)))
     window = max(hop, int(sample_rate * 0.18))
     rms = np.zeros(len(times), dtype=np.float32)
+    spectra: list[np.ndarray] = []
     for i, t in enumerate(times):
         center = int(round(float(t) * sample_rate))
         start = max(0, center - window // 2)
         end = min(len(audio), center + window // 2)
         if end <= start:
+            spectra.append(np.zeros(129, dtype=np.float32))
             continue
         chunk = audio[start:end]
         rms[i] = float(np.sqrt(np.mean(chunk * chunk)))
+        if len(chunk) < window:
+            chunk = np.pad(chunk, (0, window - len(chunk)))
+        windowed = chunk[:window] * np.hanning(window)
+        spectra.append(np.abs(np.fft.rfft(windowed, n=256)).astype(np.float32))
 
     delta = np.zeros(len(times), dtype=np.float32)
     delta[1:] = np.abs(np.diff(rms))
-    return rms, robust_score(delta)
+    flux = np.zeros(len(times), dtype=np.float32)
+    for i in range(1, len(spectra)):
+        flux[i] = float(np.maximum(spectra[i] - spectra[i - 1], 0).sum())
+    return rms, robust_score(delta), robust_score(flux)
+
+
+def ssim_dissimilarity(gray: np.ndarray) -> np.ndarray:
+    out = np.zeros(len(gray), dtype=np.float32)
+    c1 = 6.5025
+    c2 = 58.5225
+    for i in range(1, len(gray)):
+        a = gray[i - 1]
+        b = gray[i]
+        mu_a = float(a.mean())
+        mu_b = float(b.mean())
+        var_a = float(a.var())
+        var_b = float(b.var())
+        cov = float(((a - mu_a) * (b - mu_b)).mean())
+        numerator = (2 * mu_a * mu_b + c1) * (2 * cov + c2)
+        denominator = (mu_a * mu_a + mu_b * mu_b + c1) * (var_a + var_b + c2)
+        ssim = numerator / denominator if denominator else 1.0
+        out[i] = 1.0 - max(min(ssim, 1.0), -1.0)
+    return out
+
+
+def block_change(gray: np.ndarray, rows: int = 6, cols: int = 6) -> np.ndarray:
+    out = np.zeros(len(gray), dtype=np.float32)
+    h, w = gray.shape[1:]
+    row_edges = np.linspace(0, h, rows + 1, dtype=int)
+    col_edges = np.linspace(0, w, cols + 1, dtype=int)
+    for i in range(1, len(gray)):
+        changes = []
+        diff = np.abs(gray[i] - gray[i - 1])
+        for r in range(rows):
+            for c in range(cols):
+                block = diff[row_edges[r] : row_edges[r + 1], col_edges[c] : col_edges[c + 1]]
+                changes.append(float(block.mean()))
+        out[i] = max(changes) / 255.0
+    return out
 
 
 def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height: int = 54) -> FrameFeatures:
@@ -228,6 +278,8 @@ def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height
 
     pix_diff = np.zeros(len(frames), dtype=np.float32)
     pix_diff[1:] = np.abs(frames[1:] - frames[:-1]).mean(axis=(1, 2, 3)) / 255.0
+    ssim_diff = ssim_dissimilarity(gray)
+    block_diff = block_change(gray)
 
     hist_diff = np.zeros(len(frames), dtype=np.float32)
     bins = np.linspace(0, 256, 17)
@@ -246,30 +298,38 @@ def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height
     luminance_delta[1:] = np.abs(np.diff(luminance))
     edge_delta = np.zeros(len(frames), dtype=np.float32)
     edge_delta[1:] = np.abs(np.diff(edge_energy))
-    audio_rms, audio_score = audio_features_at_times(sample_audio(video_path), times)
+    audio_rms, audio_score, audio_flux_score = audio_features_at_times(sample_audio(video_path), times)
 
     pixel_score = robust_score(pix_diff)
+    ssim_score = robust_score(ssim_diff)
+    block_score = robust_score(block_diff)
     hist_score = robust_score(hist_diff)
     luminance_delta_score = robust_score(luminance_delta)
     edge_delta_score = robust_score(edge_delta)
     visual_score = np.maximum.reduce(
         [
             pixel_score,
+            0.8 * ssim_score,
+            0.7 * block_score,
             0.65 * hist_score,
             0.75 * luminance_delta_score,
             0.65 * edge_delta_score,
         ]
     )
-    score = np.maximum(visual_score, 0.9 * audio_score)
+    audio_combined = np.maximum(audio_score, audio_flux_score)
+    score = np.maximum(visual_score, 0.9 * audio_combined)
     return FrameFeatures(
         times,
         score,
         visual_score,
         pixel_score,
+        ssim_score,
+        block_score,
         hist_score,
         luminance_delta_score,
         edge_delta_score,
         audio_score,
+        audio_flux_score,
         audio_rms,
         luminance,
         saturation,
@@ -281,6 +341,17 @@ def nearest_index(times: np.ndarray, t: float) -> int:
     return int(np.argmin(np.abs(times - t)))
 
 
+def window_stats(values: np.ndarray, index: int, radius: int) -> list[float]:
+    start = max(0, index - radius)
+    end = min(len(values), index + radius + 1)
+    window = values[start:end]
+    return [
+        float(values[index]),
+        float(window.max()) if len(window) else 0.0,
+        float(window.mean()) if len(window) else 0.0,
+    ]
+
+
 def vector_at(features: FrameFeatures, index: int, video_duration: float) -> list[float]:
     t = float(features.times[index])
     prev_score = float(features.score[max(index - 1, 0)])
@@ -290,13 +361,17 @@ def vector_at(features: FrameFeatures, index: int, video_duration: float) -> lis
     return [
         t,
         t / max(video_duration, 1e-6),
-        float(features.score[index]),
-        float(features.visual_score[index]),
-        float(features.pixel_score[index]),
-        float(features.hist_score[index]),
-        float(features.luminance_delta_score[index]),
-        float(features.edge_delta_score[index]),
-        float(features.audio_score[index]),
+        *window_stats(features.score, index, 1),
+        *window_stats(features.score, index, 3),
+        *window_stats(features.visual_score, index, 2),
+        *window_stats(features.pixel_score, index, 2),
+        *window_stats(features.ssim_score, index, 2),
+        *window_stats(features.block_score, index, 2),
+        *window_stats(features.hist_score, index, 2),
+        *window_stats(features.luminance_delta_score, index, 2),
+        *window_stats(features.edge_delta_score, index, 2),
+        *window_stats(features.audio_score, index, 2),
+        *window_stats(features.audio_flux_score, index, 2),
         prev_audio,
         next_audio,
         float(features.audio_rms[index]),
@@ -311,6 +386,10 @@ def vector_at(features: FrameFeatures, index: int, video_duration: float) -> lis
 def candidate_scores(features: FrameFeatures, strategy: str) -> np.ndarray:
     if strategy == "pixel":
         return features.pixel_score
+    if strategy == "ssim":
+        return features.ssim_score
+    if strategy == "block":
+        return features.block_score
     if strategy == "histogram":
         return features.hist_score
     if strategy == "luminance":
@@ -321,10 +400,12 @@ def candidate_scores(features: FrameFeatures, strategy: str) -> np.ndarray:
         return features.visual_score
     if strategy == "audio":
         return features.audio_score
+    if strategy == "audio_flux":
+        return features.audio_flux_score
     if strategy == "combined":
         return features.score
     if strategy == "visual_or_audio":
-        return np.maximum(features.visual_score, features.audio_score)
+        return np.maximum(features.visual_score, np.maximum(features.audio_score, features.audio_flux_score))
     raise ValueError(f"unknown candidate strategy: {strategy}")
 
 
@@ -522,6 +603,11 @@ def match_events(gold: list[tuple[float, str]], pred: list[dict[str, Any]], tole
     return y_true, y_pred
 
 
+def effective_tolerance(seconds: float, frames: int, fps: float) -> float:
+    frame_tolerance = frames / fps if fps > 0 else 0.0
+    return max(seconds, frame_tolerance)
+
+
 def cmd_split(args: argparse.Namespace) -> int:
     files = sorted(p.name for p in (REPO_ROOT / "annotations").glob("*.json"))
     rng = np.random.default_rng(args.seed)
@@ -550,6 +636,7 @@ def evaluate_config(
     candidate_strategy: str,
     min_confidence: float,
     tolerance: float,
+    tolerance_frames: int,
 ) -> tuple[list[str], list[str], list[dict[str, Any]]]:
     model = train_model(
         train,
@@ -573,7 +660,11 @@ def evaluate_config(
             candidate_strategy=candidate_strategy,
             min_confidence=min_confidence,
         )
-        true_labels, pred_labels = match_events(annotation_events(ann), pred, tolerance=tolerance)
+        true_labels, pred_labels = match_events(
+            annotation_events(ann),
+            pred,
+            tolerance=effective_tolerance(tolerance, tolerance_frames, fps),
+        )
         all_true.extend(true_labels)
         all_pred.extend(pred_labels)
         rows.append(
@@ -608,6 +699,7 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
         candidate_strategy=args.candidate_strategy,
         min_confidence=args.min_confidence,
         tolerance=args.tolerance,
+        tolerance_frames=args.tolerance_frames,
     )
 
     if args.output:
@@ -639,6 +731,7 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
                 candidate_strategy=strategy,
                 min_confidence=args.min_confidence,
                 tolerance=args.tolerance,
+                tolerance_frames=args.tolerance_frames,
             )
             score = score_predictions(y_true, y_pred)
             rows.append(
@@ -713,10 +806,11 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--split", default=str(DEFAULT_SPLIT))
     evaluate.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     evaluate.add_argument("--fps", type=float, default=4.0)
-    evaluate.add_argument("--candidate-threshold", type=float, default=2.0)
-    evaluate.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="pixel")
+    evaluate.add_argument("--candidate-threshold", type=float, default=6.0)
+    evaluate.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="visual")
     evaluate.add_argument("--min-confidence", type=float, default=0.20)
-    evaluate.add_argument("--tolerance", type=float, default=1.0)
+    evaluate.add_argument("--tolerance", type=float, default=0.0)
+    evaluate.add_argument("--tolerance-frames", type=int, default=3)
     evaluate.add_argument("--output")
     evaluate.add_argument("--csv")
     evaluate.set_defaults(func=cmd_evaluate)
@@ -726,7 +820,8 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     benchmark.add_argument("--fps", type=float, default=4.0)
     benchmark.add_argument("--min-confidence", type=float, default=0.20)
-    benchmark.add_argument("--tolerance", type=float, default=1.0)
+    benchmark.add_argument("--tolerance", type=float, default=0.0)
+    benchmark.add_argument("--tolerance-frames", type=int, default=3)
     benchmark.add_argument("--thresholds", type=float, nargs="+", default=[2.0, 4.0, 6.0, 8.0])
     benchmark.add_argument("--strategies", choices=CANDIDATE_STRATEGIES, nargs="+")
     benchmark.add_argument("--output")
@@ -737,8 +832,8 @@ def build_parser() -> argparse.ArgumentParser:
     detect.add_argument("--split", default=str(DEFAULT_SPLIT))
     detect.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     detect.add_argument("--fps", type=float, default=4.0)
-    detect.add_argument("--candidate-threshold", type=float, default=2.0)
-    detect.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="pixel")
+    detect.add_argument("--candidate-threshold", type=float, default=6.0)
+    detect.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="visual")
     detect.add_argument("--min-confidence", type=float, default=0.20)
     detect.set_defaults(func=cmd_detect)
     return parser

@@ -23,18 +23,23 @@ The detector:
 3. Extracts visual and audio features:
    - pixel/frame-difference score
    - RGB histogram-change score
+   - SSIM-like frame dissimilarity
+   - block-level maximum change
    - luminance-change score
    - edge-energy-change score
    - combined visual score
-   - audio RMS and audio-onset score
+   - audio RMS, audio-onset score, and spectral-flux score
    - normalized timestamp
 4. Finds candidate segment boundaries with selectable strategies:
    - `pixel`
+   - `ssim`
+   - `block`
    - `histogram`
    - `luminance`
    - `edge`
    - `visual`
    - `audio`
+   - `audio_flux`
    - `combined`
    - `visual_or_audio`
    - `dense`
@@ -60,7 +65,7 @@ Compare candidate-generation techniques:
 ```bash
 python3 tools/segment_detector.py benchmark \
   --split splits/segment_detection_15_seed_20260627.json \
-  --thresholds 2 4 6 8 \
+  --thresholds 1.5 2 3 4 6 \
   --output reports/segment_detection_benchmark.json
 ```
 
@@ -84,12 +89,16 @@ annotation set can grow before moving to heavier models. The main expected
 failure mode is semantic labeling of visually similar cuts; adding more
 annotations should improve the classifier.
 
-On the initial 10/5 split, the benchmark runs end-to-end. The best tested
-configuration was `pixel` candidates at threshold `2.0`, with 0.423 event-label
-accuracy on the 5-video test split. `visual`, `combined`, and `visual_or_audio`
-clustered around 0.417. Raw `audio` candidates alone performed poorly on this
-small split, but audio-onset features are still available to the classifier and
-remain worth revisiting as the annotation set grows.
+On the initial 10/5 split, the benchmark runs end-to-end using a default
+matching tolerance of 3 sampled frames. The best tested configuration was
+`visual` candidates at threshold `6.0`, with 0.333 event-label accuracy on the
+5-video test split. The broader benchmark compared pixel, histogram, luminance,
+edge, SSIM-like, block-change, audio-onset, audio spectral-flux, combined, and
+dense candidates.
+
+Raw audio candidates alone still performed poorly on this small split, but
+audio RMS/onset/flux features are now available to the classifier and remain
+worth revisiting as the annotation set grows.
 
 The current baseline detects `flight_start` / `replay_start` best, while
 `pause_start` and `other` remain weak. The next useful upgrade is richer
