@@ -1,0 +1,59 @@
+{
+  "video_file": "2026-06-13_command_center_beaufort_castle_mmirleb_17580.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_command_center_beaufort_castle_mmirleb_17580.mp4",
+  "description": "command center beaufort castle",
+  "date": "2026-06-13",
+  "town": "Beaufort Castle",
+  "annotated_at": "2026-06-27T10:36:39.070Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.433,
+      "time_formatted": "0:08.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 12.1,
+      "time_formatted": "0:12.1",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 13.033,
+      "time_formatted": "0:13.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 22.5,
+      "time_formatted": "0:22.5",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 27.733,
+      "time_formatted": "0:27.7",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 35.1,
+      "time_formatted": "0:35.1",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

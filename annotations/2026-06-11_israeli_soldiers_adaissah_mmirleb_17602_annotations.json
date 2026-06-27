@@ -1,0 +1,52 @@
+{
+  "video_file": "2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.mp4",
+  "description": "israeli soldiers adaissah",
+  "date": "2026-06-11",
+  "town": "Adaissah",
+  "annotated_at": "2026-06-27T10:51:17.944Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 18.967,
+      "time_formatted": "0:19.0",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 22.333,
+      "time_formatted": "0:22.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 24.333,
+      "time_formatted": "0:24.3",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

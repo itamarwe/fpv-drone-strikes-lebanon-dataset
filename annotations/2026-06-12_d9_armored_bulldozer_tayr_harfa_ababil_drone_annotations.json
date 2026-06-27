@@ -1,0 +1,59 @@
+{
+  "video_file": "2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.mp4",
+  "description": "D9 armored bulldozer tayr harfa ababil drone",
+  "date": "2026-06-12",
+  "town": "Tayr Harfa",
+  "annotated_at": "2026-06-27T10:46:31.244Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 5.033,
+      "time_formatted": "0:05.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 16.033,
+      "time_formatted": "0:16.0",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 16.767,
+      "time_formatted": "0:16.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 21.8,
+      "time_formatted": "0:21.8",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 27.3,
+      "time_formatted": "0:27.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 36.367,
+      "time_formatted": "0:36.4",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

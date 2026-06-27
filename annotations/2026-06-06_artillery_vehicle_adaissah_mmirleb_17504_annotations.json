@@ -1,0 +1,66 @@
+{
+  "video_file": "2026-06-06_artillery_vehicle_adaissah_mmirleb_17504.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-06_artillery_vehicle_adaissah_mmirleb_17504.mp4",
+  "description": "artillery vehicle adaissah",
+  "date": "2026-06-06",
+  "town": "Adaissah",
+  "annotated_at": "2026-06-27T11:13:27.060Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.467,
+      "time_formatted": "0:00.5",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.333,
+      "time_formatted": "0:08.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 14.333,
+      "time_formatted": "0:14.3",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 15.067,
+      "time_formatted": "0:15.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 20.233,
+      "time_formatted": "0:20.2",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 25.467,
+      "time_formatted": "0:25.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 37.533,
+      "time_formatted": "0:37.5",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}
