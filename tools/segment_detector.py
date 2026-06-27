@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import importlib.util
 import json
 import math
 import subprocess
@@ -54,13 +55,16 @@ CANDIDATE_STRATEGIES = (
     "luminance",
     "edge",
     "motion_drop",
+    "transnet",
     "visual",
     "audio",
     "audio_flux",
     "combined",
     "visual_or_audio",
 )
-FEATURE_CACHE: dict[tuple[str, float], tuple[dict[str, Any], float, FrameFeatures]] = {}
+FEATURE_CACHE: dict[tuple[str, float, bool], tuple[dict[str, Any], float, FrameFeatures]] = {}
+TRANSNET_MODEL: Any | None = None
+TRANSNET_DEVICE: str | None = None
 
 
 @dataclass
@@ -79,6 +83,7 @@ class FrameFeatures:
     edge_delta_score: np.ndarray
     motion_drop_score: np.ndarray
     color_effect_score: np.ndarray
+    transnet_score: np.ndarray
     audio_score: np.ndarray
     audio_flux_score: np.ndarray
     audio_rms: np.ndarray
@@ -290,7 +295,72 @@ def rolling_mean(values: np.ndarray, radius: int) -> np.ndarray:
     return out
 
 
-def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height: int = 54) -> FrameFeatures:
+def transnet_boundary_score(video_path: Path, times: np.ndarray, fps: float) -> np.ndarray:
+    global TRANSNET_MODEL, TRANSNET_DEVICE
+    try:
+        from huggingface_hub import hf_hub_download
+        import torch
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "TransNetV2 requires huggingface_hub and torch. Install optional model dependencies first."
+        ) from exc
+
+    frames = sample_frames(video_path, fps=fps, width=48, height=27)
+    if TRANSNET_MODEL is None:
+        module_path = Path(hf_hub_download("magnusdtd/TransNetV2", filename="transnetv2_pytorch.py"))
+        weights_path = Path(hf_hub_download("magnusdtd/TransNetV2", filename="transnetv2-pytorch-weights.pth"))
+        spec = importlib.util.spec_from_file_location("transnetv2_pytorch_hf", module_path)
+        if spec is None or spec.loader is None:
+            raise RuntimeError(f"could not load TransNetV2 module from {module_path}")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        # TransNetV2 uses avg_pool3d, which PyTorch does not currently run on
+        # MPS. Keep this adapter on CPU until the op is supported.
+        device = "cpu"
+        model = module.TransNetV2()
+        model.load_state_dict(torch.load(weights_path, map_location="cpu"))
+        model.eval()
+        model.to(device)
+        TRANSNET_MODEL = model
+        TRANSNET_DEVICE = device
+    model = TRANSNET_MODEL
+    device = TRANSNET_DEVICE or "cpu"
+
+    total = len(frames)
+    if total < 2:
+        return np.zeros(len(times), dtype=np.float32)
+
+    predictions: list[np.ndarray] = []
+    no_padded_frames_start = 25
+    no_padded_frames_end = 25 + 50 - (total % 50 if total % 50 != 0 else 50)
+    padded_inputs = np.concatenate(
+        [np.expand_dims(frames[0], 0)] * no_padded_frames_start
+        + [frames]
+        + [np.expand_dims(frames[-1], 0)] * no_padded_frames_end,
+        axis=0,
+    )
+    with torch.no_grad():
+        ptr = 0
+        while ptr + 100 <= len(padded_inputs):
+            batch = torch.from_numpy(padded_inputs[ptr : ptr + 100][np.newaxis]).to(device)
+            single_frame_pred, many_hot_pred = model(batch)
+            single = torch.sigmoid(single_frame_pred)[0, 25:75, 0].cpu().numpy()
+            many = torch.sigmoid(many_hot_pred["many_hot"])[0, 25:75, 0].cpu().numpy()
+            predictions.append(np.maximum(single, many).astype(np.float32))
+            ptr += 50
+    if not predictions:
+        return np.zeros(len(times), dtype=np.float32)
+    raw_score = np.concatenate(predictions)[:total]
+    return robust_score(raw_score)
+
+
+def extract_features(
+    video_path: Path,
+    fps: float = 4.0,
+    width: int = 96,
+    height: int = 54,
+    enable_hf_models: bool = False,
+) -> FrameFeatures:
     frames = sample_frames(video_path, fps=fps, width=width, height=height).astype(np.float32)
     duration = ffprobe_duration(video_path)
     times = np.arange(len(frames), dtype=np.float32) / fps
@@ -347,6 +417,11 @@ def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height
     edge_delta_score = robust_score(edge_delta)
     motion_drop_score = robust_score(motion_drop)
     color_effect_score = robust_score(saturation_delta + 0.6 * luminance_delta)
+    transnet_score = (
+        transnet_boundary_score(video_path, times, fps=fps)
+        if enable_hf_models
+        else np.zeros(len(times), dtype=np.float32)
+    )
     dark_score = robust_score(np.clip(0.34 - luminance, 0, None) + 0.25 * np.clip(0.28 - saturation, 0, None))
     template_score = robust_score(
         np.clip(0.40 - luminance, 0, None)
@@ -364,6 +439,7 @@ def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height
             0.65 * edge_delta_score,
             0.7 * color_effect_score,
             0.8 * template_score,
+            1.1 * transnet_score,
         ]
     )
     audio_combined = np.maximum(audio_score, audio_flux_score)
@@ -383,6 +459,7 @@ def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height
         edge_delta_score,
         motion_drop_score,
         color_effect_score,
+        transnet_score,
         audio_score,
         audio_flux_score,
         audio_rms,
@@ -430,6 +507,7 @@ def vector_at(features: FrameFeatures, index: int, video_duration: float) -> lis
         *window_stats(features.edge_delta_score, index, 2),
         *window_stats(features.motion_drop_score, index, 2),
         *window_stats(features.color_effect_score, index, 2),
+        *window_stats(features.transnet_score, index, 2),
         *window_stats(features.audio_score, index, 2),
         *window_stats(features.audio_flux_score, index, 2),
         prev_audio,
@@ -464,6 +542,8 @@ def candidate_scores(features: FrameFeatures, strategy: str) -> np.ndarray:
         return features.edge_delta_score
     if strategy == "motion_drop":
         return features.motion_drop_score
+    if strategy == "transnet":
+        return features.transnet_score
     if strategy == "visual":
         return features.visual_score
     if strategy == "audio":
@@ -513,19 +593,26 @@ def annotation_events(annotation: dict[str, Any]) -> list[tuple[float, str]]:
     events = []
     for segment in annotation["segments"]:
         label = canonical_type(segment["type"])
+        if label == "banner_start":
+            continue
         if label in EVENT_LABELS:
             events.append((float(segment["time"]), label))
     return events
 
 
-def load_features(annotation_name: str, cache_dir: Path, fps: float) -> tuple[dict[str, Any], float, FrameFeatures]:
-    key = (annotation_name, fps)
+def load_features(
+    annotation_name: str,
+    cache_dir: Path,
+    fps: float,
+    enable_hf_models: bool,
+) -> tuple[dict[str, Any], float, FrameFeatures]:
+    key = (annotation_name, fps, enable_hf_models)
     if key in FEATURE_CACHE:
         return FEATURE_CACHE[key]
     ann = load_json(annotation_path(annotation_name))
     video = ensure_video(ann, cache_dir)
     duration = ffprobe_duration(video)
-    features = extract_features(video, fps=fps)
+    features = extract_features(video, fps=fps, enable_hf_models=enable_hf_models)
     FEATURE_CACHE[key] = (ann, duration, features)
     return ann, duration, features
 
@@ -536,11 +623,12 @@ def build_training_rows(
     fps: float,
     candidate_threshold: float,
     candidate_strategy: str,
+    enable_hf_models: bool,
 ) -> tuple[np.ndarray, np.ndarray]:
     rows: list[list[float]] = []
     labels: list[str] = []
     for name in names:
-        ann, duration, features = load_features(name, cache_dir, fps)
+        ann, duration, features = load_features(name, cache_dir, fps, enable_hf_models=enable_hf_models)
         positives: set[int] = set()
         for t, label in annotation_events(ann):
             if t <= 0.2:
@@ -582,6 +670,7 @@ def train_multiclass_model(
     fps: float,
     candidate_threshold: float,
     candidate_strategy: str,
+    enable_hf_models: bool,
 ):
     x, y = build_training_rows(
         train_names,
@@ -589,6 +678,7 @@ def train_multiclass_model(
         fps=fps,
         candidate_threshold=candidate_threshold,
         candidate_strategy=candidate_strategy,
+        enable_hf_models=enable_hf_models,
     )
     model = make_pipeline(StandardScaler(), make_classifier())
     model.fit(x, y)
@@ -601,6 +691,7 @@ def train_fusion_model(
     fps: float,
     candidate_threshold: float,
     candidate_strategy: str,
+    enable_hf_models: bool,
 ):
     x, y = build_training_rows(
         train_names,
@@ -608,6 +699,7 @@ def train_fusion_model(
         fps=fps,
         candidate_threshold=candidate_threshold,
         candidate_strategy=candidate_strategy,
+        enable_hf_models=enable_hf_models,
     )
     labels = sorted(set(y))
     multiclass = make_pipeline(StandardScaler(), make_classifier())
@@ -630,6 +722,7 @@ def train_model(
     candidate_threshold: float,
     candidate_strategy: str,
     model_kind: str,
+    enable_hf_models: bool,
 ):
     if model_kind == "multiclass":
         return train_multiclass_model(
@@ -638,6 +731,7 @@ def train_model(
             fps=fps,
             candidate_threshold=candidate_threshold,
             candidate_strategy=candidate_strategy,
+            enable_hf_models=enable_hf_models,
         )
     if model_kind == "fusion":
         return train_fusion_model(
@@ -646,6 +740,7 @@ def train_model(
             fps=fps,
             candidate_threshold=candidate_threshold,
             candidate_strategy=candidate_strategy,
+            enable_hf_models=enable_hf_models,
         )
     raise ValueError(f"unknown model kind: {model_kind}")
 
@@ -657,9 +752,15 @@ def detect_events(
     fps: float,
     candidate_threshold: float,
     candidate_strategy: str,
+    enable_hf_models: bool,
     min_confidence: float,
 ) -> list[dict[str, Any]]:
-    ann, duration, features = load_features(annotation_name, cache_dir, fps)
+    ann, duration, features = load_features(
+        annotation_name,
+        cache_dir,
+        fps,
+        enable_hf_models=enable_hf_models,
+    )
     events: list[dict[str, Any]] = [
         {"time": 0.0, "type": "banner_start", "score": 1.0, "source": "rule"}
     ]
@@ -723,21 +824,27 @@ def match_events(gold: list[tuple[float, str]], pred: list[dict[str, Any]], tole
     y_pred: list[str] = []
     used: set[int] = set()
     for gt, label in gold:
-        if gt <= 0.2:
-            continue
-        best_i = None
-        best_dt = math.inf
+        best_same_label_i = None
+        best_same_label_dt = math.inf
+        best_any_i = None
+        best_any_dt = math.inf
         for i, event in enumerate(pred):
             if i in used or event["type"] == "banner_start":
                 continue
             dt = abs(float(event["time"]) - gt)
-            if dt < best_dt:
-                best_i = i
-                best_dt = dt
+            if dt <= tolerance and event["type"] == label and dt < best_same_label_dt:
+                best_same_label_i = i
+                best_same_label_dt = dt
+            if dt < best_any_dt:
+                best_any_i = i
+                best_any_dt = dt
         y_true.append(label)
-        if best_i is not None and best_dt <= tolerance:
-            used.add(best_i)
-            y_pred.append(str(pred[best_i]["type"]))
+        if best_same_label_i is not None:
+            used.add(best_same_label_i)
+            y_pred.append(str(pred[best_same_label_i]["type"]))
+        elif best_any_i is not None and best_any_dt <= tolerance:
+            used.add(best_any_i)
+            y_pred.append(str(pred[best_any_i]["type"]))
         else:
             y_pred.append("missing")
     for i, event in enumerate(pred):
@@ -751,6 +858,11 @@ def match_events(gold: list[tuple[float, str]], pred: list[dict[str, Any]], tole
 def effective_tolerance(seconds: float, frames: int, fps: float) -> float:
     frame_tolerance = frames / fps if fps > 0 else 0.0
     return max(seconds, frame_tolerance)
+
+
+def require_model_features(candidate_strategy: str, enable_hf_models: bool) -> None:
+    if candidate_strategy == "transnet" and not enable_hf_models:
+        raise SystemExit("--candidate-strategy transnet requires --enable-hf-models")
 
 
 def cmd_split(args: argparse.Namespace) -> int:
@@ -780,6 +892,7 @@ def evaluate_config(
     candidate_threshold: float,
     candidate_strategy: str,
     model_kind: str,
+    enable_hf_models: bool,
     min_confidence: float,
     tolerance: float,
     tolerance_frames: int,
@@ -791,6 +904,7 @@ def evaluate_config(
         candidate_threshold=candidate_threshold,
         candidate_strategy=candidate_strategy,
         model_kind=model_kind,
+        enable_hf_models=enable_hf_models,
     )
 
     all_true: list[str] = []
@@ -805,6 +919,7 @@ def evaluate_config(
             fps=fps,
             candidate_threshold=candidate_threshold,
             candidate_strategy=candidate_strategy,
+            enable_hf_models=enable_hf_models,
             min_confidence=min_confidence,
         )
         true_labels, pred_labels = match_events(
@@ -817,7 +932,7 @@ def evaluate_config(
         rows.append(
             {
                 "annotation": name,
-                "gold_events": len([e for e in annotation_events(ann) if e[0] > 0.2]),
+                "gold_events": len(annotation_events(ann)),
                 "predicted_events": len([e for e in pred if e["type"] != "banner_start"]),
                 "predictions": pred,
             }
@@ -836,6 +951,7 @@ def score_predictions(y_true: list[str], y_pred: list[str]) -> dict[str, Any]:
 
 
 def cmd_evaluate(args: argparse.Namespace) -> int:
+    require_model_features(args.candidate_strategy, args.enable_hf_models)
     split = load_json(Path(args.split))
     all_true, all_pred, rows = evaluate_config(
         split["train"],
@@ -845,6 +961,7 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
         candidate_threshold=args.candidate_threshold,
         candidate_strategy=args.candidate_strategy,
         model_kind=args.model_kind,
+        enable_hf_models=args.enable_hf_models,
         min_confidence=args.min_confidence,
         tolerance=args.tolerance,
         tolerance_frames=args.tolerance_frames,
@@ -869,6 +986,8 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
     rows: list[dict[str, Any]] = []
     strategies = args.strategies or list(CANDIDATE_STRATEGIES)
     for strategy in strategies:
+        require_model_features(strategy, args.enable_hf_models)
+    for strategy in strategies:
         for threshold in args.thresholds:
             y_true, y_pred, details = evaluate_config(
                 split["train"],
@@ -878,6 +997,7 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
                 candidate_threshold=threshold,
                 candidate_strategy=strategy,
                 model_kind=args.model_kind,
+                enable_hf_models=args.enable_hf_models,
                 min_confidence=args.min_confidence,
                 tolerance=args.tolerance,
                 tolerance_frames=args.tolerance_frames,
@@ -919,6 +1039,7 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
 
 
 def cmd_detect(args: argparse.Namespace) -> int:
+    require_model_features(args.candidate_strategy, args.enable_hf_models)
     split = load_json(Path(args.split))
     model = train_model(
         split["train"],
@@ -927,6 +1048,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         candidate_threshold=args.candidate_threshold,
         candidate_strategy=args.candidate_strategy,
         model_kind=args.model_kind,
+        enable_hf_models=args.enable_hf_models,
     )
     events = detect_events(
         args.annotation,
@@ -935,6 +1057,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         fps=args.fps,
         candidate_threshold=args.candidate_threshold,
         candidate_strategy=args.candidate_strategy,
+        enable_hf_models=args.enable_hf_models,
         min_confidence=args.min_confidence,
     )
     print(json.dumps({"annotation": args.annotation, "events": events}, indent=2))
@@ -959,6 +1082,7 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--candidate-threshold", type=float, default=4.0)
     evaluate.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="blur")
     evaluate.add_argument("--model-kind", choices=("multiclass", "fusion"), default="fusion")
+    evaluate.add_argument("--enable-hf-models", action="store_true")
     evaluate.add_argument("--min-confidence", type=float, default=0.20)
     evaluate.add_argument("--tolerance", type=float, default=0.0)
     evaluate.add_argument("--tolerance-frames", type=int, default=3)
@@ -971,6 +1095,7 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     benchmark.add_argument("--fps", type=float, default=4.0)
     benchmark.add_argument("--model-kind", choices=("multiclass", "fusion"), default="fusion")
+    benchmark.add_argument("--enable-hf-models", action="store_true")
     benchmark.add_argument("--min-confidence", type=float, default=0.20)
     benchmark.add_argument("--tolerance", type=float, default=0.0)
     benchmark.add_argument("--tolerance-frames", type=int, default=3)
@@ -987,6 +1112,7 @@ def build_parser() -> argparse.ArgumentParser:
     detect.add_argument("--candidate-threshold", type=float, default=4.0)
     detect.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="blur")
     detect.add_argument("--model-kind", choices=("multiclass", "fusion"), default="fusion")
+    detect.add_argument("--enable-hf-models", action="store_true")
     detect.add_argument("--min-confidence", type=float, default=0.20)
     detect.set_defaults(func=cmd_detect)
     return parser
