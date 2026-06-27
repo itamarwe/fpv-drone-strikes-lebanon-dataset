@@ -25,8 +25,12 @@ The detector:
    - RGB histogram-change score
    - SSIM-like frame dissimilarity
    - block-level maximum change
+   - blur/sharpness score for transition effects
+   - dark-slide/template score for repeated label-card patterns
    - luminance-change score
    - edge-energy-change score
+   - motion-drop score for pause-like low-motion regions
+   - color-effect score for saturation/luminance effects around pauses
    - combined visual score
    - audio RMS, audio-onset score, and spectral-flux score
    - normalized timestamp
@@ -34,16 +38,22 @@ The detector:
    - `pixel`
    - `ssim`
    - `block`
+   - `blur`
+   - `dark`
+   - `template`
    - `histogram`
    - `luminance`
    - `edge`
+   - `motion_drop`
    - `visual`
    - `audio`
    - `audio_flux`
    - `combined`
    - `visual_or_audio`
    - `dense`
-5. Trains a small random-forest classifier on the train annotations.
+5. Trains a small random-forest classifier on the train annotations. The
+   default model is a lightweight fusion setup: one multiclass forest plus
+   per-label binary forests, using both visual and audio-window features.
 6. Classifies candidate boundaries as `flight_start`, `pause_start`,
    `replay_start`, `other`, or background.
 
@@ -90,17 +100,21 @@ failure mode is semantic labeling of visually similar cuts; adding more
 annotations should improve the classifier.
 
 On the initial 10/5 split, the benchmark runs end-to-end using a default
-matching tolerance of 3 sampled frames. The best tested configuration was
-`visual` candidates at threshold `6.0`, with 0.333 event-label accuracy on the
-5-video test split. The broader benchmark compared pixel, histogram, luminance,
-edge, SSIM-like, block-change, audio-onset, audio spectral-flux, combined, and
-dense candidates.
+matching tolerance of 3 sampled frames. The best tested configuration is now
+`blur` candidates at threshold `4.0` with the fusion model, with 0.394
+event-label accuracy on the 5-video test split. The broader benchmark compared
+pixel, histogram, luminance, edge, SSIM-like, block-change, blur, dark-slide,
+template, motion-drop, audio-onset, audio spectral-flux, combined, visual/audio,
+and dense candidates.
 
 Raw audio candidates alone still performed poorly on this small split, but
-audio RMS/onset/flux features are now available to the classifier and remain
-worth revisiting as the annotation set grows.
+audio RMS/onset/flux features are included in the fused classifier and help
+represent the sound-effect cues around transitions and pauses.
 
-The current baseline detects `flight_start` / `replay_start` best, while
-`pause_start` and `other` remain weak. The next useful upgrade is richer
-features around candidate boundaries, such as OCR/text-presence cues,
-optical-flow style motion changes, or clip embeddings.
+The current baseline detects `flight_start` best and improved `pause_start`
+with the new audio/blur/motion cues, while `other` remains weak because the
+class mixes template label cards and effect-heavy transitions. The local machine
+has Torch and MLX available, but this repo environment does not currently have a
+ready CLIP/VLM stack installed. A useful next upgrade would be an optional local
+embedding backend, such as MobileCLIP/OpenCLIP or an MLX vision-language model,
+combined with these cheap audio/CV features.

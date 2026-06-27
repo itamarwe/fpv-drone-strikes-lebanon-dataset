@@ -41,14 +41,19 @@ EVENT_LABELS = {
     "replay_start",
     "other",
 }
+PREDICTED_LABELS = ("flight_start", "pause_start", "replay_start", "other")
 CANDIDATE_STRATEGIES = (
     "dense",
     "pixel",
     "ssim",
     "block",
+    "blur",
+    "dark",
+    "template",
     "histogram",
     "luminance",
     "edge",
+    "motion_drop",
     "visual",
     "audio",
     "audio_flux",
@@ -66,9 +71,14 @@ class FrameFeatures:
     pixel_score: np.ndarray
     ssim_score: np.ndarray
     block_score: np.ndarray
+    blur_score: np.ndarray
+    dark_score: np.ndarray
+    template_score: np.ndarray
     hist_score: np.ndarray
     luminance_delta_score: np.ndarray
     edge_delta_score: np.ndarray
+    motion_drop_score: np.ndarray
+    color_effect_score: np.ndarray
     audio_score: np.ndarray
     audio_flux_score: np.ndarray
     audio_rms: np.ndarray
@@ -260,6 +270,26 @@ def block_change(gray: np.ndarray, rows: int = 6, cols: int = 6) -> np.ndarray:
     return out
 
 
+def sharpness(gray: np.ndarray) -> np.ndarray:
+    # Cheap Laplacian-like sharpness proxy without OpenCV.
+    center = gray[:, 1:-1, 1:-1] * -4
+    up = gray[:, :-2, 1:-1]
+    down = gray[:, 2:, 1:-1]
+    left = gray[:, 1:-1, :-2]
+    right = gray[:, 1:-1, 2:]
+    lap = center + up + down + left + right
+    return lap.var(axis=(1, 2)).astype(np.float32)
+
+
+def rolling_mean(values: np.ndarray, radius: int) -> np.ndarray:
+    out = np.zeros(len(values), dtype=np.float32)
+    for i in range(len(values)):
+        start = max(0, i - radius)
+        end = min(len(values), i + radius + 1)
+        out[i] = float(values[start:end].mean())
+    return out
+
+
 def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height: int = 54) -> FrameFeatures:
     frames = sample_frames(video_path, fps=fps, width=width, height=height).astype(np.float32)
     duration = ffprobe_duration(video_path)
@@ -280,6 +310,8 @@ def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height
     pix_diff[1:] = np.abs(frames[1:] - frames[:-1]).mean(axis=(1, 2, 3)) / 255.0
     ssim_diff = ssim_dissimilarity(gray)
     block_diff = block_change(gray)
+    sharp = sharpness(gray)
+    blur_amount = 1.0 / (1.0 + sharp / 1000.0)
 
     hist_diff = np.zeros(len(frames), dtype=np.float32)
     bins = np.linspace(0, 256, 17)
@@ -296,24 +328,42 @@ def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height
 
     luminance_delta = np.zeros(len(frames), dtype=np.float32)
     luminance_delta[1:] = np.abs(np.diff(luminance))
+    saturation_delta = np.zeros(len(frames), dtype=np.float32)
+    saturation_delta[1:] = np.abs(np.diff(saturation))
     edge_delta = np.zeros(len(frames), dtype=np.float32)
     edge_delta[1:] = np.abs(np.diff(edge_energy))
     audio_rms, audio_score, audio_flux_score = audio_features_at_times(sample_audio(video_path), times)
+    motion_pre = rolling_mean(pix_diff, radius=4)
+    motion_post = np.roll(motion_pre, -4)
+    motion_post[-4:] = motion_pre[-4:]
+    motion_drop = np.clip(motion_pre - motion_post, 0, None)
 
     pixel_score = robust_score(pix_diff)
     ssim_score = robust_score(ssim_diff)
     block_score = robust_score(block_diff)
+    blur_score = robust_score(blur_amount * np.maximum(pixel_score, block_score))
     hist_score = robust_score(hist_diff)
     luminance_delta_score = robust_score(luminance_delta)
     edge_delta_score = robust_score(edge_delta)
+    motion_drop_score = robust_score(motion_drop)
+    color_effect_score = robust_score(saturation_delta + 0.6 * luminance_delta)
+    dark_score = robust_score(np.clip(0.34 - luminance, 0, None) + 0.25 * np.clip(0.28 - saturation, 0, None))
+    template_score = robust_score(
+        np.clip(0.40 - luminance, 0, None)
+        + 0.35 * np.clip(0.32 - saturation, 0, None)
+        + 0.2 * edge_energy
+    )
     visual_score = np.maximum.reduce(
         [
             pixel_score,
             0.8 * ssim_score,
             0.7 * block_score,
+            0.7 * blur_score,
             0.65 * hist_score,
             0.75 * luminance_delta_score,
             0.65 * edge_delta_score,
+            0.7 * color_effect_score,
+            0.8 * template_score,
         ]
     )
     audio_combined = np.maximum(audio_score, audio_flux_score)
@@ -325,9 +375,14 @@ def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height
         pixel_score,
         ssim_score,
         block_score,
+        blur_score,
+        dark_score,
+        template_score,
         hist_score,
         luminance_delta_score,
         edge_delta_score,
+        motion_drop_score,
+        color_effect_score,
         audio_score,
         audio_flux_score,
         audio_rms,
@@ -367,9 +422,14 @@ def vector_at(features: FrameFeatures, index: int, video_duration: float) -> lis
         *window_stats(features.pixel_score, index, 2),
         *window_stats(features.ssim_score, index, 2),
         *window_stats(features.block_score, index, 2),
+        *window_stats(features.blur_score, index, 2),
+        *window_stats(features.dark_score, index, 2),
+        *window_stats(features.template_score, index, 2),
         *window_stats(features.hist_score, index, 2),
         *window_stats(features.luminance_delta_score, index, 2),
         *window_stats(features.edge_delta_score, index, 2),
+        *window_stats(features.motion_drop_score, index, 2),
+        *window_stats(features.color_effect_score, index, 2),
         *window_stats(features.audio_score, index, 2),
         *window_stats(features.audio_flux_score, index, 2),
         prev_audio,
@@ -390,12 +450,20 @@ def candidate_scores(features: FrameFeatures, strategy: str) -> np.ndarray:
         return features.ssim_score
     if strategy == "block":
         return features.block_score
+    if strategy == "blur":
+        return features.blur_score
+    if strategy == "dark":
+        return features.dark_score
+    if strategy == "template":
+        return features.template_score
     if strategy == "histogram":
         return features.hist_score
     if strategy == "luminance":
         return features.luminance_delta_score
     if strategy == "edge":
         return features.edge_delta_score
+    if strategy == "motion_drop":
+        return features.motion_drop_score
     if strategy == "visual":
         return features.visual_score
     if strategy == "audio":
@@ -499,7 +567,16 @@ def build_training_rows(
     return np.asarray(rows, dtype=np.float32), np.asarray(labels)
 
 
-def train_model(
+def make_classifier(class_weight: str | dict[str, float] = "balanced_subsample") -> RandomForestClassifier:
+    return RandomForestClassifier(
+        n_estimators=250,
+        random_state=20260627,
+        class_weight=class_weight,
+        min_samples_leaf=2,
+    )
+
+
+def train_multiclass_model(
     train_names: list[str],
     cache_dir: Path,
     fps: float,
@@ -513,17 +590,64 @@ def train_model(
         candidate_threshold=candidate_threshold,
         candidate_strategy=candidate_strategy,
     )
-    model = make_pipeline(
-        StandardScaler(),
-        RandomForestClassifier(
-            n_estimators=250,
-            random_state=20260627,
-            class_weight="balanced_subsample",
-            min_samples_leaf=2,
-        ),
-    )
+    model = make_pipeline(StandardScaler(), make_classifier())
     model.fit(x, y)
     return model
+
+
+def train_fusion_model(
+    train_names: list[str],
+    cache_dir: Path,
+    fps: float,
+    candidate_threshold: float,
+    candidate_strategy: str,
+):
+    x, y = build_training_rows(
+        train_names,
+        cache_dir=cache_dir,
+        fps=fps,
+        candidate_threshold=candidate_threshold,
+        candidate_strategy=candidate_strategy,
+    )
+    labels = sorted(set(y))
+    multiclass = make_pipeline(StandardScaler(), make_classifier())
+    multiclass.fit(x, y)
+    binary_models = {}
+    for label in PREDICTED_LABELS:
+        binary_y = np.asarray([label if item == label else "not_" + label for item in y])
+        if len(set(binary_y)) < 2:
+            continue
+        model = make_pipeline(StandardScaler(), make_classifier())
+        model.fit(x, binary_y)
+        binary_models[label] = model
+    return {"kind": "fusion", "multiclass": multiclass, "binary": binary_models, "labels": labels}
+
+
+def train_model(
+    train_names: list[str],
+    cache_dir: Path,
+    fps: float,
+    candidate_threshold: float,
+    candidate_strategy: str,
+    model_kind: str,
+):
+    if model_kind == "multiclass":
+        return train_multiclass_model(
+            train_names,
+            cache_dir=cache_dir,
+            fps=fps,
+            candidate_threshold=candidate_threshold,
+            candidate_strategy=candidate_strategy,
+        )
+    if model_kind == "fusion":
+        return train_fusion_model(
+            train_names,
+            cache_dir=cache_dir,
+            fps=fps,
+            candidate_threshold=candidate_threshold,
+            candidate_strategy=candidate_strategy,
+        )
+    raise ValueError(f"unknown model kind: {model_kind}")
 
 
 def detect_events(
@@ -545,12 +669,9 @@ def detect_events(
         strategy=candidate_strategy,
     ):
         vec = np.asarray([vector_at(features, idx, duration)], dtype=np.float32)
-        label = str(model.predict(vec)[0])
+        label, confidence = predict_label(model, vec)
         if label == "background":
             continue
-        proba = getattr(model, "predict_proba")(vec)[0]
-        classes = list(getattr(model, "classes_", []))
-        confidence = float(proba[classes.index(label)]) if label in classes else 0.0
         if confidence < min_confidence:
             continue
         events.append(
@@ -571,6 +692,30 @@ def detect_events(
             continue
         deduped.append(event)
     return deduped
+
+
+def predict_label(model: Any, vec: np.ndarray) -> tuple[str, float]:
+    if isinstance(model, dict) and model.get("kind") == "fusion":
+        best_label = "background"
+        best_score = 0.0
+        for label, binary_model in model["binary"].items():
+            proba = getattr(binary_model, "predict_proba")(vec)[0]
+            classes = list(getattr(binary_model, "classes_", []))
+            if label not in classes:
+                continue
+            score = float(proba[classes.index(label)])
+            if score > best_score:
+                best_label = label
+                best_score = score
+        if best_score > 0:
+            return best_label, best_score
+        model = model["multiclass"]
+
+    label = str(model.predict(vec)[0])
+    proba = getattr(model, "predict_proba")(vec)[0]
+    classes = list(getattr(model, "classes_", []))
+    confidence = float(proba[classes.index(label)]) if label in classes else 0.0
+    return label, confidence
 
 
 def match_events(gold: list[tuple[float, str]], pred: list[dict[str, Any]], tolerance: float) -> tuple[list[str], list[str]]:
@@ -634,6 +779,7 @@ def evaluate_config(
     fps: float,
     candidate_threshold: float,
     candidate_strategy: str,
+    model_kind: str,
     min_confidence: float,
     tolerance: float,
     tolerance_frames: int,
@@ -644,6 +790,7 @@ def evaluate_config(
         fps=fps,
         candidate_threshold=candidate_threshold,
         candidate_strategy=candidate_strategy,
+        model_kind=model_kind,
     )
 
     all_true: list[str] = []
@@ -697,6 +844,7 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
         fps=args.fps,
         candidate_threshold=args.candidate_threshold,
         candidate_strategy=args.candidate_strategy,
+        model_kind=args.model_kind,
         min_confidence=args.min_confidence,
         tolerance=args.tolerance,
         tolerance_frames=args.tolerance_frames,
@@ -729,6 +877,7 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
                 fps=args.fps,
                 candidate_threshold=threshold,
                 candidate_strategy=strategy,
+                model_kind=args.model_kind,
                 min_confidence=args.min_confidence,
                 tolerance=args.tolerance,
                 tolerance_frames=args.tolerance_frames,
@@ -777,6 +926,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         fps=args.fps,
         candidate_threshold=args.candidate_threshold,
         candidate_strategy=args.candidate_strategy,
+        model_kind=args.model_kind,
     )
     events = detect_events(
         args.annotation,
@@ -806,8 +956,9 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--split", default=str(DEFAULT_SPLIT))
     evaluate.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     evaluate.add_argument("--fps", type=float, default=4.0)
-    evaluate.add_argument("--candidate-threshold", type=float, default=6.0)
-    evaluate.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="visual")
+    evaluate.add_argument("--candidate-threshold", type=float, default=4.0)
+    evaluate.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="blur")
+    evaluate.add_argument("--model-kind", choices=("multiclass", "fusion"), default="fusion")
     evaluate.add_argument("--min-confidence", type=float, default=0.20)
     evaluate.add_argument("--tolerance", type=float, default=0.0)
     evaluate.add_argument("--tolerance-frames", type=int, default=3)
@@ -819,6 +970,7 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark.add_argument("--split", default=str(DEFAULT_SPLIT))
     benchmark.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     benchmark.add_argument("--fps", type=float, default=4.0)
+    benchmark.add_argument("--model-kind", choices=("multiclass", "fusion"), default="fusion")
     benchmark.add_argument("--min-confidence", type=float, default=0.20)
     benchmark.add_argument("--tolerance", type=float, default=0.0)
     benchmark.add_argument("--tolerance-frames", type=int, default=3)
@@ -832,8 +984,9 @@ def build_parser() -> argparse.ArgumentParser:
     detect.add_argument("--split", default=str(DEFAULT_SPLIT))
     detect.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     detect.add_argument("--fps", type=float, default=4.0)
-    detect.add_argument("--candidate-threshold", type=float, default=6.0)
-    detect.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="visual")
+    detect.add_argument("--candidate-threshold", type=float, default=4.0)
+    detect.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="blur")
+    detect.add_argument("--model-kind", choices=("multiclass", "fusion"), default="fusion")
     detect.add_argument("--min-confidence", type=float, default=0.20)
     detect.set_defaults(func=cmd_detect)
     return parser
