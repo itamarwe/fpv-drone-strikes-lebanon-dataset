@@ -127,6 +127,10 @@ header{display:flex;align-items:center;gap:10px;padding:8px 14px;
 
 kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
   padding:1px 4px;font-size:10px;font-family:monospace;color:var(--muted)}
+.shortcut-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 6px;
+  padding-top:8px;border-top:1px solid var(--border)}
+.sc{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.sc kbd{flex-shrink:0;min-width:16px;text-align:center}
 </style>
 </head>
 <body>
@@ -186,13 +190,13 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
       <div class="form-row">
         <label>Type</label>
         <select id="segType">
-          <option value="banner_start">Banner Start</option>
-          <option value="flight_start">Flight Start</option>
-          <option value="new_flight_start">New Flight Start</option>
-          <option value="pause_start">Pause Start</option>
-          <option value="replay_start">Replay Start</option>
-          <option value="end">End</option>
-          <option value="other">Other</option>
+          <option value="banner_start">Banner Start  [B]</option>
+          <option value="flight_start">Flight Start  [F]</option>
+          <option value="new_flight_start">New Flight Start  [N]</option>
+          <option value="pause_start">Pause Start  [P]</option>
+          <option value="replay_start">Replay Start  [R]</option>
+          <option value="end">End  [E]</option>
+          <option value="other">Other  [O]</option>
         </select>
       </div>
       <div class="form-row">
@@ -202,6 +206,20 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
       <button id="btnMark" class="primary" disabled>
         Mark at <span id="markAt">—</span> &nbsp;<kbd>M</kbd>
       </button>
+      <div class="shortcut-grid">
+        <div class="sc"><kbd>B</kbd> Banner</div>
+        <div class="sc"><kbd>F</kbd> Flight</div>
+        <div class="sc"><kbd>N</kbd> New Flight</div>
+        <div class="sc"><kbd>P</kbd> Pause</div>
+        <div class="sc"><kbd>R</kbd> Replay</div>
+        <div class="sc"><kbd>E</kbd> End</div>
+        <div class="sc"><kbd>O</kbd> Other</div>
+        <div class="sc"><kbd>M</kbd> Mark</div>
+        <div class="sc"><kbd>Space</kbd> Play/Pause</div>
+        <div class="sc"><kbd>←</kbd><kbd>→</kbd> ±1 frame</div>
+        <div class="sc"><kbd>⇧←</kbd><kbd>⇧→</kbd> ±10 frames</div>
+        <div class="sc"><kbd>Home</kbd><kbd>End</kbd> Start/End</div>
+      </div>
     </div>
     <div class="seg-list-hdr">
       <span>Segments</span><span id="segCount">0</span>
@@ -758,6 +776,11 @@ function setControlsEnabled(on) {
 // ─────────────────────────────────────────────
 // EVENT LISTENERS
 // ─────────────────────────────────────────────
+function markAs(type) {
+  g('segType').value = type;
+  markSegment();
+}
+
 function bindEvents() {
   // Video selector
   g('videoSelect').addEventListener('change', e => {
@@ -823,6 +846,13 @@ function bindEvents() {
       case 'Home':       e.preventDefault(); if (current) seek(0); break;
       case 'End':        e.preventDefault(); if (current) seek(vid.duration); break;
       case 'm': case 'M': markSegment(); break;
+      case 'b': case 'B': markAs('banner_start'); break;
+      case 'f': case 'F': markAs('flight_start'); break;
+      case 'n': case 'N': markAs('new_flight_start'); break;
+      case 'p': case 'P': markAs('pause_start'); break;
+      case 'r': case 'R': markAs('replay_start'); break;
+      case 'e': case 'E': markAs('end'); break;
+      case 'o': case 'O': markAs('other'); break;
     }
   });
 }
