@@ -17,7 +17,6 @@ import csv
 import hashlib
 import json
 import math
-import os
 import subprocess
 import sys
 import urllib.request
@@ -42,12 +41,31 @@ EVENT_LABELS = {
     "replay_start",
     "other",
 }
+CANDIDATE_STRATEGIES = (
+    "dense",
+    "pixel",
+    "histogram",
+    "luminance",
+    "edge",
+    "visual",
+    "audio",
+    "combined",
+    "visual_or_audio",
+)
+FEATURE_CACHE: dict[tuple[str, float], tuple[dict[str, Any], float, FrameFeatures]] = {}
 
 
 @dataclass
 class FrameFeatures:
     times: np.ndarray
     score: np.ndarray
+    visual_score: np.ndarray
+    pixel_score: np.ndarray
+    hist_score: np.ndarray
+    luminance_delta_score: np.ndarray
+    edge_delta_score: np.ndarray
+    audio_score: np.ndarray
+    audio_rms: np.ndarray
     luminance: np.ndarray
     saturation: np.ndarray
     edge_energy: np.ndarray
@@ -132,6 +150,66 @@ def sample_frames(video_path: Path, fps: float, width: int, height: int) -> np.n
     return frames
 
 
+def sample_audio(video_path: Path, sample_rate: int = 8000) -> np.ndarray:
+    cmd = [
+        "ffmpeg",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-i",
+        str(video_path),
+        "-vn",
+        "-ac",
+        "1",
+        "-ar",
+        str(sample_rate),
+        "-f",
+        "s16le",
+        "-",
+    ]
+    try:
+        raw = subprocess.check_output(cmd)
+    except subprocess.CalledProcessError:
+        return np.zeros(0, dtype=np.float32)
+    if not raw:
+        return np.zeros(0, dtype=np.float32)
+    return np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
+
+
+def robust_score(values: np.ndarray) -> np.ndarray:
+    median = float(np.median(values))
+    mad = float(np.median(np.abs(values - median))) or 1e-6
+    score = (values - median) / mad
+    return np.clip(score, 0, None).astype(np.float32)
+
+
+def audio_features_at_times(
+    audio: np.ndarray,
+    times: np.ndarray,
+    sample_rate: int = 8000,
+) -> tuple[np.ndarray, np.ndarray]:
+    if len(audio) == 0:
+        zeros = np.zeros(len(times), dtype=np.float32)
+        return zeros, zeros
+
+    hop_seconds = float(np.median(np.diff(times))) if len(times) > 1 else 0.25
+    hop = max(1, int(round(sample_rate * hop_seconds)))
+    window = max(hop, int(sample_rate * 0.18))
+    rms = np.zeros(len(times), dtype=np.float32)
+    for i, t in enumerate(times):
+        center = int(round(float(t) * sample_rate))
+        start = max(0, center - window // 2)
+        end = min(len(audio), center + window // 2)
+        if end <= start:
+            continue
+        chunk = audio[start:end]
+        rms[i] = float(np.sqrt(np.mean(chunk * chunk)))
+
+    delta = np.zeros(len(times), dtype=np.float32)
+    delta[1:] = np.abs(np.diff(rms))
+    return rms, robust_score(delta)
+
+
 def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height: int = 54) -> FrameFeatures:
     frames = sample_frames(video_path, fps=fps, width=width, height=height).astype(np.float32)
     duration = ffprobe_duration(video_path)
@@ -164,12 +242,39 @@ def extract_features(video_path: Path, fps: float = 4.0, width: int = 96, height
             hist_diff[i] = np.abs(cur - prev_hist).sum()
         prev_hist = cur
 
-    raw_score = pix_diff + 0.08 * hist_diff
-    median = float(np.median(raw_score))
-    mad = float(np.median(np.abs(raw_score - median))) or 1e-6
-    score = (raw_score - median) / mad
-    score = np.clip(score, 0, None)
-    return FrameFeatures(times, score, luminance, saturation, edge_energy)
+    luminance_delta = np.zeros(len(frames), dtype=np.float32)
+    luminance_delta[1:] = np.abs(np.diff(luminance))
+    edge_delta = np.zeros(len(frames), dtype=np.float32)
+    edge_delta[1:] = np.abs(np.diff(edge_energy))
+    audio_rms, audio_score = audio_features_at_times(sample_audio(video_path), times)
+
+    pixel_score = robust_score(pix_diff)
+    hist_score = robust_score(hist_diff)
+    luminance_delta_score = robust_score(luminance_delta)
+    edge_delta_score = robust_score(edge_delta)
+    visual_score = np.maximum.reduce(
+        [
+            pixel_score,
+            0.65 * hist_score,
+            0.75 * luminance_delta_score,
+            0.65 * edge_delta_score,
+        ]
+    )
+    score = np.maximum(visual_score, 0.9 * audio_score)
+    return FrameFeatures(
+        times,
+        score,
+        visual_score,
+        pixel_score,
+        hist_score,
+        luminance_delta_score,
+        edge_delta_score,
+        audio_score,
+        audio_rms,
+        luminance,
+        saturation,
+        edge_energy,
+    )
 
 
 def nearest_index(times: np.ndarray, t: float) -> int:
@@ -180,10 +285,21 @@ def vector_at(features: FrameFeatures, index: int, video_duration: float) -> lis
     t = float(features.times[index])
     prev_score = float(features.score[max(index - 1, 0)])
     next_score = float(features.score[min(index + 1, len(features.score) - 1)])
+    prev_audio = float(features.audio_score[max(index - 1, 0)])
+    next_audio = float(features.audio_score[min(index + 1, len(features.audio_score) - 1)])
     return [
         t,
         t / max(video_duration, 1e-6),
         float(features.score[index]),
+        float(features.visual_score[index]),
+        float(features.pixel_score[index]),
+        float(features.hist_score[index]),
+        float(features.luminance_delta_score[index]),
+        float(features.edge_delta_score[index]),
+        float(features.audio_score[index]),
+        prev_audio,
+        next_audio,
+        float(features.audio_rms[index]),
         prev_score,
         next_score,
         float(features.luminance[index]),
@@ -192,8 +308,36 @@ def vector_at(features: FrameFeatures, index: int, video_duration: float) -> lis
     ]
 
 
-def candidate_indices(features: FrameFeatures, min_gap: float = 0.75, threshold: float = 7.0) -> list[int]:
-    scores = features.score
+def candidate_scores(features: FrameFeatures, strategy: str) -> np.ndarray:
+    if strategy == "pixel":
+        return features.pixel_score
+    if strategy == "histogram":
+        return features.hist_score
+    if strategy == "luminance":
+        return features.luminance_delta_score
+    if strategy == "edge":
+        return features.edge_delta_score
+    if strategy == "visual":
+        return features.visual_score
+    if strategy == "audio":
+        return features.audio_score
+    if strategy == "combined":
+        return features.score
+    if strategy == "visual_or_audio":
+        return np.maximum(features.visual_score, features.audio_score)
+    raise ValueError(f"unknown candidate strategy: {strategy}")
+
+
+def candidate_indices(
+    features: FrameFeatures,
+    min_gap: float = 0.75,
+    threshold: float = 6.0,
+    strategy: str = "visual_or_audio",
+) -> list[int]:
+    if strategy == "dense":
+        step = max(1, int(round(min_gap / max(float(np.median(np.diff(features.times))), 1e-6))))
+        return list(range(1, len(features.times) - 1, step))
+    scores = candidate_scores(features, strategy)
     candidates: list[int] = []
     last_time = -999.0
     for i in range(1, len(scores) - 1):
@@ -225,19 +369,29 @@ def annotation_events(annotation: dict[str, Any]) -> list[tuple[float, str]]:
     return events
 
 
+def load_features(annotation_name: str, cache_dir: Path, fps: float) -> tuple[dict[str, Any], float, FrameFeatures]:
+    key = (annotation_name, fps)
+    if key in FEATURE_CACHE:
+        return FEATURE_CACHE[key]
+    ann = load_json(annotation_path(annotation_name))
+    video = ensure_video(ann, cache_dir)
+    duration = ffprobe_duration(video)
+    features = extract_features(video, fps=fps)
+    FEATURE_CACHE[key] = (ann, duration, features)
+    return ann, duration, features
+
+
 def build_training_rows(
     names: list[str],
     cache_dir: Path,
     fps: float,
     candidate_threshold: float,
+    candidate_strategy: str,
 ) -> tuple[np.ndarray, np.ndarray]:
     rows: list[list[float]] = []
     labels: list[str] = []
     for name in names:
-        ann = load_json(annotation_path(name))
-        video = ensure_video(ann, cache_dir)
-        duration = ffprobe_duration(video)
-        features = extract_features(video, fps=fps)
+        ann, duration, features = load_features(name, cache_dir, fps)
         positives: set[int] = set()
         for t, label in annotation_events(ann):
             if t <= 0.2:
@@ -250,7 +404,11 @@ def build_training_rows(
         # Hard visual changes that are not near an annotation teach the model
         # which cuts to ignore.
         gold_times = [t for t, _label in annotation_events(ann)]
-        for idx in candidate_indices(features, threshold=candidate_threshold):
+        for idx in candidate_indices(
+            features,
+            threshold=candidate_threshold,
+            strategy=candidate_strategy,
+        ):
             t = float(features.times[idx])
             if any(abs(t - gt) <= 0.6 for gt in gold_times):
                 continue
@@ -260,12 +418,19 @@ def build_training_rows(
     return np.asarray(rows, dtype=np.float32), np.asarray(labels)
 
 
-def train_model(train_names: list[str], cache_dir: Path, fps: float, candidate_threshold: float):
+def train_model(
+    train_names: list[str],
+    cache_dir: Path,
+    fps: float,
+    candidate_threshold: float,
+    candidate_strategy: str,
+):
     x, y = build_training_rows(
         train_names,
         cache_dir=cache_dir,
         fps=fps,
         candidate_threshold=candidate_threshold,
+        candidate_strategy=candidate_strategy,
     )
     model = make_pipeline(
         StandardScaler(),
@@ -286,15 +451,18 @@ def detect_events(
     cache_dir: Path,
     fps: float,
     candidate_threshold: float,
+    candidate_strategy: str,
+    min_confidence: float,
 ) -> list[dict[str, Any]]:
-    ann = load_json(annotation_path(annotation_name))
-    video = ensure_video(ann, cache_dir)
-    duration = ffprobe_duration(video)
-    features = extract_features(video, fps=fps)
+    ann, duration, features = load_features(annotation_name, cache_dir, fps)
     events: list[dict[str, Any]] = [
         {"time": 0.0, "type": "banner_start", "score": 1.0, "source": "rule"}
     ]
-    for idx in candidate_indices(features, threshold=candidate_threshold):
+    for idx in candidate_indices(
+        features,
+        threshold=candidate_threshold,
+        strategy=candidate_strategy,
+    ):
         vec = np.asarray([vector_at(features, idx, duration)], dtype=np.float32)
         label = str(model.predict(vec)[0])
         if label == "background":
@@ -302,6 +470,8 @@ def detect_events(
         proba = getattr(model, "predict_proba")(vec)[0]
         classes = list(getattr(model, "classes_", []))
         confidence = float(proba[classes.index(label)]) if label in classes else 0.0
+        if confidence < min_confidence:
+            continue
         events.append(
             {
                 "time": round(float(features.times[idx]), 3),
@@ -371,16 +541,22 @@ def cmd_split(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_evaluate(args: argparse.Namespace) -> int:
-    split = load_json(Path(args.split))
-    train = split["train"]
-    test = split["test"]
-    cache_dir = Path(args.cache_dir)
+def evaluate_config(
+    train: list[str],
+    test: list[str],
+    cache_dir: Path,
+    fps: float,
+    candidate_threshold: float,
+    candidate_strategy: str,
+    min_confidence: float,
+    tolerance: float,
+) -> tuple[list[str], list[str], list[dict[str, Any]]]:
     model = train_model(
         train,
         cache_dir=cache_dir,
-        fps=args.fps,
-        candidate_threshold=args.candidate_threshold,
+        fps=fps,
+        candidate_threshold=candidate_threshold,
+        candidate_strategy=candidate_strategy,
     )
 
     all_true: list[str] = []
@@ -392,10 +568,12 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
             name,
             model,
             cache_dir=cache_dir,
-            fps=args.fps,
-            candidate_threshold=args.candidate_threshold,
+            fps=fps,
+            candidate_threshold=candidate_threshold,
+            candidate_strategy=candidate_strategy,
+            min_confidence=min_confidence,
         )
-        true_labels, pred_labels = match_events(annotation_events(ann), pred, tolerance=args.tolerance)
+        true_labels, pred_labels = match_events(annotation_events(ann), pred, tolerance=tolerance)
         all_true.extend(true_labels)
         all_pred.extend(pred_labels)
         rows.append(
@@ -406,6 +584,31 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
                 "predictions": pred,
             }
         )
+    return all_true, all_pred, rows
+
+
+def score_predictions(y_true: list[str], y_pred: list[str]) -> dict[str, Any]:
+    correct = sum(a == b for a, b in zip(y_true, y_pred))
+    return {
+        "events": len(y_true),
+        "accuracy": correct / len(y_true) if y_true else 0.0,
+        "missing": sum(1 for label in y_pred if label == "missing"),
+        "false_positive": sum(1 for label in y_true if label == "background"),
+    }
+
+
+def cmd_evaluate(args: argparse.Namespace) -> int:
+    split = load_json(Path(args.split))
+    all_true, all_pred, rows = evaluate_config(
+        split["train"],
+        split["test"],
+        cache_dir=Path(args.cache_dir),
+        fps=args.fps,
+        candidate_threshold=args.candidate_threshold,
+        candidate_strategy=args.candidate_strategy,
+        min_confidence=args.min_confidence,
+        tolerance=args.tolerance,
+    )
 
     if args.output:
         out = Path(args.output)
@@ -421,6 +624,58 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_benchmark(args: argparse.Namespace) -> int:
+    split = load_json(Path(args.split))
+    rows: list[dict[str, Any]] = []
+    strategies = args.strategies or list(CANDIDATE_STRATEGIES)
+    for strategy in strategies:
+        for threshold in args.thresholds:
+            y_true, y_pred, details = evaluate_config(
+                split["train"],
+                split["test"],
+                cache_dir=Path(args.cache_dir),
+                fps=args.fps,
+                candidate_threshold=threshold,
+                candidate_strategy=strategy,
+                min_confidence=args.min_confidence,
+                tolerance=args.tolerance,
+            )
+            score = score_predictions(y_true, y_pred)
+            rows.append(
+                {
+                    "strategy": strategy,
+                    "threshold": threshold,
+                    "accuracy": round(score["accuracy"], 4),
+                    "events": score["events"],
+                    "missing": score["missing"],
+                    "false_positive": score["false_positive"],
+                    "predicted_events": sum(r["predicted_events"] for r in details),
+                }
+            )
+
+    rows.sort(key=lambda r: (r["accuracy"], -r["missing"], -r["false_positive"]), reverse=True)
+    if args.output:
+        out = Path(args.output)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(rows, indent=2), encoding="utf-8")
+
+    writer = csv.DictWriter(
+        sys.stdout,
+        fieldnames=[
+            "strategy",
+            "threshold",
+            "accuracy",
+            "events",
+            "missing",
+            "false_positive",
+            "predicted_events",
+        ],
+    )
+    writer.writeheader()
+    writer.writerows(rows)
+    return 0
+
+
 def cmd_detect(args: argparse.Namespace) -> int:
     split = load_json(Path(args.split))
     model = train_model(
@@ -428,6 +683,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         cache_dir=Path(args.cache_dir),
         fps=args.fps,
         candidate_threshold=args.candidate_threshold,
+        candidate_strategy=args.candidate_strategy,
     )
     events = detect_events(
         args.annotation,
@@ -435,6 +691,8 @@ def cmd_detect(args: argparse.Namespace) -> int:
         cache_dir=Path(args.cache_dir),
         fps=args.fps,
         candidate_threshold=args.candidate_threshold,
+        candidate_strategy=args.candidate_strategy,
+        min_confidence=args.min_confidence,
     )
     print(json.dumps({"annotation": args.annotation, "events": events}, indent=2))
     return 0
@@ -451,23 +709,37 @@ def build_parser() -> argparse.ArgumentParser:
     split.add_argument("--name", default="segment_detection_custom")
     split.set_defaults(func=cmd_split)
 
-    common: dict[str, Any] = {}
     evaluate = sub.add_parser("evaluate", help="Train on split train videos and evaluate on split test videos.")
     evaluate.add_argument("--split", default=str(DEFAULT_SPLIT))
     evaluate.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     evaluate.add_argument("--fps", type=float, default=4.0)
-    evaluate.add_argument("--candidate-threshold", type=float, default=6.0)
+    evaluate.add_argument("--candidate-threshold", type=float, default=2.0)
+    evaluate.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="pixel")
+    evaluate.add_argument("--min-confidence", type=float, default=0.20)
     evaluate.add_argument("--tolerance", type=float, default=1.0)
     evaluate.add_argument("--output")
     evaluate.add_argument("--csv")
     evaluate.set_defaults(func=cmd_evaluate)
+
+    benchmark = sub.add_parser("benchmark", help="Compare candidate strategies and thresholds.")
+    benchmark.add_argument("--split", default=str(DEFAULT_SPLIT))
+    benchmark.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
+    benchmark.add_argument("--fps", type=float, default=4.0)
+    benchmark.add_argument("--min-confidence", type=float, default=0.20)
+    benchmark.add_argument("--tolerance", type=float, default=1.0)
+    benchmark.add_argument("--thresholds", type=float, nargs="+", default=[2.0, 4.0, 6.0, 8.0])
+    benchmark.add_argument("--strategies", choices=CANDIDATE_STRATEGIES, nargs="+")
+    benchmark.add_argument("--output")
+    benchmark.set_defaults(func=cmd_benchmark)
 
     detect = sub.add_parser("detect", help="Predict segment boundary events for one annotation/video.")
     detect.add_argument("annotation", help="Annotation JSON filename under annotations/.")
     detect.add_argument("--split", default=str(DEFAULT_SPLIT))
     detect.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     detect.add_argument("--fps", type=float, default=4.0)
-    detect.add_argument("--candidate-threshold", type=float, default=6.0)
+    detect.add_argument("--candidate-threshold", type=float, default=2.0)
+    detect.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="pixel")
+    detect.add_argument("--min-confidence", type=float, default=0.20)
     detect.set_defaults(func=cmd_detect)
     return parser
 
