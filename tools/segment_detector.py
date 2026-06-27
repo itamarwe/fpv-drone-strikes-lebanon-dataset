@@ -61,6 +61,7 @@ CANDIDATE_STRATEGIES = (
     "audio_flux",
     "combined",
     "visual_or_audio",
+    "multimodal",
 )
 FEATURE_CACHE: dict[tuple[str, float, bool], tuple[dict[str, Any], float, FrameFeatures]] = {}
 TRANSNET_MODEL: Any | None = None
@@ -554,6 +555,17 @@ def candidate_scores(features: FrameFeatures, strategy: str) -> np.ndarray:
         return features.score
     if strategy == "visual_or_audio":
         return np.maximum(features.visual_score, np.maximum(features.audio_score, features.audio_flux_score))
+    if strategy == "multimodal":
+        return np.maximum.reduce(
+            [
+                features.visual_score,
+                features.audio_score,
+                features.audio_flux_score,
+                features.template_score,
+                features.motion_drop_score,
+                features.transnet_score,
+            ]
+        )
     raise ValueError(f"unknown candidate strategy: {strategy}")
 
 
@@ -566,6 +578,38 @@ def candidate_indices(
     if strategy == "dense":
         step = max(1, int(round(min_gap / max(float(np.median(np.diff(features.times))), 1e-6))))
         return list(range(1, len(features.times) - 1, step))
+    if strategy == "multimodal":
+        signal_thresholds = {
+            "visual": threshold,
+            "audio": max(1.5, threshold * 0.5),
+            "audio_flux": max(1.5, threshold * 0.5),
+            "template": max(1.5, threshold * 0.5),
+            "motion_drop": max(1.5, threshold * 0.5),
+            "transnet": max(1.0, threshold * 0.5),
+        }
+        found: dict[int, float] = {}
+        for signal, signal_threshold in signal_thresholds.items():
+            signal_scores = candidate_scores(features, signal)
+            if not np.any(signal_scores):
+                continue
+            for idx in candidate_indices(
+                features,
+                min_gap=min_gap,
+                threshold=signal_threshold,
+                strategy=signal,
+            ):
+                found[idx] = max(found.get(idx, 0.0), float(signal_scores[idx]))
+        merged: list[int] = []
+        for idx in sorted(found, key=lambda i: float(features.times[i])):
+            if not merged:
+                merged.append(idx)
+                continue
+            if float(features.times[idx]) - float(features.times[merged[-1]]) < min_gap:
+                if found[idx] > found[merged[-1]]:
+                    merged[-1] = idx
+                continue
+            merged.append(idx)
+        return merged
     scores = candidate_scores(features, strategy)
     candidates: list[int] = []
     last_time = -999.0
@@ -1079,11 +1123,11 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--split", default=str(DEFAULT_SPLIT))
     evaluate.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     evaluate.add_argument("--fps", type=float, default=4.0)
-    evaluate.add_argument("--candidate-threshold", type=float, default=4.0)
-    evaluate.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="blur")
+    evaluate.add_argument("--candidate-threshold", type=float, default=5.0)
+    evaluate.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="multimodal")
     evaluate.add_argument("--model-kind", choices=("multiclass", "fusion"), default="fusion")
     evaluate.add_argument("--enable-hf-models", action="store_true")
-    evaluate.add_argument("--min-confidence", type=float, default=0.20)
+    evaluate.add_argument("--min-confidence", type=float, default=0.30)
     evaluate.add_argument("--tolerance", type=float, default=0.0)
     evaluate.add_argument("--tolerance-frames", type=int, default=3)
     evaluate.add_argument("--output")
@@ -1109,11 +1153,11 @@ def build_parser() -> argparse.ArgumentParser:
     detect.add_argument("--split", default=str(DEFAULT_SPLIT))
     detect.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     detect.add_argument("--fps", type=float, default=4.0)
-    detect.add_argument("--candidate-threshold", type=float, default=4.0)
-    detect.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="blur")
+    detect.add_argument("--candidate-threshold", type=float, default=5.0)
+    detect.add_argument("--candidate-strategy", choices=CANDIDATE_STRATEGIES, default="multimodal")
     detect.add_argument("--model-kind", choices=("multiclass", "fusion"), default="fusion")
     detect.add_argument("--enable-hf-models", action="store_true")
-    detect.add_argument("--min-confidence", type=float, default=0.20)
+    detect.add_argument("--min-confidence", type=float, default=0.30)
     detect.set_defaults(func=cmd_detect)
     return parser
 
