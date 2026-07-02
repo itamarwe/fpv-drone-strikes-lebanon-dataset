@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+
+# Local reconstruction outputs can be large; keep them out of Git by default.
+scenes/

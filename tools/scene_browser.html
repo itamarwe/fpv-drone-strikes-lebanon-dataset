@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FPV Scenes</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #0c0d0f;
+      color: #e8edf2;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 52px;
+      padding: 8px 14px;
+      background: rgba(10, 12, 15, 0.92);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(12px);
+    }
+    .logo {
+      color: #36e4ff;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+    .top-nav {
+      display: flex;
+      gap: 4px;
+    }
+    .top-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      color: #aeb8c3;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .top-nav a.active {
+      color: #061018;
+      background: #36e4ff;
+      border-color: #36e4ff;
+      font-weight: 800;
+    }
+    select, button {
+      min-height: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      color: #e8edf2;
+      background: rgba(255, 255, 255, 0.08);
+      font: 13px ui-sans-serif, system-ui, sans-serif;
+    }
+    select {
+      flex: 1;
+      width: 100%;
+      max-width: 520px;
+      min-width: 0;
+      padding: 0 8px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    button {
+      padding: 0 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .hdr-btns {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .status {
+      padding: 18px;
+      color: #8fa0ad;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">FPV Video</div>
+    <nav class="top-nav" aria-label="Workflow">
+      <a href="/">Annotate</a>
+      <a class="active" href="/scenes/">Scenes</a>
+    </nav>
+    <select id="sceneSelect" aria-label="Scene">
+      <option value="">Loading scenes...</option>
+    </select>
+    <div class="hdr-btns">
+      <button id="addFolderButton" type="button">Add Folder</button>
+    </div>
+  </header>
+  <div class="status" id="statusText"></div>
+  <script>
+    const sceneSelect = document.getElementById("sceneSelect");
+    const addFolderButton = document.getElementById("addFolderButton");
+    const statusText = document.getElementById("statusText");
+    let scenes = [];
+
+    function formatScene(scene) {
+      const pieces = [];
+      if (scene.date) pieces.push(scene.date);
+      if (scene.town) pieces.push(scene.town);
+      if (scene.segment_ids?.length) pieces.push(scene.segment_ids.join("+"));
+      const prefix = pieces.length ? `${pieces.join(" | ")} - ` : "";
+      return `${prefix}${scene.description || scene.scene_id}`;
+    }
+
+    function openSelected() {
+      const scene = scenes.find((item) => item.scene_id === sceneSelect.value) || scenes[0];
+      if (scene?.viewer_url) location.href = scene.viewer_url;
+    }
+
+    async function loadScenes() {
+      const response = await fetch("/api/scenes", { cache: "no-store" });
+      const payload = await response.json();
+      scenes = (payload.scenes || []).filter((scene) => scene.exists && scene.viewer_url);
+      sceneSelect.innerHTML = "";
+      if (!scenes.length) {
+        sceneSelect.innerHTML = '<option value="">No saved scenes</option>';
+        statusText.textContent = "Run VGGT from the annotator or add an existing scene folder.";
+        return;
+      }
+      for (const scene of scenes) {
+        const option = document.createElement("option");
+        option.value = scene.scene_id;
+        option.textContent = formatScene(scene);
+        sceneSelect.appendChild(option);
+      }
+      statusText.textContent = "";
+    }
+
+    async function addFolder() {
+      const sourcePath = window.prompt("Scene folder path to copy into the repo");
+      if (!sourcePath) return;
+      statusText.textContent = "Adding scene folder...";
+      const response = await fetch("/api/scenes/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ source_path: sourcePath })
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        statusText.textContent = payload.error || "Could not add folder.";
+        return;
+      }
+      await loadScenes();
+      if (payload.scene?.scene_id) {
+        sceneSelect.value = payload.scene.scene_id;
+        statusText.textContent = payload.imported === false ? "Scene folder is already in the repo." : "Scene folder added.";
+      }
+    }
+
+    sceneSelect.addEventListener("change", openSelected);
+    addFolderButton.addEventListener("click", addFolder);
+    loadScenes().catch((error) => {
+      sceneSelect.innerHTML = '<option value="">Could not load scenes</option>';
+      statusText.textContent = error.message;
+    });
+  </script>
+</body>
+</html>
