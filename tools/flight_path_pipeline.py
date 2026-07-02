@@ -645,19 +645,8 @@ def extract_vggt(args: argparse.Namespace) -> None:
                 cols = cols[sample]
             np.savez_compressed(video_dir / "point_cloud.npz", pts=pts, cols=cols)
         with path_csv.open("w", newline="") as f:
-            fieldnames = [
-                "frame_index",
-                "file",
-                "video_file",
-                "segment_id",
-                "segment_index",
-                "is_attack",
-                "video_time_s",
-                "segment_time_s",
-                "x",
-                "y",
-                "z",
-            ]
+            frame_fieldnames = list(frame_rows[0].keys()) if frame_rows else []
+            fieldnames = frame_fieldnames + [name for name in ["x", "y", "z"] if name not in frame_fieldnames]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             for row, xyz in zip(frame_rows[:n], centers[:n]):
