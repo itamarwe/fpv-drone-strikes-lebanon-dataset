@@ -122,7 +122,9 @@
     }
 
     function openSelected() {
-      const scene = scenes.find((item) => item.scene_id === sceneSelect.value) || scenes[0];
+      if (!sceneSelect.value) return;
+      const scene = scenes.find((item) => item.scene_id === sceneSelect.value);
+      statusText.textContent = scene ? "Loading scene..." : "Scene not found.";
       if (scene?.viewer_url) location.href = scene.viewer_url;
     }
 
@@ -136,13 +138,19 @@
         statusText.textContent = "Run VGGT from the annotator or add an existing scene folder.";
         return;
       }
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Select a scene...";
+      placeholder.selected = true;
+      placeholder.disabled = true;
+      sceneSelect.appendChild(placeholder);
       for (const scene of scenes) {
         const option = document.createElement("option");
         option.value = scene.scene_id;
         option.textContent = formatScene(scene);
         sceneSelect.appendChild(option);
       }
-      statusText.textContent = "";
+      statusText.textContent = "Select a scene from the dropdown to open it.";
     }
 
     async function addFolder() {
@@ -163,6 +171,7 @@
       if (payload.scene?.scene_id) {
         sceneSelect.value = payload.scene.scene_id;
         statusText.textContent = payload.imported === false ? "Scene folder is already in the repo." : "Scene folder added.";
+        openSelected();
       }
     }
 
