@@ -982,10 +982,22 @@ HTML = r"""<!doctype html>
       raycaster.setFromCamera(pointer, camera);
       raycaster.params.Points.threshold = Math.max(pointMaterial.size * 2.5, 0.012);
       const intersections = raycaster.intersectObject(pointsObject, false);
-      if (!intersections.length || intersections[0].index == null) {
+      // intersectObject returns hits sorted by depth along the ray, so
+      // intersections[0] is the point nearest the camera within the threshold
+      // cylinder -- not the one nearest the cursor. That mismatch is what makes
+      // the picked point land with a lateral offset from where you clicked.
+      // Pick the hit with the smallest perpendicular distance to the ray instead.
+      let best = null;
+      for (const hit of intersections) {
+        if (hit.index == null) continue;
+        if (best === null || hit.distanceToRay < best.distanceToRay) {
+          best = hit;
+        }
+      }
+      if (best === null) {
         return;
       }
-      const position = new THREE.Vector3().fromBufferAttribute(pointsObject.geometry.getAttribute("position"), intersections[0].index);
+      const position = new THREE.Vector3().fromBufferAttribute(pointsObject.geometry.getAttribute("position"), best.index);
       addMeasurementPoint(pointsObject.localToWorld(position));
     }
 
