@@ -62,7 +62,6 @@ current_stem	target_stem	date	slug	confidence	notes
 2026-05-27_0_aul_5	2026-05-27_enemy_vehicle_in_northern_settlement	2026-05-27	enemy_vehicle_in_northern_settlement	low	title says enemy vehicle; settlement name unreadable
 2026-05-27_strike_near_jal_al_alam	2026-05-27_iron_technical_platform_at_jal_al_alam	2026-05-27	iron_technical_platform_at_jal_al_alam	medium	title readable; place inferred from filename/subtitle
 2026-05-27_strike_on_merkava_tank	2026-05-27_merkava_tank_on_military_route	2026-05-27	merkava_tank_on_military_route	medium	title readable; detailed location too small
-2026-05-28_strike_near_khiam	2026-05-28_iron_technical_platform_at_al_raheb	2026-05-28	iron_technical_platform_at_al_raheb	medium	title mostly readable; filename differs from visible place
 2026-05-29_namer_apc_ainata	2026-05-29_namer_apc_in_ainata	2026-05-29	namer_apc_in_ainata	high	title/location readable
 2026-05-29_soldier_misgav_am	2026-05-29_soldier_at_misgav_am	2026-05-29	soldier_at_misgav_am	high	title/location readable
 2026-05-30_strike_on_merkava_tank	2026-05-30_merkava_tank_in_border_area	2026-05-30	merkava_tank_beaufort_castle	high	replaced with official @mmirleb public MP4 post 16968 after Itamar approved DUP-004 as duplicate with better quality; Arabic: دبّابة ميركافا تابعة لجيش العدو الإسرائيلي في محيط قلعة الشقيف جنوبيّ لبنان
