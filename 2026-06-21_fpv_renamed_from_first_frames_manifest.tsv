@@ -71,7 +71,6 @@ current_stem	target_stem	date	slug	confidence	notes
 2026-05-31_strike_on_soldiers	2026-05-31_soldiers_gathering_near_border_site	2026-05-31	soldiers_gathering_near_border_site	low	title readable; location line unreadable
 2026-06-01_merkava_tank_near_yahmor_al_shqif	2026-06-01_merkava_tank_near_yahmor_al_shqif	2026-06-01	merkava_tank_near_yahmor_al_shqif	high	title/location readable
 2026-06-01_soldiers_near_yahmor	2026-06-01_soldiers_near_yahmor_al_shqif	2026-06-01	soldiers_near_yahmor_al_shqif	high	title/location readable
-2026-06-01_soldiers_near_yahmor_02	2026-06-01_soldiers_near_yahmor_al_shqif_02	2026-06-01	soldiers_near_yahmor_al_shqif_02	high	duplicate-looking title card; kept _02 for uniqueness
 2026-06-02_namer_apc_near_yahmor_al_shqif	2026-06-02_namer_vehicle_near_yahmor_al_shqif	2026-06-02	namer_vehicle_near_yahmor_al_shqif	high	title/location readable
 2026-06-02_strike_on_merkava_tank	2026-06-02_merkava_tank_near_yahmor_al_shqif	2026-06-02	merkava_tank_near_yahmor_al_shqif	high	title/location readable
 2026-06-02_strike_on_namer_apc	2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif	2026-06-02	soldiers_and_namer_vehicle_near_yahmor_al_shqif	high	title/location readable
