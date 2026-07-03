@@ -49,7 +49,6 @@ current_stem	target_stem	date	slug	confidence	notes
 2026-05-22_soldiers_near_manara	2026-05-22_soldier_manara	2026-05-22	soldier_manara	high	title reads one soldier in Manara site
 2026-05-23_strike_near_jardah	2026-05-23_anti_drone_system_jardah	2026-05-23	anti_drone_system_jardah	high	title reads anti-drone system at Jardah site
 2026-05-23_strike_near_ramim	2026-05-23_two_iron_dome_platforms_ramim	2026-05-23	two_iron_dome_platforms_ramim	high	title reads two Iron Dome platforms in Ramim
-2026-05-23_strike_on_soldiers	2026-05-23_soldiers_taybeh	2026-05-23	soldiers_taybeh	high	title reads gathering of soldiers in Taybeh
 2026-05-24_namer_apc_near_taybeh	2026-05-24_namer_apc_taybeh	2026-05-24	namer_apc_taybeh	high	title reads Namer vehicle in Taybeh
 2026-05-25_gall	2026-05-25_two_israeli_army_vehicles	2026-05-25	two_israeli_army_vehicles	low	title reads two Israeli army vehicles; location line not reliably readable and filename is not useful
 2026-05-25_soldiers_near_hadab_al_bustan	2026-05-25_soldiers_position_tent_hadab_al_bustan	2026-05-25	soldiers_position_tent_hadab_al_bustan	high	title reads soldiers position tent at Hadab al-Bustan site
