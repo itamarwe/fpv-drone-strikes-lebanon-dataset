@@ -1,0 +1,83 @@
+{
+  "video_file": "2026-05-25_soldiers_position_tent_hadab_al_bustan.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-25_soldiers_position_tent_hadab_al_bustan.mp4",
+  "description": "Soldiers position tent hadab al bustan",
+  "date": "2026-05-25",
+  "town": "Manor Ridge",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0.0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.72,
+      "time_formatted": "0:00.7",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8.0,
+      "time_formatted": "0:08.0",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 46.92,
+      "time_formatted": "0:46.9",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 52.16,
+      "time_formatted": "0:52.2",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 56.0,
+      "time_formatted": "0:56.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 62.2,
+      "time_formatted": "1:02.2",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 66.44,
+      "time_formatted": "1:06.4",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 67.44,
+      "time_formatted": "1:07.4",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    }
+  ]
+}
