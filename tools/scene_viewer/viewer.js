@@ -320,6 +320,51 @@ const canvas = document.getElementById("viewer");
       grid.size_m = grid.size_units * scale;
     }
 
+    // Recenter (and resize) the ground grid under the reconstructed scene itself,
+    // rather than under the camera flight path. The generator centers the grid on
+    // the path start/end midpoint, which leaves the point cloud sitting off to one
+    // side; here we shift the origin to the robust center of the points projected
+    // onto the ground plane so the scene lands in the middle of the grid.
+    function recenterGridOnScene(positions) {
+      const grid = groundGrid();
+      if (!grid || !grid.origin || !grid.u || !grid.v || !meta?.ground_grid) return;
+      const count = positions.length / 3;
+      if (count < 100) return;
+      const origin = vec3(grid.origin);
+      const u = vec3(grid.u).normalize();
+      const v = vec3(grid.v).normalize();
+      // Subsample so a robust (percentile) center stays cheap on 1M-point clouds.
+      const stride = Math.max(1, Math.floor(count / 40000));
+      const us = [];
+      const vs = [];
+      const p = new THREE.Vector3();
+      for (let i = 0; i < count; i += stride) {
+        p.set(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]).sub(origin);
+        us.push(p.dot(u));
+        vs.push(p.dot(v));
+      }
+      if (us.length < 8) return;
+      us.sort((a, b) => a - b);
+      vs.sort((a, b) => a - b);
+      const q = (arr, t) => arr[Math.min(arr.length - 1, Math.max(0, Math.round(t * (arr.length - 1))))];
+      const uLo = q(us, 0.01);
+      const uHi = q(us, 0.99);
+      const vLo = q(vs, 0.01);
+      const vHi = q(vs, 0.99);
+      const newOrigin = origin
+        .clone()
+        .add(u.clone().multiplyScalar((uLo + uHi) / 2))
+        .add(v.clone().multiplyScalar((vLo + vHi) / 2));
+      meta.ground_grid.origin = newOrigin.toArray();
+      // Size the grid to frame the scene around the new center (path may extend
+      // beyond the grid edge, which is fine).
+      const major = meta.ground_grid.major_step_units || grid.major_step_units || 1;
+      const span = Math.max(uHi - uLo, vHi - vLo);
+      const size = Math.max(Math.ceil((span * 1.25) / major) * major, major * 5);
+      meta.ground_grid.size_units = size;
+      meta.ground_grid.fixed_size_units = size;
+    }
+
     function measurementSummary() {
       if (measurementPoints.length === 0) return "Measure mode on: click the first point";
       if (measurementPoints.length === 1) return "Measure mode on: click the second point";
@@ -1026,6 +1071,7 @@ const canvas = document.getElementById("viewer");
       geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
       pointsObject = new THREE.Points(geometry, pointMaterial);
       root.add(pointsObject);
+      recenterGridOnScene(positions);
 
       pathLine = makeGradientPath(meta.path);
       pathGroup.add(pathLine);
