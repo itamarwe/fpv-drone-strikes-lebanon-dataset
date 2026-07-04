@@ -97,7 +97,11 @@ def ssh_run(info: dict, remote_cmd: str, timeout: int = 30) -> subprocess.Comple
 
 
 def gradio_status(pod_id: str = POD_ID) -> int:
-    req = urllib.request.Request(space_url(pod_id) + "/", method="GET")
+    # The RunPod proxy 403s the default python-urllib User-Agent, so pose as a
+    # browser to get the true status (a stopped/booting pod still returns non-200).
+    req = urllib.request.Request(
+        space_url(pod_id) + "/", method="GET", headers={"User-Agent": "Mozilla/5.0"}
+    )
     try:
         with urllib.request.urlopen(req, timeout=8) as resp:
             return resp.status
@@ -123,12 +127,18 @@ def wait_ssh(pod_id: str, timeout_s: int) -> dict | None:
 
 
 def launch_omega(info: dict) -> None:
+    # Fire-and-forget: setsid detaches app.py, but the ssh channel can still hang
+    # waiting on the backgrounded process, so we cap it with a short timeout and
+    # treat a timeout as "launched" -- wait_gradio() is the real readiness check.
     remote = (
         f"cd {OMEGA_DIR} && : > app.log && "
         f"VGGT_OMEGA_CHECKPOINT={OMEGA_CHECKPOINT} "
         f"setsid {OMEGA_PYTHON} -u app.py > app.log 2>&1 < /dev/null & echo launched"
     )
-    ssh_run(info, remote, timeout=30)
+    try:
+        subprocess.run(_ssh_base(info) + ["-n", remote], capture_output=True, text=True, timeout=15)
+    except subprocess.TimeoutExpired:
+        pass
 
 
 def wait_gradio(pod_id: str, timeout_s: int) -> bool:
