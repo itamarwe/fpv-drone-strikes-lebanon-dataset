@@ -2,27 +2,30 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Dark theme tuned to the FPV tool palette. */
+/*
+ * Visual style mirrors itamarweiss.com: pure-black background, Geist Sans,
+ * near-white text (#ededed), muted grey (#a1a1a1), blue accent (#3291ff).
+ */
 :root {
-  --radius: 0.625rem;
-  --background: #06111f;
-  --foreground: #eaf4ff;
-  --card: #0b1a2c;
-  --card-foreground: #eaf4ff;
-  --popover: #0b1a2c;
-  --popover-foreground: #eaf4ff;
-  --primary: #56d7ff;
-  --primary-foreground: #04121f;
-  --secondary: #16273c;
-  --secondary-foreground: #eaf4ff;
-  --muted: #12233a;
-  --muted-foreground: #9db5cc;
-  --accent: #16273c;
-  --accent-foreground: #eaf4ff;
-  --destructive: #ff5d73;
-  --border: #1d3350;
-  --input: #1d3350;
-  --ring: #56d7ff;
+  --radius: 0.75rem;
+  --background: #000000;
+  --foreground: #ededed;
+  --card: #0a0a0a;
+  --card-foreground: #ededed;
+  --popover: #0a0a0a;
+  --popover-foreground: #ededed;
+  --primary: #3291ff;
+  --primary-foreground: #ffffff;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ededed;
+  --muted: #141414;
+  --muted-foreground: #a1a1a1;
+  --accent: #1a1a1a;
+  --accent-foreground: #ffffff;
+  --destructive: #ff7b72;
+  --border: #262626;
+  --input: #262626;
+  --ring: #3291ff;
 }
 
 @theme inline {
@@ -30,6 +33,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -63,5 +68,7 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

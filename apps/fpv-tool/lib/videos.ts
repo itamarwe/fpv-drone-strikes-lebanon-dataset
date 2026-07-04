@@ -6,12 +6,24 @@ export type VideoRecord = {
   date: string;
   description: string;
   town: string;
-  thumbnailUrl: string;
+  thumbnailUrl: string; // remote (cloudfront) source thumbnail, used as fallback
+  thumbWidths: number[] | null; // locally generated responsive WebP widths
+  blurDataURL: string | null; // tiny placeholder for a blur-up load
   videoUrl: string;
   videoFile: string; // e.g. 2026-05-26_anti_drone_platform_barashit_02.mp4
-  slug: string; // slugify(videoFile) == scene directory name
+  slug: string; // slugify(videoFile) == scene directory / thumbnail folder name
   sceneId: string | null; // reconstructed scene id, when one exists
 };
+
+type RawVideo = {
+  date?: string;
+  description?: string;
+  town?: string;
+  thumbnail_url?: string;
+  video_url?: string;
+};
+
+type ThumbManifest = Record<string, { widths: number[]; blurDataURL: string }>;
 
 function slugify(value: string): string {
   const stem = value.replace(/\.[^./]+$/, "");
@@ -25,6 +37,40 @@ function slugify(value: string): string {
 
 function fileNameFromUrl(url: string): string {
   return url.split("/").pop() ?? "";
+}
+
+// The canonical list of every video lives in the annotator's inline VIDEOS array
+// (the same list that populates its dropdown). Read it straight from source so the
+// gallery and the annotator can never drift apart.
+export function readAnnotatorVideos(): RawVideo[] {
+  const htmlPath = path.join(repoRoot, "tools", "annotator.html");
+  let html: string;
+  try {
+    html = fs.readFileSync(htmlPath, "utf8");
+  } catch {
+    return [];
+  }
+  const start = html.indexOf("const VIDEOS");
+  if (start < 0) return [];
+  const open = html.indexOf("[", start);
+  const close = html.indexOf("\n];", open);
+  if (open < 0 || close < 0) return [];
+  const literal = `${html.slice(open, close)}]`; // trailing comma is fine in a JS array literal
+  try {
+    // Trusted, in-repo source; parse the array literal (single-quoted, unquoted keys).
+    return Function(`"use strict"; return (${literal});`)() as RawVideo[];
+  } catch {
+    return [];
+  }
+}
+
+function loadThumbManifest(): ThumbManifest {
+  const manifestPath = path.join(process.cwd(), "public", "thumbnails", "manifest.json");
+  try {
+    return JSON.parse(fs.readFileSync(manifestPath, "utf8")) as ThumbManifest;
+  } catch {
+    return {};
+  }
 }
 
 // Map each video slug -> the first completed scene id under scenes/<slug>/.
@@ -57,36 +103,25 @@ function buildSceneIndex(): Map<string, string> {
 }
 
 export function loadVideos(): VideoRecord[] {
-  const csvPath = path.join(repoRoot, "geo", "fpv_drone_map_records.csv");
-  let text: string;
-  try {
-    text = fs.readFileSync(csvPath, "utf8");
-  } catch {
-    return [];
-  }
-
   const sceneIndex = buildSceneIndex();
+  const thumbs = loadThumbManifest();
   const rows: VideoRecord[] = [];
   const seen = new Set<string>();
 
-  for (const line of text.split(/\r?\n/).slice(1)) {
-    if (!line.trim()) continue;
-    // Columns: id,date,description,town,lat,lng,status,thumbnail_url,video_url.
-    // The URL fields are always last and never contain commas, so read the tail
-    // from the end and the descriptive fields from the front.
-    const cols = line.split(",");
-    if (cols.length < 9) continue;
-    const videoUrl = cols[cols.length - 1].trim();
-    const thumbnailUrl = cols[cols.length - 2].trim();
+  for (const raw of readAnnotatorVideos()) {
+    const videoUrl = (raw.video_url ?? "").trim();
     const videoFile = fileNameFromUrl(videoUrl);
     if (!videoFile || seen.has(videoFile)) continue;
     seen.add(videoFile);
     const slug = slugify(videoFile);
+    const thumb = thumbs[slug];
     rows.push({
-      date: cols[1].trim(),
-      description: cols[2].trim(),
-      town: cols[3].trim(),
-      thumbnailUrl,
+      date: (raw.date ?? "").trim(),
+      description: (raw.description ?? "").trim(),
+      town: (raw.town ?? "").trim(),
+      thumbnailUrl: (raw.thumbnail_url ?? "").trim(),
+      thumbWidths: thumb?.widths ?? null,
+      blurDataURL: thumb?.blurDataURL ?? null,
       videoUrl,
       videoFile,
       slug,

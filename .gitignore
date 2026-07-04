@@ -25,3 +25,4 @@ tools/e2e/playwright-report/
 
 # archived experiment scenes (local only)
 scene_archive/
+apps/fpv-tool/public/thumbnails/
