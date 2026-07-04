@@ -971,6 +971,30 @@ def probe_dimensions(video_path: Path) -> tuple[int, int]:
     return int(w), int(h)
 
 
+def probe_source_fps(video_path: Path) -> float:
+    """Average source frame rate (fps) from the container, or 0.0 if unknown."""
+    try:
+        proc = subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+             "stream=avg_frame_rate,r_frame_rate", "-of", "default=nw=1:nk=1", str(video_path)],
+            capture_output=True, text=True, check=True,
+        )
+        for line in proc.stdout.split():
+            line = line.strip()
+            if not line or line == "0/0":
+                continue
+            if "/" in line:
+                num, den = line.split("/", 1)
+                den_f = float(den)
+                if den_f:
+                    return float(num) / den_f
+            else:
+                return float(line)
+    except Exception:  # pragma: no cover - ffprobe optional
+        pass
+    return 0.0
+
+
 def crop_rect_norm(crop_preset: str, iw: int, ih: int) -> tuple[float, float, float, float]:
     """Crop rectangle in normalized original-frame coords (x0,y0,x1,y1)."""
     if crop_preset == "central_clean":
@@ -1094,8 +1118,7 @@ def extract_frames(
     adaptive: dict[str, object] | None = None,
     exclusion_masks: list[dict[str, object]] | None = None,
     client_sky_seg: bool = False,
-    boundary_guard_s: float = 0.12,
-    drop_black_luma: float = 8.0,
+    drop_black_luma: float = 0.0,
 ) -> dict[str, object]:
     frames_dir = scene_dir / "frames"
     tmp_root = scene_dir / "_extract_tmp"
@@ -1118,6 +1141,8 @@ def extract_frames(
     else:
         sample_fps = max(0.5, min(10.0, target_frames / max(total_duration, 0.1)))
     vf = ffmpeg_filter(crop_preset, width, sample_fps)
+    source_fps = probe_source_fps(video_path)
+    frame_dur = 1.0 / source_fps if source_fps > 0 else 0.0
     target_label = "all" if explicit_sample_fps else str(target_frames)
     if max_output_frames > 0:
         target_label = f"{target_label}; {frame_window} {max_output_frames}"
@@ -1130,11 +1155,11 @@ def extract_frames(
         end_s = float(seg["end_s"])
         if end_s <= start_s:
             continue
-        # Trim the transition/cut at a segment seam: the end of every non-final
-        # segment abuts a removed pause/replay, whose first frame (often a
-        # black/blurred cut) must not be included.
-        to_s = end_s - boundary_guard_s if seg_index < len(segments) else end_s
-        to_s = max(start_s + 0.05, to_s)
+        # Half-open interval [start_s, end_s). end_s is the timestamp of the next
+        # annotation marker (e.g. a pause_start); its frame is the first frame of
+        # the pause and must be excluded. Trim exactly one source frame so the last
+        # kept frame is the one immediately before the next annotation.
+        to_s = max(start_s + frame_dur * 0.5, end_s - frame_dur)
         tmp_dir = tmp_root / f"seg_{seg_index:02d}"
         tmp_dir.mkdir(parents=True, exist_ok=True)
         run_command(
