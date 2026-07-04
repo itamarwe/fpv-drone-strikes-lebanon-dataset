@@ -1,0 +1,73 @@
+{
+  "video_file": "2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.mp4",
+  "description": "d9 engineering vehicle beaufort castle",
+  "date": "2026-06-11",
+  "town": "Beaufort Castle",
+  "annotated_at": "2026-07-03T10:24:52Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.072,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 19.74,
+      "time_formatted": "0:19.7",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 20.307,
+      "time_formatted": "0:20.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 32.173,
+      "time_formatted": "0:32.2",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 32.673,
+      "time_formatted": "0:32.7",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 43.227,
+      "time_formatted": "0:43.2",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 44.387,
+      "time_formatted": "0:44.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 45.97,
+      "time_formatted": "0:46.0",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

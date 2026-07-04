@@ -1,0 +1,38 @@
+{
+  "video_file": "2026-06-07_command_namer_vehicle_yahmor_al_shqif.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-07_command_namer_vehicle_yahmor_al_shqif.mp4",
+  "description": "Command namer vehicle yahmor al shqif",
+  "date": "2026-06-07",
+  "town": "Yahmor al-Shaqif",
+  "annotated_at": "2026-07-03T10:29:59Z",
+  "segments": [
+    {
+      "time": 8.06,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 25.667,
+      "time_formatted": "0:25.7",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 28.033,
+      "time_formatted": "0:28.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 29,
+      "time_formatted": "0:29.0",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

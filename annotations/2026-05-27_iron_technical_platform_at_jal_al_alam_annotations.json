@@ -1,0 +1,87 @@
+{
+  "video_file": "2026-05-27_iron_technical_platform_at_jal_al_alam.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_iron_technical_platform_at_jal_al_alam.mp4",
+  "description": "Iron technical platform at jal al alam",
+  "date": "2026-05-27",
+  "town": "Border near Rosh HaNikra",
+  "annotated_at": "2026-07-03T12:10:22Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.073,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 10.84,
+      "time_formatted": "0:10.8",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 11.673,
+      "time_formatted": "0:11.7",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 15.24,
+      "time_formatted": "0:15.2",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 15.807,
+      "time_formatted": "0:15.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 19.607,
+      "time_formatted": "0:19.6",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 20.273,
+      "time_formatted": "0:20.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 27.167,
+      "time_formatted": "0:27.2",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 32.567,
+      "time_formatted": "0:32.6",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 34.675,
+      "time_formatted": "0:34.7",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -410,14 +410,24 @@ def main() -> None:
         overlay.save(out_dir / f"{stem}_overlay.jpg", quality=args.quality)
 
     if rows:
-        sheet = Image.new("RGB", (rows[0].width, sum(row.height for row in rows)), (0, 0, 0))
-        y = 0
-        for row in rows:
-            sheet.paste(row, (0, y))
-            y += row.height
-        sheet_path = out_dir / "reprojection_contact_sheet.jpg"
-        sheet.save(sheet_path, quality=args.quality)
-        print(sheet_path)
+        sheet_width = rows[0].width
+        sheet_height = sum(row.height for row in rows)
+        max_jpeg_dimension = 65000
+        if sheet_width > max_jpeg_dimension or sheet_height > max_jpeg_dimension:
+            print(
+                f"[sheet] skipped contact sheet {sheet_width}x{sheet_height}; "
+                f"JPEG max dimension is {max_jpeg_dimension}",
+                flush=True,
+            )
+        else:
+            sheet = Image.new("RGB", (sheet_width, sheet_height), (0, 0, 0))
+            y = 0
+            for row in rows:
+                sheet.paste(row, (0, y))
+                y += row.height
+            sheet_path = out_dir / "reprojection_contact_sheet.jpg"
+            sheet.save(sheet_path, quality=args.quality)
+            print(sheet_path)
 
     metadata = {
         "video_dir": str(video_dir),

@@ -1,0 +1,66 @@
+{
+  "video_file": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521.mp4",
+  "description": "personnel carrier zawtar al sharqiyah mmirleb 17523",
+  "date": "2026-06-03",
+  "town": "Zawtar al-Sharqiyah",
+  "annotated_at": "2026-07-03T10:53:27Z",
+  "segments": [
+    {
+      "time": 8.042,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 12.175,
+      "time_formatted": "0:12.2",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 12.909,
+      "time_formatted": "0:12.9",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 16.342,
+      "time_formatted": "0:16.3",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 17.009,
+      "time_formatted": "0:17.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 40.042,
+      "time_formatted": "0:40.0",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 45.109,
+      "time_formatted": "0:45.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 48.742,
+      "time_formatted": "0:48.7",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

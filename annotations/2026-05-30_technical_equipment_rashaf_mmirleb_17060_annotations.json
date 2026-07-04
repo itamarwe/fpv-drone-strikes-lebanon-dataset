@@ -1,0 +1,45 @@
+{
+  "video_file": "2026-05-30_technical_equipment_rashaf_mmirleb_17060.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-30_technical_equipment_rashaf_mmirleb_17060.mp4",
+  "description": "technical equipment rashaf",
+  "date": "2026-05-30",
+  "town": "Rachaf / Rashaf",
+  "annotated_at": "2026-07-03T11:59:00Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.055,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 25.211,
+      "time_formatted": "0:25.2",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 28.111,
+      "time_formatted": "0:28.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 29.111,
+      "time_formatted": "0:29.1",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -53,6 +53,13 @@ header{position:relative;z-index:1000;display:flex;align-items:center;gap:10px;p
   border:0;border-radius:6px;background:transparent;color:var(--text);text-align:left;font-size:13px}
 .video-picker-option:hover,.video-picker-option.active{background:rgba(86,215,255,.10)}
 .hdr-btns{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.icon-btn{display:inline-flex;align-items:center;gap:6px;position:relative}
+.icon-btn svg{width:15px;height:15px;flex-shrink:0}
+.hdr-status-dot{width:8px;height:8px;border-radius:50%;background:#8fa0ad;flex-shrink:0}
+.hdr-status-dot.running,.hdr-status-dot.queued{background:#56d7ff;animation:pulseDot 1.4s infinite}
+.hdr-status-dot.done{background:#20c56b}
+.hdr-status-dot.error,.hdr-status-dot.stale{background:#ef4444}
+@keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(86,215,255,.5)}70%{box-shadow:0 0 0 6px rgba(86,215,255,0)}100%{box-shadow:0 0 0 0 rgba(86,215,255,0)}}
 
 /* LAYOUT */
 .workspace{display:flex;height:calc(100vh - 52px);overflow:hidden}
@@ -232,8 +239,23 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
   </div>
   <div class="hdr-btns">
     <button id="btnCreateScene" disabled>Create 3D Scene</button>
-    <button id="btnLoad">Load JSON</button>
-    <button id="btnSave" disabled>Save JSON</button>
+    <button id="btnJobs" class="icon-btn" type="button" title="Reconstruction jobs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span>Jobs</span>
+      <span class="hdr-status-dot" id="jobsHeaderDot"></span>
+    </button>
+    <button id="btnSaveRepo" class="icon-btn" type="button" disabled title="Save annotation to the repo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+      <span>Save</span>
+    </button>
+    <button id="btnImport" class="icon-btn" type="button" title="Import annotation JSON from a file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/></svg>
+      <span>Import</span>
+    </button>
+    <button id="btnExport" class="icon-btn" type="button" disabled title="Export annotation JSON to a file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/></svg>
+      <span>Export</span>
+    </button>
     <input type="file" id="jsonFile" accept=".json" style="display:none">
   </div>
 </header>
@@ -359,7 +381,7 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
             </select>
           </label>
           <label>Width
-            <input id="sceneWidth" type="number" min="0" max="1920" step="10" value="960">
+            <input id="sceneWidth" type="number" min="0" max="1920" step="10" value="660">
           </label>
         </div>
       </section>
@@ -372,14 +394,28 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
         </div>
         <div class="recon-status" id="reconStatus">No scene selected.</div>
         <div class="recon-log" id="reconLog" hidden></div>
-        <div class="job-manager">
-          <div class="job-manager-head">
-            <span>Jobs</span>
-            <button id="btnRefreshJobs" type="button">Refresh</button>
-          </div>
-          <div class="job-list" id="jobList"></div>
+        <div class="recon-actions" style="grid-template-columns:1fr">
+          <button id="btnViewJobs" type="button">View jobs</button>
         </div>
       </section>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="scene-dialog" id="jobsDialog">
+  <div class="scene-dialog-shell">
+    <div class="scene-dialog-header">
+      <h2>Reconstruction Jobs</h2>
+      <button id="btnCloseJobsDialog" type="button">Close</button>
+    </div>
+    <div class="scene-dialog-body">
+      <div class="job-manager" style="border-top:none;padding-top:0">
+        <div class="job-manager-head">
+          <span>Recent jobs</span>
+          <button id="btnRefreshJobs" type="button">Refresh</button>
+        </div>
+        <div class="job-list" id="jobList"></div>
+      </div>
     </div>
   </div>
 </dialog>
@@ -586,6 +622,12 @@ let jobPollTimer = null;
 let videoStatuses = {};
 let scenePreviewQueue = [];
 let scenePreviewIndex = -1;
+const CENTRAL_CLEAN_CROP = {
+  x: 120 / 848,
+  y: 190 / 478,
+  w: 660 / 848,
+  h: 280 / 478,
+};
 
 // ─────────────────────────────────────────────
 // DOM
@@ -612,6 +654,12 @@ const g = id => document.getElementById(id);
   renderVideoPickerMenu();
   updateVideoPickerButton();
   loadVideoStatuses();
+  // Deep-link: open the video named in the ?v= query param.
+  const wantedVideo = new URLSearchParams(location.search).get('v');
+  if (wantedVideo) {
+    const idx = VIDEOS.findIndex(v => videoFileFor(v) === wantedVideo);
+    if (idx !== -1) selectVideoByIndex(idx);
+  }
 })();
 
 // ─────────────────────────────────────────────
@@ -619,6 +667,12 @@ const g = id => document.getElementById(id);
 // ─────────────────────────────────────────────
 function loadVideo(v) {
   current = v;
+  // Reflect the current video in the URL so it can be linked / bookmarked.
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set('v', videoFileFor(v));
+    history.replaceState(null, '', url);
+  } catch (e) { /* non-browser / file: mode */ }
   annotations = [];
   selectedSceneSegments = new Set();
   activeSceneStatus = null;
@@ -642,7 +696,8 @@ function loadVideo(v) {
   renderReconstructionPanel();
   setControlsEnabled(false);
   g('btnCreateScene').disabled = false;
-  g('btnSave').disabled = true;
+  g('btnSaveRepo').disabled = true;
+  g('btnExport').disabled = true;
 
   vid.src = v.video_url;
   vid.load();
@@ -1061,12 +1116,19 @@ function sceneSampleFps() {
 function estimatedImageCount() {
   const duration = selectedIntervals().reduce((sum, seg) => sum + Math.max(0, seg.duration_s || 0), 0);
   if (!duration) return 0;
-  return Math.max(1, Math.ceil(duration * sceneSampleFps()));
+  return Math.max(1, Math.round(duration * sceneSampleFps()));
 }
 
+const VGGT_FRAME_WARN_THRESHOLD = 125;
 function updateSceneImageCount() {
   const count = estimatedImageCount();
-  g('sceneImageCount').textContent = count ? `${count}` : '0';
+  const el = g('sceneImageCount');
+  const heavy = count > VGGT_FRAME_WARN_THRESHOLD;
+  el.textContent = count ? (heavy ? `${count} ⚠` : `${count}`) : '0';
+  el.style.color = heavy ? 'var(--red)' : '';
+  el.title = heavy
+    ? `${count} frames (> ${VGGT_FRAME_WARN_THRESHOLD}). VGGT may be slow/memory-heavy — reconstruction still uses all frames.`
+    : '';
 }
 
 function updateCropBoxOverlay() {
@@ -1083,10 +1145,10 @@ function updateCropBoxOverlay() {
     return;
   }
   overlay.style.display = 'block';
-  overlay.style.left = `${videoRect.left - wrapperRect.left + videoRect.width * 0.08}px`;
-  overlay.style.top = `${videoRect.top - wrapperRect.top}px`;
-  overlay.style.width = `${videoRect.width * 0.84}px`;
-  overlay.style.height = `${videoRect.height}px`;
+  overlay.style.left = `${videoRect.left - wrapperRect.left + videoRect.width * CENTRAL_CLEAN_CROP.x}px`;
+  overlay.style.top = `${videoRect.top - wrapperRect.top + videoRect.height * CENTRAL_CLEAN_CROP.y}px`;
+  overlay.style.width = `${videoRect.width * CENTRAL_CLEAN_CROP.w}px`;
+  overlay.style.height = `${videoRect.height * CENTRAL_CLEAN_CROP.h}px`;
 }
 
 function sceneKeyForSelection() {
@@ -1253,10 +1315,36 @@ function renderJobList(jobs) {
   });
 }
 
+// Reflect overall reconstruction-job state on the header Jobs button.
+function jobsOverallStatus(jobs) {
+  if (jobs.some(j => j.status === 'running' || j.status === 'queued')) return 'running';
+  if (jobs.some(j => j.status === 'error' || j.status === 'stale')) return 'error';
+  if (jobs.some(j => j.status === 'done')) return 'done';
+  return '';
+}
+
+function updateJobsHeaderStatus(jobs) {
+  const dot = g('jobsHeaderDot');
+  if (!dot) return;
+  const status = jobsOverallStatus(jobs || []);
+  dot.className = 'hdr-status-dot ' + status;
+  const titles = {running: 'Reconstruction job running', error: 'A reconstruction job failed',
+                  done: 'Reconstruction jobs (latest done)', '': 'Reconstruction jobs'};
+  g('btnJobs').title = titles[status];
+}
+
+function openJobsDialog() {
+  refreshJobManager({reattach: true});
+  const d = g('jobsDialog');
+  if (typeof d.showModal === 'function') d.showModal();
+  else d.setAttribute('open', '');
+}
+
 async function refreshJobManager(options = {}) {
   const {reattach = false} = options;
   if (!current) {
     renderJobList([]);
+    updateJobsHeaderStatus([]);
     return;
   }
   try {
@@ -1265,6 +1353,7 @@ async function refreshJobManager(options = {}) {
     const payload = await res.json();
     const jobs = payload.jobs || [];
     renderJobList(jobs);
+    updateJobsHeaderStatus(jobs);
     const selectedSceneId = activeSceneStatus && activeSceneStatus.scene_id;
     const matchingActive = selectedSceneId
       ? jobs.find(job => job.scene_id === selectedSceneId && jobIsActive(job))
@@ -1277,6 +1366,7 @@ async function refreshJobManager(options = {}) {
     }
   } catch {
     renderJobList([]);
+    updateJobsHeaderStatus([]);
   }
 }
 
@@ -1295,11 +1385,12 @@ function sceneRequestBody() {
     })),
     segments,
     sample_fps: sceneSampleFps(),
-    target_frames: estimatedImageCount() || 36,
+    target_frames: 0,
     default_scale_m_per_unit: Number(g('sceneDefaultScale').value) || 117.6,
     crop_preset: g('sceneCropPreset').value,
-    width: Number(g('sceneWidth').value) || 960,
+    width: Number(g('sceneWidth').value) || 660,
     focal_px: 812,
+    refresh_vggt: true,
     render_camera_views: true,
   };
 }
@@ -1454,11 +1545,19 @@ function downloadAnnotationJSON(data) {
   document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 
-async function saveJSON() {
+// Update the text label of an icon button without clobbering its <svg>.
+function setBtnLabel(btnId, text) {
+  const btn = g(btnId);
+  if (!btn) return;
+  const span = btn.querySelector('span:not(.hdr-status-dot)');
+  if (span) span.textContent = text;
+}
+
+// Save the current annotation to the repo (where the UI reads annotations from).
+async function saveToRepo() {
   const data = annotationPayload();
   if (!data) return;
-  const original = g('btnSave').textContent;
-  g('btnSave').disabled = true;
+  g('btnSaveRepo').disabled = true;
   try {
     if (location.protocol === 'file:') throw new Error('file mode');
     const res = await fetch(`${API_BASE}/api/annotations`, {
@@ -1468,15 +1567,23 @@ async function saveJSON() {
     });
     const payload = await res.json();
     if (!res.ok) throw new Error(payload.error || 'Failed to save annotation');
-    g('btnSave').textContent = 'Saved';
+    setBtnLabel('btnSaveRepo', 'Saved');
     await loadVideoStatuses();
-    setTimeout(() => { g('btnSave').textContent = original; }, 1200);
+    setTimeout(() => setBtnLabel('btnSaveRepo', 'Save'), 1200);
   } catch {
-    downloadAnnotationJSON(data);
-    g('btnSave').textContent = original;
+    setBtnLabel('btnSaveRepo', 'Save failed');
+    alert('Could not save to the repo. Is the tool server running?\nUse Export to download the JSON file instead.');
+    setTimeout(() => setBtnLabel('btnSaveRepo', 'Save'), 1600);
   } finally {
-    g('btnSave').disabled = !current;
+    g('btnSaveRepo').disabled = !current;
   }
+}
+
+// Export the current annotation to a downloaded JSON file.
+function exportJSON() {
+  const data = annotationPayload();
+  if (!data) return;
+  downloadAnnotationJSON(data);
 }
 
 function loadJSON(file) {
@@ -1543,11 +1650,13 @@ function bindEvents() {
   // Video events
   vid.addEventListener('loadedmetadata', () => {
     setControlsEnabled(true);
-    g('btnSave').disabled = false;
+    g('btnSaveRepo').disabled = false;
+    g('btnExport').disabled = false;
     onTimeUpdate();
     renderReconstructionPanel();
     updateCropBoxOverlay();
     generateFilmstrip();
+    refreshJobManager();
   });
   vid.addEventListener('loadeddata', updateCropBoxOverlay);
   vid.addEventListener('timeupdate', () => {
@@ -1586,12 +1695,20 @@ function bindEvents() {
     if (e.key === 'Enter') { e.preventDefault(); markSegment(); }
   });
 
-  // Save / load
-  g('btnSave').addEventListener('click', saveJSON);
-  g('btnLoad').addEventListener('click', () => g('jsonFile').click());
+  // Save (repo) / import / export
+  g('btnSaveRepo').addEventListener('click', saveToRepo);
+  g('btnExport').addEventListener('click', exportJSON);
+  g('btnImport').addEventListener('click', () => g('jsonFile').click());
   g('jsonFile').addEventListener('change', e => {
     if (e.target.files[0]) { loadJSON(e.target.files[0]); e.target.value = ''; }
   });
+
+  // Jobs window
+  g('btnJobs').addEventListener('click', openJobsDialog);
+  g('btnViewJobs').addEventListener('click', openJobsDialog);
+  g('btnCloseJobsDialog').addEventListener('click', () => g('jobsDialog').close());
+  // Keep the header jobs status live even when the dialog is closed.
+  setInterval(() => { if (current) refreshJobManager(); }, 5000);
 
   // 3D scene reconstruction
   g('btnCreateScene').addEventListener('click', openSceneDialog);

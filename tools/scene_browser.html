@@ -175,9 +175,24 @@
       }
     }
 
+    // Deep-link: /scenes/?scene=<scene_id> opens that scene's viewer directly.
+    // location.replace keeps this redirect out of history so Back doesn't bounce.
+    function applySceneFromQuery() {
+      const wanted = new URLSearchParams(location.search).get("scene");
+      if (!wanted) return;
+      const scene = scenes.find((item) => item.scene_id === wanted);
+      if (!scene || !scene.viewer_url) {
+        statusText.textContent = "Linked scene not found.";
+        return;
+      }
+      sceneSelect.value = wanted;
+      statusText.textContent = "Opening linked scene...";
+      location.replace(scene.viewer_url);
+    }
+
     sceneSelect.addEventListener("change", openSelected);
     addFolderButton.addEventListener("click", addFolder);
-    loadScenes().catch((error) => {
+    loadScenes().then(applySceneFromQuery).catch((error) => {
       sceneSelect.innerHTML = '<option value="">Could not load scenes</option>';
       statusText.textContent = error.message;
     });

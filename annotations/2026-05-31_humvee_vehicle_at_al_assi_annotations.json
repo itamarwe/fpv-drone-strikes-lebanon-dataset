@@ -1,0 +1,31 @@
+{
+  "video_file": "2026-05-31_humvee_vehicle_at_al_assi.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-31_humvee_vehicle_at_al_assi.mp4",
+  "description": "Humvee vehicle at al assi",
+  "date": "2026-05-31",
+  "town": "Border area opposite Mays al-Jabal",
+  "annotated_at": "2026-07-03T11:56:25Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.08,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 43.18,
+      "time_formatted": "0:43.2",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

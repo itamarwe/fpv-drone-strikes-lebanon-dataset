@@ -67,10 +67,13 @@ scenes/
         ...
 ```
 
-`scene_manifest.json` records the source video, selected segments, crop preset,
-target frame count, default scale, and creation time. `scene_state.json` stores
-interactive corrections such as a manually measured scale. The viewer directory
-is self-contained enough to serve the point cloud and frame comparison assets.
+`scene_manifest.json` records the source video, selected segments, default
+scale, creation time, and `model_config`: the exact preprocessing settings,
+VGGT backend/model settings, upload mode, frame cap, point budget, sky-mask
+setting, focal length, and camera-view render settings. `scene_state.json`
+stores interactive corrections such as a manually measured scale. The viewer
+directory is self-contained enough to serve the point cloud and frame
+comparison assets.
 
 The default server output root is the repo root, so generated 3D scenes land in
 `scenes/`. Heavy video downloads remain cached outside the repo under
@@ -134,23 +137,35 @@ when the segments likely share scene overlap; otherwise they should be
 reconstructed as separate scenes. The dialog can preview the selected intervals
 in the source video so transitions can be checked before running VGGT.
 
-Frame extraction uses FFmpeg. The default crop preset is `central_clean`:
+Frame extraction uses FFmpeg. The default crop preset is `central_clean`,
+restored from the manually selected clean crop used in the first high-quality
+VGGT overlay:
 
 ```text
-crop=trunc(iw*0.84/2)*2:ih:trunc(iw*0.08/2)*2:0
+crop=x=iw*(120/848), y=ih*(190/478), w=iw*(660/848), h=ih*(280/478)
 ```
 
-That keeps the central 84 percent of the frame width and the full height, which
-removes more of the side rotors/blurred edge regions while preserving the
-flight-relevant view. Extracted frames are then scaled to the requested width
-and sampled to the requested target frame count.
+On the common `848x478` source videos, that is exactly `x=120, y=190, w=660,
+h=280`. It removes the side blur/rotor regions and the top HUD/propeller band
+while preserving the flight-relevant lower central view. Extracted frames are
+then scaled to the requested width. When an FPS is explicitly selected, all
+frames emitted by FFmpeg's `fps` filter are sent forward; there is no additional
+target-frame cap.
+
+The backend also encodes the extracted frame sequence as `vggt_input.mp4`.
+For public VGGT Space uploads this MP4 is a transport wrapper, not the timing
+source: high-FPS extracted frames are packed into a 2 fps MP4, then VGGT samples
+that upload video at 2 fps so every extracted frame is still used. Real timing
+for speed/height remains in `frames.csv` via `video_time_s`, `segment_time_s`,
+and `sequence_time_s`.
 
 Default UI parameters:
 
 - sample FPS: `3`
-- estimated image count: selected flight duration multiplied by sample FPS
+- estimated image count: selected flight duration multiplied by sample FPS; this
+  is informational when FPS is explicitly selected, not a cap
 - crop: `central_clean`
-- width: `960`
+- width: `660`
 - focal length for reprojection diagnostics: `812 px`
 - default scale: `117.6 m/unit`
 
@@ -176,6 +191,10 @@ python tools/flight_path_pipeline.py \
 
 The VGGT run uses the selected extracted frames. The output `.glb` and related
 assets are stored in the scene directory.
+
+Reconstruction jobs refresh the VGGT output by default. This avoids pairing a
+newly extracted crop/FPS frame set with a stale `.glb` from an older run of the
+same scene id.
 
 Tool:
 

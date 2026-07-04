@@ -1,0 +1,45 @@
+{
+  "video_file": "2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143.mp4",
+  "description": "d9 bulldozer zawtar al sharqiyah",
+  "date": "2026-05-26",
+  "town": "Zawtar al-Sharqiyah",
+  "annotated_at": "2026-07-03T12:20:22Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.045,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 26.927,
+      "time_formatted": "0:26.9",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 31.427,
+      "time_formatted": "0:31.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 34.294,
+      "time_formatted": "0:34.3",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "video_file": "2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif.mp4",
+  "description": "Soldiers and namer vehicle near yahmor al shqif",
+  "date": "2026-06-02",
+  "town": "Yahmor al-Shaqif",
+  "annotated_at": "2026-07-03T11:01:21Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 30.731,
+      "time_formatted": "0:30.7",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 48.226,
+      "time_formatted": "0:48.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 66.426,
+      "time_formatted": "1:06.4",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 73.326,
+      "time_formatted": "1:13.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 74.893,
+      "time_formatted": "1:14.9",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

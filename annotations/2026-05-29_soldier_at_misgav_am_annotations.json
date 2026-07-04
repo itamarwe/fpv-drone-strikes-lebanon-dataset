@@ -1,0 +1,59 @@
+{
+  "video_file": "2026-05-29_soldier_at_misgav_am.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-29_soldier_at_misgav_am.mp4",
+  "description": "Soldier at misgav am",
+  "date": "2026-05-29",
+  "town": "Misgav Am",
+  "annotated_at": "2026-07-03T12:00:23Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.539,
+      "time_formatted": "0:08.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 21.272,
+      "time_formatted": "0:21.3",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 21.872,
+      "time_formatted": "0:21.9",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 55.405,
+      "time_formatted": "0:55.4",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 60.539,
+      "time_formatted": "1:00.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 65.272,
+      "time_formatted": "1:05.3",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

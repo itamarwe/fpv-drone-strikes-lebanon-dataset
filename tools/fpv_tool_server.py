@@ -27,10 +27,19 @@ from pathlib import Path
 from typing import Callable
 from urllib.parse import parse_qs, unquote, urlparse
 
-
 ROOT = Path(__file__).resolve().parents[1]
+TOOLS = Path(__file__).resolve().parent
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+from asset_urls import asset_root_from_env, scene_data_base, scene_viewer_page_url
 DEFAULT_OUT_DIR = ROOT
 DEFAULT_VIDEO_CACHE = Path("/tmp/fpv-model-benchmark/videos")
+GENERIC_VIEWER_INDEX = ROOT / "tools" / "scene_viewer" / "index.html"
+SCENE_VIEWER_INDEX_RE = re.compile(r"^/scenes/(.+)/viewer(?:/index\.html)?/?$")
+# Soft advisory only: above this many frames VGGT reconstruction gets slow/heavy.
+# This is NOT a hard cap -- frames are capped only when max_vggt_frames > 0.
+VGGT_FRAME_WARN_THRESHOLD = 125
 
 
 def slugify(value: str) -> str:
@@ -92,6 +101,92 @@ def update_scene_manifest(scene_dir: Path | None, fields: dict[str, object]) -> 
     manifest = read_json_if_exists(manifest_path)
     manifest.update(fields)
     manifest_path.write_text(json.dumps(manifest, indent=2))
+
+
+def body_bool(body: dict[str, object], key: str, default: bool = False) -> bool:
+    value = body.get(key, default)
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "on"}
+    return bool(value)
+
+
+def crop_config(crop_preset: str) -> dict[str, object]:
+    if crop_preset == "central_clean":
+        return {
+            "preset": crop_preset,
+            "reference_size_px": {"width": 848, "height": 478},
+            "reference_bbox_px": {"x": 120, "y": 190, "width": 660, "height": 280},
+            "ffmpeg_crop_expr": (
+                "crop=trunc(iw*660/848/2)*2:"
+                "trunc(ih*280/478/2)*2:"
+                "trunc(iw*120/848/2)*2:"
+                "trunc(ih*190/478/2)*2"
+            ),
+        }
+    return {"preset": crop_preset}
+
+
+def reconstruction_config(
+    state: "ToolState",
+    body: dict[str, object],
+    *,
+    frame_count: int | None = None,
+    candidate_frames: int | None = None,
+    effective_sample_fps: float | None = None,
+    ffmpeg_filter_expr: str | None = None,
+) -> dict[str, object]:
+    sample_fps = float(body.get("sample_fps", 0) or 0)
+    max_vggt_frames = int(body.get("max_vggt_frames", 0) or 0)
+    upload_video_fps = min(float(effective_sample_fps or sample_fps or 2.0), 2.0)
+    vggt_space = str(body.get("vggt_space") or state.vggt_space)
+    vggt_backend = str(body.get("vggt_backend") or state.vggt_backend)
+    vggt_upload_mode = str(body.get("vggt_upload_mode", "video"))
+    vggt_timeout = int(body.get("vggt_timeout", 900) or 900)
+    conf_thres = float(body.get("vggt_conf_thres", 50.0) or 50.0)
+    max_points_k = float(body.get("vggt_max_points_k", 1000.0) or 1000.0)
+    mask_sky = body_bool(body, "vggt_mask_sky", False)
+    max_frames_arg = max_vggt_frames or frame_count or 0
+    crop_preset = str(body.get("crop_preset", "central_clean"))
+    width = int(body.get("width", 960) or 0)
+
+    return {
+        "preprocess": {
+            "sample_fps_requested": sample_fps,
+            "sample_fps_effective": effective_sample_fps,
+            "target_frames": int(body.get("target_frames", 36) or 0),
+            "frames_used": frame_count,
+            "candidate_frames": candidate_frames,
+            "frame_window": str(body.get("frame_window", "all")),
+            "max_vggt_frames": max_vggt_frames,
+            "output_width_px": width,
+            "crop": crop_config(crop_preset),
+            "ffmpeg_filter": ffmpeg_filter_expr,
+        },
+        "vggt": {
+            "model": "facebook/VGGT-Omega" if vggt_backend == "omega" else "facebook/VGGT-1B",
+            "space": vggt_space,
+            "backend": vggt_backend,
+            "upload_mode": vggt_upload_mode,
+            "upload_video_fps": upload_video_fps,
+            "max_frames_arg": max_frames_arg,
+            "conf_thres": conf_thres,
+            "max_points_k": max_points_k,
+            "mask_sky": mask_sky,
+            "timeout_s": vggt_timeout,
+            "refresh": body_bool(body, "refresh_vggt", True),
+        },
+        "camera_views": {
+            "render": body_bool(body, "render_camera_views", True),
+            "focal_px": float(body.get("focal_px", 812) or 812),
+            "view": "full",
+            "splat": int(body.get("splat", 1) or 1),
+        },
+        "scale": {
+            "default_scale_m_per_unit": float(body.get("default_scale_m_per_unit", state.default_scale)),
+        },
+    }
 
 
 @dataclass
@@ -160,7 +255,11 @@ class ToolState:
         self.video_cache_dir = args.video_cache_dir
         self.python = args.python
         self.vggt_python = args.vggt_python
+        self.vggt_space = args.vggt_space
+        self.vggt_backend = args.vggt_backend
         self.default_scale = args.default_scale_m_per_unit
+        self.asset_root = str(getattr(args, "asset_root", "") or "").strip().rstrip("/")
+        self.app_base = str(getattr(args, "app_base", "") or "").strip().rstrip("/")
         self.jobs: dict[str, Job] = {}
         self.lock = threading.Lock()
         self.scenes_dir.mkdir(parents=True, exist_ok=True)
@@ -248,12 +347,42 @@ def read_json_if_exists(path: Path) -> dict[str, object]:
     return data if isinstance(data, dict) else {}
 
 
-def scene_summary(scene_dir: Path, scenes_root: Path) -> dict[str, object] | None:
+def scene_viewer_dir(scenes_root: Path, path: str) -> Path | None:
+    match = SCENE_VIEWER_INDEX_RE.match(path)
+    if not match:
+        return None
+    viewer_dir = ensure_child(scenes_root, match.group(1), "viewer")
+    if not (viewer_dir / "scene_meta.json").exists():
+        return None
+    return viewer_dir
+
+
+def scene_has_viewer(scene_dir: Path) -> bool:
+    return (scene_dir / "viewer" / "scene_meta.json").exists()
+
+
+def scene_viewer_url(scenes_root: Path, scene_dir: Path, app_base: str = "") -> str:
+    rel_path = scene_dir.relative_to(scenes_root).as_posix()
+    return scene_viewer_page_url(rel_path, app_base)
+
+
+def read_generic_viewer_html(scene_base: str, app_base: str = "", api_base: str = "") -> bytes:
+    html = GENERIC_VIEWER_INDEX.read_text()
+    scene_base = scene_base if scene_base.endswith("/") else f"{scene_base}/"
+    return (
+        html.replace("__SCENE_BASE__", scene_base)
+        .replace("__APP_BASE__", app_base)
+        .replace("__API_BASE__", api_base)
+        .encode()
+    )
+
+
+def scene_summary(scene_dir: Path, scenes_root: Path, app_base: str = "") -> dict[str, object] | None:
     manifest = read_json_if_exists(scene_dir / "scene_manifest.json")
     metadata = read_json_if_exists(scene_dir / "metadata.json")
     state = read_json_if_exists(scene_dir / "scene_state.json")
-    viewer = scene_dir / "viewer" / "index.html"
-    if not viewer.exists() and not manifest:
+    has_viewer = scene_has_viewer(scene_dir)
+    if not has_viewer and not manifest:
         return None
     scene_id = str(manifest.get("scene_id") or metadata.get("scene_id") or scene_dir.name)
     rel_path = scene_dir.relative_to(scenes_root).as_posix()
@@ -271,13 +400,17 @@ def scene_summary(scene_dir: Path, scenes_root: Path) -> dict[str, object] | Non
     if segment_ids:
         title = f"{title} ({', '.join(segment_ids)})"
 
-    mtimes = [p.stat().st_mtime for p in [scene_dir, viewer, scene_dir / "scene_state.json"] if p.exists()]
+    mtimes = [
+        p.stat().st_mtime
+        for p in [scene_dir, scene_dir / "viewer" / "scene_meta.json", scene_dir / "scene_state.json"]
+        if p.exists()
+    ]
     updated_at = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(max(mtimes))) if mtimes else ""
     return {
         "scene_id": scene_id,
         "title": title,
-        "viewer_url": f"/scenes/{rel_path}/viewer/index.html" if viewer.exists() else "",
-        "exists": viewer.exists(),
+        "viewer_url": scene_viewer_url(scenes_root, scene_dir, app_base=app_base) if has_viewer else "",
+        "exists": has_viewer,
         "video_file": manifest.get("video_file") or metadata.get("video_file") or "",
         "description": manifest.get("description") or metadata.get("description") or "",
         "date": manifest.get("date") or metadata.get("date") or "",
@@ -287,7 +420,7 @@ def scene_summary(scene_dir: Path, scenes_root: Path) -> dict[str, object] | Non
         "frames": metadata.get("frames") or manifest.get("frames") or "",
         "sample_fps": manifest.get("sample_fps") or metadata.get("sample_fps") or "",
         "crop_preset": manifest.get("crop_preset") or metadata.get("crop_preset") or "",
-        "target_frames": manifest.get("target_frames") or metadata.get("target_frames") or "",
+        "target_frames": manifest.get("target_frames", metadata.get("target_frames", "")),
         "scale_m_per_unit": state.get("scale_m_per_unit") or manifest.get("default_scale_m_per_unit") or "",
         "scale_saved": bool(state.get("saved")),
         "job_id": manifest.get("job_id") or "",
@@ -300,14 +433,15 @@ def scene_summary(scene_dir: Path, scenes_root: Path) -> dict[str, object] | Non
     }
 
 
-def list_scene_summaries(scenes_root: Path) -> list[dict[str, object]]:
+def list_scene_summaries(scenes_root: Path, app_base: str = "") -> list[dict[str, object]]:
     scenes: list[dict[str, object]] = []
     if not scenes_root.exists():
         return []
     candidates = {p.parent for p in scenes_root.rglob("scene_manifest.json")}
+    candidates.update(p.parent for p in scenes_root.rglob("viewer/scene_meta.json"))
     candidates.update(p.parent.parent for p in scenes_root.rglob("viewer/index.html"))
     for scene_dir in sorted(candidates, key=lambda p: p.relative_to(scenes_root).as_posix()):
-        summary = scene_summary(scene_dir, scenes_root)
+        summary = scene_summary(scene_dir, scenes_root, app_base=app_base)
         if summary is not None:
             scenes.append(summary)
     scenes.sort(key=lambda item: str(item.get("updated_at") or item.get("created_at") or ""), reverse=True)
@@ -318,7 +452,7 @@ def find_scene_dir(scenes_root: Path, scene_id: str) -> Path | None:
     direct = scenes_root / scene_id
     if direct.exists():
         return direct
-    for summary in list_scene_summaries(scenes_root):
+    for summary in list_scene_summaries(scenes_root, app_base=""):
         if summary.get("scene_id") == scene_id:
             path = summary.get("path")
             if path:
@@ -352,7 +486,7 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
             if path == "/api/health":
                 write_json(self, {"ok": True, "out_dir": str(self.state.out_dir)})
             elif path == "/api/scenes":
-                write_json(self, {"scenes": list_scene_summaries(self.state.scenes_dir)})
+                write_json(self, {"scenes": list_scene_summaries(self.state.scenes_dir, self.state.app_base)})
             elif path == "/api/video-status":
                 self.handle_video_status()
             elif path == "/api/annotations":
@@ -392,12 +526,12 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
         segment_ids = [s for s in query.get("segments", [""])[0].split(",") if s]
         sid = scene_id_for(video_file, segment_ids)
         scene_dir = find_scene_dir(self.state.scenes_dir, sid)
-        viewer = scene_dir / "viewer" / "index.html" if scene_dir else None
+        viewer_meta = scene_dir / "viewer" / "scene_meta.json" if scene_dir else None
         state_path = scene_dir / "scene_state.json" if scene_dir else None
-        summary = scene_summary(scene_dir, self.state.scenes_dir) if scene_dir else None
+        summary = scene_summary(scene_dir, self.state.scenes_dir, self.state.app_base) if scene_dir else None
         payload = {
             "scene_id": sid,
-            "exists": bool(viewer and viewer.exists()),
+            "exists": bool(viewer_meta and viewer_meta.exists()),
             "viewer_url": str(summary.get("viewer_url")) if summary else "",
             "state": json.loads(state_path.read_text()) if state_path and state_path.exists() else {},
         }
@@ -444,12 +578,12 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
         if not source.exists() or not source.is_dir():
             write_error(self, f"folder not found: {source}", status=404)
             return
-        if source.name == "viewer" and (source / "index.html").exists():
+        if source.name == "viewer" and ((source / "scene_meta.json").exists() or (source / "index.html").exists()):
             source = source.parent
-        is_scene_folder = (source / "viewer" / "index.html").exists()
-        is_standalone_viewer = (source / "index.html").exists() and (source / "scene_meta.json").exists()
+        is_scene_folder = (source / "viewer" / "scene_meta.json").exists()
+        is_standalone_viewer = (source / "scene_meta.json").exists()
         if not is_scene_folder and not is_standalone_viewer:
-            write_error(self, "folder must contain viewer/index.html or index.html with scene_meta.json", status=400)
+            write_error(self, "folder must contain viewer/scene_meta.json or scene_meta.json", status=400)
             return
 
         manifest = read_json_if_exists(source / "scene_manifest.json")
@@ -458,7 +592,7 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
         video_file = str(manifest.get("video_file") or scene_meta.get("video_file") or "imported")
         dest = ensure_child(self.state.scenes_dir, scene_rel_dir_for(video_file, scene_id))
         if source == dest.resolve():
-            summary = scene_summary(dest, self.state.scenes_dir)
+            summary = scene_summary(dest, self.state.scenes_dir, self.state.app_base)
             write_json(self, {"imported": False, "scene": summary})
             return
         if dest.exists():
@@ -481,7 +615,7 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
                     indent=2,
                 )
             )
-        summary = scene_summary(dest, self.state.scenes_dir)
+        summary = scene_summary(dest, self.state.scenes_dir, self.state.app_base)
         write_json(self, {"imported": True, "path": str(dest), "scene": summary})
 
     def handle_video_status(self) -> None:
@@ -493,7 +627,7 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
                 continue
             videos.setdefault(video_file, {})
             videos[video_file].update({"annotated": True, "annotation_path": str(path)})
-        for scene in list_scene_summaries(self.state.scenes_dir):
+        for scene in list_scene_summaries(self.state.scenes_dir, self.state.app_base):
             if not scene.get("exists") or not scene.get("viewer_url"):
                 continue
             video_file = str(scene.get("video_file") or "")
@@ -599,7 +733,22 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
         thread.start()
         write_json(self, {"job_id": job.id, "scene_id": scene_id, "viewer_url": job.viewer_url}, status=202)
 
+    def serve_generic_scene_viewer(self, viewer_dir: Path) -> None:
+        rel_scene = viewer_dir.parent.relative_to(self.state.scenes_dir).as_posix()
+        scene_base = scene_data_base(rel_scene, self.state.asset_root)
+        data = read_generic_viewer_html(scene_base, self.state.app_base, "")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(data)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(data)
+
     def serve_static(self, path: str) -> None:
+        viewer_dir = scene_viewer_dir(self.state.scenes_dir, path)
+        if viewer_dir is not None:
+            self.serve_generic_scene_viewer(viewer_dir)
+            return
         if path in {"", "/"}:
             target = ROOT / "tools" / "annotator.html"
         elif path in {"/scenes", "/scenes/"}:
@@ -658,7 +807,12 @@ def download_video(video_url: str, video_file: str, cache_dir: Path, job: Job) -
 def ffmpeg_filter(crop_preset: str, width: int, sample_fps: float) -> str:
     parts = [f"fps={sample_fps:g}"]
     if crop_preset == "central_clean":
-        parts.append("crop=trunc(iw*0.84/2)*2:ih:trunc(iw*0.08/2)*2:0")
+        parts.append(
+            "crop=trunc(iw*660/848/2)*2:"
+            "trunc(ih*280/478/2)*2:"
+            "trunc(iw*120/848/2)*2:"
+            "trunc(ih*190/478/2)*2"
+        )
     if width:
         parts.append(f"scale={width}:-2")
     return ",".join(parts)
@@ -680,8 +834,10 @@ def extract_frames(
     sample_fps: float,
     width: int,
     crop_preset: str,
+    max_output_frames: int,
+    frame_window: str,
     job: Job,
-) -> int:
+) -> dict[str, object]:
     frames_dir = scene_dir / "frames"
     tmp_root = scene_dir / "_extract_tmp"
     if frames_dir.exists():
@@ -692,12 +848,16 @@ def extract_frames(
     tmp_root.mkdir(parents=True, exist_ok=True)
 
     total_duration = sum(max(0.0, float(seg["end_s"]) - float(seg["start_s"])) for seg in segments)
+    explicit_sample_fps = sample_fps > 0
     if sample_fps > 0:
         sample_fps = max(0.5, min(10.0, sample_fps))
     else:
         sample_fps = max(0.5, min(10.0, target_frames / max(total_duration, 0.1)))
     vf = ffmpeg_filter(crop_preset, width, sample_fps)
-    job.log(f"[frames] {len(segments)} segment(s), target={target_frames}, fps={sample_fps:.3f}, vf={vf}")
+    target_label = "all" if explicit_sample_fps else str(target_frames)
+    if max_output_frames > 0:
+        target_label = f"{target_label}; {frame_window} {max_output_frames}"
+    job.log(f"[frames] {len(segments)} segment(s), target={target_label}, fps={sample_fps:.3f}, vf={vf}")
 
     candidates: list[dict[str, object]] = []
     sequence_offset_s = 0.0
@@ -745,7 +905,21 @@ def extract_frames(
             )
         sequence_offset_s += end_s - start_s
 
-    selected = evenly_sample(candidates, target_frames)
+    selected = candidates if explicit_sample_fps else evenly_sample(candidates, target_frames)
+    if max_output_frames > 0 and len(selected) > max_output_frames:
+        if frame_window == "first":
+            selected = selected[:max_output_frames]
+        elif frame_window == "last":
+            selected = selected[-max_output_frames:]
+        else:
+            selected = evenly_sample(selected, max_output_frames)
+        job.log(f"[frames] kept {len(selected)} frame(s) from {len(candidates)} candidate frame(s) using {frame_window} window")
+    elif len(selected) > VGGT_FRAME_WARN_THRESHOLD:
+        job.log(
+            f"[frames] WARNING: {len(selected)} frames selected (> {VGGT_FRAME_WARN_THRESHOLD}); "
+            f"VGGT reconstruction may be slow or memory-heavy. Pass max_vggt_frames "
+            f"(e.g. with frame_window=last) to cap the sequence if needed."
+        )
     out_rows: list[dict[str, object]] = []
     for frame_index, item in enumerate(selected, start=1):
         dst = frames_dir / f"f_{frame_index:06d}.jpg"
@@ -771,8 +945,37 @@ def extract_frames(
         writer = csv.DictWriter(handle, fieldnames=list(out_rows[0].keys()))
         writer.writeheader()
         writer.writerows(out_rows)
-    job.log(f"[frames] wrote {len(out_rows)} frame(s)")
-    return len(out_rows)
+    input_video = scene_dir / "vggt_input.mp4"
+    upload_video_fps = min(sample_fps, 2.0)
+    run_command(
+        [
+            "ffmpeg",
+            "-v",
+            "error",
+            "-y",
+            "-framerate",
+            f"{upload_video_fps:g}",
+            "-i",
+            str(frames_dir / "f_%06d.jpg"),
+            "-c:v",
+            "libx264",
+            "-pix_fmt",
+            "yuv420p",
+            "-movflags",
+            "+faststart",
+            str(input_video),
+        ],
+        job,
+        timeout=900,
+    )
+    job.log(f"[frames] wrote {len(out_rows)} frame(s); encoded VGGT upload video at {upload_video_fps:g} fps")
+    return {
+        "frame_count": len(out_rows),
+        "candidate_frames": len(candidates),
+        "sample_fps_effective": sample_fps,
+        "ffmpeg_filter": vf,
+        "upload_video_fps": upload_video_fps,
+    }
 
 
 def maybe_render_camera_views(state: ToolState, scene_dir: Path, frame_count: int, body: dict[str, object], job: Job) -> None:
@@ -840,7 +1043,10 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
             "target_frames": int(body.get("target_frames", 36)),
             "sample_fps": float(body.get("sample_fps", 0) or 0),
             "crop_preset": body.get("crop_preset", "central_clean"),
+            "max_vggt_frames": int(body.get("max_vggt_frames", 0) or 0),
+            "frame_window": body.get("frame_window", "all"),
             "default_scale_m_per_unit": float(body.get("default_scale_m_per_unit", state.default_scale)),
+            "model_config": reconstruction_config(state, body),
             "viewer_url": job.viewer_url,
             "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         }
@@ -853,7 +1059,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
 
         set_job_state(state, job, step="extract_frames")
         update_scene_manifest(scene_dir, {"job_status": job.status, "job_step": job.step, "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
-        frame_count = extract_frames(
+        frame_info = extract_frames(
             video_path=video_path,
             scene_dir=scene_dir,
             video_file=video_file,
@@ -862,32 +1068,66 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
             sample_fps=float(body.get("sample_fps", 0) or 0),
             width=int(body.get("width", 960)),
             crop_preset=str(body.get("crop_preset", "central_clean")),
+            max_output_frames=int(body.get("max_vggt_frames", 0) or 0),
+            frame_window=str(body.get("frame_window", "all")),
             job=job,
         )
-        (scene_dir / "metadata.json").write_text(json.dumps({**manifest, "frames": frame_count}, indent=2))
+        frame_count = int(frame_info["frame_count"])
+        manifest.update(
+            {
+                "frames": frame_count,
+                "model_config": reconstruction_config(
+                    state,
+                    body,
+                    frame_count=frame_count,
+                    candidate_frames=int(frame_info["candidate_frames"]),
+                    effective_sample_fps=float(frame_info["sample_fps_effective"]),
+                    ffmpeg_filter_expr=str(frame_info["ffmpeg_filter"]),
+                ),
+            }
+        )
+        (scene_dir / "scene_manifest.json").write_text(json.dumps(manifest, indent=2))
+        (scene_dir / "metadata.json").write_text(json.dumps(manifest, indent=2))
 
         if not body.get("skip_vggt", False):
             set_job_state(state, job, step="run_vggt")
             update_scene_manifest(scene_dir, {"job_status": job.status, "job_step": job.step, "frames": frame_count, "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
+            vggt_config = manifest["model_config"]["vggt"]  # type: ignore[index]
+            vggt_cmd = [
+                state.vggt_python,
+                str(ROOT / "tools" / "flight_path_pipeline.py"),
+                "--out-dir",
+                str(state.out_dir),
+                "run-vggt",
+                "--recon-subdir",
+                recon_subdir,
+                "--space",
+                str(vggt_config["space"]),
+                "--backend",
+                str(vggt_config["backend"]),
+                "--video-id",
+                scene_id,
+                "--max-frames",
+                str(int(vggt_config["max_frames_arg"])),
+                "--conf-thres",
+                str(float(vggt_config["conf_thres"])),
+                "--max-points-k",
+                str(float(vggt_config["max_points_k"])),
+                "--vggt-timeout",
+                str(int(vggt_config["timeout_s"])),
+                "--upload-mode",
+                str(vggt_config["upload_mode"]),
+                "--video-sample-fps",
+                str(float(vggt_config["upload_video_fps"])),
+            ]
+            if vggt_config["mask_sky"]:
+                vggt_cmd.append("--mask-sky")
+            if vggt_config["refresh"]:
+                vggt_cmd.append("--refresh")
             run_command(
-                [
-                    state.vggt_python,
-                    str(ROOT / "tools" / "flight_path_pipeline.py"),
-                    "--out-dir",
-                    str(state.out_dir),
-                    "run-vggt",
-                    "--recon-subdir",
-                    recon_subdir,
-                    "--video-id",
-                    scene_id,
-                    "--max-frames",
-                    str(int(body.get("max_vggt_frames", frame_count))),
-                    "--vggt-timeout",
-                    str(int(body.get("vggt_timeout", 900))),
-                    *(["--refresh"] if body.get("refresh_vggt", False) else []),
-                ],
+                vggt_cmd,
                 job,
-                timeout=int(body.get("vggt_timeout", 900)) + 120,
+                timeout=int(vggt_config["timeout_s"]) + 120,
             )
 
         set_job_state(state, job, step="extract_vggt")
@@ -987,6 +1227,18 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--default-scale-m-per-unit", type=float, default=117.6)
     parser.add_argument("--python", default=os.environ.get("FPV_TOOL_PYTHON", sys.executable))
     parser.add_argument("--vggt-python", default=os.environ.get("VGGT_PYTHON", os.environ.get("FPV_TOOL_PYTHON", sys.executable)))
+    parser.add_argument("--vggt-space", default=os.environ.get("VGGT_SPACE", "facebook/vggt-omega"))
+    parser.add_argument("--vggt-backend", choices=["omega", "classic"], default=os.environ.get("VGGT_BACKEND", "omega"))
+    parser.add_argument(
+        "--asset-root",
+        default=asset_root_from_env(),
+        help="CloudFront/S3 root for scene data (default: local). Example: https://d2fioemadmrru3.cloudfront.net",
+    )
+    parser.add_argument(
+        "--app-base",
+        default=os.environ.get("FPV_APP_BASE", ""),
+        help="Web app path prefix when embedded (e.g. /research/fpv-drone-strikes)",
+    )
     return parser.parse_args()
 
 

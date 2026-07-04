@@ -1,0 +1,59 @@
+{
+  "video_file": "2026-06-01_soldiers_near_yahmor_al_shqif_02.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-01_soldiers_near_yahmor_al_shqif_02.mp4",
+  "description": "Soldiers near yahmor al shqif 02",
+  "date": "2026-06-01",
+  "town": "Yahmor al-Shaqif",
+  "annotated_at": "2026-07-03T11:46:19Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 25.633,
+      "time_formatted": "0:25.6",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 26.633,
+      "time_formatted": "0:26.6",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 42.687,
+      "time_formatted": "0:42.7",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 45.226,
+      "time_formatted": "0:45.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 47.867,
+      "time_formatted": "0:47.9",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

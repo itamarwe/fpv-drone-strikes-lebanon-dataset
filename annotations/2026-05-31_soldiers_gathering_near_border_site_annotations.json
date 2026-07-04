@@ -1,0 +1,45 @@
+{
+  "video_file": "2026-05-31_soldiers_gathering_near_border_site.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-31_soldiers_gathering_near_border_site.mp4",
+  "description": "Soldiers gathering near border site",
+  "date": "2026-05-31",
+  "town": "Beaufort Castle",
+  "annotated_at": "2026-07-03T11:52:36Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 34.727,
+      "time_formatted": "0:34.7",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 38.227,
+      "time_formatted": "0:38.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 43.393,
+      "time_formatted": "0:43.4",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

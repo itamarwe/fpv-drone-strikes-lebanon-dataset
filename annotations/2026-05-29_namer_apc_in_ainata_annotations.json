@@ -1,0 +1,73 @@
+{
+  "video_file": "2026-05-29_namer_apc_in_ainata.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-29_namer_apc_in_ainata.mp4",
+  "description": "Namer apc in ainata",
+  "date": "2026-05-29",
+  "town": "Ainata",
+  "annotated_at": "2026-07-03T12:02:16Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.046,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 13.012,
+      "time_formatted": "0:13.0",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 13.612,
+      "time_formatted": "0:13.6",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 21.146,
+      "time_formatted": "0:21.1",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 21.812,
+      "time_formatted": "0:21.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 28.612,
+      "time_formatted": "0:28.6",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 33.512,
+      "time_formatted": "0:33.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 37.679,
+      "time_formatted": "0:37.7",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

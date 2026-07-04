@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VGGT Scene Viewer</title>
+  <link rel="stylesheet" href="__APP_BASE__/tools/scene_viewer/viewer.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">FPV Video</div>
+    <nav class="top-nav" aria-label="Workflow">
+      <a href="/" target="_top">Annotate</a>
+      <a class="active" href="/scenes/" target="_top">Scenes</a>
+    </nav>
+    <label class="scene-picker" for="sceneSelectTop">
+      <select id="sceneSelectTop">
+        <option value="">Loading scenes...</option>
+      </select>
+    </label>
+    <div class="hdr-btns">
+      <button id="saveSceneButton" type="button">Save</button>
+      <span id="saveStateText"></span>
+    </div>
+  </header>
+  <canvas id="viewer"></canvas>
+  <section class="panel">
+    <div class="scene-label">
+      <strong id="title">VGGT Scene</strong>
+      <span class="meta" id="meta"></span>
+    </div>
+    <button id="resetView" title="Reset view">Reset</button>
+    <label class="strip-range" for="pointSize">Point
+      <input id="pointSize" type="range" min="0.001" max="0.018" step="0.001" value="0.005" />
+      <span id="pointSizeValue">0.005</span>
+    </label>
+    <label class="strip-range path-range" for="pathProgress">Path
+      <input id="pathProgress" type="range" min="0" max="120" step="1" value="0" />
+      <span id="frameValue">1</span>
+    </label>
+    <div class="play-controls" aria-label="Playback">
+      <button id="playButton" class="icon-button" type="button" title="Play" aria-label="Play">&#9654;</button>
+      <button id="repeatButton" class="icon-button active" type="button" title="Repeat" aria-label="Repeat">&#8635;</button>
+    </div>
+    <div class="toggles">
+      <label class="toggle"><input id="showFrustums" type="checkbox" checked /> Frustums</label>
+      <label class="toggle"><input id="showPath" type="checkbox" checked /> Path</label>
+      <label class="toggle"><input id="showAxes" type="checkbox" checked /> Axes</label>
+      <label class="toggle"><input id="showPoints" type="checkbox" checked /> Points</label>
+      <label class="toggle"><input id="showDrone" type="checkbox" checked /> Camera</label>
+    </div>
+    <div class="scale-control">
+      <label for="scaleInput">Scale</label>
+      <input id="scaleInput" type="number" min="0.0001" step="0.1" value="117.6" />
+      <span>m/unit</span>
+      <button id="measureButton" type="button">Measure</button>
+    </div>
+    <div class="swatches">
+      <span><i class="dot" style="background:#36e4ff"></i>camera path</span>
+      <span><i class="dot" style="background:#ff4d6d"></i>attack end</span>
+      <span><i class="dot" style="background:#4b6472"></i>ground grid</span>
+    </div>
+  </section>
+  <section class="camera-view" id="cameraViewPanel">
+    <div class="camera-view-header">
+      <span>Frame</span>
+      <div class="camera-view-tabs" aria-label="Camera view mode">
+        <button id="viewActual" type="button" data-view-mode="actual">Actual</button>
+        <button id="viewRender" type="button" data-view-mode="render">Render</button>
+        <button id="viewOverlay" type="button" data-view-mode="overlay" class="active">Overlay</button>
+      </div>
+    </div>
+    <img id="cameraViewImage" alt="Camera view for selected pose" />
+    <div id="cameraViewCaption">No camera-view render available.</div>
+  </section>
+  <section class="plots-panel">
+    <div class="plot-title">Speed vs. Time <strong id="speedReadout">--</strong></div>
+    <canvas id="speedPlot"></canvas>
+    <div class="plot-title">Height Above Ground <strong id="heightReadout">--</strong></div>
+    <canvas id="heightPlot"></canvas>
+    <div class="plot-title">Top View Path <strong id="pathReadout">--</strong></div>
+    <canvas id="topPlot"></canvas>
+  </section>
+  <dialog class="scale-dialog" id="scaleDialog">
+    <form class="scale-form" method="dialog">
+      <h2>Measure Scale</h2>
+      <p id="scaleMeasuredText">Select two points to measure a VGGT distance.</p>
+      <label>
+        Real length in meters
+        <input id="realLengthM" type="number" min="0" step="0.01" placeholder="8.2" />
+      </label>
+      <p id="scaleResultText">Scale: -- m/unit</p>
+      <div class="scale-dialog-actions">
+        <button id="applyScale" type="button">Apply Scale</button>
+        <button value="close">Close</button>
+      </div>
+    </form>
+  </dialog>
+  <script>window.SCENE_BASE = "__SCENE_BASE__"; window.APP_BASE = "__APP_BASE__"; window.API_BASE = "__API_BASE__";</script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="__APP_BASE__/tools/scene_viewer/viewer.js"></script>
+</body>
+</html>

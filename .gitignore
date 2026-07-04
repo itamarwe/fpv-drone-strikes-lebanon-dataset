@@ -3,3 +3,22 @@ __pycache__/
 
 # Local reconstruction outputs can be large; keep them out of Git by default.
 scenes/
+
+# Next.js FPV tool app (synced assets + build output)
+apps/fpv-tool/node_modules/
+apps/fpv-tool/.next/
+apps/fpv-tool/next-env.d.ts
+apps/fpv-tool/public/tools/
+apps/fpv-tool/public/annotate/
+apps/fpv-tool/public/scenes/
+
+# Secrets / local env
+.env
+.env.local
+.env*.local
+
+# Playwright e2e deps + outputs
+tools/e2e/node_modules/
+tools/e2e/test-results/
+tools/e2e/playwright-report/
+

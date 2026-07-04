@@ -531,8 +531,11 @@ def run_vggt(args: argparse.Namespace) -> None:
     print(f"[vggt] connecting to {args.space}", flush=True)
     hf_token = os.environ.get(args.hf_token_env) if args.hf_token_env else None
     if hf_token:
+        import inspect
+
         print(f"[vggt] using Hugging Face token from ${args.hf_token_env}", flush=True)
-        client = Client(args.space, hf_token=hf_token, verbose=False)
+        token_kwarg = "hf_token" if "hf_token" in inspect.signature(Client).parameters else "token"
+        client = Client(args.space, **{token_kwarg: hf_token}, verbose=False)
     else:
         client = Client(args.space, verbose=False)
     for idx, video_dir in enumerate(video_dirs, start=1):
@@ -540,31 +543,74 @@ def run_vggt(args: argparse.Namespace) -> None:
         if out_glb.exists() and out_glb.stat().st_size > 0 and not args.refresh:
             print(f"[vggt {idx}/{len(video_dirs)}] skip existing {video_dir.name}")
             continue
-        frame_files = sorted((video_dir / "frames").glob("*.jpg"))
-        if args.max_frames and len(frame_files) > args.max_frames:
-            step = math.ceil(len(frame_files) / args.max_frames)
-            frame_files = frame_files[::step]
-        print(f"[vggt {idx}/{len(video_dirs)}] uploading {len(frame_files)} frames: {video_dir.name}", flush=True)
-        _, target_dir, preview, _ = client.predict(
-            input_video=None,
-            input_images=[handle_file(str(f)) for f in frame_files],
-            video_sample_fps=2.0,
-            api_name="/update_gallery_on_upload",
-        )
+        upload_mode = args.upload_mode
+        input_video = video_dir / "vggt_input.mp4"
+        if upload_mode == "auto":
+            upload_mode = "video" if input_video.exists() else "images"
+        if args.backend == "classic" and upload_mode == "video":
+            print("[vggt] classic backend video uploads are sampled at 1fps by the demo; using images instead", flush=True)
+            upload_mode = "images"
+        if upload_mode == "video":
+            if not input_video.exists():
+                raise SystemExit(f"{input_video} does not exist; rerun frame extraction or use --upload-mode images")
+            print(
+                f"[vggt {idx}/{len(video_dirs)}] uploading video at {args.video_sample_fps:g} fps: {video_dir.name}",
+                flush=True,
+            )
+            _, target_dir, preview, _ = client.predict(
+                input_video={"video": handle_file(str(input_video)), "subtitles": None},
+                input_images=[],
+                video_sample_fps=float(args.video_sample_fps),
+                api_name="/update_gallery_on_upload",
+            )
+        else:
+            frame_files = sorted((video_dir / "frames").glob("*.jpg"))
+            if args.max_frames and len(frame_files) > args.max_frames:
+                step = math.ceil(len(frame_files) / args.max_frames)
+                frame_files = frame_files[::step]
+            print(f"[vggt {idx}/{len(video_dirs)}] uploading {len(frame_files)} frames: {video_dir.name}", flush=True)
+            upload_files = [handle_file(str(f)) for f in frame_files]
+            if args.backend == "classic":
+                _, target_dir, preview, _ = client.predict(
+                    input_video=None,
+                    input_images=upload_files,
+                    api_name="/update_gallery_on_upload",
+                )
+            else:
+                _, target_dir, preview, _ = client.predict(
+                    input_video=None,
+                    input_images=upload_files,
+                    video_sample_fps=2.0,
+                    api_name="/update_gallery_on_upload",
+                )
         print(f"[vggt] target_dir={target_dir}; preview_frames={len(preview) if preview else 0}", flush=True)
         t0 = time.time()
-        job = client.submit(
-            target_dir=target_dir,
-            conf_thres=args.conf_thres,
-            mask_black_bg=False,
-            mask_white_bg=False,
-            show_cam=True,
-            mask_sky=True,
-            max_points_k=args.max_points_k,
-            api_name="/gradio_demo",
-        )
+        if args.backend == "classic":
+            job = client.submit(
+                target_dir=target_dir,
+                conf_thres=args.conf_thres,
+                frame_filter="All",
+                mask_black_bg=False,
+                mask_white_bg=False,
+                show_cam=True,
+                mask_sky=bool(args.mask_sky),
+                prediction_mode="Pointmap Regression",
+                api_name="/gradio_demo",
+            )
+        else:
+            job = client.submit(
+                target_dir=target_dir,
+                conf_thres=args.conf_thres,
+                mask_black_bg=False,
+                mask_white_bg=False,
+                show_cam=True,
+                mask_sky=bool(args.mask_sky),
+                max_points_k=args.max_points_k,
+                api_name="/gradio_demo",
+            )
         print(f"[vggt] waiting for /gradio_demo result (timeout={args.vggt_timeout}s)", flush=True)
-        glb_path, vis_log = job.result(timeout=args.vggt_timeout)
+        result = job.result(timeout=args.vggt_timeout)
+        glb_path, vis_log = result[0], result[1]
         shutil.copy(glb_path, out_glb)
         (video_dir / "vggt_log.txt").write_text((vis_log or "")[:5000])
         print(f"[vggt] saved {out_glb} in {time.time() - t0:.0f}s", flush=True)
@@ -1226,13 +1272,17 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-points-k", type=float, default=1000.0)
     p.add_argument("--vggt-timeout", type=int, default=900)
     p.add_argument("--hf-token-env", default="HF_TOKEN")
+    p.add_argument("--backend", choices=["omega", "classic"], default="omega")
+    p.add_argument("--upload-mode", choices=["auto", "images", "video"], default="auto")
+    p.add_argument("--video-sample-fps", type=float, default=10.0)
+    p.add_argument("--mask-sky", action="store_true", help="Enable the Space sky-segmentation mask before reconstruction")
     p.add_argument("--refresh", action="store_true")
 
     p = sub.add_parser("extract-vggt", help="Parse VGGT .glb files into relative paths")
     p.add_argument("--recon-subdir", default=DEFAULT_RECON_SUBDIR)
     p.add_argument("--video-id")
     p.add_argument("--limit", type=int)
-    p.add_argument("--max-points", type=int, default=220_000)
+    p.add_argument("--max-points", type=int, default=1_000_000)
     p.add_argument("--refresh", action="store_true")
 
     p = sub.add_parser("scale-report", help="Create scale method report from relative paths")

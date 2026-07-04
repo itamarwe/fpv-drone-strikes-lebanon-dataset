@@ -1,0 +1,73 @@
+{
+  "video_file": "2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah.mp4",
+  "description": "Targeting israeli soldiers eastern outskirts zawtar al sharqiyah",
+  "date": "2026-06-02",
+  "town": "Zawtar al-Sharqiyah",
+  "annotated_at": "2026-07-03T10:58:18Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.5,
+      "time_formatted": "0:08.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 12.5,
+      "time_formatted": "0:12.5",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 13.233,
+      "time_formatted": "0:13.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 16.867,
+      "time_formatted": "0:16.9",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 17.5,
+      "time_formatted": "0:17.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 21.133,
+      "time_formatted": "0:21.1",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 26.233,
+      "time_formatted": "0:26.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 28.767,
+      "time_formatted": "0:28.8",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}
