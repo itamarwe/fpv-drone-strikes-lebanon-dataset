@@ -1,0 +1,60 @@
+{
+  "video_file": "2026-05-16_merkava_tank_bayyadah_mmirleb_16351.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-16_merkava_tank_bayyadah_mmirleb_16351.mp4",
+  "description": "merkava tank bayyadah",
+  "date": "2026-05-16",
+  "town": "Al Bayada / Bayyadah",
+  "annotated_at": "2026-07-04T12:57:17Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.05,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 12.017,
+      "time_formatted": "0:12.0",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 12.75,
+      "time_formatted": "0:12.7",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 29.047,
+      "time_formatted": "0:29.0",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 34.18,
+      "time_formatted": "0:34.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 35.48,
+      "time_formatted": "0:35.5",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ],
+  "exclusion_masks": []
+}

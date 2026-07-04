@@ -114,7 +114,7 @@ def resolve_annotation(query: str) -> Path:
     """Resolve a scene name/date/path to a single annotation file."""
     p = Path(query)
     if p.suffix == ".json" and p.exists():
-        return p
+        return p.resolve()
     stem = query[: -len("_annotations.json")] if query.endswith("_annotations.json") else query
     matches = sorted(ANNOTATION_DIR.glob(f"*{stem}*_annotations.json"))
     if not matches:
@@ -179,7 +179,7 @@ def main() -> int:
     annotations = [resolve_annotation(s) for s in args.scenes]
     log(f"preset={args.preset} scenes:")
     for a in annotations:
-        print(f"    {a.relative_to(ROOT)}")
+        print(f"    {os.path.relpath(a, ROOT)}")
     if args.dry_run:
         return 0
 
