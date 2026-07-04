@@ -671,7 +671,11 @@ const g = id => document.getElementById(id);
 // ─────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────
-(function init() {
+// Defined as a hoisted declaration and invoked at the very end of the script so
+// that every top-level const/let (mask state, VGGT_FRAME_WARN_THRESHOLD, etc.) is
+// initialized before init's loadVideo chain reads it (avoids temporal-dead-zone
+// ReferenceErrors).
+function init() {
   const sel = g('videoSelect');
   VIDEOS.forEach((v, i) => {
     const o = document.createElement('option');
@@ -690,7 +694,7 @@ const g = id => document.getElementById(id);
     const idx = VIDEOS.findIndex(v => videoFileFor(v) === wantedVideo);
     if (idx !== -1) selectVideoByIndex(idx);
   }
-})();
+}
 
 // ─────────────────────────────────────────────
 // LOAD VIDEO
@@ -1958,6 +1962,9 @@ function bindEvents() {
     }
   });
 }
+
+// Run init last, once every top-level declaration above has been initialized.
+init();
 </script>
 </body>
 </html>
