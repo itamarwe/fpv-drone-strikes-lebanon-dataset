@@ -22,3 +22,6 @@ tools/e2e/node_modules/
 tools/e2e/test-results/
 tools/e2e/playwright-report/
 
+
+# archived experiment scenes (local only)
+scene_archive/
