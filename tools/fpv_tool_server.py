@@ -41,6 +41,12 @@ SCENE_VIEWER_INDEX_RE = re.compile(r"^/scenes/(.+)/viewer(?:/index\.html)?/?$")
 # This is NOT a hard cap -- frames are capped only when max_vggt_frames > 0.
 VGGT_FRAME_WARN_THRESHOLD = 125
 
+# Local copy of the VGGT-Omega sky-segmentation model, used to run skyseg on the
+# CLEAN frames client-side (before painting exclusion boxes), so the black boxes
+# never bias the sky prediction.
+SKYSEG_ONNX = os.environ.get("SKYSEG_ONNX", "/tmp/fpv-skyseg/skyseg.onnx")
+_skyseg_session = None
+
 
 def slugify(value: str) -> str:
     value = Path(value).stem if value else "video"
@@ -150,8 +156,9 @@ def reconstruction_config(
     conf_thres = float(body.get("vggt_conf_thres", 50.0) or 50.0)
     max_points_k = float(body.get("vggt_max_points_k", 1000.0) or 1000.0)
     mask_sky = body_bool(body, "vggt_mask_sky", False)
-    # If exclusion masks are painted black, tell VGGT to drop the black background.
-    mask_black_bg = bool(body.get("exclusion_masks"))
+    # If exclusion masks or client-side skyseg paint pixels black, tell VGGT to
+    # drop the black background.
+    mask_black_bg = bool(body.get("exclusion_masks")) or body_bool(body, "client_sky_seg", False)
     max_frames_arg = max_vggt_frames or frame_count or 0
     crop_preset = str(body.get("crop_preset", "central_clean"))
     width = int(body.get("width", 960) or 0)
@@ -1024,6 +1031,53 @@ def paint_exclusion_masks(path: Path, masks: list[dict[str, object]], crop_rect:
     return drew
 
 
+def get_skyseg_session():
+    global _skyseg_session
+    if _skyseg_session is None:
+        import onnxruntime
+
+        _skyseg_session = onnxruntime.InferenceSession(SKYSEG_ONNX, providers=["CPUExecutionProvider"])
+    return _skyseg_session
+
+
+def skyseg_sky_mask(img_bgr, session):
+    """Replicates VGGT-Omega's skyseg (visual_util.run_skyseg / segment_sky).
+
+    Returns a boolean mask where True == sky (result_map < 32), at the frame's
+    resolution. Run on the CLEAN frame so painted boxes don't bias the prediction.
+    """
+    import cv2
+    import numpy as np
+
+    h, w = img_bgr.shape[:2]
+    inp = cv2.resize(img_bgr, (320, 320))
+    inp = cv2.cvtColor(inp, cv2.COLOR_BGR2RGB).astype(np.float32)
+    inp = (inp / 255.0 - [0.485, 0.456, 0.406]) / [0.229, 0.224, 0.225]
+    inp = inp.transpose(2, 0, 1).reshape(1, 3, 320, 320).astype("float32")
+    iname = session.get_inputs()[0].name
+    oname = session.get_outputs()[0].name
+    res = np.array(session.run([oname], {iname: inp})).squeeze()
+    lo, hi = float(res.min()), float(res.max())
+    res = (res - lo) / (hi - lo) if hi > lo else np.zeros_like(res)
+    res = cv2.resize((res * 255.0).astype("uint8"), (w, h))
+    # VGGT-Omega's apply_sky_mask keeps result_map < 32 (ground) and removes the
+    # rest, so sky == result_map >= 32 (verified: ~5%, all in the top strip).
+    return res >= 32
+
+
+def paint_sky_black(path: Path, session) -> float:
+    """Paint sky pixels black on a frame; returns the fraction masked as sky."""
+    import cv2
+
+    img = cv2.imread(str(path))
+    if img is None:
+        return 0.0
+    mask = skyseg_sky_mask(img, session)
+    img[mask] = 0
+    cv2.imwrite(str(path), img)
+    return float(mask.mean())
+
+
 def extract_frames(
     video_path: Path,
     scene_dir: Path,
@@ -1039,6 +1093,7 @@ def extract_frames(
     clahe: dict[str, object] | None = None,
     adaptive: dict[str, object] | None = None,
     exclusion_masks: list[dict[str, object]] | None = None,
+    client_sky_seg: bool = False,
 ) -> dict[str, object]:
     frames_dir = scene_dir / "frames"
     tmp_root = scene_dir / "_extract_tmp"
@@ -1163,12 +1218,28 @@ def extract_frames(
             masks_applied = {"count": len(exclusion_masks), "crop_rect_norm": list(mask_rect)}
             job.log(f"[frames] painting {len(exclusion_masks)} exclusion mask(s) black")
 
+    # Client-side skyseg: detect sky on the CLEAN frame (before boxes) and paint it
+    # black, so the exclusion boxes never bias the sky prediction.
+    sky_session = None
+    sky_applied = None
+    if client_sky_seg:
+        try:
+            sky_session = get_skyseg_session()
+            sky_applied = {"enabled": True, "model": SKYSEG_ONNX, "order": "sky_then_boxes"}
+            job.log("[frames] client-side skyseg on clean frames (sky_then_boxes)")
+        except Exception as exc:  # pragma: no cover
+            job.log(f"[frames] client-side skyseg unavailable ({exc}); skipping")
+            sky_session = None
+
     out_rows: list[dict[str, object]] = []
+    sky_fracs: list[float] = []
     for frame_index, item in enumerate(selected, start=1):
         dst = frames_dir / f"f_{frame_index:06d}.jpg"
         shutil.copy2(Path(item["src"]), dst)
         if clahe_lut is not None:
             apply_luma_lut(dst, clahe_lut)
+        if sky_session is not None:
+            sky_fracs.append(paint_sky_black(dst, sky_session))
         if exclusion_masks and mask_rect is not None:
             paint_exclusion_masks(dst, exclusion_masks, mask_rect)
         out_rows.append(
@@ -1184,6 +1255,10 @@ def extract_frames(
                 "sequence_time_s": f"{float(item['sequence_time_s']):.3f}",
             }
         )
+    if sky_applied is not None and sky_fracs:
+        mean_sky = sum(sky_fracs) / len(sky_fracs)
+        sky_applied["mean_sky_fraction"] = round(mean_sky, 4)
+        job.log(f"[frames] skyseg painted mean {mean_sky * 100:.1f}% of each frame black")
     if tmp_root.exists():
         shutil.rmtree(tmp_root)
     if not out_rows:
@@ -1225,6 +1300,7 @@ def extract_frames(
         "clahe": clahe_applied,
         "adaptive_fps": adaptive_applied,
         "exclusion_masks": masks_applied,
+        "client_sky_seg": sky_applied,
     }
 
 
@@ -1324,6 +1400,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
             clahe=body.get("clahe") if isinstance(body.get("clahe"), dict) else None,
             adaptive=body.get("adaptive_fps") if isinstance(body.get("adaptive_fps"), dict) else None,
             exclusion_masks=body.get("exclusion_masks") if isinstance(body.get("exclusion_masks"), list) else None,
+            client_sky_seg=body_bool(body, "client_sky_seg", False),
         )
         frame_count = int(frame_info["frame_count"])
         manifest.update(
