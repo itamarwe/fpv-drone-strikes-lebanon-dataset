@@ -640,6 +640,7 @@ const FLIGHT_TYPES = new Set(['flight_start', 'new_flight_start']);
 let current = null;
 let annotations = [];
 let masks = [];
+let maskMode = false; // declared here (not with the mask helpers below) so loadVideo can read it during init without a temporal-dead-zone error
 let thumbs = [];      // [{time, canvas}]
 let thumbAbort = false;
 let selectedSceneSegments = new Set();
@@ -1188,7 +1189,7 @@ function updateCropBoxOverlay() {
 // EXCLUSION MASKS (regions painted black + excluded from reconstruction)
 // Stored in normalized [0,1] coords relative to the video frame.
 // ─────────────────────────────────────────────
-let maskMode = false;
+// maskMode is declared with the top-level state above (init/loadVideo read it early)
 let maskDraft = null;
 let maskDragStart = null;
 const SVGNS = 'http://www.w3.org/2000/svg';
