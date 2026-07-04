@@ -76,6 +76,19 @@ header{position:relative;z-index:1000;display:flex;align-items:center;gap:10px;p
 .crop-box-overlay::before{content:'central clean crop';position:absolute;top:6px;left:8px;
   padding:2px 6px;border-radius:4px;background:rgba(3,17,28,.82);color:var(--accent);
   font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.mask-overlay{position:absolute;display:none;z-index:5;pointer-events:none}
+.mask-overlay.active{pointer-events:auto;cursor:crosshair}
+.mask-shape{fill:rgba(255,60,60,.28);stroke:#ff3c3c;stroke-width:1.5px;vector-effect:non-scaling-stroke}
+.mask-draft{fill:rgba(255,209,102,.20);stroke:#ffd166;stroke-width:1.5px;stroke-dasharray:5 3;vector-effect:non-scaling-stroke}
+.mask-panel{display:grid;gap:6px;border-top:1px solid var(--border);padding-top:10px;margin-top:6px}
+.mask-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.mask-controls select{background:var(--surf2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:5px 6px;font-size:12px}
+.mask-controls button{padding:4px 9px;font-size:12px}
+.mask-hint{font-size:11px;color:var(--muted);line-height:1.35;margin:0}
+.mask-list{display:grid;gap:4px;max-height:120px;overflow:auto}
+.mask-item{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;
+  padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:#07111d}
+.mask-item button{padding:1px 7px;font-size:12px}
 .vid-placeholder{color:#3a6080;text-align:center;user-select:none}
 .vid-placeholder .big{font-size:42px;opacity:.4;margin-bottom:8px}
 .vid-placeholder p{font-size:13px}
@@ -273,6 +286,7 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
       </div>
       <video id="mainVideo" preload="metadata"></video>
       <div class="crop-box-overlay" id="cropBoxOverlay"></div>
+      <svg class="mask-overlay" id="maskOverlay" viewBox="0 0 1 1" preserveAspectRatio="none"></svg>
     </div>
 
     <div class="filmstrip-section">
@@ -342,6 +356,20 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
     </div>
     <div class="seg-list" id="segList">
       <p class="empty-state">No segments marked yet</p>
+    </div>
+    <div class="mask-panel">
+      <div class="seg-list-hdr"><span>Exclusion Masks</span><span id="maskCount">0</span></div>
+      <div class="mask-controls">
+        <button id="btnMaskMode" type="button">Draw masks</button>
+        <select id="maskShape" title="Shape to draw">
+          <option value="rect">Rectangle</option>
+          <option value="ellipse">Ellipse</option>
+          <option value="polygon">Polygon</option>
+        </select>
+        <button id="btnMaskClear" type="button">Clear</button>
+      </div>
+      <p class="mask-hint" id="maskHint" style="display:none">Drag for rectangle/ellipse; for polygon click points then double-click to finish. These regions are painted black and excluded from VGGT reconstruction.</p>
+      <div class="mask-list" id="maskList"></div>
     </div>
   </div>
 </div>
@@ -611,6 +639,7 @@ const FLIGHT_TYPES = new Set(['flight_start', 'new_flight_start']);
 // ─────────────────────────────────────────────
 let current = null;
 let annotations = [];
+let masks = [];
 let thumbs = [];      // [{time, canvas}]
 let thumbAbort = false;
 let selectedSceneSegments = new Set();
@@ -674,6 +703,8 @@ function loadVideo(v) {
     history.replaceState(null, '', url);
   } catch (e) { /* non-browser / file: mode */ }
   annotations = [];
+  masks = [];
+  if (maskMode) setMaskMode(false);
   selectedSceneSegments = new Set();
   activeSceneStatus = null;
   activeJobId = null;
@@ -820,9 +851,11 @@ async function loadSavedAnnotations(v) {
       comment: s.comment || '',
       thumb: null,
     }));
+    masks = normalizeMasks(d.exclusion_masks);
     renderAnnotations();
     updateFilmstripMarkers();
     renderReconstructionPanel();
+    updateMaskOverlay();
     loadVideoStatuses();
   } catch {
     g('reconStatus').textContent = 'Start the local tool server to load saved annotations and scenes.';
@@ -1149,6 +1182,167 @@ function updateCropBoxOverlay() {
   overlay.style.top = `${videoRect.top - wrapperRect.top + videoRect.height * CENTRAL_CLEAN_CROP.y}px`;
   overlay.style.width = `${videoRect.width * CENTRAL_CLEAN_CROP.w}px`;
   overlay.style.height = `${videoRect.height * CENTRAL_CLEAN_CROP.h}px`;
+}
+
+// ─────────────────────────────────────────────
+// EXCLUSION MASKS (regions painted black + excluded from reconstruction)
+// Stored in normalized [0,1] coords relative to the video frame.
+// ─────────────────────────────────────────────
+let maskMode = false;
+let maskDraft = null;
+let maskDragStart = null;
+const SVGNS = 'http://www.w3.org/2000/svg';
+
+const clamp01 = n => Math.min(1, Math.max(0, Number(n) || 0));
+const r3 = n => Math.round(Number(n) * 1000) / 1000;
+
+function roundMask(m) {
+  if (m.type === 'rect') return {type:'rect', x:r3(m.x), y:r3(m.y), w:r3(m.w), h:r3(m.h)};
+  if (m.type === 'ellipse') return {type:'ellipse', cx:r3(m.cx), cy:r3(m.cy), rx:r3(m.rx), ry:r3(m.ry)};
+  return {type:'polygon', points:(m.points||[]).map(p => [r3(p[0]), r3(p[1])])};
+}
+
+function normalizeMasks(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map(m => {
+    if (m.type === 'rect') return {type:'rect', x:clamp01(m.x), y:clamp01(m.y), w:clamp01(m.w), h:clamp01(m.h)};
+    if (m.type === 'ellipse') return {type:'ellipse', cx:clamp01(m.cx), cy:clamp01(m.cy), rx:clamp01(m.rx), ry:clamp01(m.ry)};
+    if (m.type === 'polygon') return {type:'polygon', points:(m.points||[]).map(p => [clamp01(p[0]), clamp01(p[1])])};
+    return null;
+  }).filter(Boolean);
+}
+
+function maskSvg() { return g('maskOverlay'); }
+
+function updateMaskOverlay() {
+  const svg = maskSvg();
+  if (!svg) return;
+  if (!current || !vid.videoWidth || vid.style.display === 'none') { svg.style.display = 'none'; return; }
+  const vr = vid.getBoundingClientRect();
+  const wr = vid.parentElement.getBoundingClientRect();
+  if (!vr.width || !vr.height) { svg.style.display = 'none'; return; }
+  svg.style.display = 'block';
+  svg.style.left = `${vr.left - wr.left}px`;
+  svg.style.top = `${vr.top - wr.top}px`;
+  svg.style.width = `${vr.width}px`;
+  svg.style.height = `${vr.height}px`;
+  renderMasks();
+}
+
+function maskPointFromEvent(e) {
+  const r = maskSvg().getBoundingClientRect();
+  return [clamp01((e.clientX - r.left) / r.width), clamp01((e.clientY - r.top) / r.height)];
+}
+
+function maskShapeEl(m, cls) {
+  let el;
+  if (m.type === 'rect') {
+    el = document.createElementNS(SVGNS, 'rect');
+    el.setAttribute('x', Math.min(m.x, m.x + m.w)); el.setAttribute('y', Math.min(m.y, m.y + m.h));
+    el.setAttribute('width', Math.abs(m.w)); el.setAttribute('height', Math.abs(m.h));
+  } else if (m.type === 'ellipse') {
+    el = document.createElementNS(SVGNS, 'ellipse');
+    el.setAttribute('cx', m.cx); el.setAttribute('cy', m.cy);
+    el.setAttribute('rx', Math.abs(m.rx)); el.setAttribute('ry', Math.abs(m.ry));
+  } else {
+    el = document.createElementNS(SVGNS, 'polygon');
+    el.setAttribute('points', (m.points || []).map(p => p.join(',')).join(' '));
+  }
+  el.setAttribute('class', cls);
+  return el;
+}
+
+function renderMasks() {
+  const svg = maskSvg();
+  if (!svg) return;
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  masks.forEach(m => svg.appendChild(maskShapeEl(m, 'mask-shape')));
+  if (maskDraft) svg.appendChild(maskShapeEl(maskDraft, 'mask-draft'));
+  if (g('maskCount')) g('maskCount').textContent = String(masks.length);
+  renderMaskList();
+}
+
+function renderMaskList() {
+  const box = g('maskList');
+  if (!box) return;
+  box.innerHTML = '';
+  masks.forEach((m, i) => {
+    const row = document.createElement('div');
+    row.className = 'mask-item';
+    const label = document.createElement('span');
+    label.textContent = `${i + 1}. ${m.type}`;
+    const del = document.createElement('button');
+    del.type = 'button'; del.textContent = 'Delete';
+    del.addEventListener('click', () => { masks.splice(i, 1); renderMasks(); });
+    row.append(label, del);
+    box.appendChild(row);
+  });
+}
+
+function setMaskMode(on) {
+  maskMode = !!on;
+  maskDraft = null;
+  maskDragStart = null;
+  const svg = maskSvg();
+  if (svg) svg.classList.toggle('active', maskMode);
+  const btn = g('btnMaskMode');
+  if (btn) { btn.classList.toggle('active', maskMode); btn.textContent = maskMode ? 'Done drawing' : 'Draw masks'; }
+  if (g('maskHint')) g('maskHint').style.display = maskMode ? 'block' : 'none';
+  updateMaskOverlay();
+}
+
+function bindMaskEvents() {
+  const svg = maskSvg();
+  if (!svg) return;
+  svg.addEventListener('pointerdown', e => {
+    if (!maskMode) return;
+    e.preventDefault();
+    const shape = g('maskShape').value;
+    const p = maskPointFromEvent(e);
+    if (shape === 'polygon') {
+      if (!maskDraft || maskDraft.type !== 'polygon') maskDraft = {type:'polygon', points:[]};
+      maskDraft.points.push(p);
+      renderMasks();
+      return;
+    }
+    maskDragStart = p;
+    maskDraft = shape === 'rect'
+      ? {type:'rect', x:p[0], y:p[1], w:0, h:0}
+      : {type:'ellipse', cx:p[0], cy:p[1], rx:0, ry:0};
+    try { svg.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!maskMode || !maskDragStart || !maskDraft) return;
+    const p = maskPointFromEvent(e);
+    if (maskDraft.type === 'rect') {
+      maskDraft.w = p[0] - maskDragStart[0]; maskDraft.h = p[1] - maskDragStart[1];
+    } else if (maskDraft.type === 'ellipse') {
+      maskDraft.cx = (maskDragStart[0] + p[0]) / 2; maskDraft.cy = (maskDragStart[1] + p[1]) / 2;
+      maskDraft.rx = Math.abs(p[0] - maskDragStart[0]) / 2; maskDraft.ry = Math.abs(p[1] - maskDragStart[1]) / 2;
+    }
+    renderMasks();
+  });
+  const finishDrag = () => {
+    if (!maskDragStart || !maskDraft) return;
+    if (maskDraft.type === 'rect') {
+      if (maskDraft.w < 0) { maskDraft.x += maskDraft.w; maskDraft.w = -maskDraft.w; }
+      if (maskDraft.h < 0) { maskDraft.y += maskDraft.h; maskDraft.h = -maskDraft.h; }
+    }
+    const min = 0.006;
+    const big = maskDraft.type === 'rect'
+      ? (maskDraft.w > min && maskDraft.h > min)
+      : (maskDraft.rx > min && maskDraft.ry > min);
+    if (big) masks.push(maskDraft);
+    maskDraft = null; maskDragStart = null; renderMasks();
+  };
+  svg.addEventListener('pointerup', finishDrag);
+  svg.addEventListener('pointercancel', finishDrag);
+  svg.addEventListener('dblclick', e => {
+    if (!maskMode) return;
+    e.preventDefault();
+    if (maskDraft && maskDraft.type === 'polygon' && maskDraft.points.length >= 3) masks.push(maskDraft);
+    maskDraft = null; renderMasks();
+  });
 }
 
 function sceneKeyForSelection() {
@@ -1533,6 +1727,7 @@ function annotationPayload() {
       label:          (SEG[a.type] || {label:a.type}).label,
       comment:        a.comment || '',
     })),
+    exclusion_masks: masks.map(roundMask),
   };
 }
 
@@ -1603,9 +1798,11 @@ function loadJSON(file) {
             time: s.time, type: s.type,
             comment: s.comment || '', thumb: null,
           }));
+          masks = normalizeMasks(d.exclusion_masks);
           renderAnnotations();
           updateFilmstripMarkers();
           renderReconstructionPanel();
+          updateMaskOverlay();
         }, {once: true});
       } else {
         alert('Could not find matching video for this annotation file.');
@@ -1655,10 +1852,11 @@ function bindEvents() {
     onTimeUpdate();
     renderReconstructionPanel();
     updateCropBoxOverlay();
+    updateMaskOverlay();
     generateFilmstrip();
     refreshJobManager();
   });
-  vid.addEventListener('loadeddata', updateCropBoxOverlay);
+  vid.addEventListener('loadeddata', () => { updateCropBoxOverlay(); updateMaskOverlay(); });
   vid.addEventListener('timeupdate', () => {
     onTimeUpdate();
     onScenePreviewTimeUpdate();
@@ -1731,7 +1929,12 @@ function bindEvents() {
       refreshSceneStatus();
     });
   });
-  window.addEventListener('resize', updateCropBoxOverlay);
+  window.addEventListener('resize', () => { updateCropBoxOverlay(); updateMaskOverlay(); });
+  // Exclusion masks
+  bindMaskEvents();
+  g('btnMaskMode').addEventListener('click', () => setMaskMode(!maskMode));
+  g('btnMaskClear').addEventListener('click', () => { masks = []; maskDraft = null; renderMasks(); });
+  g('maskShape').addEventListener('change', () => { maskDraft = null; renderMasks(); });
 
   // Keyboard shortcuts
   document.addEventListener('keydown', e => {
