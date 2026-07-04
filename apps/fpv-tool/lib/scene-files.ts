@@ -44,6 +44,40 @@ async function serveGenericViewer(parts: string[]): Promise<Response | null> {
   });
 }
 
+// Serve the 3D viewer for a scene addressed by id alone (clean /viewer/<id> URL),
+// locating which video directory holds it. Scene data still loads from
+// /scenes/<stem>/<id>/viewer/ via SCENE_BASE.
+export async function serveViewerBySceneId(sceneId: string): Promise<Response | null> {
+  let stems: string[];
+  try {
+    stems = (await fs.readdir(scenesDir, { withFileTypes: true }))
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name);
+  } catch {
+    return null;
+  }
+  for (const stem of stems) {
+    // The scene id is prefixed with its video slug, so only inspect matching dirs.
+    if (sceneId !== stem && !sceneId.startsWith(`${stem}_`)) continue;
+    const viewerDir = ensureChild(scenesDir, stem, sceneId, "viewer");
+    try {
+      await fs.access(path.join(viewerDir, "scene_meta.json"));
+    } catch {
+      continue;
+    }
+    const html = await fs.readFile(viewerIndexPath, "utf8");
+    const sceneBase = sceneDataBase(`${stem}/${sceneId}`, basePath);
+    const body = html
+      .replaceAll("__SCENE_BASE__", sceneBase)
+      .replaceAll("__APP_BASE__", basePath)
+      .replaceAll("__API_BASE__", "");
+    return new Response(body, {
+      headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
+    });
+  }
+  return null;
+}
+
 export async function serveSceneRequest(urlPath: string): Promise<Response | null> {
   const normalized = urlPath.replace(/\/$/, "") || "/scenes";
   if (normalized === "/scenes") {

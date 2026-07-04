@@ -1,46 +1,67 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Dark theme tuned to the FPV tool palette. */
+:root {
+  --radius: 0.625rem;
+  --background: #06111f;
+  --foreground: #eaf4ff;
+  --card: #0b1a2c;
+  --card-foreground: #eaf4ff;
+  --popover: #0b1a2c;
+  --popover-foreground: #eaf4ff;
+  --primary: #56d7ff;
+  --primary-foreground: #04121f;
+  --secondary: #16273c;
+  --secondary-foreground: #eaf4ff;
+  --muted: #12233a;
+  --muted-foreground: #9db5cc;
+  --accent: #16273c;
+  --accent-foreground: #eaf4ff;
+  --destructive: #ff5d73;
+  --border: #1d3350;
+  --input: #1d3350;
+  --ring: #56d7ff;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+* {
+  border-color: var(--border);
+}
+
 html,
 body {
   margin: 0;
   min-height: 100%;
-  background: #06111f;
-  color: #eaf4ff;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
-}
-
-a {
-  color: #56d7ff;
-}
-
-main {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 48px 20px;
-  line-height: 1.5;
-}
-
-main h1 {
-  margin: 0 0 12px;
-  font-size: 28px;
-}
-
-main p {
-  margin: 0 0 16px;
-  color: #9db5cc;
-}
-
-main nav {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-main nav a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 0 14px;
-  border: 1px solid #24435e;
-  border-radius: 999px;
-  text-decoration: none;
-  font-weight: 700;
 }
