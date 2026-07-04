@@ -152,7 +152,7 @@ def request_body(annotation: dict[str, Any], selected: list[dict[str, Any]], arg
             if args.adaptive_fps
             else None
         ),
-        "exclusion_masks": annotation.get("exclusion_masks") or None,
+        "exclusion_masks": None if args.no_masks else (annotation.get("exclusion_masks") or None),
     }
 
 
@@ -281,6 +281,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--fps", type=float, default=10.0)
     parser.add_argument("--tail-seconds", type=float, default=0.0, help="keep only the last N seconds of the flight sequence (0 = whole chain)")
+    parser.add_argument("--no-masks", action="store_true", help="ignore the annotation's exclusion_masks (no black boxes, no mask_black_bg)")
     parser.add_argument("--width", type=int, default=660)
     parser.add_argument("--crop-preset", default="central_clean")
     parser.add_argument("--scale", type=float, default=117.6)
