@@ -123,6 +123,7 @@ def request_body(annotation: dict[str, Any], selected: list[dict[str, Any]], arg
             if args.adaptive_fps
             else None
         ),
+        "exclusion_masks": annotation.get("exclusion_masks") or None,
     }
 
 

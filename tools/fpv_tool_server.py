@@ -138,6 +138,7 @@ def reconstruction_config(
     ffmpeg_filter_expr: str | None = None,
     clahe: dict[str, object] | None = None,
     adaptive_fps: dict[str, object] | None = None,
+    exclusion_masks: dict[str, object] | None = None,
 ) -> dict[str, object]:
     sample_fps = float(body.get("sample_fps", 0) or 0)
     max_vggt_frames = int(body.get("max_vggt_frames", 0) or 0)
@@ -149,6 +150,8 @@ def reconstruction_config(
     conf_thres = float(body.get("vggt_conf_thres", 50.0) or 50.0)
     max_points_k = float(body.get("vggt_max_points_k", 1000.0) or 1000.0)
     mask_sky = body_bool(body, "vggt_mask_sky", False)
+    # If exclusion masks are painted black, tell VGGT to drop the black background.
+    mask_black_bg = bool(body.get("exclusion_masks"))
     max_frames_arg = max_vggt_frames or frame_count or 0
     crop_preset = str(body.get("crop_preset", "central_clean"))
     width = int(body.get("width", 960) or 0)
@@ -167,6 +170,7 @@ def reconstruction_config(
             "ffmpeg_filter": ffmpeg_filter_expr,
             "clahe": clahe,
             "adaptive_fps": adaptive_fps,
+            "exclusion_masks": exclusion_masks,
         },
         "vggt": {
             "model": "facebook/VGGT-Omega" if vggt_backend == "omega" else "facebook/VGGT-1B",
@@ -178,6 +182,7 @@ def reconstruction_config(
             "conf_thres": conf_thres,
             "max_points_k": max_points_k,
             "mask_sky": mask_sky,
+            "mask_black_bg": mask_black_bg,
             "timeout_s": vggt_timeout,
             "refresh": body_bool(body, "refresh_vggt", True),
         },
@@ -947,6 +952,76 @@ def select_adaptive_frames(candidates: list[dict[str, object]], target_frames: i
     return [candidates[i] for i in chosen]
 
 
+def probe_dimensions(video_path: Path) -> tuple[int, int]:
+    proc = subprocess.run(
+        ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+         "stream=width,height", "-of", "csv=p=0:s=x", str(video_path)],
+        capture_output=True, text=True, check=True,
+    )
+    w, h = proc.stdout.strip().split("x")[:2]
+    return int(w), int(h)
+
+
+def crop_rect_norm(crop_preset: str, iw: int, ih: int) -> tuple[float, float, float, float]:
+    """Crop rectangle in normalized original-frame coords (x0,y0,x1,y1)."""
+    if crop_preset == "central_clean":
+        return (120 / 848, 190 / 478, (120 + 660) / 848, (190 + 280) / 478)
+    if crop_preset == "full_frame":
+        aspect = MODEL_INPUT_ASPECT
+        src = iw / max(1, ih)
+        if src >= aspect:  # source wider -> crop width
+            w = aspect / src
+            return ((1 - w) / 2, 0.0, (1 + w) / 2, 1.0)
+        h = src / aspect  # source taller -> crop height
+        return (0.0, (1 - h) / 2, 1.0, (1 + h) / 2)
+    return (0.0, 0.0, 1.0, 1.0)
+
+
+def paint_exclusion_masks(path: Path, masks: list[dict[str, object]], crop_rect: tuple[float, float, float, float]) -> bool:
+    """Fill excluded regions with black on an already-cropped/scaled frame.
+
+    Masks are stored in normalized original-frame coords; they are mapped through
+    the active crop rectangle onto the output frame (out-of-crop parts clip away).
+    """
+    import cv2
+    import numpy as np
+
+    img = cv2.imread(str(path))
+    if img is None:
+        return False
+    height, out_w = img.shape[0], img.shape[1]
+    x0, y0, x1, y1 = crop_rect
+    cw, ch = max(1e-6, x1 - x0), max(1e-6, y1 - y0)
+
+    def to_px(nx: float, ny: float) -> tuple[int, int]:
+        return (int(round((nx - x0) / cw * out_w)), int(round((ny - y0) / ch * height)))
+
+    drew = False
+    for m in masks:
+        t = m.get("type")
+        try:
+            if t == "rect":
+                cv2.rectangle(img, to_px(float(m["x"]), float(m["y"])),
+                              to_px(float(m["x"]) + float(m["w"]), float(m["y"]) + float(m["h"])),
+                              (0, 0, 0), thickness=-1)
+                drew = True
+            elif t == "ellipse":
+                rx = max(1, int(round(float(m["rx"]) / cw * out_w)))
+                ry = max(1, int(round(float(m["ry"]) / ch * height)))
+                cv2.ellipse(img, to_px(float(m["cx"]), float(m["cy"])), (rx, ry), 0, 0, 360, (0, 0, 0), -1)
+                drew = True
+            elif t == "polygon":
+                pts = np.array([to_px(float(px), float(py)) for px, py in m["points"]], dtype=np.int32)
+                if len(pts) >= 3:
+                    cv2.fillPoly(img, [pts], (0, 0, 0))
+                    drew = True
+        except (KeyError, TypeError, ValueError):
+            continue
+    if drew:
+        cv2.imwrite(str(path), img)
+    return drew
+
+
 def extract_frames(
     video_path: Path,
     scene_dir: Path,
@@ -961,6 +1036,7 @@ def extract_frames(
     job: Job,
     clahe: dict[str, object] | None = None,
     adaptive: dict[str, object] | None = None,
+    exclusion_masks: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
     frames_dir = scene_dir / "frames"
     tmp_root = scene_dir / "_extract_tmp"
@@ -1070,12 +1146,29 @@ def extract_frames(
             clahe_applied = {"enabled": True, "clip_limit": clip, "scope": "sequence_uniform"}
             job.log(f"[frames] applying sequence-uniform CLAHE (clip_limit={clip:g})")
 
+    # Exclusion masks: paint fixed junk regions (logos, blur bands, propellers)
+    # black so they carry no features; VGGT is then told to mask the black bg.
+    mask_rect = None
+    masks_applied = None
+    if exclusion_masks:
+        try:
+            iw, ih = probe_dimensions(video_path)
+            mask_rect = crop_rect_norm(crop_preset, iw, ih)
+        except Exception as exc:  # pragma: no cover
+            job.log(f"[frames] could not probe dimensions for masks ({exc}); skipping masks")
+            exclusion_masks = None
+        else:
+            masks_applied = {"count": len(exclusion_masks), "crop_rect_norm": list(mask_rect)}
+            job.log(f"[frames] painting {len(exclusion_masks)} exclusion mask(s) black")
+
     out_rows: list[dict[str, object]] = []
     for frame_index, item in enumerate(selected, start=1):
         dst = frames_dir / f"f_{frame_index:06d}.jpg"
         shutil.copy2(Path(item["src"]), dst)
         if clahe_lut is not None:
             apply_luma_lut(dst, clahe_lut)
+        if exclusion_masks and mask_rect is not None:
+            paint_exclusion_masks(dst, exclusion_masks, mask_rect)
         out_rows.append(
             {
                 "frame_index": frame_index,
@@ -1129,6 +1222,7 @@ def extract_frames(
         "upload_video_fps": upload_video_fps,
         "clahe": clahe_applied,
         "adaptive_fps": adaptive_applied,
+        "exclusion_masks": masks_applied,
     }
 
 
@@ -1227,6 +1321,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
             job=job,
             clahe=body.get("clahe") if isinstance(body.get("clahe"), dict) else None,
             adaptive=body.get("adaptive_fps") if isinstance(body.get("adaptive_fps"), dict) else None,
+            exclusion_masks=body.get("exclusion_masks") if isinstance(body.get("exclusion_masks"), list) else None,
         )
         frame_count = int(frame_info["frame_count"])
         manifest.update(
@@ -1241,6 +1336,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
                     ffmpeg_filter_expr=str(frame_info["ffmpeg_filter"]),
                     clahe=frame_info.get("clahe"),
                     adaptive_fps=frame_info.get("adaptive_fps"),
+                    exclusion_masks=frame_info.get("exclusion_masks"),
                 ),
             }
         )
@@ -1280,6 +1376,8 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
             ]
             if vggt_config["mask_sky"]:
                 vggt_cmd.append("--mask-sky")
+            if vggt_config.get("mask_black_bg"):
+                vggt_cmd.append("--mask-black-bg")
             if vggt_config["refresh"]:
                 vggt_cmd.append("--refresh")
             run_command(

@@ -590,7 +590,7 @@ def run_vggt(args: argparse.Namespace) -> None:
                 target_dir=target_dir,
                 conf_thres=args.conf_thres,
                 frame_filter="All",
-                mask_black_bg=False,
+                mask_black_bg=bool(args.mask_black_bg),
                 mask_white_bg=False,
                 show_cam=True,
                 mask_sky=bool(args.mask_sky),
@@ -601,7 +601,7 @@ def run_vggt(args: argparse.Namespace) -> None:
             job = client.submit(
                 target_dir=target_dir,
                 conf_thres=args.conf_thres,
-                mask_black_bg=False,
+                mask_black_bg=bool(args.mask_black_bg),
                 mask_white_bg=False,
                 show_cam=True,
                 mask_sky=bool(args.mask_sky),
@@ -1276,6 +1276,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--upload-mode", choices=["auto", "images", "video"], default="auto")
     p.add_argument("--video-sample-fps", type=float, default=10.0)
     p.add_argument("--mask-sky", action="store_true", help="Enable the Space sky-segmentation mask before reconstruction")
+    p.add_argument("--mask-black-bg", action="store_true", help="Tell the Space to drop the pure-black background (painted exclusion masks)")
     p.add_argument("--refresh", action="store_true")
 
     p = sub.add_parser("extract-vggt", help="Parse VGGT .glb files into relative paths")
