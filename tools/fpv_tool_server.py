@@ -931,24 +931,26 @@ def select_adaptive_frames(candidates: list[dict[str, object]], target_frames: i
             continue
         motion[i] = float(np.mean(np.abs(a.astype(np.int16) - b.astype(np.int16))))
 
+    # Partition candidates into exactly target_frames disjoint contiguous bins,
+    # weighted by cumulative motion (bins are narrower in index where motion is
+    # high => more keyframes through the fast approach). Each bin is guaranteed
+    # non-empty, so we always emit exactly target_frames frames. Within each bin
+    # keep the sharpest (least motion-blurred) frame.
     cum = np.cumsum(motion)
-    if cum[-1] <= 0:
-        idxs = [round(i * (n - 1) / max(target_frames - 1, 1)) for i in range(target_frames)]
-    else:
-        milestones = [cum[-1] * i / max(target_frames - 1, 1) for i in range(target_frames)]
-        idxs = [int(np.searchsorted(cum, m)) for m in milestones]
+    total = float(cum[-1])
+    edges = [0]
+    for i in range(1, target_frames):
+        e = int(np.searchsorted(cum, total * i / target_frames)) if total > 0 else round(i * n / target_frames)
+        e = max(e, edges[-1] + 1)                 # at least one frame per bin
+        e = min(e, n - (target_frames - i))        # leave room for remaining bins
+        edges.append(e)
+    edges.append(n)
 
-    half = max(1, n // (target_frames * 3))
     chosen: list[int] = []
-    seen: set[int] = set()
-    for idx in idxs:
-        lo, hi = max(0, idx - half), min(n, idx + half + 1)
-        order = sorted(range(lo, hi), key=lambda k: -sharp[k])
-        best = next((k for k in order if k not in seen), min(max(idx, 0), n - 1))
-        seen.add(best)
-        chosen.append(best)
-    chosen = sorted(set(chosen))
-    job.log(f"[frames] adaptive: kept {len(chosen)} of {n} candidates (motion-weighted, sharpest-in-window)")
+    for i in range(target_frames):
+        lo, hi = edges[i], edges[i + 1]
+        chosen.append(lo + int(np.argmax(sharp[lo:hi])))
+    job.log(f"[frames] adaptive: {len(chosen)} of {n} frames (motion-weighted bins, sharpest-in-bin)")
     return [candidates[i] for i in chosen]
 
 
