@@ -1884,13 +1884,29 @@ function bindEvents() {
     seek((e.target.value / 10000) * vid.duration);
   });
 
-  // Filmstrip click
-  fsCon.addEventListener('click', e => {
-    if (!vid.duration) return;
+  // Filmstrip click + drag to scrub. fsIn is what scrolls inside fsCon, so its
+  // getBoundingClientRect().left already reflects the scroll offset -- mapping the
+  // pointer straight against it (no extra scrollLeft) matches the playhead cursor,
+  // which is positioned at (cur/dur)*scrollWidth.
+  const fsTimeFromEvent = e => {
     const rect = fsIn.getBoundingClientRect();
-    const x = e.clientX - rect.left + fsCon.scrollLeft;
-    seek((x / fsIn.scrollWidth) * vid.duration);
+    const x = Math.max(0, Math.min(e.clientX - rect.left, fsIn.scrollWidth));
+    return (x / fsIn.scrollWidth) * (vid.duration || 0);
+  };
+  let fsScrubbing = false;
+  fsCon.addEventListener('pointerdown', e => {
+    if (!vid.duration) return;
+    fsScrubbing = true;
+    try { fsCon.setPointerCapture(e.pointerId); } catch (_) {}
+    seek(fsTimeFromEvent(e));
+    e.preventDefault();
   });
+  fsCon.addEventListener('pointermove', e => {
+    if (fsScrubbing && vid.duration) seek(fsTimeFromEvent(e));
+  });
+  const endFsScrub = () => { fsScrubbing = false; };
+  fsCon.addEventListener('pointerup', endFsScrub);
+  fsCon.addEventListener('pointercancel', endFsScrub);
 
   // Segment controls
   g('btnMark').addEventListener('click', markSegment);
