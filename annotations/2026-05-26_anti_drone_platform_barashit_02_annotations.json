@@ -4,7 +4,7 @@
   "description": "Anti drone platform barashit 02",
   "date": "2026-05-26",
   "town": "Border near Rmaych",
-  "annotated_at": "2026-07-03T12:15:56Z",
+  "annotated_at": "2026-07-04T08:00:27Z",
   "segments": [
     {
       "time": 0,
@@ -70,8 +70,8 @@
       "comment": ""
     },
     {
-      "time": 77.886,
-      "time_formatted": "1:17.9",
+      "time": 77.953,
+      "time_formatted": "1:18.0",
       "type": "flight_start",
       "label": "Flight Start",
       "comment": ""
@@ -82,6 +82,64 @@
       "type": "replay_start",
       "label": "Replay Start",
       "comment": ""
+    }
+  ],
+  "exclusion_masks": [
+    {
+      "type": "rect",
+      "x": 0.605,
+      "y": 0.739,
+      "w": 0.326,
+      "h": 0.085
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0.703,
+      "w": 0.257,
+      "h": 0.265
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0.004,
+      "w": 0.364,
+      "h": 0.4
+    },
+    {
+      "type": "rect",
+      "x": 0.67,
+      "y": 0.009,
+      "w": 0.33,
+      "h": 0.392
+    },
+    {
+      "type": "rect",
+      "x": 0.46,
+      "y": 0.429,
+      "w": 0.071,
+      "h": 0.069
+    },
+    {
+      "type": "rect",
+      "x": 0.411,
+      "y": 0.061,
+      "w": 0.231,
+      "h": 0.135
+    },
+    {
+      "type": "rect",
+      "x": 0.81,
+      "y": 0.403,
+      "w": 0.19,
+      "h": 0.201
+    },
+    {
+      "type": "rect",
+      "x": 0.829,
+      "y": 0.752,
+      "w": 0.171,
+      "h": 0.176
     }
   ]
 }

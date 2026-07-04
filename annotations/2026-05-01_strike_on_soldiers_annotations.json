@@ -4,7 +4,7 @@
   "description": "Strike on soldiers",
   "date": "2026-05-01",
   "town": "Al Bayada / Bayyadah",
-  "annotated_at": "2026-07-03T12:38:24Z",
+  "annotated_at": "2026-07-04T06:38:47Z",
   "segments": [
     {
       "time": 0,
@@ -54,6 +54,50 @@
       "type": "replay_start",
       "label": "Replay Start",
       "comment": ""
+    }
+  ],
+  "exclusion_masks": [
+    {
+      "type": "rect",
+      "x": 0.79,
+      "y": 0.513,
+      "w": 0.21,
+      "h": 0.285
+    },
+    {
+      "type": "rect",
+      "x": 0.076,
+      "y": 0.697,
+      "w": 0.059,
+      "h": 0.133
+    },
+    {
+      "type": "rect",
+      "x": 0.002,
+      "y": 0,
+      "w": 0.341,
+      "h": 0.459
+    },
+    {
+      "type": "rect",
+      "x": 0.656,
+      "y": 0.005,
+      "w": 0.344,
+      "h": 0.502
+    },
+    {
+      "type": "rect",
+      "x": 0.346,
+      "y": 0.01,
+      "w": 0.31,
+      "h": 0.213
+    },
+    {
+      "type": "rect",
+      "x": 0.458,
+      "y": 0.543,
+      "w": 0.08,
+      "h": 0.083
     }
   ]
 }
