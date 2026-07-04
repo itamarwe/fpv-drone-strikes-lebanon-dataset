@@ -881,8 +881,16 @@ const canvas = document.getElementById("viewer");
     }
 
     function currentSceneBox() {
+      // Everything here is in root-LOCAL coords (path/grid are raw); fitView maps
+      // the resulting center/eye to world via toWorld(). Use the points geometry's
+      // LOCAL bounding box -- setFromObject() would return a WORLD box (alignment
+      // rotation already applied), which fitView would then rotate a second time,
+      // throwing the camera off-screen for scenes with a tilted ground.
       const box = new THREE.Box3();
-      if (pointsObject) box.setFromObject(pointsObject);
+      if (pointsObject?.geometry) {
+        pointsObject.geometry.computeBoundingBox();
+        if (pointsObject.geometry.boundingBox) box.copy(pointsObject.geometry.boundingBox);
+      }
       if (meta?.path?.length) {
         for (const frame of meta.path) box.expandByPoint(vec3(frame.position));
       }

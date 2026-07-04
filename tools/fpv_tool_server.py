@@ -1094,6 +1094,8 @@ def extract_frames(
     adaptive: dict[str, object] | None = None,
     exclusion_masks: list[dict[str, object]] | None = None,
     client_sky_seg: bool = False,
+    boundary_guard_s: float = 0.12,
+    drop_black_luma: float = 8.0,
 ) -> dict[str, object]:
     frames_dir = scene_dir / "frames"
     tmp_root = scene_dir / "_extract_tmp"
@@ -1128,6 +1130,11 @@ def extract_frames(
         end_s = float(seg["end_s"])
         if end_s <= start_s:
             continue
+        # Trim the transition/cut at a segment seam: the end of every non-final
+        # segment abuts a removed pause/replay, whose first frame (often a
+        # black/blurred cut) must not be included.
+        to_s = end_s - boundary_guard_s if seg_index < len(segments) else end_s
+        to_s = max(start_s + 0.05, to_s)
         tmp_dir = tmp_root / f"seg_{seg_index:02d}"
         tmp_dir.mkdir(parents=True, exist_ok=True)
         run_command(
@@ -1138,7 +1145,7 @@ def extract_frames(
                 "-ss",
                 f"{start_s:.3f}",
                 "-to",
-                f"{end_s:.3f}",
+                f"{to_s:.3f}",
                 "-i",
                 str(video_path),
                 "-vf",
@@ -1166,6 +1173,26 @@ def extract_frames(
                 }
             )
         sequence_offset_s += end_s - start_s
+
+    # Safety net: drop near-black frames (leftover cut/transition frames) before
+    # selection so they can't be chosen as keyframes.
+    if drop_black_luma > 0 and candidates:
+        try:
+            import cv2
+
+            kept = []
+            dropped = 0
+            for item in candidates:
+                img = cv2.imread(str(item["src"]))
+                if img is not None and float(img.mean()) < drop_black_luma:
+                    dropped += 1
+                    continue
+                kept.append(item)
+            if dropped and kept:
+                job.log(f"[frames] dropped {dropped} near-black frame(s)")
+                candidates = kept
+        except Exception:  # pragma: no cover - cv2 optional
+            pass
 
     adaptive_applied = None
     if adaptive_enabled:
