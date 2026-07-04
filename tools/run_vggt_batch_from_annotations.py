@@ -118,6 +118,11 @@ def request_body(annotation: dict[str, Any], selected: list[dict[str, Any]], arg
         "vggt_max_points_k": args.vggt_max_points_k,
         "vggt_mask_sky": args.vggt_mask_sky,
         "clahe": {"enabled": True, "clip_limit": args.clahe_clip} if args.clahe else None,
+        "adaptive_fps": (
+            {"enabled": True, "base_fps": args.adaptive_base_fps, "target_frames": args.adaptive_target}
+            if args.adaptive_fps
+            else None
+        ),
     }
 
 
@@ -259,6 +264,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--vggt-mask-sky", action="store_true")
     parser.add_argument("--clahe", action="store_true", help="sequence-uniform CLAHE contrast enhancement (for dark clips)")
     parser.add_argument("--clahe-clip", type=float, default=2.0, help="CLAHE contrast-limit (higher = stronger)")
+    parser.add_argument("--adaptive-fps", action="store_true", help="motion-aware keyframing (more frames where motion is high, sharpest-in-window)")
+    parser.add_argument("--adaptive-base-fps", type=float, default=24.0, help="dense sampling rate before adaptive keyframing")
+    parser.add_argument("--adaptive-target", type=int, default=125, help="number of keyframes to keep when --adaptive-fps")
     parser.add_argument("--poll-seconds", type=float, default=5.0)
     parser.add_argument("--skip-camera-views", action="store_true")
     parser.add_argument("--no-refresh-vggt", action="store_true")

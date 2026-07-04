@@ -137,6 +137,7 @@ def reconstruction_config(
     effective_sample_fps: float | None = None,
     ffmpeg_filter_expr: str | None = None,
     clahe: dict[str, object] | None = None,
+    adaptive_fps: dict[str, object] | None = None,
 ) -> dict[str, object]:
     sample_fps = float(body.get("sample_fps", 0) or 0)
     max_vggt_frames = int(body.get("max_vggt_frames", 0) or 0)
@@ -165,6 +166,7 @@ def reconstruction_config(
             "crop": crop_config(crop_preset),
             "ffmpeg_filter": ffmpeg_filter_expr,
             "clahe": clahe,
+            "adaptive_fps": adaptive_fps,
         },
         "vggt": {
             "model": "facebook/VGGT-Omega" if vggt_backend == "omega" else "facebook/VGGT-1B",
@@ -885,6 +887,66 @@ def apply_luma_lut(path: Path, lut) -> None:
     cv2.imwrite(str(path), cv2.cvtColor(ycrcb, cv2.COLOR_YCrCb2BGR))
 
 
+def select_adaptive_frames(candidates: list[dict[str, object]], target_frames: int, job: "Job"):
+    """Motion-aware keyframing.
+
+    Keeps more frames where inter-frame motion is high (the fast terminal approach,
+    where consecutive-frame overlap drops) and fewer during slow cruise, so VGGT
+    sees a roughly constant baseline between adjacent frames. Within each window it
+    keeps the *sharpest* (least motion-blurred) frame. Real per-frame timestamps
+    are preserved because we only choose a subset of the densely-sampled candidates.
+    """
+    n = len(candidates)
+    if target_frames <= 0 or n <= target_frames:
+        return candidates
+    try:
+        import cv2
+        import numpy as np
+    except Exception as exc:  # pragma: no cover - cv2 optional
+        job.log(f"[frames] adaptive fps unavailable ({exc}); falling back to even sampling")
+        return evenly_sample(candidates, target_frames)
+
+    width = 256
+    grays: list = []
+    sharp = np.zeros(n, dtype=np.float64)
+    for i, item in enumerate(candidates):
+        img = cv2.imread(str(item["src"]), cv2.IMREAD_GRAYSCALE)
+        if img is None:
+            grays.append(None)
+            continue
+        h, w = img.shape[:2]
+        g = cv2.resize(img, (width, max(1, round(h * width / w))))
+        grays.append(g)
+        sharp[i] = cv2.Laplacian(g, cv2.CV_64F).var()
+
+    motion = np.zeros(n, dtype=np.float64)
+    for i in range(1, n):
+        a, b = grays[i - 1], grays[i]
+        if a is None or b is None or a.shape != b.shape:
+            continue
+        motion[i] = float(np.mean(np.abs(a.astype(np.int16) - b.astype(np.int16))))
+
+    cum = np.cumsum(motion)
+    if cum[-1] <= 0:
+        idxs = [round(i * (n - 1) / max(target_frames - 1, 1)) for i in range(target_frames)]
+    else:
+        milestones = [cum[-1] * i / max(target_frames - 1, 1) for i in range(target_frames)]
+        idxs = [int(np.searchsorted(cum, m)) for m in milestones]
+
+    half = max(1, n // (target_frames * 3))
+    chosen: list[int] = []
+    seen: set[int] = set()
+    for idx in idxs:
+        lo, hi = max(0, idx - half), min(n, idx + half + 1)
+        order = sorted(range(lo, hi), key=lambda k: -sharp[k])
+        best = next((k for k in order if k not in seen), min(max(idx, 0), n - 1))
+        seen.add(best)
+        chosen.append(best)
+    chosen = sorted(set(chosen))
+    job.log(f"[frames] adaptive: kept {len(chosen)} of {n} candidates (motion-weighted, sharpest-in-window)")
+    return [candidates[i] for i in chosen]
+
+
 def extract_frames(
     video_path: Path,
     scene_dir: Path,
@@ -898,6 +960,7 @@ def extract_frames(
     frame_window: str,
     job: Job,
     clahe: dict[str, object] | None = None,
+    adaptive: dict[str, object] | None = None,
 ) -> dict[str, object]:
     frames_dir = scene_dir / "frames"
     tmp_root = scene_dir / "_extract_tmp"
@@ -910,7 +973,12 @@ def extract_frames(
 
     total_duration = sum(max(0.0, float(seg["end_s"]) - float(seg["start_s"])) for seg in segments)
     explicit_sample_fps = sample_fps > 0
-    if sample_fps > 0:
+    adaptive_enabled = bool(adaptive and adaptive.get("enabled"))
+    if adaptive_enabled:
+        # Sample densely, then keyframe by motion below (bypasses the 10fps clamp).
+        sample_fps = max(1.0, float(adaptive.get("base_fps", 24) or 24))
+        explicit_sample_fps = True
+    elif sample_fps > 0:
         sample_fps = max(0.5, min(10.0, sample_fps))
     else:
         sample_fps = max(0.5, min(10.0, target_frames / max(total_duration, 0.1)))
@@ -966,8 +1034,14 @@ def extract_frames(
             )
         sequence_offset_s += end_s - start_s
 
-    selected = candidates if explicit_sample_fps else evenly_sample(candidates, target_frames)
-    if max_output_frames > 0 and len(selected) > max_output_frames:
+    adaptive_applied = None
+    if adaptive_enabled:
+        adaptive_target = int(adaptive.get("target_frames") or target_frames or max_output_frames or VGGT_FRAME_WARN_THRESHOLD)
+        selected = select_adaptive_frames(candidates, adaptive_target, job)
+        adaptive_applied = {"enabled": True, "base_fps": sample_fps, "target_frames": adaptive_target, "metric": "motion+sharpness"}
+    else:
+        selected = candidates if explicit_sample_fps else evenly_sample(candidates, target_frames)
+    if not adaptive_enabled and max_output_frames > 0 and len(selected) > max_output_frames:
         if frame_window == "first":
             selected = selected[:max_output_frames]
         elif frame_window == "last":
@@ -1054,6 +1128,7 @@ def extract_frames(
         "ffmpeg_filter": vf,
         "upload_video_fps": upload_video_fps,
         "clahe": clahe_applied,
+        "adaptive_fps": adaptive_applied,
     }
 
 
@@ -1151,6 +1226,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
             frame_window=str(body.get("frame_window", "all")),
             job=job,
             clahe=body.get("clahe") if isinstance(body.get("clahe"), dict) else None,
+            adaptive=body.get("adaptive_fps") if isinstance(body.get("adaptive_fps"), dict) else None,
         )
         frame_count = int(frame_info["frame_count"])
         manifest.update(
@@ -1164,6 +1240,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
                     effective_sample_fps=float(frame_info["sample_fps_effective"]),
                     ffmpeg_filter_expr=str(frame_info["ffmpeg_filter"]),
                     clahe=frame_info.get("clahe"),
+                    adaptive_fps=frame_info.get("adaptive_fps"),
                 ),
             }
         )
