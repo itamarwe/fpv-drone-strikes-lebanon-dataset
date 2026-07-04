@@ -117,6 +117,7 @@ def request_body(annotation: dict[str, Any], selected: list[dict[str, Any]], arg
         "vggt_conf_thres": args.vggt_conf_thres,
         "vggt_max_points_k": args.vggt_max_points_k,
         "vggt_mask_sky": args.vggt_mask_sky,
+        "clahe": {"enabled": True, "clip_limit": args.clahe_clip} if args.clahe else None,
     }
 
 
@@ -256,6 +257,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--vggt-conf-thres", type=float, default=50.0)
     parser.add_argument("--vggt-max-points-k", type=float, default=1000.0)
     parser.add_argument("--vggt-mask-sky", action="store_true")
+    parser.add_argument("--clahe", action="store_true", help="sequence-uniform CLAHE contrast enhancement (for dark clips)")
+    parser.add_argument("--clahe-clip", type=float, default=2.0, help="CLAHE contrast-limit (higher = stronger)")
     parser.add_argument("--poll-seconds", type=float, default=5.0)
     parser.add_argument("--skip-camera-views", action="store_true")
     parser.add_argument("--no-refresh-vggt", action="store_true")

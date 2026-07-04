@@ -136,6 +136,7 @@ def reconstruction_config(
     candidate_frames: int | None = None,
     effective_sample_fps: float | None = None,
     ffmpeg_filter_expr: str | None = None,
+    clahe: dict[str, object] | None = None,
 ) -> dict[str, object]:
     sample_fps = float(body.get("sample_fps", 0) or 0)
     max_vggt_frames = int(body.get("max_vggt_frames", 0) or 0)
@@ -163,6 +164,7 @@ def reconstruction_config(
             "output_width_px": width,
             "crop": crop_config(crop_preset),
             "ffmpeg_filter": ffmpeg_filter_expr,
+            "clahe": clahe,
         },
         "vggt": {
             "model": "facebook/VGGT-Omega" if vggt_backend == "omega" else "facebook/VGGT-1B",
@@ -804,6 +806,12 @@ def download_video(video_url: str, video_file: str, cache_dir: Path, job: Job) -
     return out
 
 
+# VGGT-Omega preprocesses inputs to ~368x720 (HxW); this is the target aspect
+# (W/H) for the "full_frame" crop, which keeps the whole frame minus the letterbox
+# needed to hit that aspect (paired with exclusion masks instead of a tight crop).
+MODEL_INPUT_ASPECT = 720.0 / 368.0
+
+
 def ffmpeg_filter(crop_preset: str, width: int, sample_fps: float) -> str:
     parts = [f"fps={sample_fps:g}"]
     if crop_preset == "central_clean":
@@ -812,6 +820,13 @@ def ffmpeg_filter(crop_preset: str, width: int, sample_fps: float) -> str:
             "trunc(ih*280/478/2)*2:"
             "trunc(iw*120/848/2)*2:"
             "trunc(ih*190/478/2)*2"
+        )
+    elif crop_preset == "full_frame":
+        # Central crop to the model's input aspect, keeping as much of the frame
+        # as possible (crop only one dimension to hit MODEL_INPUT_ASPECT).
+        parts.append(
+            f"crop=trunc(min(iw\\,ih*{MODEL_INPUT_ASPECT:.6f})/2)*2:"
+            f"trunc(min(ih\\,iw/{MODEL_INPUT_ASPECT:.6f})/2)*2"
         )
     if width:
         parts.append(f"scale={width}:-2")
@@ -823,6 +838,51 @@ def evenly_sample(items: list[dict[str, object]], target: int) -> list[dict[str,
         return items
     indexes = [round(i * (len(items) - 1) / max(target - 1, 1)) for i in range(target)]
     return [items[i] for i in indexes]
+
+
+def sequence_clahe_lut(frame_paths: list[Path], clip_limit: float, sample: int = 48):
+    """Build ONE contrast-limited luma equalization LUT from the whole sequence.
+
+    Uniform for the sequence (not per-frame) so brightening a dark clip does not
+    flicker frame-to-frame. Returns a 256-entry uint8 LUT for the Y channel, or
+    None if it can't be built.
+    """
+    import cv2
+    import numpy as np
+
+    hist = np.zeros(256, dtype=np.float64)
+    step = max(1, len(frame_paths) // max(1, sample))
+    used = 0
+    for path in frame_paths[::step]:
+        img = cv2.imread(str(path))
+        if img is None:
+            continue
+        y = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)[:, :, 0]
+        hist += cv2.calcHist([y], [0], None, [256], [0, 256]).ravel()
+        used += 1
+    if used == 0 or hist.sum() == 0:
+        return None
+    total = hist.sum()
+    clip = max(1.0, clip_limit) * total / 256.0  # contrast limit like CLAHE
+    excess = float(np.maximum(hist - clip, 0.0).sum())
+    hist = np.minimum(hist, clip) + excess / 256.0
+    cdf = np.cumsum(hist)
+    lo, hi = float(cdf.min()), float(cdf.max())
+    if hi <= lo:
+        return None
+    lut = np.round((cdf - lo) / (hi - lo) * 255.0).astype(np.uint8)
+    return lut
+
+
+def apply_luma_lut(path: Path, lut) -> None:
+    import cv2
+
+    img = cv2.imread(str(path))
+    if img is None:
+        return
+    ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+    ycrcb[:, :, 0] = lut[ycrcb[:, :, 0]]
+    cv2.imwrite(str(path), cv2.cvtColor(ycrcb, cv2.COLOR_YCrCb2BGR))
 
 
 def extract_frames(
@@ -837,6 +897,7 @@ def extract_frames(
     max_output_frames: int,
     frame_window: str,
     job: Job,
+    clahe: dict[str, object] | None = None,
 ) -> dict[str, object]:
     frames_dir = scene_dir / "frames"
     tmp_root = scene_dir / "_extract_tmp"
@@ -920,10 +981,27 @@ def extract_frames(
             f"VGGT reconstruction may be slow or memory-heavy. Pass max_vggt_frames "
             f"(e.g. with frame_window=last) to cap the sequence if needed."
         )
+    # Sequence-uniform CLAHE: build one luma LUT from all selected frames, then
+    # apply the same mapping to every frame (recovers shadow detail on dark clips).
+    clahe_lut = None
+    clahe_applied = None
+    if clahe and clahe.get("enabled"):
+        clip = float(clahe.get("clip_limit", 2.0) or 2.0)
+        try:
+            clahe_lut = sequence_clahe_lut([Path(item["src"]) for item in selected], clip)
+        except Exception as exc:  # pragma: no cover - cv2 optional
+            job.log(f"[frames] CLAHE unavailable ({exc}); skipping enhancement")
+            clahe_lut = None
+        if clahe_lut is not None:
+            clahe_applied = {"enabled": True, "clip_limit": clip, "scope": "sequence_uniform"}
+            job.log(f"[frames] applying sequence-uniform CLAHE (clip_limit={clip:g})")
+
     out_rows: list[dict[str, object]] = []
     for frame_index, item in enumerate(selected, start=1):
         dst = frames_dir / f"f_{frame_index:06d}.jpg"
         shutil.copy2(Path(item["src"]), dst)
+        if clahe_lut is not None:
+            apply_luma_lut(dst, clahe_lut)
         out_rows.append(
             {
                 "frame_index": frame_index,
@@ -975,6 +1053,7 @@ def extract_frames(
         "sample_fps_effective": sample_fps,
         "ffmpeg_filter": vf,
         "upload_video_fps": upload_video_fps,
+        "clahe": clahe_applied,
     }
 
 
@@ -1071,6 +1150,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
             max_output_frames=int(body.get("max_vggt_frames", 0) or 0),
             frame_window=str(body.get("frame_window", "all")),
             job=job,
+            clahe=body.get("clahe") if isinstance(body.get("clahe"), dict) else None,
         )
         frame_count = int(frame_info["frame_count"])
         manifest.update(
@@ -1083,6 +1163,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
                     candidate_frames=int(frame_info["candidate_frames"]),
                     effective_sample_fps=float(frame_info["sample_fps_effective"]),
                     ffmpeg_filter_expr=str(frame_info["ffmpeg_filter"]),
+                    clahe=frame_info.get("clahe"),
                 ),
             }
         )
