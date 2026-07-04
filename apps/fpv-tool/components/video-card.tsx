@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { withBasePath } from "@/lib/config";
+import { thumbBase, withBasePath } from "@/lib/urls";
 import type { VideoRecord } from "@/lib/videos";
 
 // Matches the responsive grid: 1 col on phones, 2 on small, 3 on large, 4 on xl.
@@ -7,7 +7,7 @@ const SIZES = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1
 
 function thumbSources(video: VideoRecord) {
   if (video.thumbWidths && video.thumbWidths.length) {
-    const base = withBasePath(`/thumbnails/${video.slug}`);
+    const base = thumbBase ? `${thumbBase}/${video.slug}` : withBasePath(`/thumbnails/${video.slug}`);
     const srcSet = video.thumbWidths.map((w) => `${base}/${w}.webp ${w}w`).join(", ");
     const fallback = `${base}/${video.thumbWidths[video.thumbWidths.length - 1]}.webp`;
     return { src: fallback, srcSet };
