@@ -24,8 +24,8 @@ export function SiteHeader({ active }: { active?: "annotate" | "scenes" }) {
             aria-current={active === item.key ? "page" : undefined}
             className={
               active === item.key
-                ? "inline-flex min-h-[30px] items-center rounded-lg border border-primary bg-primary px-2.5 text-[13px] font-extrabold text-primary-foreground"
-                : "inline-flex min-h-[30px] items-center rounded-lg border border-border px-2.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
+                ? "inline-flex min-h-[30px] items-center rounded-md border border-primary bg-primary px-2.5 text-[13px] font-extrabold text-primary-foreground"
+                : "inline-flex min-h-[30px] items-center rounded-md border border-border px-2.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
             }
           >
             {item.label}

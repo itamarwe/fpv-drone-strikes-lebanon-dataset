@@ -1,14 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ArrowDown, ArrowUp, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { VideoCard } from "@/components/video-card";
 import type { VideoRecord } from "@/lib/videos";
 
 type SceneFilter = "all" | "with" | "without";
 type SortDir = "desc" | "asc";
-
-const controlClass =
-  "h-9 rounded-md border border-input bg-secondary px-3 text-[13px] text-foreground outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring";
 
 export function VideoBrowser({ videos }: { videos: VideoRecord[] }) {
   const [query, setQuery] = useState("");
@@ -33,35 +40,39 @@ export function VideoBrowser({ videos }: { videos: VideoRecord[] }) {
   return (
     <div>
       <div className="mb-5 flex flex-wrap items-center gap-2">
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search by description, town, date…"
-          className={`${controlClass} min-w-0 flex-1 sm:max-w-sm`}
-          aria-label="Search videos"
-        />
-        <select
-          value={sceneFilter}
-          onChange={(e) => setSceneFilter(e.target.value as SceneFilter)}
-          className={controlClass}
-          aria-label="Filter by scene"
-        >
-          <option value="all">All videos</option>
-          <option value="with">With 3D scene</option>
-          <option value="without">Without scene</option>
-        </select>
-        <button
+        <div className="relative min-w-0 flex-1 sm:max-w-sm">
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by description, town, date…"
+            aria-label="Search videos"
+            className="pl-8"
+          />
+        </div>
+
+        <Select value={sceneFilter} onValueChange={(v) => setSceneFilter(v as SceneFilter)}>
+          <SelectTrigger className="w-[168px]" aria-label="Filter by scene">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All videos</SelectItem>
+            <SelectItem value="with">With 3D scene</SelectItem>
+            <SelectItem value="without">Without scene</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Button
           type="button"
+          variant="secondary"
           onClick={() => setSort((s) => (s === "desc" ? "asc" : "desc"))}
-          className={`${controlClass} inline-flex items-center gap-1.5 hover:text-foreground`}
           aria-label={`Sort by date ${sort === "desc" ? "descending" : "ascending"}`}
         >
           Date
-          <span aria-hidden className="text-muted-foreground">
-            {sort === "desc" ? "↓" : "↑"}
-          </span>
-        </button>
+          {sort === "desc" ? <ArrowDown /> : <ArrowUp />}
+        </Button>
+
         <span className="ml-auto text-[13px] text-muted-foreground">
           {filtered.length === videos.length
             ? `${videos.length} videos`
