@@ -67,6 +67,35 @@ def select_attack_pause_chain(intervals: list[dict[str, Any]]) -> list[dict[str,
     return [intervals[index] for index in selected_indexes]
 
 
+def trim_to_tail_seconds(selected: list[dict[str, Any]], tail_seconds: float) -> list[dict[str, Any]]:
+    """Keep only the last `tail_seconds` of the concatenated flight sequence.
+
+    Walks back from the final (attack) segment; the earliest included segment is
+    shortened (start_s moved forward) so the total is exactly tail_seconds. Segment
+    structure/ids are preserved for whatever survives the window.
+    """
+    if tail_seconds <= 0:
+        return selected
+    total = sum(float(s["duration_s"]) for s in selected)
+    if total <= tail_seconds:
+        return selected
+    remaining = tail_seconds
+    out: list[dict[str, Any]] = []
+    for seg in reversed(selected):
+        dur = float(seg["duration_s"])
+        if dur <= remaining:
+            out.insert(0, seg)
+            remaining -= dur
+        else:
+            trimmed = dict(seg)
+            trimmed["start_s"] = round(float(seg["end_s"]) - remaining, 3)
+            trimmed["duration_s"] = round(remaining, 3)
+            out.insert(0, trimmed)
+            remaining = 0.0
+            break
+    return out
+
+
 def post_json(base_url: str, path: str, body: dict[str, Any]) -> dict[str, Any]:
     data = json.dumps(body).encode("utf-8")
     request = urllib.request.Request(
@@ -180,6 +209,7 @@ def run_batch(args: argparse.Namespace) -> int:
         if not selected:
             print(f"[{batch_index}/{len(paths)}] skip {path.name}: no flight intervals", flush=True)
             continue
+        selected = trim_to_tail_seconds(selected, args.tail_seconds)
 
         total_s = sum(float(row["duration_s"]) for row in selected)
         body = request_body(annotation, selected, args)
@@ -250,6 +280,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--limit", type=int, default=10)
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--fps", type=float, default=10.0)
+    parser.add_argument("--tail-seconds", type=float, default=0.0, help="keep only the last N seconds of the flight sequence (0 = whole chain)")
     parser.add_argument("--width", type=int, default=660)
     parser.add_argument("--crop-preset", default="central_clean")
     parser.add_argument("--scale", type=float, default=117.6)
