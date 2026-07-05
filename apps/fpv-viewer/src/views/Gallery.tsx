@@ -3,6 +3,42 @@ import type { VideoRecord } from "../types";
 import { THUMB_BASE } from "../types";
 import { sceneHref, videoHref } from "../App";
 
+const PlayIcon = () => (
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden>
+    <path d="M8 5.14v13.72L19 12 8 5.14z" />
+  </svg>
+);
+
+const GlobeIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="14"
+    height="14"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    aria-hidden
+  >
+    <circle cx="12" cy="12" r="9" />
+    <ellipse cx="12" cy="12" rx="4" ry="9" />
+    <path d="M3.5 9h17M3.5 15h17" />
+  </svg>
+);
+
+const ArrowIcon = ({ dir }: { dir: "asc" | "desc" }) => (
+  <svg
+    viewBox="0 0 24 24"
+    width="13"
+    height="13"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    aria-hidden
+  >
+    {dir === "desc" ? <path d="M12 4v16m0 0l-6-6m6 6l6-6" /> : <path d="M12 20V4m0 0l-6 6m6-6l6 6" />}
+  </svg>
+);
+
 function Thumb({ video }: { video: VideoRecord }) {
   const [broken, setBroken] = useState(false);
   const useLocal = Boolean(video.thumbWidths?.length) && !broken;
@@ -34,16 +70,27 @@ function Thumb({ video }: { video: VideoRecord }) {
   );
 }
 
+type SceneFilter = "all" | "with";
+type SortDir = "desc" | "asc";
+
 export function Gallery({ videos }: { videos: VideoRecord[] }) {
   const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<SortDir>("desc");
+  const [sceneFilter, setSceneFilter] = useState<SceneFilter>("all");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return videos;
-    return videos.filter((v) =>
-      `${v.description} ${v.town} ${v.date} ${v.videoFile}`.toLowerCase().includes(q),
-    );
-  }, [videos, query]);
+    const list = videos.filter((v) => {
+      if (sceneFilter === "with" && !v.scenePath) return false;
+      if (!q) return true;
+      return `${v.description} ${v.town} ${v.date} ${v.videoFile}`.toLowerCase().includes(q);
+    });
+    list.sort((a, b) => {
+      const cmp = a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+      return sort === "desc" ? -cmp : cmp;
+    });
+    return list;
+  }, [videos, query, sort, sceneFilter]);
 
   const withScene = videos.filter((v) => v.scenePath).length;
 
@@ -63,6 +110,24 @@ export function Gallery({ videos }: { videos: VideoRecord[] }) {
           placeholder="Search by description, town, date…"
           aria-label="Search videos"
         />
+        <button
+          type="button"
+          className="toolbar-btn"
+          onClick={() => setSort((s) => (s === "desc" ? "asc" : "desc"))}
+          aria-label={`Sort by date, ${sort === "desc" ? "newest" : "oldest"} first`}
+          title={sort === "desc" ? "Newest first" : "Oldest first"}
+        >
+          Date <ArrowIcon dir={sort} />
+        </button>
+        <button
+          type="button"
+          className={`toolbar-btn${sceneFilter === "with" ? " active" : ""}`}
+          onClick={() => setSceneFilter((f) => (f === "with" ? "all" : "with"))}
+          aria-pressed={sceneFilter === "with"}
+          title="Only videos with a reconstructed 3D scene"
+        >
+          <GlobeIcon /> 3D scenes
+        </button>
         <span className="gallery-count">
           {filtered.length === videos.length
             ? `${videos.length} videos`
@@ -80,17 +145,24 @@ export function Gallery({ videos }: { videos: VideoRecord[] }) {
               {v.date}
               {v.town ? ` · ${v.town}` : ""}
             </span>
-            <span className="links">
-              <a href={videoHref(v.videoFile)}>Video</a>
+            <div className="card-actions">
+              <a className="card-btn" href={videoHref(v.videoFile)}>
+                <PlayIcon /> Video
+              </a>
               {v.scenePath ? (
-                <a href={sceneHref(v.videoFile)}>3D scene</a>
+                <a className="card-btn primary" href={sceneHref(v.videoFile)}>
+                  <GlobeIcon /> 3D scene
+                </a>
               ) : (
-                <span className="disabled">No scene</span>
+                <span className="card-btn disabled" title="No reconstructed scene yet">
+                  <GlobeIcon /> No scene
+                </span>
               )}
-            </span>
+            </div>
           </div>
         ))}
       </div>
+      {filtered.length === 0 ? <p className="not-found">No videos match your filters.</p> : null}
     </div>
   );
 }

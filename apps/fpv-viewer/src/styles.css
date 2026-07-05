@@ -220,14 +220,67 @@ a:hover {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.video-card .links {
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+.card-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
   font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
-.video-card .links a:not(:last-child) {
-  margin-right: 12px;
+.card-btn:hover {
+  color: #fff;
+  border-color: #555;
+  text-decoration: none;
 }
-.video-card .links .disabled {
-  color: var(--hairline);
+.card-btn.primary {
+  border-color: rgba(50, 145, 255, 0.55);
+  color: var(--brand);
+}
+.card-btn.primary:hover {
+  border-color: var(--brand);
+  color: #fff;
+}
+.card-btn.disabled {
+  color: #555;
+  pointer-events: none;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: 500 13px var(--font-sans);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.toolbar-btn:hover {
+  border-color: #555;
+  color: #fff;
+}
+.toolbar-btn.active {
+  border-color: var(--brand);
+  color: var(--brand);
 }
 
 /* Video view */
@@ -334,38 +387,59 @@ a:hover {
   margin: 8px 0 24px;
 }
 
-/* Scene view */
-.scene-view .canvas-holder {
+/* Scene view — desktop: dominant 3D stage with PiP video bottom-right,
+   controls bar below, height/speed chart strip under that. */
+.scene-stage {
   position: relative;
-  height: min(72vh, 760px);
+  height: min(62vh, 720px);
   border: 1px solid var(--hairline);
   border-radius: 8px;
   overflow: hidden;
   background: #050607;
 }
-.scene-view canvas {
+.scene-stage .canvas-holder {
+  position: absolute;
+  inset: 0;
+}
+.scene-stage canvas {
   display: block;
   width: 100%;
   height: 100%;
 }
-.scene-hud {
+.scene-pip {
   position: absolute;
-  left: 10px;
+  right: 10px;
   bottom: 10px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.65);
-  border: 1px solid var(--hairline);
+  width: min(34%, 320px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 6px;
-  padding: 6px 10px;
-  font-size: 12.5px;
-  color: var(--grey);
+  background: #000;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+  z-index: 3;
+}
+.stage-btn {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--text);
+  font-size: 15px;
+  cursor: pointer;
+  z-index: 4;
   backdrop-filter: blur(6px);
 }
-.scene-hud input[type="range"] {
-  width: 130px;
-  accent-color: var(--brand);
+.stage-btn:hover {
+  color: #fff;
+  border-color: #777;
+}
+.fullscreen-btn {
+  top: 10px;
+  right: 10px;
 }
 .scene-status {
   position: absolute;
@@ -375,6 +449,104 @@ a:hover {
   justify-content: center;
   color: var(--grey);
   font-size: 14px;
+  z-index: 2;
+}
+
+.scene-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 4px;
+}
+.play-btn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.play-btn:hover {
+  color: #fff;
+  border-color: var(--brand);
+}
+.scrubber {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--brand);
+  height: 4px;
+  cursor: pointer;
+}
+.time-display {
+  flex-shrink: 0;
+  color: var(--grey);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.scene-toggles {
+  flex-shrink: 0;
+  display: inline-flex;
+  gap: 12px;
+  color: var(--grey);
+  font-size: 13px;
+}
+.scene-toggles label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+.scene-toggles input {
+  accent-color: var(--brand);
+}
+
+.scene-chart {
+  display: block;
+  width: 100%;
+  height: 150px;
+  margin-top: 6px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* Mobile: stacked stage -> controls -> chart, smaller PiP, larger touch
+   targets, toggles wrap to their own row. */
+@media screen and (max-width: 700px) {
+  .scene-stage {
+    height: 48vh;
+  }
+  .scene-pip {
+    width: 44%;
+    right: 8px;
+    bottom: 8px;
+  }
+  .scene-controls {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .play-btn {
+    width: 44px;
+    height: 44px;
+  }
+  .scrubber {
+    order: 3;
+    flex-basis: 100%;
+    height: 6px;
+  }
+  .scene-toggles {
+    margin-left: auto;
+  }
+  .scene-chart {
+    height: 120px;
+  }
 }
 
 .back-link {

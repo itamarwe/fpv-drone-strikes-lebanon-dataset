@@ -26,9 +26,13 @@ npm run dev            # http://localhost:5185
 - `scenes/<stem>/<sceneId>/viewer/` — which videos have a 3D scene
 - `apps/fpv-tool/public/thumbnails/manifest.json` — responsive thumb widths + blur
 
-In dev, the Vite server proxies `/scenes` to the python tool server
-(`127.0.0.1:8766`) and `/thumbnails` to the fpv-tool Next app (`127.0.0.1:3001`).
-Thumbnails fall back to the remote CloudFront JPG when the local WebP is missing.
+In dev, the Vite server itself serves `/scenes` (from the repo's `scenes/`
+directory) and `/thumbnails` (from `apps/fpv-tool/public/thumbnails/`) straight
+from disk — **no python or Next server is needed**. Thumbnails fall back to the
+remote CloudFront JPG when a local WebP is missing. In production those two URL
+prefixes point at CloudFront via `VITE_SCENE_BASE` / `VITE_THUMB_BASE`, and the
+videos (the playback clock for the 3D scene view) stream from CloudFront
+directly, so nothing dynamic runs anywhere.
 
 ## Production build
 

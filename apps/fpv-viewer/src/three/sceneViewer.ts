@@ -1,24 +1,37 @@
-// Lean, read-only Three.js scene viewer.
+// Lean, read-only Three.js scene viewer with playback.
 //
 // Renders a reconstructed scene from the repo's viewer data format:
 //   <sceneBase>/<scenePath>/viewer/scene_meta.json
 //   + points_positions.bin (Float32 xyz) / points_colors.bin (Uint8 rgb)
 // Applies the stored ground-alignment quaternion, draws a ground grid centered
-// on the point cloud, and shows the flight path. No editing, saving,
+// on the point cloud and the flight path, and animates a camera marker along
+// the path (setTime, driven by the source video's clock). No editing, saving,
 // measuring or scene switching — those live in the full tool.
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+type PathFrame = {
+  position: number[];
+  right?: number[];
+  down?: number[];
+  forward?: number[];
+  video_time_s?: number;
+  sequence_time_s?: number;
+};
+
 type SceneMeta = {
   point_count: number;
-  path: { position: number[]; video_time_s?: number }[];
+  path: PathFrame[];
   assets: { positions: string; colors: string };
+  default_scale_m_per_unit?: number;
+  calibration?: { scale_m_per_vggt_unit?: number } | null;
   ground_grid?: {
     origin: number[];
     u: number[];
     v: number[];
     normal: number[];
     fitted_normal?: number[];
+    d: number;
     size_units: number;
     minor_step_units: number;
     major_step_units: number;
@@ -26,6 +39,18 @@ type SceneMeta = {
   scene_alignment_quaternion?: number[] | null;
   bbox_min?: number[];
   bbox_max?: number[];
+};
+
+export type TimelinePoint = {
+  t: number; // source-video time (s) — the playback clock
+  heightM: number | null; // height above the fitted ground plane (m)
+  speedMs: number | null; // flight speed (m/s), from sequence-time deltas
+};
+
+export type SceneTimeline = {
+  t0: number;
+  t1: number;
+  points: TimelinePoint[];
 };
 
 const vec3 = (v: number[]) => new THREE.Vector3(v[0], v[1], v[2]);
@@ -37,7 +62,13 @@ export class ReadOnlySceneViewer {
   private camera: THREE.PerspectiveCamera;
   private controls: OrbitControls;
   private pointsMaterial = new THREE.PointsMaterial({ size: 0.004, vertexColors: true });
-  private points: THREE.Points | null = null;
+  private pathGroup = new THREE.Group();
+  private gridGroup = new THREE.Group();
+  private markerGroup = new THREE.Group();
+  private marker: THREE.Mesh | null = null;
+  private frustum: THREE.LineSegments | null = null;
+  private meta: SceneMeta | null = null;
+  private radius = 1;
   private disposed = false;
   private animationHandle = 0;
 
@@ -49,9 +80,12 @@ export class ReadOnlySceneViewer {
     this.camera = new THREE.PerspectiveCamera(55, 1, 0.001, 100);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
+    this.root.add(this.pathGroup, this.gridGroup, this.markerGroup);
     this.scene.add(this.root);
     this.resize();
-    window.addEventListener("resize", this.resize);
+    // The holder resizes with the responsive layout, not only the window.
+    this.resizeObserver = new ResizeObserver(this.resize);
+    this.resizeObserver.observe(holder);
     const loop = () => {
       if (this.disposed) return;
       this.animationHandle = requestAnimationFrame(loop);
@@ -60,6 +94,8 @@ export class ReadOnlySceneViewer {
     };
     loop();
   }
+
+  private resizeObserver: ResizeObserver;
 
   async load(viewerBase: string): Promise<{ pointCount: number; frames: number }> {
     const meta: SceneMeta = await fetch(`${viewerBase}/scene_meta.json`).then((r) => {
@@ -77,6 +113,7 @@ export class ReadOnlySceneViewer {
       }),
     ]);
     if (this.disposed) return { pointCount: 0, frames: 0 };
+    this.meta = meta;
 
     const positions = new Float32Array(positionsBuf);
     const colors8 = new Uint8Array(colorsBuf);
@@ -90,14 +127,110 @@ export class ReadOnlySceneViewer {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    this.points = new THREE.Points(geometry, this.pointsMaterial);
-    this.root.add(this.points);
+    this.root.add(new THREE.Points(geometry, this.pointsMaterial));
 
     this.buildPath(meta);
     this.buildGrid(meta, positions);
     this.fitView(meta, positions);
+    this.buildMarker(meta);
+    const t = this.timeline();
+    if (t) this.setTime(t.t0);
     return { pointCount: positions.length / 3, frames: meta.path?.length ?? 0 };
   }
+
+  // -- scale ---------------------------------------------------------------
+
+  private scaleMPerUnit(): number {
+    const cal = this.meta?.calibration?.scale_m_per_vggt_unit;
+    if (cal && cal > 0) return cal;
+    const def = this.meta?.default_scale_m_per_unit;
+    return def && def > 0 ? def : 117.6;
+  }
+
+  // -- playback ------------------------------------------------------------
+
+  /** Height/speed series against source-video time, for charts + scrubbing. */
+  timeline(): SceneTimeline | null {
+    const meta = this.meta;
+    const path = meta?.path ?? [];
+    if (!meta || path.length < 2) return null;
+    const scale = this.scaleMPerUnit();
+    const grid = meta.ground_grid;
+    const normal = grid ? vec3(grid.fitted_normal ?? grid.normal).normalize() : null;
+    const points: TimelinePoint[] = [];
+    for (let i = 0; i < path.length; i += 1) {
+      const f = path[i];
+      const p = vec3(f.position);
+      const t = f.video_time_s ?? i;
+      const heightM =
+        normal && grid ? Math.max(0, (normal.dot(p) + grid.d) * scale) : null;
+      let speedMs: number | null = null;
+      if (i > 0) {
+        const prev = path[i - 1];
+        // sequence time is continuous across removed pauses, so deltas across
+        // segment seams still measure real flight time.
+        const dt = (f.sequence_time_s ?? 0) - (prev.sequence_time_s ?? 0);
+        if (dt > 1e-4) {
+          speedMs = (p.distanceTo(vec3(prev.position)) * scale) / dt;
+        }
+      }
+      points.push({ t, heightM, speedMs });
+    }
+    // Median-of-3 smoothing on speed to tame sampling jitter.
+    const speeds = points.map((p) => p.speedMs);
+    for (let i = 1; i < points.length - 1; i += 1) {
+      const trio = [speeds[i - 1], speeds[i], speeds[i + 1]].filter(
+        (v): v is number => v !== null,
+      );
+      if (trio.length === 3) {
+        points[i].speedMs = trio.slice().sort((a, b) => a - b)[1];
+      }
+    }
+    return { t0: points[0].t, t1: points[points.length - 1].t, points };
+  }
+
+  /** Move the camera marker to source-video time t (interpolated). */
+  setTime(t: number) {
+    const path = this.meta?.path ?? [];
+    if (path.length === 0 || !this.marker) return;
+    const times = path.map((f, i) => f.video_time_s ?? i);
+    let i = 0;
+    while (i < times.length - 1 && times[i + 1] <= t) i += 1;
+    const a = path[i];
+    const b = path[Math.min(i + 1, path.length - 1)];
+    const ta = times[i];
+    const tb = times[Math.min(i + 1, path.length - 1)];
+    const gap = tb - ta;
+    // Interpolate within a segment; across a removed pause (big gap in video
+    // time) hold at the segment end instead of gliding through the cut.
+    const lerp = gap > 1e-6 && gap < 0.75 ? Math.min(1, Math.max(0, (t - ta) / gap)) : 0;
+    const pos = vec3(a.position).lerp(vec3(b.position), lerp);
+    this.marker.position.copy(pos);
+    if (this.frustum) {
+      const src = lerp < 0.5 ? a : b;
+      this.frustum.position.copy(pos);
+      if (src.right && src.down && src.forward) {
+        const m = new THREE.Matrix4().makeBasis(
+          vec3(src.right).normalize(),
+          vec3(src.down).normalize().multiplyScalar(-1),
+          vec3(src.forward).normalize().multiplyScalar(-1),
+        );
+        this.frustum.setRotationFromMatrix(m);
+      }
+    }
+  }
+
+  // -- visibility toggles ---------------------------------------------------
+
+  setPathVisible(v: boolean) {
+    this.pathGroup.visible = v;
+  }
+
+  setGridVisible(v: boolean) {
+    this.gridGroup.visible = v;
+  }
+
+  // -- construction ----------------------------------------------------------
 
   private alignmentQuaternion(meta: SceneMeta): THREE.Quaternion | null {
     const stored = meta.scene_alignment_quaternion;
@@ -121,21 +254,54 @@ export class ReadOnlySceneViewer {
     if (path.length < 2) return;
     const pts = path.map((f) => vec3(f.position));
     const geometry = new THREE.BufferGeometry().setFromPoints(pts);
-    const line = new THREE.Line(
-      geometry,
-      new THREE.LineBasicMaterial({ color: 0x36e4ff, transparent: true, opacity: 0.85 }),
+    this.pathGroup.add(
+      new THREE.Line(
+        geometry,
+        new THREE.LineBasicMaterial({ color: 0x3291ff, transparent: true, opacity: 0.85 }),
+      ),
     );
-    this.root.add(line);
     const mkSphere = (p: THREE.Vector3, r: number, color: number) => {
       const s = new THREE.Mesh(
         new THREE.SphereGeometry(r, 16, 16),
         new THREE.MeshBasicMaterial({ color }),
       );
       s.position.copy(p);
-      this.root.add(s);
+      this.pathGroup.add(s);
     };
-    mkSphere(pts[0], 0.012, 0x36e4ff);
+    mkSphere(pts[0], 0.012, 0x3291ff);
     mkSphere(pts[pts.length - 1], 0.017, 0xff4d6d);
+  }
+
+  private buildMarker(meta: SceneMeta) {
+    if (!meta.path?.length) return;
+    const r = Math.max(this.radius / 130, 0.004);
+    this.marker = new THREE.Mesh(
+      new THREE.SphereGeometry(r, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0xffb000 }),
+    );
+    this.markerGroup.add(this.marker);
+    // A small camera frustum wireframe oriented by the frame basis.
+    const w = this.radius / 14;
+    const h = w * (368 / 720);
+    const d = this.radius / 9;
+    const corners = [
+      new THREE.Vector3(-w, -h, -d),
+      new THREE.Vector3(w, -h, -d),
+      new THREE.Vector3(w, h, -d),
+      new THREE.Vector3(-w, h, -d),
+    ];
+    const o = new THREE.Vector3(0, 0, 0);
+    const verts: THREE.Vector3[] = [];
+    for (let i = 0; i < 4; i += 1) {
+      verts.push(o.clone(), corners[i].clone()); // rays
+      verts.push(corners[i].clone(), corners[(i + 1) % 4].clone()); // rim
+    }
+    const geometry = new THREE.BufferGeometry().setFromPoints(verts);
+    this.frustum = new THREE.LineSegments(
+      geometry,
+      new THREE.LineBasicMaterial({ color: 0xffb000, transparent: true, opacity: 0.9 }),
+    );
+    this.markerGroup.add(this.frustum);
   }
 
   // Grid centered under the point cloud (robust percentile center), matching
@@ -186,7 +352,7 @@ export class ReadOnlySceneViewer {
         center.clone().add(v.clone().multiplyScalar(-half)).add(u.clone().multiplyScalar(off)),
         center.clone().add(v.clone().multiplyScalar(half)).add(u.clone().multiplyScalar(off)),
       ]);
-      this.root.add(new THREE.Line(a, material(isMajor)), new THREE.Line(b, material(isMajor)));
+      this.gridGroup.add(new THREE.Line(a, material(isMajor)), new THREE.Line(b, material(isMajor)));
     }
   }
 
@@ -206,6 +372,7 @@ export class ReadOnlySceneViewer {
     for (const f of meta.path ?? []) box.expandByPoint(vec3(f.position));
     const center = box.getCenter(new THREE.Vector3());
     const radius = Math.max(box.getSize(new THREE.Vector3()).length() / 2, 0.05);
+    this.radius = radius;
     const eyeLocal = center
       .clone()
       .add(new THREE.Vector3(radius * 0.9, radius * 0.75, radius * 0.9));
@@ -222,17 +389,6 @@ export class ReadOnlySceneViewer {
     this.pointsMaterial.size = radius / 260;
   }
 
-  setPointScale(mult: number) {
-    // mult is relative to the auto-computed base size
-    const base = this.controls.maxDistance / 12 / 260;
-    this.pointsMaterial.size = base * mult;
-  }
-
-  resetView() {
-    // Re-fit is cheap to approximate: reuse controls target and zoom out.
-    this.controls.reset();
-  }
-
   private resize = () => {
     const w = this.holder.clientWidth || 1;
     const h = this.holder.clientHeight || 1;
@@ -244,7 +400,7 @@ export class ReadOnlySceneViewer {
   dispose() {
     this.disposed = true;
     cancelAnimationFrame(this.animationHandle);
-    window.removeEventListener("resize", this.resize);
+    this.resizeObserver.disconnect();
     this.controls.dispose();
     this.root.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
