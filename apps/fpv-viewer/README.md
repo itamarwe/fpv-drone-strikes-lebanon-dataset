@@ -59,9 +59,10 @@ thumbnails from whatever the two env bases point at.
      --cache-control "public,max-age=31536000,immutable"
    ```
 
-3. **Upload scene viewer data** — only `scene_meta.json` + the two point bins
-   are needed (~15 MB per scene, ~1 GB total; skip the heavy per-frame
-   `camera_view_assets/`):
+3. **Upload scene viewer data** — `scene_meta.json`, the two point bins, and
+   the per-frame `camera_view_assets/` (the scene view's corner panel shows the
+   actual/render/overlay VGGT frames from there). ~15 MB of bins + ~7 MB of
+   frames per scene, ~1.5 GB total:
 
    ```bash
    cd <dataset-repo>
@@ -71,8 +72,17 @@ thumbnails from whatever the two env bases point at.
        --content-type application/octet-stream --cache-control "public,max-age=31536000" ;
      aws s3 cp "$d/points_colors.bin"      "s3://<BUCKET>/$d/" \
        --content-type application/octet-stream --cache-control "public,max-age=31536000" ;
+     aws s3 sync "$d/camera_view_assets/"  "s3://<BUCKET>/$d/camera_view_assets/" \
+       --content-type image/jpeg --cache-control "public,max-age=31536000,immutable" ;
    done
    ```
+
+   Future pipeline improvement: have scene generation also emit a compact
+   animated artifact (e.g. an animated WebP per view mode) so the frame panel
+   is one request instead of ~125.
+
+   Also: `2026-05-26_anti_drone_platform_barashit_02.mp4` is missing from the
+   CDN (403) — upload it so its video page can play.
 
 4. **CORS**: the app is served from `itamarweiss.com` but fetches scene bins /
    thumbnails from the CDN — add a CORS policy on the bucket/distribution

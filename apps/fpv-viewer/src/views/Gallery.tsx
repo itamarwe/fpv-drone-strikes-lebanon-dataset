@@ -92,16 +92,8 @@ export function Gallery({ videos }: { videos: VideoRecord[] }) {
     return list;
   }, [videos, query, sort, sceneFilter]);
 
-  const withScene = videos.filter((v) => v.scenePath).length;
-
   return (
     <div>
-      <h1>FPV strike videos</h1>
-      <p className="page-lede">
-        {videos.length} videos from southern Lebanon · {withScene} with a reconstructed 3D scene.
-        Open a video to see its flight annotations, or explore the 3D reconstruction where one
-        exists.
-      </p>
       <div className="gallery-toolbar">
         <input
           type="search"

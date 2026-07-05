@@ -90,11 +90,13 @@ a:hover {
 }
 .site-title {
   font-family: var(--font-doto);
-  font-size: 26px;
+  /* one row on any phone: shrink with the viewport */
+  font-size: clamp(17px, 4.6vw, 26px);
   font-weight: 700;
   line-height: 56px;
   letter-spacing: 0.02em;
   text-decoration: none;
+  white-space: nowrap;
 }
 .site-title,
 .site-title:visited {
@@ -283,23 +285,75 @@ a:hover {
   color: var(--brand);
 }
 
-/* Video view */
+/* Video view — YouTube-mobile-style: player first, compact headline below. */
 .video-view video {
   width: 100%;
-  max-height: 68vh;
+  max-height: 62vh;
   background: #000;
   border-radius: 8px;
   border: 1px solid var(--hairline);
   outline: none;
+  cursor: pointer;
+}
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+}
+.transport button {
+  flex-shrink: 0;
+  min-width: 36px;
+  height: 34px;
+  padding: 0 8px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--grey);
+  font: 500 12.5px var(--font-sans);
+  cursor: pointer;
+}
+.transport button:hover {
+  color: #fff;
+  border-color: #555;
+}
+.transport .play-btn {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 13px;
+}
+.transport .scrubber {
+  flex: 1;
+  min-width: 60px;
+}
+.transport .time-display {
+  flex-shrink: 0;
+}
+.video-headline {
+  margin: 14px 0 4px;
+}
+.video-headline h1 {
+  font-size: 18px;
+  line-height: 1.35;
+  margin: 0 0 4px;
+}
+.video-headline .view-meta {
+  margin: 0 0 8px;
+}
+.back-link-inline {
+  color: var(--grey);
 }
 .view-meta {
   color: var(--grey);
-  font-size: 14px;
+  font-size: 13.5px;
   margin: 10px 0 4px;
 }
 .view-actions {
-  margin: 14px 0 26px;
-  font-size: 15px;
+  margin: 10px 0 24px;
+  font-size: 14px;
 }
 .view-actions a:not(:last-child) {
   margin-right: 18px;
@@ -417,16 +471,49 @@ a:hover {
   width: 100%;
   height: 100%;
 }
-.scene-pip {
+/* Corner panel showing the frames sent to VGGT (actual / render / overlay). */
+.scene-frame-panel {
   position: absolute;
   right: 10px;
   bottom: 10px;
-  width: min(34%, 320px);
+  width: min(36%, 340px);
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 6px;
+  overflow: hidden;
   background: #000;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
   z-index: 3;
+}
+.scene-frame-panel img {
+  display: block;
+  width: 100%;
+}
+.frame-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.8);
+}
+.frame-tabs button {
+  border: 0;
+  border-radius: 4px;
+  padding: 2px 7px;
+  background: transparent;
+  color: var(--grey);
+  font: 500 11px var(--font-sans);
+  cursor: pointer;
+}
+.frame-tabs button.active {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+.frame-tabs .frame-counter {
+  margin-left: auto;
+  padding-right: 4px;
+  color: var(--grey);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
 }
 .stage-btn {
   position: absolute;
@@ -539,14 +626,39 @@ a:hover {
   margin: 8px 0 0;
 }
 
-.scene-chart {
-  display: block;
-  width: 100%;
-  height: 132px;
-  margin-top: 6px;
+/* Stacked chart cards (speed, height) in the tool's plot style. */
+.scene-charts {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+.chart-card {
   border: 1px solid var(--hairline);
   border-radius: 8px;
   background: var(--surface);
+  padding: 10px 12px 8px;
+}
+.chart-card header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.chart-readout {
+  color: #ffb000;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.chart-canvas {
+  display: block;
+  width: 100%;
+  height: 104px;
   cursor: crosshair;
   touch-action: none;
 }
@@ -557,8 +669,8 @@ a:hover {
   .scene-stage {
     height: clamp(260px, 44vh, 480px);
   }
-  .scene-pip {
-    width: 44%;
+  .scene-frame-panel {
+    width: 46%;
     right: 8px;
     bottom: 8px;
   }
@@ -577,9 +689,20 @@ a:hover {
   }
   .scene-toggles {
     margin-left: auto;
+    flex-wrap: wrap;
   }
-  .scene-chart {
-    height: 120px;
+  .chart-canvas {
+    height: 96px;
+  }
+  .transport {
+    flex-wrap: wrap;
+  }
+  .transport .scrubber {
+    order: 5;
+    flex-basis: 100%;
+  }
+  .transport button {
+    height: 40px;
   }
 }
 

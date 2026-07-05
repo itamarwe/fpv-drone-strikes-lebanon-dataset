@@ -5,7 +5,7 @@ export function Header() {
     <header className="site-header">
       <div className="wrapper">
         <a className="site-title" href="#/">
-          FPV Strike Dataset
+          FPV Dataset
         </a>
         <nav className="site-nav">
           <a href="#/">Videos</a>

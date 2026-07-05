@@ -1,9 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { VideoRecord } from "../types";
-import { SCENE_BASE, THUMB_BASE } from "../types";
+import { SCENE_BASE } from "../types";
 import { videoHref } from "../App";
-import { ReadOnlySceneViewer, type SceneTimeline } from "../three/sceneViewer";
+import {
+  ReadOnlySceneViewer,
+  type SceneFrame,
+  type SceneTimeline,
+} from "../three/sceneViewer";
 import { SceneCharts } from "../components/SceneCharts";
+
+type FrameMode = "overlay" | "render" | "actual";
 
 function fmt(t: number): string {
   const m = Math.floor(t / 60);
@@ -11,28 +17,32 @@ function fmt(t: number): string {
   return `${m}:${s}`;
 }
 
-// Read-only 3D scene with synced playback: the source video (corner overlay)
-// is the master clock; the camera marker in the scene and the playhead in the
-// height/speed chart follow it. Scrub with the slider or by dragging on the
-// chart.
+// Read-only 3D scene with playback on flight (sequence) time — the pauses that
+// exist in the source video are removed, so speed/height charts and the camera
+// motion are continuous. The corner panel shows the actual frames that were
+// sent to VGGT (actual / rendered / overlay), synced to the same clock.
 export function SceneView({ video }: { video: VideoRecord }) {
   const holderRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const viewerRef = useRef<ReadOnlySceneViewer | null>(null);
-  const internalClockRef = useRef<{ playing: boolean; last: number; t: number } | null>(null);
+  const clockRef = useRef<{ playing: boolean; last: number; t: number }>({
+    playing: false,
+    last: 0,
+    t: 0,
+  });
   const lastTRef = useRef(-1);
   const timelineRef = useRef<SceneTimeline | null>(null);
 
   const [status, setStatus] = useState<string | null>("Loading 3D scene…");
   const [stats, setStats] = useState<{ pointCount: number; frames: number } | null>(null);
   const [timeline, setTimeline] = useState<SceneTimeline | null>(null);
+  const [frames, setFrames] = useState<SceneFrame[]>([]);
+  const [frameMode, setFrameMode] = useState<FrameMode>("overlay");
   const [currentT, setCurrentT] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [videoBroken, setVideoBroken] = useState(false);
   const [showPath, setShowPath] = useState(true);
   const [showGrid, setShowGrid] = useState(true);
-  const [showVideo, setShowVideo] = useState(true);
+  const [showFrames, setShowFrames] = useState(true);
   const [showPoints, setShowPoints] = useState(true);
   const [showFrusta, setShowFrusta] = useState(false);
   const [measuring, setMeasuring] = useState(false);
@@ -47,76 +57,90 @@ export function SceneView({ video }: { video: VideoRecord }) {
     viewer
       .load(`${SCENE_BASE}/${video.scenePath}/viewer`)
       .then((s) => {
+        // StrictMode double-mounts: a disposed viewer resolves with empty
+        // results — never let it clobber the live viewer's state.
+        if (viewerRef.current !== viewer) return;
         setStats(s);
         const t = viewer.timeline();
         setTimeline(t);
         timelineRef.current = t;
+        setFrames(viewer.frames());
         if (t) {
+          clockRef.current = { playing: false, last: 0, t: t.t0 };
           setCurrentT(t.t0);
-          const el = videoRef.current;
-          // Seeks are dropped before metadata is loaded; onLoadedMetadata
-          // repeats this for the case where the video is slower than the scene.
-          if (el && el.readyState >= 1) el.currentTime = t.t0;
         }
         setStatus(null);
       })
-      .catch((e) => setStatus(`Failed to load scene (${e.message ?? e})`));
+      .catch((e) => {
+        if (viewerRef.current !== viewer) return;
+        setStatus(`Failed to load scene (${e.message ?? e})`);
+      });
     return () => {
       viewerRef.current = null;
       viewer.dispose();
     };
   }, [video.scenePath]);
 
-  // Playback clock: read the video's currentTime every frame; if the video
-  // failed to load, fall back to an internal wall clock.
+  // Playback clock: internal accumulator over flight time.
   useEffect(() => {
     let handle = 0;
     const tick = (now: number) => {
       handle = requestAnimationFrame(tick);
-      let t: number | null = null;
-      const el = videoRef.current;
-      if (!videoBroken && el && el.readyState >= 1) {
-        t = el.currentTime;
-        const tl = timelineRef.current;
-        if (tl) {
-          // Keep the video inside the scene's time window: snap back to the
-          // start if a pre-metadata seek was dropped, pause at the scene end.
-          if (t < tl.t0 - 0.3) {
-            el.currentTime = tl.t0;
-            t = tl.t0;
-          } else if (t > tl.t1 + 0.05 && !el.paused) {
-            el.pause();
-            t = tl.t1;
-          }
-        }
-      } else if (internalClockRef.current?.playing && timeline) {
-        // The clock keeps its own accumulator; lastTRef is only the render
-        // threshold and must not feed back into timekeeping.
-        const c = internalClockRef.current;
-        const dt = (now - c.last) / 1000;
-        c.last = now;
-        c.t = Math.min(c.t + dt, timeline.t1);
-        t = c.t;
-        if (t >= timeline.t1) {
-          c.playing = false;
-          setPlaying(false);
-        }
+      const c = clockRef.current;
+      const tl = timelineRef.current;
+      if (!tl || !c.playing) return;
+      const dt = (now - c.last) / 1000;
+      c.last = now;
+      c.t = Math.min(c.t + dt, tl.t1);
+      if (c.t >= tl.t1) {
+        c.playing = false;
+        setPlaying(false);
       }
-      if (t === null) return;
-      if (Math.abs(t - lastTRef.current) > 0.02) {
-        lastTRef.current = t;
-        viewerRef.current?.setTime(t);
-        setCurrentT(t);
+      if (Math.abs(c.t - lastTRef.current) > 0.02) {
+        lastTRef.current = c.t;
+        viewerRef.current?.setTime(c.t);
+        setCurrentT(c.t);
       }
     };
     handle = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(handle);
-  }, [videoBroken, timeline]);
+  }, []);
 
   useEffect(() => viewerRef.current?.setPathVisible(showPath), [showPath]);
   useEffect(() => viewerRef.current?.setGridVisible(showGrid), [showGrid]);
   useEffect(() => viewerRef.current?.setPointsVisible(showPoints), [showPoints]);
   useEffect(() => viewerRef.current?.setFrustaVisible(showFrusta), [showFrusta]);
+
+  const seek = (t: number) => {
+    clockRef.current.t = t;
+    lastTRef.current = t;
+    viewerRef.current?.setTime(t);
+    setCurrentT(t);
+  };
+
+  const togglePlay = () => {
+    const c = clockRef.current;
+    const tl = timelineRef.current;
+    if (!tl) return;
+    if (!c.playing && c.t >= tl.t1 - 0.05) c.t = tl.t0; // replay from start
+    c.playing = !c.playing;
+    c.last = performance.now();
+    setPlaying(c.playing);
+  };
+
+  // Spacebar plays/pauses (viewing shortcut, matches the video page).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.code !== "Space") return;
+      const tag = (document.activeElement as HTMLElement | null)?.tagName ?? "";
+      if (["INPUT", "SELECT", "TEXTAREA", "BUTTON"].includes(tag)) return;
+      e.preventDefault();
+      togglePlay();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggleMeasure = () => {
     const next = !measuring;
@@ -128,65 +152,24 @@ export function SceneView({ video }: { video: VideoRecord }) {
     });
   };
 
-  const seek = (t: number) => {
-    const el = videoRef.current;
-    if (!videoBroken && el) el.currentTime = t;
-    if (internalClockRef.current) internalClockRef.current.t = t;
-    lastTRef.current = t;
-    viewerRef.current?.setTime(t);
-    setCurrentT(t);
-  };
-
-  const markVideoBroken = () => {
-    // Video can't be used as the clock (e.g. missing from the CDN, no error
-    // event fired) -> hide the PiP and keep playing on the internal clock.
-    setVideoBroken(true);
-    internalClockRef.current = {
-      playing: true,
-      last: performance.now(),
-      t: lastTRef.current >= 0 ? lastTRef.current : timelineRef.current?.t0 ?? 0,
-    };
-    setPlaying(true);
-  };
-
-  const togglePlay = () => {
-    const el = videoRef.current;
-    if (!videoBroken && el) {
-      if (el.paused) {
-        const tl = timelineRef.current;
-        // Restart from the scene start when outside the scene window.
-        if (tl && (el.currentTime < tl.t0 - 0.3 || el.currentTime >= tl.t1 - 0.05)) {
-          el.currentTime = tl.t0;
-        }
-        void el.play().catch(markVideoBroken);
-        // Some failures (403 from the CDN) never fire an error event: if no
-        // data has arrived shortly after pressing play, fall back.
-        window.setTimeout(() => {
-          const now = videoRef.current;
-          if (now && !now.paused && now.readyState < 2) markVideoBroken();
-        }, 2500);
-      } else el.pause();
-    } else {
-      const c = internalClockRef.current ?? {
-        playing: false,
-        last: performance.now(),
-        t: timelineRef.current?.t0 ?? 0,
-      };
-      const tl = timelineRef.current;
-      if (!c.playing && tl && c.t >= tl.t1 - 0.05) c.t = tl.t0; // replay from start
-      c.playing = !c.playing;
-      c.last = performance.now();
-      internalClockRef.current = c;
-      setPlaying(c.playing);
-    }
-  };
-
   const toggleFullscreen = () => {
     const stage = stageRef.current;
     if (!stage) return;
     if (document.fullscreenElement) void document.exitFullscreen();
     else void stage.requestFullscreen().catch(() => undefined);
   };
+
+  // Current VGGT frame (nearest by flight time).
+  const frameIndex = useMemo(() => {
+    if (!frames.length) return -1;
+    let best = 0;
+    for (let i = 1; i < frames.length; i += 1) {
+      if (Math.abs(frames[i].t - currentT) < Math.abs(frames[best].t - currentT)) best = i;
+    }
+    return best;
+  }, [frames, currentT]);
+  const frameSrc =
+    frameIndex >= 0 ? frames[frameIndex][frameMode] ?? frames[frameIndex].actual : null;
 
   if (!video.scenePath) {
     return (
@@ -214,27 +197,26 @@ export function SceneView({ video }: { video: VideoRecord }) {
       <div className="scene-stage" ref={stageRef}>
         <div className="canvas-holder" ref={holderRef} />
         {status ? <div className="scene-status">{status}</div> : null}
-        <video
-          ref={videoRef}
-          className="scene-pip"
-          style={{ display: showVideo && !videoBroken ? "block" : "none" }}
-          src={video.videoUrl}
-          poster={
-            video.thumbWidths?.length
-              ? `${THUMB_BASE}/${video.slug}/${video.thumbWidths[video.thumbWidths.length - 1]}.webp`
-              : video.thumbnailUrl || undefined
-          }
-          muted
-          playsInline
-          preload="auto"
-          onLoadedMetadata={(e) => {
-            const tl = timelineRef.current;
-            if (tl) e.currentTarget.currentTime = tl.t0;
-          }}
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          onError={() => setVideoBroken(true)}
-        />
+        {showFrames && frameSrc ? (
+          <div className="scene-frame-panel">
+            <div className="frame-tabs">
+              {(["overlay", "render", "actual"] as FrameMode[]).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  className={frameMode === mode ? "active" : ""}
+                  onClick={() => setFrameMode(mode)}
+                >
+                  {mode === "overlay" ? "Overlay" : mode === "render" ? "Render" : "Actual"}
+                </button>
+              ))}
+              <span className="frame-counter">
+                {frameIndex + 1}/{frames.length}
+              </span>
+            </div>
+            <img src={frameSrc} alt={`VGGT ${frameMode} frame ${frameIndex + 1}`} />
+          </div>
+        ) : null}
         <button
           type="button"
           className="stage-btn fullscreen-btn"
@@ -252,6 +234,7 @@ export function SceneView({ video }: { video: VideoRecord }) {
             className="play-btn"
             onClick={togglePlay}
             aria-label={playing ? "Pause" : "Play"}
+            title="Play/pause (space)"
           >
             {playing ? "❚❚" : "▶"}
           </button>
@@ -286,13 +269,8 @@ export function SceneView({ video }: { video: VideoRecord }) {
               Grid
             </label>
             <label>
-              <input
-                type="checkbox"
-                checked={showVideo}
-                disabled={videoBroken}
-                onChange={(e) => setShowVideo(e.target.checked)}
-              />
-              Video
+              <input type="checkbox" checked={showFrames} onChange={(e) => setShowFrames(e.target.checked)} />
+              Frames
             </label>
             <button
               type="button"

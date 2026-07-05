@@ -17,6 +17,11 @@ type PathFrame = {
   forward?: number[];
   video_time_s?: number;
   sequence_time_s?: number;
+  distance_to_end_units?: number;
+  frame_image?: string;
+  actual_image?: string;
+  render_image?: string;
+  overlay_image?: string;
 };
 
 type SceneMeta = {
@@ -42,15 +47,25 @@ type SceneMeta = {
 };
 
 export type TimelinePoint = {
-  t: number; // source-video time (s) — the playback clock
+  t: number; // flight (sequence) time in seconds — continuous, pauses removed
   heightM: number | null; // height above the fitted ground plane (m)
-  speedMs: number | null; // flight speed (m/s), from sequence-time deltas
+  speedRawMs: number | null; // per-frame speed (m/s)
+  speedMs: number | null; // smoothed speed (m/s)
+  distM: number | null; // distance to the strike point (m)
 };
 
 export type SceneTimeline = {
   t0: number;
   t1: number;
+  avgSpeedMs: number | null;
   points: TimelinePoint[];
+};
+
+export type SceneFrame = {
+  t: number; // flight (sequence) time
+  actual: string | null;
+  render: string | null;
+  overlay: string | null;
 };
 
 const vec3 = (v: number[]) => new THREE.Vector3(v[0], v[1], v[2]);
@@ -71,6 +86,7 @@ export class ReadOnlySceneViewer {
   private frustum: THREE.LineSegments | null = null;
   private pointsObject: THREE.Points | null = null;
   private meta: SceneMeta | null = null;
+  private viewerBase: string | null = null;
   private radius = 1;
   private disposed = false;
   private animationHandle = 0;
@@ -123,6 +139,7 @@ export class ReadOnlySceneViewer {
     ]);
     if (this.disposed) return { pointCount: 0, frames: 0 };
     this.meta = meta;
+    this.viewerBase = viewerBase;
 
     const positions = new Float32Array(positionsBuf);
     const colors8 = new Uint8Array(colorsBuf);
@@ -139,9 +156,9 @@ export class ReadOnlySceneViewer {
     this.pointsObject = new THREE.Points(geometry, this.pointsMaterial);
     this.root.add(this.pointsObject);
 
+    this.fitView(meta, positions); // sets this.radius, used to size markers
     this.buildPath(meta);
     this.buildGrid(meta, positions);
-    this.fitView(meta, positions);
     this.buildMarker(meta);
     this.buildFrusta(meta);
     const t = this.timeline();
@@ -160,7 +177,7 @@ export class ReadOnlySceneViewer {
 
   // -- playback ------------------------------------------------------------
 
-  /** Height/speed series against source-video time, for charts + scrubbing. */
+  /** Height/speed/distance series against flight (sequence) time. */
   timeline(): SceneTimeline | null {
     const meta = this.meta;
     const path = meta?.path ?? [];
@@ -172,39 +189,69 @@ export class ReadOnlySceneViewer {
     for (let i = 0; i < path.length; i += 1) {
       const f = path[i];
       const p = vec3(f.position);
-      const t = f.video_time_s ?? i;
+      const t = f.sequence_time_s ?? i;
       const heightM =
         normal && grid ? Math.max(0, (normal.dot(p) + grid.d) * scale) : null;
-      let speedMs: number | null = null;
+      let speedRawMs: number | null = null;
       if (i > 0) {
         const prev = path[i - 1];
-        // sequence time is continuous across removed pauses, so deltas across
-        // segment seams still measure real flight time.
         const dt = (f.sequence_time_s ?? 0) - (prev.sequence_time_s ?? 0);
         if (dt > 1e-4) {
-          speedMs = (p.distanceTo(vec3(prev.position)) * scale) / dt;
+          speedRawMs = (p.distanceTo(vec3(prev.position)) * scale) / dt;
         }
       }
-      points.push({ t, heightM, speedMs });
+      const distM =
+        typeof f.distance_to_end_units === "number" ? f.distance_to_end_units * scale : null;
+      points.push({ t, heightM, speedRawMs, speedMs: speedRawMs, distM });
     }
-    // Median-of-3 smoothing on speed to tame sampling jitter.
-    const speeds = points.map((p) => p.speedMs);
-    for (let i = 1; i < points.length - 1; i += 1) {
-      const trio = [speeds[i - 1], speeds[i], speeds[i + 1]].filter(
+    // Smooth speed: median-of-3 (kills sampling spikes) then a short moving
+    // average — the amber "smooth" curve; raw stays as the teal backdrop.
+    const median3: (number | null)[] = points.map((p, i) => {
+      if (i === 0 || i === points.length - 1) return p.speedRawMs;
+      const trio = [points[i - 1].speedRawMs, p.speedRawMs, points[i + 1].speedRawMs].filter(
         (v): v is number => v !== null,
       );
-      if (trio.length === 3) {
-        points[i].speedMs = trio.slice().sort((a, b) => a - b)[1];
+      return trio.length === 3 ? trio.slice().sort((a, b) => a - b)[1] : p.speedRawMs;
+    });
+    for (let i = 0; i < points.length; i += 1) {
+      const window: number[] = [];
+      for (let j = Math.max(0, i - 2); j <= Math.min(points.length - 1, i + 2); j += 1) {
+        const v = median3[j];
+        if (v !== null) window.push(v);
       }
+      points[i].speedMs = window.length
+        ? window.reduce((a, b) => a + b, 0) / window.length
+        : null;
     }
-    return { t0: points[0].t, t1: points[points.length - 1].t, points };
+    // Time-weighted average speed = total path length / total flight time.
+    let dist = 0;
+    for (let i = 1; i < path.length; i += 1) {
+      dist += vec3(path[i].position).distanceTo(vec3(path[i - 1].position));
+    }
+    const totalT = (points[points.length - 1].t ?? 0) - (points[0].t ?? 0);
+    const avgSpeedMs = totalT > 1e-4 ? (dist * scale) / totalT : null;
+    return { t0: points[0].t, t1: points[points.length - 1].t, avgSpeedMs, points };
   }
 
-  /** Move the camera marker to source-video time t (interpolated). */
+  /** Per-frame VGGT camera-view images (actual / render / overlay). */
+  frames(): SceneFrame[] {
+    const path = this.meta?.path ?? [];
+    const base = this.viewerBase;
+    if (!base) return [];
+    const url = (rel?: string) => (rel ? `${base}/${rel}` : null);
+    return path.map((f, i) => ({
+      t: f.sequence_time_s ?? i,
+      actual: url(f.actual_image ?? f.frame_image),
+      render: url(f.render_image),
+      overlay: url(f.overlay_image),
+    }));
+  }
+
+  /** Move the camera marker to flight (sequence) time t (interpolated). */
   setTime(t: number) {
     const path = this.meta?.path ?? [];
     if (path.length === 0 || !this.marker) return;
-    const times = path.map((f, i) => f.video_time_s ?? i);
+    const times = path.map((f, i) => f.sequence_time_s ?? i);
     let i = 0;
     while (i < times.length - 1 && times[i + 1] <= t) i += 1;
     const a = path[i];
@@ -212,9 +259,8 @@ export class ReadOnlySceneViewer {
     const ta = times[i];
     const tb = times[Math.min(i + 1, path.length - 1)];
     const gap = tb - ta;
-    // Interpolate within a segment; across a removed pause (big gap in video
-    // time) hold at the segment end instead of gliding through the cut.
-    const lerp = gap > 1e-6 && gap < 0.75 ? Math.min(1, Math.max(0, (t - ta) / gap)) : 0;
+    // Sequence time is continuous (pauses removed), so always interpolate.
+    const lerp = gap > 1e-6 ? Math.min(1, Math.max(0, (t - ta) / gap)) : 0;
     const pos = vec3(a.position).lerp(vec3(b.position), lerp);
     this.marker.position.copy(pos);
     if (this.frustum) {
@@ -336,8 +382,8 @@ export class ReadOnlySceneViewer {
       s.position.copy(p);
       this.pathGroup.add(s);
     };
-    mkSphere(pts[0], 0.012, 0x3291ff);
-    mkSphere(pts[pts.length - 1], 0.017, 0xff4d6d);
+    mkSphere(pts[0], Math.max(this.radius / 110, 0.003), 0x3291ff);
+    mkSphere(pts[pts.length - 1], Math.max(this.radius / 80, 0.004), 0xff4d6d);
   }
 
   // A small camera frustum wireframe (apex at origin, opening along -Z).
