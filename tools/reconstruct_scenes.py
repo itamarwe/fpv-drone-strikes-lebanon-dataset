@@ -17,7 +17,7 @@ are only used when that is all that exists.
 Examples:
   # Redo a set of scenes with the "clean" preset and shut the pod down after:
   python tools/reconstruct_scenes.py --preset clean --stop-pod \
-      2026-05-26_anti_drone_platform_barashit_02 2026-05-01_strike_on_soldiers
+      2026-05-26_anti_drone_platform_barashit 2026-05-01_strike_on_soldiers
 
   # Explicit annotation files, keep the pod up:
   python tools/reconstruct_scenes.py --preset clean \

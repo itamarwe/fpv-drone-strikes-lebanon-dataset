@@ -81,9 +81,6 @@ thumbnails from whatever the two env bases point at.
    animated artifact (e.g. an animated WebP per view mode) so the frame panel
    is one request instead of ~125.
 
-   Also: `2026-05-26_anti_drone_platform_barashit_02.mp4` is missing from the
-   CDN (403) — upload it so its video page can play.
-
 4. **CORS**: the app is served from `itamarweiss.com` but fetches scene bins /
    thumbnails from the CDN — add a CORS policy on the bucket/distribution
    allowing `GET` from `https://itamarweiss.com` (or `*`).

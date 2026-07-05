@@ -10,7 +10,7 @@ export type VideoRecord = {
   thumbWidths: number[] | null; // locally generated responsive WebP widths
   blurDataURL: string | null; // tiny placeholder for a blur-up load
   videoUrl: string;
-  videoFile: string; // e.g. 2026-05-26_anti_drone_platform_barashit_02.mp4
+  videoFile: string; // e.g. 2026-05-26_anti_drone_platform_barashit.mp4
   slug: string; // slugify(videoFile) == scene directory / thumbnail folder name
   sceneId: string | null; // reconstructed scene id, when one exists
 };
