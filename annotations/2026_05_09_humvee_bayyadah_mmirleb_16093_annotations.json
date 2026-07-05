@@ -1,14 +1,14 @@
 {
   "video_file": "2026-05-09_humvee_bayyadah_mmirleb_16093.mp4",
   "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_humvee_bayyadah_mmirleb_16093.mp4",
-  "description": "humvee bayyadah",
+  "description": "Communications Humvee, al-Bayyada (dive drone)",
   "date": "2026-05-09",
   "town": "Al Bayada / Bayyadah",
   "auto_generated": true,
   "generator": "classify_and_extract_segments+segments_report_to_annotations",
   "segments": [
     {
-      "time": 0.0,
+      "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
       "source": "auto",
@@ -24,7 +24,7 @@
       "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
     },
     {
-      "time": 8.0,
+      "time": 8,
       "time_formatted": "0:08.0",
       "type": "flight_start",
       "source": "auto",

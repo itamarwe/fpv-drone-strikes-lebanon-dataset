@@ -57,7 +57,7 @@ export function VideoCard({ video }: { video: VideoRecord }) {
       </a>
 
       <div className="flex min-w-0 flex-col gap-0.5">
-        <h3 className="line-clamp-2 text-[15px] font-medium capitalize leading-snug text-foreground">
+        <h3 className="line-clamp-2 text-[15px] font-medium leading-snug text-foreground">
           {video.description || video.videoFile}
         </h3>
         <p className="truncate text-[13px] text-muted-foreground">

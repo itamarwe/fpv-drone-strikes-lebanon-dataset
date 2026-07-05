@@ -49,7 +49,7 @@ export function SceneView({ video }: { video: VideoRecord }) {
       <a className="back-link" href="#/">
         ← All videos
       </a>
-      <h1 style={{ textTransform: "capitalize" }}>{video.description || video.videoFile}</h1>
+      <h1>{video.description || video.videoFile}</h1>
       <p className="view-meta">
         {video.date}
         {video.town ? ` · ${video.town}` : ""} · 3D reconstruction

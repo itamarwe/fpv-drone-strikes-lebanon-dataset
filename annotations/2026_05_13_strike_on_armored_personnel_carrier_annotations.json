@@ -1,14 +1,14 @@
 {
   "video_file": "2026-05-13_strike_on_armored_personnel_carrier.mp4",
   "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-13_strike_on_armored_personnel_carrier.mp4",
-  "description": "Strike on armored personnel carrier",
+  "description": "Armored troop carrier, city of Bint Jbeil (dive drone)",
   "date": "2026-05-13",
   "town": "Bint Jbeil",
   "auto_generated": true,
   "generator": "classify_and_extract_segments+segments_report_to_annotations",
   "segments": [
     {
-      "time": 0.0,
+      "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
       "source": "auto",
