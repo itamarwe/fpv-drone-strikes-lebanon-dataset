@@ -125,6 +125,9 @@ export function VideoView({ video }: { video: VideoRecord }) {
 
   return (
     <div className="video-view">
+      <a className="back-link" href="#/">
+        ← All videos
+      </a>
       <video
         ref={videoRef}
         src={video.videoUrl}
@@ -191,12 +194,18 @@ export function VideoView({ video }: { video: VideoRecord }) {
           {video.town ? ` · ${video.town}` : ""}
         </p>
         <div className="view-actions">
-          <a className="back-link-inline" href="#/">
-            ← All videos
-          </a>
           {video.scenePath ? <a href={sceneHref(video.videoFile)}>View 3D scene →</a> : null}
-          <a href={video.videoUrl} rel="noreferrer">
-            Download video
+          <a
+            className="icon-link"
+            href={video.videoUrl}
+            rel="noreferrer"
+            title="Download video"
+            aria-label="Download video"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <path d="M12 4v11m0 0l-5-5m5 5l5-5" />
+              <path d="M4 19h16" />
+            </svg>
           </a>
         </div>
       </div>

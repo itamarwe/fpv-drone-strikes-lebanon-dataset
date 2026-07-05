@@ -354,8 +354,14 @@ a:hover {
 .video-headline .view-meta {
   margin: 0 0 8px;
 }
-.back-link-inline {
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
   color: var(--grey);
+}
+.icon-link:hover {
+  color: #fff;
 }
 .view-meta {
   color: var(--grey);
