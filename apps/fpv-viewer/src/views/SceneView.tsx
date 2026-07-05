@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { VideoRecord } from "../types";
-import { SCENE_BASE } from "../types";
+import { SCENE_BASE, THUMB_BASE } from "../types";
 import { videoHref } from "../App";
 import { ReadOnlySceneViewer, type SceneTimeline } from "../three/sceneViewer";
 import { SceneCharts } from "../components/SceneCharts";
@@ -20,8 +20,9 @@ export function SceneView({ video }: { video: VideoRecord }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const viewerRef = useRef<ReadOnlySceneViewer | null>(null);
-  const internalClockRef = useRef<{ playing: boolean; last: number } | null>(null);
+  const internalClockRef = useRef<{ playing: boolean; last: number; t: number } | null>(null);
   const lastTRef = useRef(-1);
+  const timelineRef = useRef<SceneTimeline | null>(null);
 
   const [status, setStatus] = useState<string | null>("Loading 3D scene…");
   const [stats, setStats] = useState<{ pointCount: number; frames: number } | null>(null);
@@ -49,10 +50,13 @@ export function SceneView({ video }: { video: VideoRecord }) {
         setStats(s);
         const t = viewer.timeline();
         setTimeline(t);
+        timelineRef.current = t;
         if (t) {
           setCurrentT(t.t0);
           const el = videoRef.current;
-          if (el) el.currentTime = t.t0;
+          // Seeks are dropped before metadata is loaded; onLoadedMetadata
+          // repeats this for the case where the video is slower than the scene.
+          if (el && el.readyState >= 1) el.currentTime = t.t0;
         }
         setStatus(null);
       })
@@ -73,11 +77,30 @@ export function SceneView({ video }: { video: VideoRecord }) {
       const el = videoRef.current;
       if (!videoBroken && el && el.readyState >= 1) {
         t = el.currentTime;
+        const tl = timelineRef.current;
+        if (tl) {
+          // Keep the video inside the scene's time window: snap back to the
+          // start if a pre-metadata seek was dropped, pause at the scene end.
+          if (t < tl.t0 - 0.3) {
+            el.currentTime = tl.t0;
+            t = tl.t0;
+          } else if (t > tl.t1 + 0.05 && !el.paused) {
+            el.pause();
+            t = tl.t1;
+          }
+        }
       } else if (internalClockRef.current?.playing && timeline) {
+        // The clock keeps its own accumulator; lastTRef is only the render
+        // threshold and must not feed back into timekeeping.
         const c = internalClockRef.current;
         const dt = (now - c.last) / 1000;
         c.last = now;
-        t = Math.min(lastTRef.current < 0 ? timeline.t0 : lastTRef.current + dt, timeline.t1);
+        c.t = Math.min(c.t + dt, timeline.t1);
+        t = c.t;
+        if (t >= timeline.t1) {
+          c.playing = false;
+          setPlaying(false);
+        }
       }
       if (t === null) return;
       if (Math.abs(t - lastTRef.current) > 0.02) {
@@ -108,18 +131,49 @@ export function SceneView({ video }: { video: VideoRecord }) {
   const seek = (t: number) => {
     const el = videoRef.current;
     if (!videoBroken && el) el.currentTime = t;
+    if (internalClockRef.current) internalClockRef.current.t = t;
     lastTRef.current = t;
     viewerRef.current?.setTime(t);
     setCurrentT(t);
   };
 
+  const markVideoBroken = () => {
+    // Video can't be used as the clock (e.g. missing from the CDN, no error
+    // event fired) -> hide the PiP and keep playing on the internal clock.
+    setVideoBroken(true);
+    internalClockRef.current = {
+      playing: true,
+      last: performance.now(),
+      t: lastTRef.current >= 0 ? lastTRef.current : timelineRef.current?.t0 ?? 0,
+    };
+    setPlaying(true);
+  };
+
   const togglePlay = () => {
     const el = videoRef.current;
     if (!videoBroken && el) {
-      if (el.paused) void el.play().catch(() => setVideoBroken(true));
-      else el.pause();
+      if (el.paused) {
+        const tl = timelineRef.current;
+        // Restart from the scene start when outside the scene window.
+        if (tl && (el.currentTime < tl.t0 - 0.3 || el.currentTime >= tl.t1 - 0.05)) {
+          el.currentTime = tl.t0;
+        }
+        void el.play().catch(markVideoBroken);
+        // Some failures (403 from the CDN) never fire an error event: if no
+        // data has arrived shortly after pressing play, fall back.
+        window.setTimeout(() => {
+          const now = videoRef.current;
+          if (now && !now.paused && now.readyState < 2) markVideoBroken();
+        }, 2500);
+      } else el.pause();
     } else {
-      const c = internalClockRef.current ?? { playing: false, last: performance.now() };
+      const c = internalClockRef.current ?? {
+        playing: false,
+        last: performance.now(),
+        t: timelineRef.current?.t0 ?? 0,
+      };
+      const tl = timelineRef.current;
+      if (!c.playing && tl && c.t >= tl.t1 - 0.05) c.t = tl.t0; // replay from start
       c.playing = !c.playing;
       c.last = performance.now();
       internalClockRef.current = c;
@@ -165,9 +219,18 @@ export function SceneView({ video }: { video: VideoRecord }) {
           className="scene-pip"
           style={{ display: showVideo && !videoBroken ? "block" : "none" }}
           src={video.videoUrl}
+          poster={
+            video.thumbWidths?.length
+              ? `${THUMB_BASE}/${video.slug}/${video.thumbWidths[video.thumbWidths.length - 1]}.webp`
+              : video.thumbnailUrl || undefined
+          }
           muted
           playsInline
           preload="auto"
+          onLoadedMetadata={(e) => {
+            const tl = timelineRef.current;
+            if (tl) e.currentTarget.currentTime = tl.t0;
+          }}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
           onError={() => setVideoBroken(true)}

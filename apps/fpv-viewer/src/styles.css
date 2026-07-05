@@ -388,10 +388,21 @@ a:hover {
 }
 
 /* Scene view — desktop: dominant 3D stage with PiP video bottom-right,
-   controls bar below, height/speed chart strip under that. */
+   controls bar below, height/speed chart strip under that. The stage height
+   leaves room for title + controls + chart so nothing falls below the fold. */
+.scene-view h1 {
+  font-size: 21px;
+  margin: 0 0 4px;
+}
+.scene-view .view-meta {
+  margin: 0 0 12px;
+}
+.scene-view .back-link {
+  margin-bottom: 10px;
+}
 .scene-stage {
   position: relative;
-  height: min(62vh, 720px);
+  height: clamp(300px, calc(100vh - 400px), 700px);
   border: 1px solid var(--hairline);
   border-radius: 8px;
   overflow: hidden;
@@ -531,7 +542,7 @@ a:hover {
 .scene-chart {
   display: block;
   width: 100%;
-  height: 150px;
+  height: 132px;
   margin-top: 6px;
   border: 1px solid var(--hairline);
   border-radius: 8px;
@@ -544,7 +555,7 @@ a:hover {
    targets, toggles wrap to their own row. */
 @media screen and (max-width: 700px) {
   .scene-stage {
-    height: 48vh;
+    height: clamp(260px, 44vh, 480px);
   }
   .scene-pip {
     width: 44%;
