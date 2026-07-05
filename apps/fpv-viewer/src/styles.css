@@ -297,13 +297,14 @@ a:hover {
 }
 .transport {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   margin-top: 8px;
 }
 .transport button {
   flex-shrink: 0;
-  min-width: 36px;
+  min-width: 38px;
   height: 34px;
   padding: 0 8px;
   border: 1px solid var(--hairline);
@@ -327,7 +328,7 @@ a:hover {
 }
 .transport .scrubber {
   flex: 1;
-  min-width: 60px;
+  min-width: 100px;
 }
 .transport .time-display {
   flex-shrink: 0;
@@ -694,15 +695,22 @@ a:hover {
   .chart-canvas {
     height: 96px;
   }
+  /* Transport becomes two rows: [play | scrubber | time] on top, the
+     secondary buttons stretched evenly across their own row below. */
   .transport {
-    flex-wrap: wrap;
+    row-gap: 8px;
   }
   .transport .scrubber {
-    order: 5;
-    flex-basis: 100%;
+    min-width: 0;
   }
-  .transport button {
+  .transport .time-display {
+    font-size: 12px;
+  }
+  .transport .t-secondary {
+    flex: 1 1 0;
+    min-width: 0;
     height: 40px;
+    padding: 0 2px;
   }
 }
 

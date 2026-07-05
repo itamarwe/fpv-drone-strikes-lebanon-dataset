@@ -138,12 +138,6 @@ export function VideoView({ video }: { video: VideoRecord }) {
       />
 
       <div className="transport">
-        <button type="button" onClick={() => step(-10)} title="Back 10s (←×2)">
-          -10s
-        </button>
-        <button type="button" onClick={() => step(-1 / FPS)} title="Previous frame (,)">
-          ‹f
-        </button>
         <button
           type="button"
           className="play-btn"
@@ -152,12 +146,6 @@ export function VideoView({ video }: { video: VideoRecord }) {
           title="Play/pause (space)"
         >
           {playing ? "❚❚" : "▶"}
-        </button>
-        <button type="button" onClick={() => step(1 / FPS)} title="Next frame (.)">
-          f›
-        </button>
-        <button type="button" onClick={() => step(10)} title="Forward 10s">
-          +10s
         </button>
         <input
           type="range"
@@ -172,10 +160,37 @@ export function VideoView({ video }: { video: VideoRecord }) {
         <span className="time-display">
           {fmt(currentTime)} / {fmt(duration)}
         </span>
-        <button type="button" onClick={toggleMute} title="Mute (m)">
+        <button type="button" className="t-secondary" onClick={() => step(-10)} title="Back 10s">
+          -10s
+        </button>
+        <button
+          type="button"
+          className="t-secondary"
+          onClick={() => step(-1 / FPS)}
+          title="Previous frame (,)"
+        >
+          ‹f
+        </button>
+        <button
+          type="button"
+          className="t-secondary"
+          onClick={() => step(1 / FPS)}
+          title="Next frame (.)"
+        >
+          f›
+        </button>
+        <button type="button" className="t-secondary" onClick={() => step(10)} title="Forward 10s">
+          +10s
+        </button>
+        <button type="button" className="t-secondary t-mute" onClick={toggleMute} title="Mute (m)">
           {muted ? "🔇" : "🔊"}
         </button>
-        <button type="button" onClick={toggleFullscreen} title="Fullscreen (f)">
+        <button
+          type="button"
+          className="t-secondary"
+          onClick={toggleFullscreen}
+          title="Fullscreen (f)"
+        >
           ⛶
         </button>
       </div>
