@@ -504,6 +504,29 @@ a:hover {
 .scene-toggles input {
   accent-color: var(--brand);
 }
+.measure-btn {
+  min-height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--grey);
+  font: 500 12.5px var(--font-sans);
+  cursor: pointer;
+}
+.measure-btn:hover {
+  color: #fff;
+  border-color: #555;
+}
+.measure-btn.active {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+.measure-readout {
+  color: var(--text);
+  font-size: 13.5px;
+  margin: 8px 0 0;
+}
 
 .scene-chart {
   display: block;

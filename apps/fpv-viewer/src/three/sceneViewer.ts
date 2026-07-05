@@ -65,12 +65,20 @@ export class ReadOnlySceneViewer {
   private pathGroup = new THREE.Group();
   private gridGroup = new THREE.Group();
   private markerGroup = new THREE.Group();
+  private frustaGroup = new THREE.Group();
+  private measureGroup = new THREE.Group();
   private marker: THREE.Mesh | null = null;
   private frustum: THREE.LineSegments | null = null;
+  private pointsObject: THREE.Points | null = null;
   private meta: SceneMeta | null = null;
   private radius = 1;
   private disposed = false;
   private animationHandle = 0;
+  private measureMode = false;
+  private measurePoints: THREE.Vector3[] = [];
+  private onMeasure: ((meters: number | null, units: number | null) => void) | null = null;
+  private raycaster = new THREE.Raycaster();
+  private pointerNdc = new THREE.Vector2();
 
   constructor(private holder: HTMLElement) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
@@ -80,8 +88,9 @@ export class ReadOnlySceneViewer {
     this.camera = new THREE.PerspectiveCamera(55, 1, 0.001, 100);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
-    this.root.add(this.pathGroup, this.gridGroup, this.markerGroup);
+    this.root.add(this.pathGroup, this.gridGroup, this.markerGroup, this.frustaGroup, this.measureGroup);
     this.scene.add(this.root);
+    this.renderer.domElement.addEventListener("pointerdown", this.pickPoint);
     this.resize();
     // The holder resizes with the responsive layout, not only the window.
     this.resizeObserver = new ResizeObserver(this.resize);
@@ -127,12 +136,14 @@ export class ReadOnlySceneViewer {
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    this.root.add(new THREE.Points(geometry, this.pointsMaterial));
+    this.pointsObject = new THREE.Points(geometry, this.pointsMaterial);
+    this.root.add(this.pointsObject);
 
     this.buildPath(meta);
     this.buildGrid(meta, positions);
     this.fitView(meta, positions);
     this.buildMarker(meta);
+    this.buildFrusta(meta);
     const t = this.timeline();
     if (t) this.setTime(t.t0);
     return { pointCount: positions.length / 3, frames: meta.path?.length ?? 0 };
@@ -207,16 +218,8 @@ export class ReadOnlySceneViewer {
     const pos = vec3(a.position).lerp(vec3(b.position), lerp);
     this.marker.position.copy(pos);
     if (this.frustum) {
-      const src = lerp < 0.5 ? a : b;
       this.frustum.position.copy(pos);
-      if (src.right && src.down && src.forward) {
-        const m = new THREE.Matrix4().makeBasis(
-          vec3(src.right).normalize(),
-          vec3(src.down).normalize().multiplyScalar(-1),
-          vec3(src.forward).normalize().multiplyScalar(-1),
-        );
-        this.frustum.setRotationFromMatrix(m);
-      }
+      this.orientByFrame(this.frustum, lerp < 0.5 ? a : b);
     }
   }
 
@@ -229,6 +232,71 @@ export class ReadOnlySceneViewer {
   setGridVisible(v: boolean) {
     this.gridGroup.visible = v;
   }
+
+  setPointsVisible(v: boolean) {
+    if (this.pointsObject) this.pointsObject.visible = v;
+  }
+
+  setFrustaVisible(v: boolean) {
+    this.frustaGroup.visible = v;
+  }
+
+  // -- measure tool ----------------------------------------------------------
+
+  /** Toggle two-point measuring; reports distance via the callback. */
+  setMeasureMode(enabled: boolean, onMeasure?: (meters: number | null, units: number | null) => void) {
+    this.measureMode = enabled;
+    if (onMeasure) this.onMeasure = onMeasure;
+    this.clearMeasurement();
+  }
+
+  clearMeasurement() {
+    this.measurePoints = [];
+    this.measureGroup.clear();
+    this.onMeasure?.(null, null);
+  }
+
+  private pickPoint = (event: PointerEvent) => {
+    if (!this.measureMode || !this.pointsObject) return;
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    this.pointerNdc.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.pointerNdc.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    this.raycaster.setFromCamera(this.pointerNdc, this.camera);
+    this.raycaster.params.Points.threshold = Math.max(this.pointsMaterial.size * 2.5, 0.012);
+    const hits = this.raycaster.intersectObject(this.pointsObject, false);
+    // Pick the hit closest to the ray (not the closest to the camera), so the
+    // selected point lands under the cursor instead of with a lateral offset.
+    let best: THREE.Intersection | null = null;
+    for (const hit of hits) {
+      if (hit.index == null || hit.distanceToRay == null) continue;
+      if (best === null || hit.distanceToRay < (best.distanceToRay ?? Infinity)) best = hit;
+    }
+    if (best === null || best.index == null) return;
+    const local = new THREE.Vector3().fromBufferAttribute(
+      this.pointsObject.geometry.getAttribute("position") as THREE.BufferAttribute,
+      best.index,
+    );
+    if (this.measurePoints.length >= 2) this.clearMeasurement();
+    this.measurePoints.push(local.clone());
+    const r = Math.max(this.radius / 220, 0.002);
+    const markerMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(r, 12, 12),
+      new THREE.MeshBasicMaterial({ color: 0xffffff }),
+    );
+    markerMesh.position.copy(local);
+    this.measureGroup.add(markerMesh);
+    if (this.measurePoints.length === 2) {
+      const [a, b] = this.measurePoints;
+      this.measureGroup.add(
+        new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints([a, b]),
+          new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 }),
+        ),
+      );
+      const units = a.distanceTo(b);
+      this.onMeasure?.(units * this.scaleMPerUnit(), units);
+    }
+  };
 
   // -- construction ----------------------------------------------------------
 
@@ -272,18 +340,11 @@ export class ReadOnlySceneViewer {
     mkSphere(pts[pts.length - 1], 0.017, 0xff4d6d);
   }
 
-  private buildMarker(meta: SceneMeta) {
-    if (!meta.path?.length) return;
-    const r = Math.max(this.radius / 130, 0.004);
-    this.marker = new THREE.Mesh(
-      new THREE.SphereGeometry(r, 16, 16),
-      new THREE.MeshBasicMaterial({ color: 0xffb000 }),
-    );
-    this.markerGroup.add(this.marker);
-    // A small camera frustum wireframe oriented by the frame basis.
-    const w = this.radius / 14;
+  // A small camera frustum wireframe (apex at origin, opening along -Z).
+  private frustumWire(scaleMult: number, color: number, opacity: number): THREE.LineSegments {
+    const w = (this.radius / 14) * scaleMult;
     const h = w * (368 / 720);
-    const d = this.radius / 9;
+    const d = (this.radius / 9) * scaleMult;
     const corners = [
       new THREE.Vector3(-w, -h, -d),
       new THREE.Vector3(w, -h, -d),
@@ -296,12 +357,53 @@ export class ReadOnlySceneViewer {
       verts.push(o.clone(), corners[i].clone()); // rays
       verts.push(corners[i].clone(), corners[(i + 1) % 4].clone()); // rim
     }
-    const geometry = new THREE.BufferGeometry().setFromPoints(verts);
-    this.frustum = new THREE.LineSegments(
-      geometry,
-      new THREE.LineBasicMaterial({ color: 0xffb000, transparent: true, opacity: 0.9 }),
+    return new THREE.LineSegments(
+      new THREE.BufferGeometry().setFromPoints(verts),
+      new THREE.LineBasicMaterial({ color, transparent: true, opacity }),
     );
+  }
+
+  private orientByFrame(obj: THREE.Object3D, frame: PathFrame) {
+    if (frame.right && frame.down && frame.forward) {
+      const m = new THREE.Matrix4().makeBasis(
+        vec3(frame.right).normalize(),
+        vec3(frame.down).normalize().multiplyScalar(-1),
+        vec3(frame.forward).normalize().multiplyScalar(-1),
+      );
+      obj.setRotationFromMatrix(m);
+    }
+  }
+
+  private buildMarker(meta: SceneMeta) {
+    if (!meta.path?.length) return;
+    const r = Math.max(this.radius / 130, 0.004);
+    this.marker = new THREE.Mesh(
+      new THREE.SphereGeometry(r, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0xffb000 }),
+    );
+    this.markerGroup.add(this.marker);
+    this.frustum = this.frustumWire(1, 0xffb000, 0.9);
     this.markerGroup.add(this.frustum);
+  }
+
+  // Static frusta along the path (every ~10th frame, final frame highlighted),
+  // like the full tool's camera-frusta layer. Hidden by default.
+  private buildFrusta(meta: SceneMeta) {
+    const path = meta.path ?? [];
+    for (let i = 0; i < path.length; i += 10) {
+      const f = this.frustumWire(0.55, 0x3291ff, 0.4);
+      f.position.copy(vec3(path[i].position));
+      this.orientByFrame(f, path[i]);
+      this.frustaGroup.add(f);
+    }
+    if (path.length) {
+      const last = path[path.length - 1];
+      const f = this.frustumWire(0.8, 0xff4d6d, 0.8);
+      f.position.copy(vec3(last.position));
+      this.orientByFrame(f, last);
+      this.frustaGroup.add(f);
+    }
+    this.frustaGroup.visible = false;
   }
 
   // Grid centered under the point cloud (robust percentile center), matching
@@ -401,6 +503,7 @@ export class ReadOnlySceneViewer {
     this.disposed = true;
     cancelAnimationFrame(this.animationHandle);
     this.resizeObserver.disconnect();
+    this.renderer.domElement.removeEventListener("pointerdown", this.pickPoint);
     this.controls.dispose();
     this.root.traverse((obj) => {
       const mesh = obj as THREE.Mesh;

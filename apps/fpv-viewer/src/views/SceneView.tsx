@@ -32,6 +32,10 @@ export function SceneView({ video }: { video: VideoRecord }) {
   const [showPath, setShowPath] = useState(true);
   const [showGrid, setShowGrid] = useState(true);
   const [showVideo, setShowVideo] = useState(true);
+  const [showPoints, setShowPoints] = useState(true);
+  const [showFrusta, setShowFrusta] = useState(false);
+  const [measuring, setMeasuring] = useState(false);
+  const [measureText, setMeasureText] = useState<string | null>(null);
 
   // Build the 3D viewer
   useEffect(() => {
@@ -88,6 +92,18 @@ export function SceneView({ video }: { video: VideoRecord }) {
 
   useEffect(() => viewerRef.current?.setPathVisible(showPath), [showPath]);
   useEffect(() => viewerRef.current?.setGridVisible(showGrid), [showGrid]);
+  useEffect(() => viewerRef.current?.setPointsVisible(showPoints), [showPoints]);
+  useEffect(() => viewerRef.current?.setFrustaVisible(showFrusta), [showFrusta]);
+
+  const toggleMeasure = () => {
+    const next = !measuring;
+    setMeasuring(next);
+    setMeasureText(next ? "Click two points in the scene" : null);
+    viewerRef.current?.setMeasureMode(next, (meters) => {
+      if (meters !== null) setMeasureText(`Distance: ${meters.toFixed(1)} m`);
+      else if (next) setMeasureText("Click two points in the scene");
+    });
+  };
 
   const seek = (t: number) => {
     const el = videoRef.current;
@@ -191,8 +207,16 @@ export function SceneView({ video }: { video: VideoRecord }) {
           </span>
           <span className="scene-toggles">
             <label>
+              <input type="checkbox" checked={showPoints} onChange={(e) => setShowPoints(e.target.checked)} />
+              Points
+            </label>
+            <label>
               <input type="checkbox" checked={showPath} onChange={(e) => setShowPath(e.target.checked)} />
               Path
+            </label>
+            <label>
+              <input type="checkbox" checked={showFrusta} onChange={(e) => setShowFrusta(e.target.checked)} />
+              Cameras
             </label>
             <label>
               <input type="checkbox" checked={showGrid} onChange={(e) => setShowGrid(e.target.checked)} />
@@ -207,9 +231,18 @@ export function SceneView({ video }: { video: VideoRecord }) {
               />
               Video
             </label>
+            <button
+              type="button"
+              className={`measure-btn${measuring ? " active" : ""}`}
+              onClick={toggleMeasure}
+              title="Measure the distance between two points"
+            >
+              Measure
+            </button>
           </span>
         </div>
       ) : null}
+      {measureText ? <p className="measure-readout">{measureText}</p> : null}
 
       {timeline ? <SceneCharts timeline={timeline} currentT={currentT} onSeek={seek} /> : null}
 
