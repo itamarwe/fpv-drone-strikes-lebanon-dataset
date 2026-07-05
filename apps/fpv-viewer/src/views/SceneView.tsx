@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { VideoRecord } from "../types";
 import { SCENE_BASE } from "../types";
 import { videoHref } from "../App";
@@ -17,6 +17,16 @@ function fmt(t: number): string {
   return `${m}:${s}`;
 }
 
+// Nearest VGGT frame to a given flight time.
+function nearestFrameIndex(frames: SceneFrame[], t: number): number {
+  if (!frames.length) return -1;
+  let best = 0;
+  for (let i = 1; i < frames.length; i += 1) {
+    if (Math.abs(frames[i].t - t) < Math.abs(frames[best].t - t)) best = i;
+  }
+  return best;
+}
+
 // Read-only 3D scene with playback on flight (sequence) time — the pauses that
 // exist in the source video are removed, so speed/height charts and the camera
 // motion are continuous. The corner panel shows the actual frames that were
@@ -32,6 +42,14 @@ export function SceneView({ video }: { video: VideoRecord }) {
   });
   const lastTRef = useRef(-1);
   const timelineRef = useRef<SceneTimeline | null>(null);
+  // Corner frame panel: painted imperatively into a <canvas> from preloaded,
+  // decoded images so it stays in lockstep with the 3D during playback. Setting
+  // <img src> to a fresh remote URL every animation frame can't fetch/decode
+  // fast enough, so the picture used to freeze until playback stopped.
+  const frameCanvasRef = useRef<HTMLCanvasElement>(null);
+  const framesRef = useRef<SceneFrame[]>([]);
+  const frameModeRef = useRef<FrameMode>("overlay");
+  const imgCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
 
   const [status, setStatus] = useState<string | null>("Loading 3D scene…");
   const [stats, setStats] = useState<{ pointCount: number; frames: number } | null>(null);
@@ -81,6 +99,63 @@ export function SceneView({ video }: { video: VideoRecord }) {
     };
   }, [video.scenePath]);
 
+  // The frame-panel image URL for a given flight time, in the active mode.
+  const srcAt = useCallback((t: number): string | null => {
+    const fr = framesRef.current;
+    const idx = nearestFrameIndex(fr, t);
+    if (idx < 0) return null;
+    const f = fr[idx];
+    return f[frameModeRef.current] ?? f.actual;
+  }, []);
+
+  // Paint a (already-decoded, cached) frame into the canvas. No-op until the
+  // image has loaded — the preloader redraws it on load.
+  const drawFrame = useCallback((src: string | null) => {
+    const canvas = frameCanvasRef.current;
+    if (!canvas || !src) return;
+    const img = imgCacheRef.current.get(src);
+    if (!img || !img.complete || img.naturalWidth === 0) return;
+    if (canvas.width !== img.naturalWidth || canvas.height !== img.naturalHeight) {
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+    }
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.drawImage(img, 0, 0);
+  }, []);
+
+  // Keep the refs the animation loop reads in sync with React state.
+  useEffect(() => {
+    framesRef.current = frames;
+  }, [frames]);
+  useEffect(() => {
+    frameModeRef.current = frameMode;
+  }, [frameMode]);
+
+  // Preload + decode every frame of the active mode so swapping between them is
+  // instant, then draw whatever frame is current.
+  useEffect(() => {
+    const cache = imgCacheRef.current;
+    for (const f of frames) {
+      const s = f[frameMode] ?? f.actual;
+      if (!s || cache.has(s)) continue;
+      const img = new Image();
+      img.decoding = "async";
+      img.onload = () => {
+        if (srcAt(clockRef.current.t) === s) drawFrame(s);
+      };
+      img.src = s;
+      cache.set(s, img);
+    }
+    drawFrame(srcAt(clockRef.current.t));
+  }, [frames, frameMode, srcAt, drawFrame]);
+
+  // Redraw on the discrete cases React drives: scrubbing while paused, switching
+  // mode, or re-showing the panel. (Smooth playback is handled in the tick.)
+  useEffect(() => {
+    drawFrame(srcAt(clockRef.current.t));
+  }, [currentT, frameMode, showFrames, srcAt, drawFrame]);
+
   // Playback clock: internal accumulator over flight time.
   useEffect(() => {
     let handle = 0;
@@ -99,12 +174,13 @@ export function SceneView({ video }: { video: VideoRecord }) {
       if (Math.abs(c.t - lastTRef.current) > 0.02) {
         lastTRef.current = c.t;
         viewerRef.current?.setTime(c.t);
+        drawFrame(srcAt(c.t));
         setCurrentT(c.t);
       }
     };
     handle = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(handle);
-  }, []);
+  }, [drawFrame, srcAt]);
 
   useEffect(() => viewerRef.current?.setPathVisible(showPath), [showPath]);
   useEffect(() => viewerRef.current?.setGridVisible(showGrid), [showGrid]);
@@ -115,6 +191,7 @@ export function SceneView({ video }: { video: VideoRecord }) {
     clockRef.current.t = t;
     lastTRef.current = t;
     viewerRef.current?.setTime(t);
+    drawFrame(srcAt(t));
     setCurrentT(t);
   };
 
@@ -159,15 +236,10 @@ export function SceneView({ video }: { video: VideoRecord }) {
     else void stage.requestFullscreen().catch(() => undefined);
   };
 
-  // Current VGGT frame (nearest by flight time).
-  const frameIndex = useMemo(() => {
-    if (!frames.length) return -1;
-    let best = 0;
-    for (let i = 1; i < frames.length; i += 1) {
-      if (Math.abs(frames[i].t - currentT) < Math.abs(frames[best].t - currentT)) best = i;
-    }
-    return best;
-  }, [frames, currentT]);
+  // Current VGGT frame (nearest by flight time). Used for the counter and to
+  // decide whether the panel has anything to show; the picture itself is painted
+  // into the canvas imperatively.
+  const frameIndex = useMemo(() => nearestFrameIndex(frames, currentT), [frames, currentT]);
   const frameSrc =
     frameIndex >= 0 ? frames[frameIndex][frameMode] ?? frames[frameIndex].actual : null;
 
@@ -214,7 +286,10 @@ export function SceneView({ video }: { video: VideoRecord }) {
                 {frameIndex + 1}/{frames.length}
               </span>
             </div>
-            <img src={frameSrc} alt={`VGGT ${frameMode} frame ${frameIndex + 1}`} />
+            <canvas
+              ref={frameCanvasRef}
+              aria-label={`VGGT ${frameMode} frame ${frameIndex + 1}`}
+            />
           </div>
         ) : null}
         <button
