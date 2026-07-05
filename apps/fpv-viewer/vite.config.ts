@@ -17,4 +17,12 @@ export default defineConfig({
       "/thumbnails": { target: "http://127.0.0.1:3001", changeOrigin: true },
     },
   },
+  // Same proxies for `npm run preview` (testing the production build locally).
+  preview: {
+    port: 5186,
+    proxy: {
+      "/scenes": { target: "http://127.0.0.1:8766", changeOrigin: true },
+      "/thumbnails": { target: "http://127.0.0.1:3001", changeOrigin: true },
+    },
+  },
 });
