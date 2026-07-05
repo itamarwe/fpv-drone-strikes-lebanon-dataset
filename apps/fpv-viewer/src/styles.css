@@ -295,12 +295,22 @@ a:hover {
   outline: none;
   cursor: pointer;
 }
+/* Transport: two logical rows (primary: play/slider/time; secondary: the rest).
+   Desktop shows them side by side on one line; mobile stacks them. */
 .transport {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   margin-top: 8px;
+}
+.t-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.t-primary {
+  flex: 1;
 }
 .transport button {
   flex-shrink: 0;
@@ -328,7 +338,7 @@ a:hover {
 }
 .transport .scrubber {
   flex: 1;
-  min-width: 100px;
+  min-width: 40px;
 }
 .transport .time-display {
   flex-shrink: 0;
@@ -695,18 +705,17 @@ a:hover {
   .chart-canvas {
     height: 96px;
   }
-  /* Transport becomes two rows: [play | scrubber | time] on top, the
-     secondary buttons stretched evenly across their own row below. */
+  /* Transport stacks: [play | slider | time] on top, secondary buttons
+     stretched evenly across their own full-width row below. */
   .transport {
-    row-gap: 8px;
-  }
-  .transport .scrubber {
-    min-width: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
   }
   .transport .time-display {
     font-size: 12px;
   }
-  .transport .t-secondary {
+  .t-secondary button {
     flex: 1 1 0;
     min-width: 0;
     height: 40px;

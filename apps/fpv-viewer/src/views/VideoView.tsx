@@ -138,61 +138,50 @@ export function VideoView({ video }: { video: VideoRecord }) {
       />
 
       <div className="transport">
-        <button
-          type="button"
-          className="play-btn"
-          onClick={togglePlay}
-          aria-label={playing ? "Pause" : "Play"}
-          title="Play/pause (space)"
-        >
-          {playing ? "❚❚" : "▶"}
-        </button>
-        <input
-          type="range"
-          className="scrubber"
-          min={0}
-          max={duration || 1}
-          step={0.01}
-          value={Math.min(currentTime, duration || 1)}
-          onChange={(e) => seek(Number(e.target.value))}
-          aria-label="Seek"
-        />
-        <span className="time-display">
-          {fmt(currentTime)} / {fmt(duration)}
-        </span>
-        <button type="button" className="t-secondary" onClick={() => step(-10)} title="Back 10s">
-          -10s
-        </button>
-        <button
-          type="button"
-          className="t-secondary"
-          onClick={() => step(-1 / FPS)}
-          title="Previous frame (,)"
-        >
-          ‹f
-        </button>
-        <button
-          type="button"
-          className="t-secondary"
-          onClick={() => step(1 / FPS)}
-          title="Next frame (.)"
-        >
-          f›
-        </button>
-        <button type="button" className="t-secondary" onClick={() => step(10)} title="Forward 10s">
-          +10s
-        </button>
-        <button type="button" className="t-secondary t-mute" onClick={toggleMute} title="Mute (m)">
-          {muted ? "🔇" : "🔊"}
-        </button>
-        <button
-          type="button"
-          className="t-secondary"
-          onClick={toggleFullscreen}
-          title="Fullscreen (f)"
-        >
-          ⛶
-        </button>
+        <div className="t-row t-primary">
+          <button
+            type="button"
+            className="play-btn"
+            onClick={togglePlay}
+            aria-label={playing ? "Pause" : "Play"}
+            title="Play/pause (space)"
+          >
+            {playing ? "❚❚" : "▶"}
+          </button>
+          <input
+            type="range"
+            className="scrubber"
+            min={0}
+            max={duration || 1}
+            step={0.01}
+            value={Math.min(currentTime, duration || 1)}
+            onChange={(e) => seek(Number(e.target.value))}
+            aria-label="Seek"
+          />
+          <span className="time-display">
+            {fmt(currentTime)} / {fmt(duration)}
+          </span>
+        </div>
+        <div className="t-row t-secondary">
+          <button type="button" onClick={() => step(-10)} title="Back 10s">
+            -10s
+          </button>
+          <button type="button" onClick={() => step(-1 / FPS)} title="Previous frame (,)">
+            ‹f
+          </button>
+          <button type="button" onClick={() => step(1 / FPS)} title="Next frame (.)">
+            f›
+          </button>
+          <button type="button" onClick={() => step(10)} title="Forward 10s">
+            +10s
+          </button>
+          <button type="button" onClick={toggleMute} title="Mute (m)">
+            {muted ? "🔇" : "🔊"}
+          </button>
+          <button type="button" onClick={toggleFullscreen} title="Fullscreen (f)">
+            ⛶
+          </button>
+        </div>
       </div>
 
       <div className="video-headline">
