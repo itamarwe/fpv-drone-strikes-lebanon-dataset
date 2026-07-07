@@ -65,15 +65,19 @@ export function SceneView({ video }: { video: VideoRecord }) {
   const [showFrusta, setShowFrusta] = useState(false);
   const [measuring, setMeasuring] = useState(false);
   const [measureText, setMeasureText] = useState<string | null>(null);
+  const variants = video.scenePaths ?? (video.scenePath ? [video.scenePath] : []);
+  const [scenePath, setScenePath] = useState<string | null>(video.scenePath);
+
+  useEffect(() => setScenePath(video.scenePath), [video.videoFile, video.scenePath]);
 
   // Build the 3D viewer
   useEffect(() => {
-    if (!video.scenePath || !holderRef.current) return;
+    if (!scenePath || !holderRef.current) return;
     const viewer = new ReadOnlySceneViewer(holderRef.current);
     viewerRef.current = viewer;
     setStatus("Loading 3D scene…");
     viewer
-      .load(`${SCENE_BASE}/${video.scenePath}/viewer`)
+      .load(`${SCENE_BASE}/${scenePath}/viewer`)
       .then((s) => {
         // StrictMode double-mounts: a disposed viewer resolves with empty
         // results — never let it clobber the live viewer's state.
@@ -97,7 +101,7 @@ export function SceneView({ video }: { video: VideoRecord }) {
       viewerRef.current = null;
       viewer.dispose();
     };
-  }, [video.scenePath]);
+  }, [scenePath]);
 
   // The frame-panel image URL for a given flight time, in the active mode.
   const srcAt = useCallback((t: number): string | null => {
@@ -347,6 +351,25 @@ export function SceneView({ video }: { video: VideoRecord }) {
               <input type="checkbox" checked={showFrames} onChange={(e) => setShowFrames(e.target.checked)} />
               Frames
             </label>
+            {variants.length > 1 ? (
+              <select
+                className="variant-select"
+                value={scenePath ?? ""}
+                onChange={(e) => setScenePath(e.target.value)}
+                aria-label="Scene variant"
+                title="Point-cloud variant"
+              >
+                {variants.map((p) => {
+                  const name = p.split("/").pop() ?? p;
+                  const label = name.includes("__") ? name.split("__").pop()! : "base";
+                  return (
+                    <option key={p} value={p}>
+                      {label}
+                    </option>
+                  );
+                })}
+              </select>
+            ) : null}
             <button
               type="button"
               className={`measure-btn${measuring ? " active" : ""}`}

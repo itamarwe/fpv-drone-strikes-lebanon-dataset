@@ -621,6 +621,16 @@ a:hover {
 .scene-toggles input {
   accent-color: var(--brand);
 }
+.variant-select {
+  min-height: 26px;
+  padding: 0 6px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--grey);
+  font: 500 12.5px var(--font-sans);
+  cursor: pointer;
+}
 .measure-btn {
   min-height: 26px;
   padding: 0 10px;

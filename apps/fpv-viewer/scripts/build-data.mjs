@@ -57,6 +57,7 @@ function readAnnotations() {
   return byVideo;
 }
 
+// Map each video slug -> ALL completed scene variants (sorted, canonical first).
 function buildSceneIndex() {
   const scenesDir = path.join(repoRoot, "scenes");
   const index = new Map();
@@ -64,13 +65,16 @@ function buildSceneIndex() {
   for (const stem of fs.readdirSync(scenesDir, { withFileTypes: true })) {
     if (!stem.isDirectory()) continue;
     const base = path.join(scenesDir, stem.name);
-    for (const scene of fs.readdirSync(base, { withFileTypes: true })) {
+    const variants = [];
+    for (const scene of fs.readdirSync(base, { withFileTypes: true }).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    )) {
       if (!scene.isDirectory()) continue;
       if (fs.existsSync(path.join(base, scene.name, "viewer", "scene_meta.json"))) {
-        index.set(stem.name, `${stem.name}/${scene.name}`);
-        break;
+        variants.push(`${stem.name}/${scene.name}`);
       }
     }
+    if (variants.length) index.set(stem.name, variants);
   }
   return index;
 }
@@ -99,6 +103,7 @@ for (const raw of readAnnotatorVideos()) {
   const slug = slugify(videoFile);
   const ann = annotations.get(videoFile);
   const thumb = thumbs[slug];
+  const scenePaths = sceneIndex.get(slug) ?? null;
   videos.push({
     videoFile,
     slug,
@@ -109,7 +114,8 @@ for (const raw of readAnnotatorVideos()) {
     thumbnailUrl: (raw.thumbnail_url ?? "").trim(),
     thumbWidths: thumb?.widths ?? null,
     blur: thumb?.blurDataURL ?? null,
-    scenePath: sceneIndex.get(slug) ?? null,
+    scenePath: scenePaths?.[0] ?? null,
+    scenePaths,
     segments: ann?.segments ?? null,
     annotationAuto: ann ? Boolean(ann.auto_generated) : null,
   });
