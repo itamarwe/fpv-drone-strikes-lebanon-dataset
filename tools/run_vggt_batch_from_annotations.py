@@ -148,7 +148,12 @@ def request_body(annotation: dict[str, Any], selected: list[dict[str, Any]], arg
         "vggt_mask_sky": args.vggt_mask_sky,
         "clahe": {"enabled": True, "clip_limit": args.clahe_clip} if args.clahe else None,
         "adaptive_fps": (
-            {"enabled": True, "base_fps": args.adaptive_base_fps, "target_frames": args.adaptive_target}
+            {
+                "enabled": True,
+                "base_fps": args.adaptive_base_fps,
+                "target_frames": args.adaptive_target,
+                "tail_dense_s": args.adaptive_tail_dense_s,
+            }
             if args.adaptive_fps
             else None
         ),
@@ -302,6 +307,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--adaptive-fps", action="store_true", help="motion-aware keyframing (more frames where motion is high, sharpest-in-window)")
     parser.add_argument("--adaptive-base-fps", type=float, default=24.0, help="dense sampling rate before adaptive keyframing")
     parser.add_argument("--adaptive-target", type=int, default=125, help="number of keyframes to keep when --adaptive-fps")
+    parser.add_argument("--adaptive-tail-dense-s", type=float, default=0.0,
+                        help="additionally keep every sampled frame in the last N seconds of flight (on top of --adaptive-target)")
     parser.add_argument("--poll-seconds", type=float, default=5.0)
     parser.add_argument("--skip-camera-views", action="store_true")
     parser.add_argument("--no-refresh-vggt", action="store_true")

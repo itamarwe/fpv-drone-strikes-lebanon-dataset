@@ -530,14 +530,20 @@ def run_vggt(args: argparse.Namespace) -> None:
 
     print(f"[vggt] connecting to {args.space}", flush=True)
     hf_token = os.environ.get(args.hf_token_env) if args.hf_token_env else None
-    if hf_token:
-        import inspect
+    # Generous HTTP timeouts: modern httpx defaults (read=5s) abort uploads /
+    # slow proxy responses (RunPod) with ReadTimeout -> server ClientDisconnect.
+    import inspect
 
+    client_kwargs: dict = {"verbose": False}
+    if "httpx_kwargs" in inspect.signature(Client).parameters:
+        import httpx
+
+        client_kwargs["httpx_kwargs"] = {"timeout": httpx.Timeout(60.0, read=600.0, connect=30.0)}
+    if hf_token:
         print(f"[vggt] using Hugging Face token from ${args.hf_token_env}", flush=True)
         token_kwarg = "hf_token" if "hf_token" in inspect.signature(Client).parameters else "token"
-        client = Client(args.space, **{token_kwarg: hf_token}, verbose=False)
-    else:
-        client = Client(args.space, verbose=False)
+        client_kwargs[token_kwarg] = hf_token
+    client = Client(args.space, **client_kwargs)
     for idx, video_dir in enumerate(video_dirs, start=1):
         out_glb = video_dir / "vggt_scene.glb"
         if out_glb.exists() and out_glb.stat().st_size > 0 and not args.refresh:

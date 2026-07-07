@@ -1224,6 +1224,22 @@ def extract_frames(
         adaptive_target = int(adaptive.get("target_frames") or target_frames or max_output_frames or VGGT_FRAME_WARN_THRESHOLD)
         selected = select_adaptive_frames(candidates, adaptive_target, job)
         adaptive_applied = {"enabled": True, "base_fps": sample_fps, "target_frames": adaptive_target, "metric": "motion+sharpness"}
+        # Dense tail: additionally keep EVERY sampled frame in the last N
+        # seconds of flight (the attack run), on top of the adaptive budget.
+        # With base_fps at the source rate this is true full-fps coverage.
+        tail_dense_s = float(adaptive.get("tail_dense_s", 0) or 0)
+        if tail_dense_s > 0 and candidates:
+            end_t = float(candidates[-1]["sequence_time_s"])
+            dense = [c for c in candidates if float(c["sequence_time_s"]) >= end_t - tail_dense_s]
+            seen_srcs = {item["src"] for item in selected}
+            added = [c for c in dense if c["src"] not in seen_srcs]
+            selected = sorted(selected + added, key=lambda c: (c["segment_index"], c["sequence_time_s"]))
+            adaptive_applied["tail_dense_s"] = tail_dense_s
+            adaptive_applied["tail_dense_added"] = len(added)
+            job.log(
+                f"[frames] dense tail: +{len(added)} frame(s) covering the last "
+                f"{tail_dense_s:g}s at {sample_fps:g} fps (total {len(selected)})"
+            )
     else:
         selected = candidates if explicit_sample_fps else evenly_sample(candidates, target_frames)
     if not adaptive_enabled and max_output_frames > 0 and len(selected) > max_output_frames:
