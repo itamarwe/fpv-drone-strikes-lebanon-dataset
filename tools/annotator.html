@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FPV Video Annotator</title>
+<style>
+:root {
+  /* Matches the scene viewer palette (neutral dark, cyan accent). */
+  --bg:#0c0d0f; --surf:#131519; --surf2:#1c1f24; --text:#e8edf2;
+  --muted:#aeb8c3; --accent:#36e4ff; --accent2:#ffd166;
+  --border:rgba(255,255,255,.14); --red:#ff7b7b; --green:#4caf50;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  font-size:14px;overflow:hidden}
+button{background:var(--surf2);color:var(--text);border:1px solid var(--border);
+  border-radius:6px;padding:5px 10px;cursor:pointer;font-size:13px;transition:background .15s}
+button:hover{background:rgba(255,255,255,.14)}
+button:disabled{opacity:.35;cursor:default;pointer-events:none}
+button.primary{background:var(--accent);color:#061018;border-color:var(--accent);font-weight:600}
+button.primary:hover{background:#2bc4e0}
+select,input[type=text],input[type=number]{background:var(--surf2);color:var(--text);
+  border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:13px}
+select:focus,input:focus{outline:1px solid var(--accent)}
+
+/* HEADER */
+header{position:relative;z-index:1000;display:flex;align-items:center;gap:10px;padding:8px 14px;
+  background:rgba(10,12,15,.92);border-bottom:1px solid rgba(255,255,255,.10);
+  height:52px;flex-shrink:0;overflow:visible;backdrop-filter:blur(12px)}
+.logo{font-weight:800;font-size:15px;color:#36e4ff;white-space:nowrap;letter-spacing:0}
+.top-nav{display:flex;gap:4px;flex-shrink:0}
+.top-nav a{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;
+  border:1px solid rgba(255,255,255,.14);border-radius:8px;color:#aeb8c3;
+  text-decoration:none;font-size:13px}
+.top-nav a.active{color:#061018;background:#36e4ff;border-color:#36e4ff;font-weight:800}
+#videoSelect{position:fixed!important;left:-9999px;top:-9999px;opacity:0;pointer-events:none;width:1px!important;height:1px!important}
+.video-picker{position:relative;z-index:1001;flex:1;min-width:0;max-width:520px}
+.video-picker-button{width:100%;min-height:32px;display:flex;align-items:center;gap:8px;
+  padding:0 10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  border-radius:8px;color:var(--text);font-size:13px;text-align:left}
+.video-picker-button::after{content:'▾';margin-left:auto;color:#8fa0ad;font-size:10px}
+.video-picker-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.status-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto;background:#ff4d4d}
+.status-dot.scene{background:#20c56b}
+.status-dot.annotated{background:#f59e0b}
+.status-dot.missing{background:#ef4444}
+.video-picker-menu{position:absolute;z-index:1002;left:0;right:0;top:calc(100% + 5px);
+  max-height:min(620px,calc(100vh - 76px));overflow:auto;background:#101216;
+  border:1px solid rgba(255,255,255,.16);border-radius:8px;box-shadow:0 18px 60px rgba(0,0,0,.48);
+  padding:4px}
+.video-picker-option{width:100%;display:flex;align-items:center;gap:8px;padding:7px 8px;
+  border:0;border-radius:6px;background:transparent;color:var(--text);text-align:left;font-size:13px}
+.video-picker-option:hover,.video-picker-option.active{background:rgba(86,215,255,.10)}
+.hdr-btns{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.icon-btn{display:inline-flex;align-items:center;gap:6px;position:relative}
+.icon-btn svg{width:15px;height:15px;flex-shrink:0}
+.hdr-status-dot{width:8px;height:8px;border-radius:50%;background:#8fa0ad;flex-shrink:0}
+.hdr-status-dot.running,.hdr-status-dot.queued{background:#36e4ff;animation:pulseDot 1.4s infinite}
+.hdr-status-dot.done{background:#20c56b}
+.hdr-status-dot.error,.hdr-status-dot.stale{background:#ef4444}
+@keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(86,215,255,.5)}70%{box-shadow:0 0 0 6px rgba(86,215,255,0)}100%{box-shadow:0 0 0 0 rgba(86,215,255,0)}}
+
+/* LAYOUT */
+.workspace{display:flex;height:calc(100vh - 52px);overflow:hidden}
+
+/* PLAYER AREA */
+.player-area{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+
+.video-wrapper{flex:1;min-height:0;display:flex;align-items:center;
+  justify-content:center;background:#060607;position:relative}
+#mainVideo{max-width:100%;max-height:100%;display:none;object-fit:contain}
+.crop-box-overlay{position:absolute;display:none;pointer-events:none;
+  border:2px solid rgba(86,215,255,.95);box-shadow:0 0 0 9999px rgba(0,0,0,.18),0 0 18px rgba(86,215,255,.28);
+  background:rgba(86,215,255,.035);z-index:4}
+.crop-box-overlay::before{content:'central clean crop';position:absolute;top:6px;left:8px;
+  padding:2px 6px;border-radius:4px;background:rgba(3,17,28,.82);color:var(--accent);
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.mask-overlay{position:absolute;display:none;z-index:5;pointer-events:none}
+.mask-overlay.active{pointer-events:auto;cursor:crosshair}
+.mask-shape{fill:rgba(255,60,60,.28);stroke:#ff3c3c;stroke-width:1.5px;vector-effect:non-scaling-stroke}
+.mask-draft{fill:rgba(255,209,102,.20);stroke:#ffd166;stroke-width:1.5px;stroke-dasharray:5 3;vector-effect:non-scaling-stroke}
+.mask-panel{display:grid;gap:6px;border-top:1px solid var(--border);padding-top:10px;margin-top:6px}
+.mask-controls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.mask-controls select{background:var(--surf2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:5px 6px;font-size:12px}
+.mask-controls button{padding:4px 9px;font-size:12px}
+.mask-hint{font-size:11px;color:var(--muted);line-height:1.35;margin:0}
+.mask-list{display:grid;gap:4px;max-height:120px;overflow:auto}
+.mask-item{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;
+  padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:#101216}
+.mask-item button{padding:1px 7px;font-size:12px}
+.vid-placeholder{color:#5a6470;text-align:center;user-select:none}
+.vid-placeholder .big{font-size:42px;opacity:.4;margin-bottom:8px}
+.vid-placeholder p{font-size:13px}
+.vid-overlay{position:absolute;top:0;left:0;right:0;
+  padding:6px 12px;background:linear-gradient(to bottom,rgba(0,0,0,.65),transparent);
+  font-size:12px;color:#aac;pointer-events:none;display:none}
+.vid-overlay strong{color:var(--text);font-size:13px;display:block}
+
+/* FILMSTRIP */
+.filmstrip-section{flex-shrink:0;background:#0a0b0d;
+  border-top:1px solid var(--border)}
+.filmstrip-bar{display:flex;align-items:center;gap:8px;padding:3px 10px 0;
+  font-size:11px;color:var(--muted)}
+#filmstripStatus{font-size:11px;color:var(--muted)}
+.filmstrip-container{overflow-x:auto;overflow-y:hidden;height:60px;
+  position:relative;cursor:crosshair;
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.filmstrip-inner{display:flex;gap:2px;padding:4px;
+  position:relative;min-width:100%;height:100%;align-items:center}
+.fs-thumb{flex-shrink:0;width:88px;height:50px;background:var(--surf2);
+  border-radius:3px;overflow:hidden;cursor:pointer;
+  border:1px solid transparent;transition:border-color .1s;position:relative}
+.fs-thumb:hover{border-color:var(--accent)}
+.fs-thumb canvas{width:100%;height:100%;display:block}
+.fs-thumb.loading{background:linear-gradient(90deg,var(--surf2) 0,#22252b 40px,var(--surf2) 80px);
+  background-size:200% 100%;animation:shimmer 1.4s infinite linear}
+@keyframes shimmer{to{background-position:-200% 0}}
+.fs-cursor{position:absolute;top:0;bottom:0;width:2px;
+  background:var(--red);pointer-events:none;z-index:20;
+  box-shadow:0 0 5px var(--red);display:none}
+.fs-cursor::before{content:'';position:absolute;top:-1px;left:-4px;
+  width:10px;height:10px;background:var(--red);border-radius:50%}
+.fs-marker{position:absolute;top:0;bottom:0;width:2px;
+  pointer-events:none;z-index:15;opacity:.85}
+.fs-marker::after{content:'';position:absolute;bottom:2px;left:-4px;
+  width:10px;height:10px;border-radius:2px;background:inherit}
+
+/* CONTROLS */
+.controls-bar{flex-shrink:0;display:flex;align-items:center;gap:8px;
+  padding:7px 12px;background:var(--surf);border-top:1px solid var(--border)}
+.pbtn-group{display:flex;gap:3px}
+.pbtn-group button{padding:5px 9px;font-size:13px;min-width:32px}
+#btnPlay{font-size:15px;min-width:36px;color:var(--accent);border-color:var(--accent)}
+#btnPlay:hover{background:rgba(86,215,255,.1)}
+.time-disp{font-variant-numeric:tabular-nums;font-size:13px;
+  color:var(--accent2);min-width:130px;text-align:center;font-weight:600}
+.time-slider{flex:1;height:4px;accent-color:var(--accent);cursor:pointer}
+
+/* SEGMENTS PANEL */
+.seg-panel{width:290px;flex-shrink:0;display:flex;flex-direction:column;
+  background:var(--surf);border-left:1px solid var(--border);overflow:hidden}
+.add-seg{flex-shrink:0;padding:12px;border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;gap:8px}
+.add-seg h3{font-size:11px;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--muted)}
+.form-row{display:flex;flex-direction:column;gap:3px}
+.form-row label{font-size:11px;color:var(--muted)}
+.form-row select,.form-row input{width:100%}
+#btnMark{width:100%;padding:8px;font-size:13px}
+.seg-list-hdr{flex-shrink:0;display:flex;align-items:center;
+  justify-content:space-between;padding:7px 12px;
+  font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);border-bottom:1px solid var(--border)}
+#segCount{color:var(--accent2);font-weight:700}
+.seg-list{flex:1;overflow-y:auto;scrollbar-width:thin;
+  scrollbar-color:var(--border) transparent}
+.empty-state{padding:24px 12px;text-align:center;color:var(--muted);font-size:13px}
+.seg-item{display:flex;align-items:center;gap:8px;padding:8px 10px;
+  border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.seg-item:hover{background:var(--surf2)}
+.seg-thumb{flex-shrink:0;width:64px;height:36px;background:var(--surf2);
+  border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.seg-thumb canvas{width:64px;height:36px;display:block}
+.seg-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.seg-type{font-size:12px;font-weight:600}
+.seg-time{font-size:11px;color:var(--accent2);font-variant-numeric:tabular-nums}
+.seg-comment{font-size:11px;color:var(--muted);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.seg-del{flex-shrink:0;background:none;border:none;color:var(--muted);
+  font-size:14px;padding:2px 5px;cursor:pointer;opacity:0;border-radius:4px;
+  transition:opacity .15s}
+.seg-item:hover .seg-del{opacity:1}
+.seg-del:hover{background:rgba(255,123,123,.2);color:var(--red)}
+
+kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
+  padding:1px 4px;font-size:10px;font-family:monospace;color:var(--muted)}
+.shortcut-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px 6px;
+  padding-top:8px;border-top:1px solid var(--border)}
+.sc{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.sc kbd{flex-shrink:0;min-width:16px;text-align:center}
+.recon-summary{font-size:12px;color:var(--muted);line-height:1.35}
+.recon-segments{display:flex;flex-direction:column;gap:6px;max-height:130px;
+  overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.recon-seg{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:8px;
+  padding:7px 8px;border:1px solid var(--border);border-radius:6px;background:rgba(255,255,255,.035);
+  font-size:12px}
+.recon-seg input{accent-color:var(--accent)}
+.recon-seg-main{min-width:0;display:flex;flex-direction:column;gap:2px}
+.recon-seg-title{color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recon-seg-time{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.pill{display:inline-flex;align-items:center;justify-content:center;min-width:44px;
+  padding:2px 6px;border-radius:999px;background:rgba(86,215,255,.12);color:var(--accent);
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.pill.attack{background:rgba(255,123,123,.15);color:var(--red)}
+.recon-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.recon-grid label{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--muted)}
+.recon-grid input,.recon-grid select{width:100%;background:var(--surf2);color:var(--text);
+  border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:13px}
+.image-count{display:flex;align-items:center;min-height:30px;padding:5px 8px;border:1px solid var(--border);
+  border-radius:6px;background:rgba(255,255,255,.035);color:var(--accent2);font-size:13px;font-variant-numeric:tabular-nums}
+.recon-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.recon-status{min-height:34px;padding:8px;border:1px solid var(--border);border-radius:6px;
+  background:rgba(0,0,0,.16);color:var(--muted);font-size:12px;line-height:1.35}
+.recon-log{max-height:90px;overflow:auto;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;color:#8fa0ad;border:1px solid var(--border);border-radius:6px;padding:6px;background:#0c0d0f}
+.job-manager{display:grid;gap:6px;border-top:1px solid var(--border);padding-top:10px}
+.job-manager-head{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);
+  font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.job-manager-head button{padding:3px 8px;font-size:12px}
+.job-list{display:grid;gap:5px;max-height:112px;overflow:auto}
+.job-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;
+  padding:6px 8px;border:1px solid var(--border);border-radius:6px;background:#101216;font-size:12px}
+.job-dot{width:8px;height:8px;border-radius:50%;background:#8fa0ad}
+.job-dot.running,.job-dot.queued{background:#36e4ff}
+.job-dot.done{background:#20c56b}
+.job-dot.error,.job-dot.stale{background:#ef4444}
+.job-main{min-width:0;overflow:hidden}
+.job-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.job-meta{color:var(--muted);font-size:11px}
+.job-action{padding:3px 8px;font-size:12px}
+.scene-dialog{width:min(760px,calc(100vw - 48px));max-height:calc(100vh - 72px);
+  border:1px solid rgba(255,255,255,.16);border-radius:10px;background:#101216;color:var(--text);
+  padding:0;box-shadow:0 24px 80px rgba(0,0,0,.58)}
+.scene-dialog::backdrop{background:rgba(0,0,0,.58)}
+.scene-dialog-shell{display:grid;grid-template-rows:auto 1fr;max-height:calc(100vh - 72px)}
+.scene-dialog-header{display:flex;align-items:center;gap:10px;padding:12px 14px;
+  border-bottom:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.035)}
+.scene-dialog-header h2{font-size:15px;color:#36e4ff;margin-right:auto}
+.scene-dialog-body{display:grid;gap:12px;padding:14px;overflow:auto}
+.scene-dialog-section{display:grid;gap:8px}
+.scene-dialog-section h3{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.scene-preview-row{display:flex;align-items:center;gap:8px}
+.scene-preview-row button{white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="/" style="text-decoration:none">FPV Video</a>
+  <nav class="top-nav" aria-label="Workflow">
+    <a class="active" href="/annotate/">Annotate</a>
+    <a href="/scenes/">Scenes</a>
+  </nav>
+  <select id="videoSelect"><option value="">— Select a video —</option></select>
+  <div class="video-picker" id="videoPicker">
+    <button class="video-picker-button" id="videoPickerButton" type="button">
+      <span class="status-dot missing" id="videoPickerDot"></span>
+      <span class="video-picker-label" id="videoPickerLabel">Select a video</span>
+    </button>
+    <div class="video-picker-menu" id="videoPickerMenu" hidden></div>
+  </div>
+  <div class="hdr-btns">
+    <button id="btnCreateScene" disabled>Create 3D Scene</button>
+    <button id="btnJobs" class="icon-btn" type="button" title="Reconstruction jobs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span>Jobs</span>
+      <span class="hdr-status-dot" id="jobsHeaderDot"></span>
+    </button>
+    <button id="btnSaveRepo" class="icon-btn" type="button" disabled title="Save annotation to the repo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+      <span>Save</span>
+    </button>
+    <button id="btnImport" class="icon-btn" type="button" title="Import annotation JSON from a file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M12 3v12"/><path d="M8 11l4 4 4-4"/></svg>
+      <span>Import</span>
+    </button>
+    <button id="btnExport" class="icon-btn" type="button" disabled title="Export annotation JSON to a file">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M12 15V3"/><path d="M8 7l4-4 4 4"/></svg>
+      <span>Export</span>
+    </button>
+    <input type="file" id="jsonFile" accept=".json" style="display:none">
+  </div>
+</header>
+
+<div class="workspace">
+  <div class="player-area">
+    <div class="video-wrapper">
+      <div class="vid-placeholder" id="vidPlaceholder">
+        <div class="big">&#9654;</div>
+        <p>Select a video from the dropdown above</p>
+      </div>
+      <div class="vid-overlay" id="vidOverlay">
+        <strong id="vidTitle"></strong>
+        <span id="vidMeta"></span>
+      </div>
+      <video id="mainVideo" preload="metadata"></video>
+      <div class="crop-box-overlay" id="cropBoxOverlay"></div>
+      <svg class="mask-overlay" id="maskOverlay" viewBox="0 0 1 1" preserveAspectRatio="none"></svg>
+    </div>
+
+    <div class="filmstrip-section">
+      <div class="filmstrip-bar">
+        <span>Timeline</span>
+        <span id="filmstripStatus"></span>
+      </div>
+      <div class="filmstrip-container" id="fsContainer">
+        <div class="filmstrip-inner" id="fsInner"></div>
+      </div>
+    </div>
+
+    <div class="controls-bar">
+      <div class="pbtn-group">
+        <button id="btnStart"  title="Go to start [Home]">&#9198;</button>
+        <button id="btnJBack"  title="Jump back 10 frames [Shift+&#8592;]">&#9194;</button>
+        <button id="btnPrev"   title="Previous frame [&#8592;]">&#9664;</button>
+        <button id="btnPlay"   title="Play / Pause [Space]">&#9654;</button>
+        <button id="btnNext"   title="Next frame [&#8594;]">&#9654;&#9654;</button>
+        <button id="btnJFwd"   title="Jump forward 10 frames [Shift+&#8594;]">&#9193;</button>
+        <button id="btnEnd"    title="Go to end [End]">&#9197;</button>
+      </div>
+      <span class="time-disp" id="timeDisp">—</span>
+      <input type="range" id="timeSlider" class="time-slider" min="0" max="10000" value="0" disabled>
+    </div>
+  </div>
+
+  <div class="seg-panel">
+    <div class="add-seg">
+      <h3>Add Segment</h3>
+      <div class="form-row">
+        <label>Type</label>
+        <select id="segType">
+          <option value="banner_start">Banner Start  [B]</option>
+          <option value="flight_start">Flight Start  [F]</option>
+          <option value="new_flight_start">New Flight Start  [N]</option>
+          <option value="pause_start">Pause Start  [P]</option>
+          <option value="replay_start">Replay Start  [R]</option>
+          <option value="end">End  [E]</option>
+          <option value="other">Other  [O]</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Comment</label>
+        <input type="text" id="segComment" placeholder="Optional...">
+      </div>
+      <button id="btnMark" class="primary" disabled>
+        Mark at <span id="markAt">—</span> &nbsp;<kbd>M</kbd>
+      </button>
+      <div class="shortcut-grid">
+        <div class="sc"><kbd>B</kbd> Banner</div>
+        <div class="sc"><kbd>F</kbd> Flight</div>
+        <div class="sc"><kbd>N</kbd> New Flight</div>
+        <div class="sc"><kbd>P</kbd> Pause</div>
+        <div class="sc"><kbd>R</kbd> Replay</div>
+        <div class="sc"><kbd>E</kbd> End</div>
+        <div class="sc"><kbd>O</kbd> Other</div>
+        <div class="sc"><kbd>M</kbd> Mark</div>
+        <div class="sc"><kbd>Space</kbd> Play/Pause</div>
+        <div class="sc"><kbd>←</kbd><kbd>→</kbd> ±1 frame</div>
+        <div class="sc"><kbd>⇧←</kbd><kbd>⇧→</kbd> ±10 frames</div>
+        <div class="sc"><kbd>Home</kbd><kbd>End</kbd> Start/End</div>
+      </div>
+    </div>
+    <div class="seg-list-hdr">
+      <span>Segments</span><span id="segCount">0</span>
+    </div>
+    <div class="seg-list" id="segList">
+      <p class="empty-state">No segments marked yet</p>
+    </div>
+    <div class="mask-panel">
+      <div class="seg-list-hdr"><span>Exclusion Masks</span><span id="maskCount">0</span></div>
+      <div class="mask-controls">
+        <button id="btnMaskMode" type="button">Draw masks</button>
+        <select id="maskShape" title="Shape to draw">
+          <option value="rect">Rectangle</option>
+          <option value="ellipse">Ellipse</option>
+          <option value="polygon">Polygon</option>
+        </select>
+        <button id="btnMaskClear" type="button">Clear</button>
+      </div>
+      <p class="mask-hint" id="maskHint" style="display:none">Drag for rectangle/ellipse; for polygon click points then double-click to finish. These regions are painted black and excluded from VGGT reconstruction.</p>
+      <div class="mask-list" id="maskList"></div>
+    </div>
+  </div>
+</div>
+
+<dialog class="scene-dialog" id="sceneDialog">
+  <div class="scene-dialog-shell">
+    <div class="scene-dialog-header">
+      <h2>Create 3D Scene</h2>
+      <button id="btnCloseSceneDialog" type="button">Close</button>
+    </div>
+    <div class="scene-dialog-body">
+      <section class="scene-dialog-section">
+        <h3>Flight Segments</h3>
+        <div class="recon-summary" id="reconSummary">Load annotations to select flight segments.</div>
+        <div class="scene-preview-row">
+          <button id="btnPlaySelectedScene" type="button" disabled>Play selected</button>
+          <button id="btnStopScenePreview" type="button" disabled>Stop</button>
+        </div>
+        <div class="recon-segments" id="reconSegments"></div>
+      </section>
+      <section class="scene-dialog-section">
+        <h3>Parameters</h3>
+        <div class="recon-grid">
+          <label>FPS
+            <input id="sceneSampleFps" type="number" min="0.5" max="10" step="0.25" value="3">
+          </label>
+          <label>Images
+            <div class="image-count" id="sceneImageCount">0</div>
+          </label>
+          <label>Scale
+            <input id="sceneDefaultScale" type="number" min="0.0001" step="0.1" value="117.6">
+          </label>
+          <label>Crop
+            <select id="sceneCropPreset">
+              <option value="central_clean">Central clean</option>
+              <option value="none">Full frame</option>
+            </select>
+          </label>
+          <label>Width
+            <input id="sceneWidth" type="number" min="0" max="1920" step="10" value="660">
+          </label>
+        </div>
+      </section>
+      <section class="scene-dialog-section">
+        <h3>Generate</h3>
+        <div class="recon-actions">
+          <button id="btnRunScene" class="primary" disabled>Run VGGT</button>
+          <button id="btnOpenScene" disabled>Open Scene</button>
+          <button id="btnBrowseScenes">Browse</button>
+        </div>
+        <div class="recon-status" id="reconStatus">No scene selected.</div>
+        <div class="recon-log" id="reconLog" hidden></div>
+        <div class="recon-actions" style="grid-template-columns:1fr">
+          <button id="btnViewJobs" type="button">View jobs</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="scene-dialog" id="jobsDialog">
+  <div class="scene-dialog-shell">
+    <div class="scene-dialog-header">
+      <h2>Reconstruction Jobs</h2>
+      <button id="btnCloseJobsDialog" type="button">Close</button>
+    </div>
+    <div class="scene-dialog-body">
+      <div class="job-manager" style="border-top:none;padding-top:0">
+        <div class="job-manager-head">
+          <span>Recent jobs</span>
+          <button id="btnRefreshJobs" type="button">Refresh</button>
+        </div>
+        <div class="job-list" id="jobList"></div>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<video id="thumbVideo" style="position:absolute;opacity:0;pointer-events:none;top:-9999px" muted preload="auto"></video>
+
+<script>
+// ─────────────────────────────────────────────
+// VIDEO DATA  (from geo/fpv_drone_map_records.csv)
+// ─────────────────────────────────────────────
+const VIDEOS = [
+  {date:'2026-06-17',description:'Infiltrating Israeli army force position, outskirts of Kfar Tebnit (Ababil dive drone)',town:'Kfar Tebnit',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-17_force_position_kfar_tebnit_mmirleb_17590.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-17_force_position_kfar_tebnit_mmirleb_17590.mp4'},
+  {date:'2026-06-14',description:'Israeli army engineering vehicle, outskirts of Arnoun (Ababil dive drone)',town:'Arnoun',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-14_engineering_vehicle_arnoun_ababil_drone.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-14_engineering_vehicle_arnoun_ababil_drone.mp4'},
+  {date:'2026-06-13',description:'Newly established Israeli army command center, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_command_center_beaufort_castle_mmirleb_17580.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_command_center_beaufort_castle_mmirleb_17580.mp4'},
+  {date:'2026-06-13',description:'"Namera" troop carrier, newly established Hamamis Hill site opposite Khiam (Ababil dive drone)',town:'Khiam',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586.mp4'},
+  {date:'2026-06-13',description:'Israeli army engineering vehicle, outskirts of Majdal Zoun (Ababil dive drone)',town:'Majdal Zoun',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_excavator_majdal_zoun.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_excavator_majdal_zoun.mp4'},
+  {date:'2026-06-13',description:'Israeli army logistics point, al-Bayyada (Ababil dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-13_logistics_position_bayyadah_mmirleb_17434.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_logistics_position_bayyadah_mmirleb_17434.mp4'},
+  {date:'2026-06-12',description:'Merkava tank, eastern outskirts of Yohmor al-Shaqif (Ababil dive drone)',town:'Yahmor al-Shaqif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_merkava_tank_yahmor_al_shqif.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_merkava_tank_yahmor_al_shqif.mp4'},
+  {date:'2026-06-12',description:'D9 bulldozer, Tayr Harfa (Ababil dive drone)',town:'Tayr Harfa',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.mp4'},
+  {date:'2026-06-12',description:'Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595.mp4'},
+  {date:'2026-06-11',description:'D9 engineering vehicle, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.mp4'},
+  {date:'2026-06-11',description:'Israeli army soldiers, Adaisseh (Ababil dive drone)',town:'Adaissah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.mp4'},
+  {date:'2026-06-11',description:'Merkava tank, Tayr Harfa (Ababil dive drone)',town:'Tayr Harfa',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.mp4'},
+  {date:'2026-06-10',description:'Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-10_merkava_tank_beaufort_castle.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_merkava_tank_beaufort_castle.mp4'},
+  {date:'2026-06-10',description:'Military Hummer, eastern outskirts of Yohmor al-Shaqif (Ababil dive drone)',town:'Yahmor al-Shaqif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-10_humvee_yahmar_al_shaqif.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_humvee_yahmar_al_shaqif.mp4'},
+  {date:'2026-06-09',description:'"Namera" vehicle, city of Khiam (Ababil dive drone)',town:'Khiam',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-09_namer_apc_metula_southern_outskirts_khiam.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-09_namer_apc_metula_southern_outskirts_khiam.mp4'},
+  {date:'2026-06-08',description:'Israeli army vehicles, outskirts of Yohmor al-Shaqif (Ababil dive drones)',town:'Yahmor al-Shaqif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif.mp4'},
+  {date:'2026-06-08',description:'Command-and-control vehicle, outskirts of Yohmor al-Shaqif (Ababil dive drone)',town:'Yahmor al-Shaqif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-08_command_and_control_vehicle_beaufort_castle.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-08_command_and_control_vehicle_beaufort_castle.mp4'},
+  {date:'2026-06-07',description:'Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-07_merkava_tank_beaufort_castle.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-07_merkava_tank_beaufort_castle.mp4'},
+  {date:'2026-06-07',description:'Command "Namera" vehicle, outskirts of Yohmor al-Shaqif (Ababil dive drone)',town:'Yahmor al-Shaqif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-07_command_namer_vehicle_yahmor_al_shqif.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-07_command_namer_vehicle_yahmor_al_shqif.mp4'},
+  {date:'2026-06-06',description:'Artillery vehicle, Adaisseh (Ababil dive drone)',town:'Adaissah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-06_sholef_howitzer_adaissah.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-06_sholef_howitzer_adaissah.mp4'},
+  {date:'2026-06-06',description:'Merkava tank, newly established Blat site (Ababil dive drone)',town:'Jabal Blat',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-06_merkava_tank_blat_position.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-06_merkava_tank_blat_position.mp4'},
+  {date:'2026-06-06',description:'Artillery vehicle, Adaisseh (Ababil dive drone)',town:'Adaissah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-06_artillery_vehicle_adaissah_mmirleb_17504.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-06_artillery_vehicle_adaissah_mmirleb_17504.mp4'},
+  {date:'2026-06-05',description:'Humvee carrying Israeli army soldiers, city of Khiam (Ababil dive drone)',town:'Khiam',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-05_humvee_near_khiam.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-05_humvee_near_khiam.mp4'},
+  {date:'2026-06-05',description:'Israeli army soldiers, city of Khiam (Ababil dive drone)',town:'Khiam',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-05_soldiers_khiam_mmirleb_17315.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-05_soldiers_khiam_mmirleb_17315.mp4'},
+  {date:'2026-06-05',description:'Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447.mp4'},
+  {date:'2026-06-04',description:'Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-04_merkava_tank_beaufort_castle_02.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-04_merkava_tank_beaufort_castle_02.mp4'},
+  {date:'2026-06-04',description:'Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-04_merkava_tank_beaufort_castle.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-04_merkava_tank_beaufort_castle.mp4'},
+  {date:'2026-06-03',description:'Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_merkava_tank_zawtar_al_sharqiyah.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_merkava_tank_zawtar_al_sharqiyah.mp4'},
+  {date:'2026-06-03',description:'Troop carrier, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492.mp4'},
+  {date:'2026-06-03',description:'Troop carrier, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521.mp4'},
+  {date:'2026-06-03',description:'Troop carrier, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_m113_apc_beaufort_castle.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_m113_apc_beaufort_castle.mp4'},
+  {date:'2026-06-03',description:'Military Hummer, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-03_humvee_zawtar_al_sharqiyah.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_humvee_zawtar_al_sharqiyah.mp4'},
+  {date:'2026-06-02',description:'Israeli army soldiers, eastern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah.mp4'},
+  {date:'2026-06-02',description:'Soldier gathering + "Namera" vehicle, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drones)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif.mp4'},
+  {date:'2026-06-02',description:'"Namera" vehicle, southern outskirts of Yohmor al-Shaqif (Ababil dive drone)',town:'Yahmor al-Shaqif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-02_namer_vehicle_near_yahmor_al_shqif.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_namer_vehicle_near_yahmor_al_shqif.mp4'},
+  {date:'2026-06-02',description:'Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-02_merkava_tank_near_yahmor_al_shqif.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-02_merkava_tank_near_yahmor_al_shqif.mp4'},
+  {date:'2026-06-01',description:'Soldiers near yahmor al shqif 02',town:'Yahmor al-Shaqif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-01_soldiers_near_yahmor_al_shqif_02.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-01_soldiers_near_yahmor_al_shqif_02.mp4'},
+  {date:'2026-06-01',description:'Israeli army soldier gathering, southern outskirts of Yohmor al-Shaqif (Ababil dive drone)',town:'Yahmor al-Shaqif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-01_soldiers_near_yahmor_al_shqif.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-01_soldiers_near_yahmor_al_shqif.mp4'},
+  {date:'2026-06-01',description:'Merkava tank, southern outskirts of Yohmor al-Shaqif (Ababil dive drone)',town:'Yahmor al-Shaqif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-01_merkava_tank_near_yahmor_al_shqif.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-06-01_merkava_tank_near_yahmor_al_shqif.mp4'},
+  {date:'2026-05-31',description:'Israeli army soldier gathering, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-31_soldiers_gathering_near_border_site.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-31_soldiers_gathering_near_border_site.mp4'},
+  {date:'2026-05-31',description:'"Namera" vehicle and troop carrier, Dibel (Ababil dive drone)',town:'Dibel / Debel',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-31_namer_vehicle_and_apc_in_dibel.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-31_namer_vehicle_and_apc_in_dibel.mp4'},
+  {date:'2026-05-31',description:'Soldiers\' position and "Humvee" vehicle, vicinity of Beaufort Castle (two Ababil dive drones)',town:'Border area opposite Mays al-Jabal',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-31_humvee_vehicle_at_al_assi.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-31_humvee_vehicle_at_al_assi.mp4'},
+  {date:'2026-05-30',description:'Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)',town:'Beaufort Castle',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-30_merkava_tank_in_border_area.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-30_merkava_tank_in_border_area.mp4'},
+  {date:'2026-05-30',description:'Israeli army technical equipment, Rashaf (Ababil dive drone)',town:'Rachaf / Rashaf',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-30_technical_equipment_rashaf_mmirleb_17060.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-30_technical_equipment_rashaf_mmirleb_17060.mp4'},
+  {date:'2026-05-29',description:'Israeli army soldier, Misgav Am site (Ababil dive drone)',town:'Misgav Am',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-29_soldier_at_misgav_am.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-29_soldier_at_misgav_am.mp4'},
+  {date:'2026-05-29',description:'Troop carrier, Ainata (Ababil dive drone)',town:'Ainata',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-29_namer_apc_in_ainata.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-29_namer_apc_in_ainata.mp4'},
+  {date:'2026-05-28',description:'Iron technical platform at al raheb',town:'Khiam',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-28_iron_technical_platform_at_al_raheb.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-28_iron_technical_platform_at_al_raheb.mp4'},
+  {date:'2026-05-28',description:'Iron Dome launcher vehicle, city of Khiam (Ababil dive drone)',town:'Khiam',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16993.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16993.mp4'},
+  {date:'2026-05-28',description:'Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154.mp4'},
+  {date:'2026-05-27',description:'Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_merkava_tank_on_military_route.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_merkava_tank_on_military_route.mp4'},
+  {date:'2026-05-27',description:'Iron Dome platform, Jal al-Alam site (Ababil dive drone)',town:'Border near Rosh HaNikra',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_iron_technical_platform_at_jal_al_alam.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_iron_technical_platform_at_jal_al_alam.mp4'},
+  {date:'2026-05-27',description:'Israeli army vehicle, Galilee Forests camp (Ababil dive drone)',town:'Shomera',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-27_enemy_vehicle_in_northern_settlement.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_enemy_vehicle_in_northern_settlement.mp4'},
+  {date:'2026-05-26',description:'Two Merkava tanks, Rashaf (Ababil dive drones)',town:'Rachaf / Rashaf',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_merkava_tank_in_rashaf.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_merkava_tank_in_rashaf.mp4'},
+  {date:'2026-05-26',description:'Communications equipment, al-Assi site on the southern Lebanese border (Ababil dive drone)',town:'Border area opposite Mays al-Jabal',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_communications_equipment_at_al_assi.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_communications_equipment_at_al_assi.mp4'},
+  {date:'2026-05-26',description:'Iron Dome platform, "Biranit" barracks on the southern Lebanese border (Ababil dive drone)',town:'Biranit barracks (Israel), approx',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_anti_drone_platform_barashit.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_anti_drone_platform_barashit.mp4'},
+  {date:'2026-05-26',description:'Military Hummer at the riverbed, Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068.mp4'},
+  {date:'2026-05-26',description:'D9 bulldozer, Zawtar al-Sharqiyah (Ababil dive drone)',town:'Zawtar al-Sharqiyah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143.mp4'},
+  {date:'2026-05-25',description:'Two Israeli army vehicles, Naqoura naval site on the southern Lebanese border (two Ababil dive drones)',town:'Naqoura',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-25_two_israeli_army_vehicles.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-25_two_israeli_army_vehicles.mp4'},
+  {date:'2026-05-25',description:'Soldiers\' positioning tent, Hadab al-Bustan site (Ababil dive drone)',town:'Manor Ridge',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-25_soldiers_position_tent_hadab_al_bustan.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-25_soldiers_position_tent_hadab_al_bustan.mp4'},
+  {date:'2026-05-25',description:'Command room, "Avivim" barracks on the southern Lebanese border (Ababil dive drone)',town:'Avivim barracks (Israel), approx',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-25_command_room_tayr_harfa.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-25_command_room_tayr_harfa.mp4'},
+  {date:'2026-05-24',description:'"Namera" vehicle, Taybeh (Ababil dive drone)',town:'Taybeh',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-24_namer_apc_taybeh.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-24_namer_apc_taybeh.mp4'},
+  {date:'2026-05-24',description:'Command Hummer vehicle, Manara site (Ababil dive drone)',town:'Manara',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-24_humvee_manara_mmirleb_16823.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-24_humvee_manara_mmirleb_16823.mp4'},
+  {date:'2026-05-23',description:'Israeli army soldier gathering, al-Bayyada (Ababil dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-23_soldier_gathering_bayyadah.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-23_soldier_gathering_bayyadah.mp4'},
+  {date:'2026-05-23',description:'Two Iron Dome platforms, Ramim (Hounin) barracks (two Ababil dive drones)',town:'Ramim Ridge',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-23_two_iron_dome_platforms_ramim.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-23_two_iron_dome_platforms_ramim.mp4'},
+  {date:'2026-05-23',description:'Counter-drone system, al-Jardah site on the southern Lebanese border (Ababil dive drone)',town:'Border Israel in front of Alma al-Shaab',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-23_anti_drone_system_jardah.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-23_anti_drone_system_jardah.mp4'},
+  {date:'2026-05-22',description:'Israeli army soldier, Manara site (Ababil dive drone)',town:'Manara',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-22_soldier_manara.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-22_soldier_manara.mp4'},
+  {date:'2026-05-22',description:'Merkava tank, Markaba (Ababil dive drone)',town:'Markaba',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-22_merkava_tank_markaba.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-22_merkava_tank_markaba.mp4'},
+  {date:'2026-05-21',description:'Engineering vehicle, Khallet al-Raj at the outskirts of Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan.mp4'},
+  {date:'2026-05-20',description:'"Namera" vehicle, Hadatha (Ababil dive drone)',town:'Haddatha',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-20_namer_apc_hadatha.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-20_namer_apc_hadatha.mp4'},
+  {date:'2026-05-20',description:'Newly established HQ of the 401st Armored Brigade, Dibel (swarm of Ababil dive drones)',town:'Dibel / Debel',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-20_armored_brigade_401_hq_debel.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-20_armored_brigade_401_hq_debel.mp4'},
+  {date:'2026-05-19',description:'Military vehicle, Misgav Am settlement (Ababil dive drone)',town:'Misgav Am',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_military_vehicle_misgav_am.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_military_vehicle_misgav_am.mp4'},
+  {date:'2026-05-19',description:'Iron Dome platform, Misgav Am settlement on the southern Lebanese border (Ababil dive drone)',town:'Misgav Am',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_iron_dome_platform_misgav_am_mmirleb_16697.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_iron_dome_platform_misgav_am_mmirleb_16697.mp4'},
+  {date:'2026-05-19',description:'Iron Dome platform, Jal al-Alam site (dive drone)',town:'Border near Rosh HaNikra',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16395.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16395.mp4'},
+  {date:'2026-05-19',description:'Communications vehicle, Taybeh (Ababil dive drone)',town:'Taybeh',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_communications_vehicle_taybeh_mmirleb_16552.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_communications_vehicle_taybeh_mmirleb_16552.mp4'},
+  {date:'2026-05-19',description:'Engineering vehicle, city of Khiam (Ababil dive drone)',town:'Khiam',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-19_engineering_vehicle_khiam_mmirleb_16767.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-19_engineering_vehicle_khiam_mmirleb_16767.mp4'},
+  {date:'2026-05-18',description:'Iron Dome platform, Shomera settlement (dive drone)',town:'Near Shomera (Israel), approx',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-18_iron_dome_platform_shomera.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-18_iron_dome_platform_shomera.mp4'},
+  {date:'2026-05-18',description:'Vehicle of the 300th Brigade commander, Shomera barracks (Ababil dive drone)',town:'Near Shomera (Israel), approx',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-18_brigade_300_commander_vehicle_shomera_mmirleb_16516.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-18_brigade_300_commander_vehicle_shomera_mmirleb_16516.mp4'},
+  {date:'2026-05-18',description:'Engineering vehicle, Khallet al-Raj (Ababil dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16558.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16558.mp4'},
+  {date:'2026-05-17',description:'Enemy logistics position, Iskandarounah in al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-17_logistics_position_bayyadah_iskandarounah_mmirleb_16413.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-17_logistics_position_bayyadah_iskandarounah_mmirleb_16413.mp4'},
+  {date:'2026-05-17',description:'"Buggy" vehicle, Iskandarounah in al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443.mp4'},
+  {date:'2026-05-16',description:'Military Hummer, Iskandarounah in al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-16_hummer_iskandarounah_naqoura.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-16_hummer_iskandarounah_naqoura.mp4'},
+  {date:'2026-05-16',description:'Engineering vehicle, Khallet Raj in Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16319.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16319.mp4'},
+  {date:'2026-05-16',description:'Merkava tank, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-16_merkava_tank_bayyadah_mmirleb_16351.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-16_merkava_tank_bayyadah_mmirleb_16351.mp4'},
+  {date:'2026-05-16',description:'"Namera" vehicle, Taybeh (Ababil dive drone)',town:'Taybeh',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-16_namer_vehicle_taybeh_mmirleb_16531.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-16_namer_vehicle_taybeh_mmirleb_16531.mp4'},
+  {date:'2026-05-15',description:'Engineering vehicle, city of Khiam (dive drone)',town:'Khiam',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-15_engineering_vehicle_khiam.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-15_engineering_vehicle_khiam.mp4'},
+  {date:'2026-05-15',description:'Troop carrier, Khallet Raj area in Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16301.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16301.mp4'},
+  {date:'2026-05-14',description:'Military tanker, city of Bint Jbeil (Ababil dive drone)',town:'Bint Jbeil',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_strike_on_military_tanker_near_bint_jbeil.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_strike_on_military_tanker_near_bint_jbeil.mp4'},
+  {date:'2026-05-14',description:'Merkava tank, city of Bint Jbeil (dive drone)',town:'Bint Jbeil',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_merkava_tank_bint_jbeil_mmirleb_16493.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_merkava_tank_bint_jbeil_mmirleb_16493.mp4'},
+  {date:'2026-05-14',description:'Merkava tank, Taybeh (Ababil dive drone)',town:'Taybeh',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_merkava_tank_aytaroun.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_merkava_tank_aytaroun.mp4'},
+  {date:'2026-05-14',description:'Wireless communications system, newly established Blat site opposite Ramyah (dive drone)',town:'Jabal Blat',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_wireless_communications_system_blat_mmirleb_16285.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_wireless_communications_system_blat_mmirleb_16285.mp4'},
+  {date:'2026-05-14',description:'Soldier gathering, Ras al-Naqoura military site (dive drone)',town:'Naqoura',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_soldiers_gathering_naqoura_ras_naqoura_mmirleb_16294.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_soldiers_gathering_naqoura_ras_naqoura_mmirleb_16294.mp4'},
+  {date:'2026-05-14',description:'"Namera" vehicle, Rashaf (dive drone)',town:'Rachaf / Rashaf',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_namer_vehicle_rashaf_mmirleb_16312.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_namer_vehicle_rashaf_mmirleb_16312.mp4'},
+  {date:'2026-05-14',description:'Military Hummer, Tayr Harfa (dive drone)',town:'Tayr Harfa',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-14_humvee_tayr_harfa_mmirleb_16337.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_humvee_tayr_harfa_mmirleb_16337.mp4'},
+  {date:'2026-05-13',description:'Merkava tank, Aynata (dive drone)',town:'Ainata',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-13_strike_on_merkava_tank_near_aita_al_shaab.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-13_strike_on_merkava_tank_near_aita_al_shaab.mp4'},
+  {date:'2026-05-13',description:'Armored troop carrier, city of Bint Jbeil (dive drone)',town:'Bint Jbeil',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-13_strike_on_armored_personnel_carrier.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-13_strike_on_armored_personnel_carrier.mp4'},
+  {date:'2026-05-12',description:'Israeli army vehicles and soldiers, al-Abbad site on the southern Lebanese border (swarm of dive drones)',town:'Margaliot',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_soldiers_and_vehicles.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_soldiers_and_vehicles.mp4'},
+  {date:'2026-05-12',description:'"Namera" vehicle, Houla (dive drone)',town:'Houla',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_namer_apc_near_houla.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_namer_apc_near_houla.mp4'},
+  {date:'2026-05-12',description:'Humvee on the Naqoura-Iskandaroun road (dive drone)',town:'Naqoura',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_humvee.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_humvee.mp4'},
+  {date:'2026-05-12',description:'Engineering vehicle, Tayr Harfa (dive drone)',town:'Tayr Harfa',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa.mp4'},
+  {date:'2026-05-12',description:'Merkava tank, vicinity of Khirbet al-Manara site (dive drone)',town:'Manara',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16106.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16106.mp4'},
+  {date:'2026-05-12',description:'Israeli army soldier, vicinity of Khirbet al-Manara site (dive drone)',town:'Manara',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16118.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16118.mp4'},
+  {date:'2026-05-12',description:'Humvee on the Naqoura-Iskandaroun road (dive drone)',town:'Naqoura',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.mp4'},
+  {date:'2026-05-11',description:'Israeli army soldier, Taybeh (dive drone)',town:'Taybeh',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-11_strike_on_soldier_near_dhayra.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-11_strike_on_soldier_near_dhayra.mp4'},
+  {date:'2026-05-11',description:'HEMTT logistics vehicle, Tayr Harfa (dive drone)',town:'Tayr Harfa',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-11_strike_on_logistics_vehicle_near_tayr_harfa.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-11_strike_on_logistics_vehicle_near_tayr_harfa.mp4'},
+  {date:'2026-05-11',description:'Engineering vehicle, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-11_strike_on_engineering_vehicle_near_khiam.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-11_strike_on_engineering_vehicle_near_khiam.mp4'},
+  {date:'2026-05-11',description:'D9 engineering vehicle on the Naqoura road (dive drone)',town:'Naqoura',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-11_strike_on_d9_engineering_vehicle_near_naqoura.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-11_strike_on_d9_engineering_vehicle_near_naqoura.mp4'},
+  {date:'2026-05-10',description:'Merkava tank, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_strike_on_merkava_tank.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_strike_on_merkava_tank.mp4'},
+  {date:'2026-05-10',description:'D9 engineering vehicle, Khallet al-Raj in Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_strike_on_d9_engineering_vehicle_near_deir_siryan.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_strike_on_d9_engineering_vehicle_near_deir_siryan.mp4'},
+  {date:'2026-05-10',description:'Bulldozer, city of Bint Jbeil (dive drone)',town:'Bint Jbeil',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_strike_on_bulldozer_near_ramiya.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_strike_on_bulldozer_near_ramiya.mp4'},
+  {date:'2026-05-10',description:'Newly established Israeli army HQ, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_headquarters_bayyadah_mmirleb_16035.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_headquarters_bayyadah_mmirleb_16035.mp4'},
+  {date:'2026-05-10',description:'House where Israeli soldiers were positioned, Tayr Harfa (dive drone)',town:'Tayr Harfa',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16056.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16056.mp4'},
+  {date:'2026-05-09',description:'Soldier gathering at a helicopter landing pad, Shlomi settlement (dive drone)',town:'Shlomi',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_strike_on_soldiers_near_shlomi.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_soldiers_near_shlomi.mp4'},
+  {date:'2026-05-09',description:'Israeli army soldiers, vicinity of Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_strike_on_soldiers_near_deir_mimas.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_soldiers_near_deir_mimas.mp4'},
+  {date:'2026-05-09',description:'Soldier gathering, Jal al-Alam site on the Lebanese border (dive drone)',town:'Jal al-Alam site, border',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_strike_on_soldiers.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_soldiers.mp4'},
+  {date:'2026-05-09',description:'Military vehicle, Khallet al-Raj in Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_strike_on_israeli_military_vehicle.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_israeli_military_vehicle.mp4'},
+  {date:'2026-05-09',description:'Soldier gathering at a helicopter landing pad, Shlomi settlement (dive drone)',town:'Shlomi',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_soldiers_gathering_shlomi_mmirleb_15970.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_soldiers_gathering_shlomi_mmirleb_15970.mp4'},
+  {date:'2026-05-09',description:'Soldier gathering, Jal al-Alam site on the Lebanese border (dive drone)',town:'Border Israel opposite Alma al-Shaab',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.mp4'},
+  {date:'2026-05-09',description:'Newly set-up army tent, Khallet al-Raj in Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065.mp4'},
+  {date:'2026-05-09',description:'Communications Humvee, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_humvee_bayyadah_mmirleb_16093.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_humvee_bayyadah_mmirleb_16093.mp4'},
+  {date:'2026-05-09',description:'Israeli army soldiers, vicinity of Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_soldiers_deir_siryan_mmirleb_16168.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_soldiers_deir_siryan_mmirleb_16168.mp4'},
+  {date:'2026-05-09',description:'Bulldozer, Khallet Raj area in Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16249.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16249.mp4'},
+  {date:'2026-05-08',description:'Merkava tank, newly established Namr al-Jamal site opposite Alma al-Shaab (dive drone)',town:'Border Israel opposite Alma al-Shaab',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_strike_on_merkava_tank_near_namr_al_jamal.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_strike_on_merkava_tank_near_namr_al_jamal.mp4'},
+  {date:'2026-05-08',description:'Merkava tank, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_merkava_tank_bayyadah_mmirleb_16051.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_merkava_tank_bayyadah_mmirleb_16051.mp4'},
+  {date:'2026-05-08',description:'Merkava tank, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_strike_on_merkava_tank.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_strike_on_merkava_tank.mp4'},
+  {date:'2026-05-08',description:'Humvee, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_strike_on_humvee_in_naqoura.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_strike_on_humvee_in_naqoura.mp4'},
+  {date:'2026-05-08',description:'Series of resistance strikes on Israeli army forces, Rashaf (swarm of Ababil dive drones)',town:'Rachaf / Rashaf',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_resistance_strikes_enemy_forces_kfar_kila.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_resistance_strikes_enemy_forces_kfar_kila.mp4'},
+  {date:'2026-05-08',description:'Humvee, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-08_humvee_bayyadah_mmirleb_16048.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-08_humvee_bayyadah_mmirleb_16048.mp4'},
+  {date:'2026-05-07',description:'Iron Dome platform and its crew, Jal al-Alam site (two dive drones)',town:'Border Israel opposite Alma al-Shaab',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.mp4'},
+  {date:'2026-05-06',description:'Israeli army soldier gathering, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_soldier_group.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_soldier_group.mp4'},
+  {date:'2026-05-06',description:'"Namera" troop carrier, Qouzah (dive drone)',town:'Qouzah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_namer_apc_near_qouzah.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_namer_apc_near_qouzah.mp4'},
+  {date:'2026-05-06',description:'"Namera" vehicle, Khallet al-Raj in Deir Siryan (dive drone)',town:'Deir Seryan / Khallet al-Raj',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_namer_apc_near_deir_siryan.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_namer_apc_near_deir_siryan.mp4'},
+  {date:'2026-05-06',description:'"Namera" vehicle, city of Bint Jbeil (dive drone)',town:'Bint Jbeil',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_namer_apc_in_bint_jbeil.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_namer_apc_in_bint_jbeil.mp4'},
+  {date:'2026-05-06',description:'Israeli army positioning point, Taybeh (dive drone)',town:'Taybeh',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_strike_on_enemy_position.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_strike_on_enemy_position.mp4'},
+  {date:'2026-05-06',description:'Israeli army soldier gathering, Aita al-Shaab (dive drone)',town:'Ayta ash Shab / Aita al-Shaab',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841.mp4'},
+  {date:'2026-05-06',description:'Israeli army positioning point, Taybeh (dive drone)',town:'Taybeh',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_position_point_taybeh_mmirleb_16210.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_position_point_taybeh_mmirleb_16210.mp4'},
+  {date:'2026-05-06',description:'D9 bulldozer, Houla (dive drone)',town:'Houla',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347.mp4'},
+  {date:'2026-05-05',description:'Merkava tank, Qouzah (dive drone)',town:'Qouzah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-05_strike_on_merkava_tank.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-05_strike_on_merkava_tank.mp4'},
+  {date:'2026-05-04',description:'Troop transport vehicle, vicinity of al-Abbad site on the southern Lebanese border (dive drone)',town:'Sheikh Abbad hill near Houla, approx',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_strike_on_troop_transport_vehicle.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_strike_on_troop_transport_vehicle.mp4'},
+  {date:'2026-05-04',description:'HEMTT logistics vehicle, Manara site (Ababil dive drone)',town:'Manara',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_strike_on_engineering_vehicle.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_strike_on_engineering_vehicle.mp4'},
+  {date:'2026-05-04',description:'HEMTT logistics vehicle, Manara site (Ababil dive drone)',town:'Manara',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528.mp4'},
+  {date:'2026-05-03',description:'Observation and surveillance camera, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-03_strike_on_surveillance_camera.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-03_strike_on_surveillance_camera.mp4'},
+  {date:'2026-05-03',description:'Armored-company commander\'s tank, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-03_company_commander_tank_bayyadah_mmirleb_16007.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-03_company_commander_tank_bayyadah_mmirleb_16007.mp4'},
+  {date:'2026-05-02',description:'"Namera" vehicle, city of Bint Jbeil (dive drone)',town:'Bint Jbeil',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-02_strike_on_namer_apc_in_bint_jbeil.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-02_strike_on_namer_apc_in_bint_jbeil.mp4'},
+  {date:'2026-05-02',description:'Drone control system, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-02_strike_on_drone_control_system.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-02_strike_on_drone_control_system.mp4'},
+  {date:'2026-05-01',description:'Israeli army soldiers, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-01_strike_on_soldiers.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_strike_on_soldiers.mp4'},
+  {date:'2026-05-01',description:'Humvee, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-01_strike_on_humvee.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_strike_on_humvee.mp4'},
+  {date:'2026-05-01',description:'"Namera" vehicle, city of Bint Jbeil (dive drone)',town:'Bint Jbeil',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-01_namer_vehicle_bint_jbeil_mmirleb_15898.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_namer_vehicle_bint_jbeil_mmirleb_15898.mp4'},
+  {date:'2026-05-01',description:'Merkava tank, Rashaf (dive drone)',town:'Rachaf / Rashaf',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-01_merkava_tank_rashaf_mmirleb_15950.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_merkava_tank_rashaf_mmirleb_15950.mp4'},
+  {date:'2026-04-30',description:'Hummer vehicle, al-Bayyada (dive drone)',town:'Al Bayada / Bayyadah',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-04-30_strike_on_humvee_in_naqoura.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-04-30_strike_on_humvee_in_naqoura.mp4'},
+  {date:'2026-04-29',description:'Merkava tank, Beit Lif (dive drone)',town:'Beit Lif',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-04-29_strike_on_merkava_tank.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-04-29_strike_on_merkava_tank.mp4'},
+  {date:'2026-04-24',description:'D9 engineering vehicle on the road between Taybeh and Deir Siryan (dive drone)',town:'Taybeh',thumbnail_url:'https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-04-24_d9_engineering_vehicle_between_taybeh_and_deir_siryan.jpg',video_url:'https://d2fioemadmrru3.cloudfront.net/videos/2026-04-24_d9_engineering_vehicle_between_taybeh_and_deir_siryan.mp4'},
+];
+
+// ─────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────
+const SEG = {
+  banner_start:     {label:'Banner Start',     color:'#4a9eff'},
+  flight_start:     {label:'Flight Start',     color:'#4caf50'},
+  new_flight_start: {label:'New Flight Start', color:'#00bcd4'},
+  pause_start:      {label:'Pause Start',      color:'#ffd166'},
+  replay_start:     {label:'Replay Start',     color:'#ff9800'},
+  end:              {label:'End',              color:'#f44336'},
+  other:            {label:'Other',            color:'#9e77ed'},
+};
+const TW = 88, TH = 50, FPS = 30;
+const API_BASE = location.protocol === 'file:' ? 'http://127.0.0.1:8766' : '';
+const FLIGHT_TYPES = new Set(['flight_start', 'new_flight_start']);
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let current = null;
+let annotations = [];
+let masks = [];
+let maskMode = false; // declared here (not with the mask helpers below) so loadVideo can read it during init without a temporal-dead-zone error
+let thumbs = [];      // [{time, canvas}]
+let thumbAbort = false;
+let selectedSceneSegments = new Set();
+let lastSceneKey = '';
+let activeSceneStatus = null;
+let activeJobId = null;
+let activeJobSceneId = '';
+let jobPollTimer = null;
+let videoStatuses = {};
+let scenePreviewQueue = [];
+let scenePreviewIndex = -1;
+const CENTRAL_CLEAN_CROP = {
+  x: 120 / 848,
+  y: 190 / 478,
+  w: 660 / 848,
+  h: 280 / 478,
+};
+
+// ─────────────────────────────────────────────
+// DOM
+// ─────────────────────────────────────────────
+const vid   = document.getElementById('mainVideo');
+const tvid  = document.getElementById('thumbVideo');
+const fsCon = document.getElementById('fsContainer');
+const fsIn  = document.getElementById('fsInner');
+const g = id => document.getElementById(id);
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+// Defined as a hoisted declaration and invoked at the very end of the script so
+// that every top-level const/let (mask state, VGGT_FRAME_WARN_THRESHOLD, etc.) is
+// initialized before init's loadVideo chain reads it (avoids temporal-dead-zone
+// ReferenceErrors).
+function init() {
+  const sel = g('videoSelect');
+  VIDEOS.forEach((v, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.dataset.baseText = `${v.date} - ${v.description} (${v.town})`;
+    o.textContent = o.dataset.baseText;
+    sel.appendChild(o);
+  });
+  bindEvents();
+  renderVideoPickerMenu();
+  updateVideoPickerButton();
+  loadVideoStatuses();
+  // Deep-link: open the video named in the ?v= query param.
+  const wantedVideo = new URLSearchParams(location.search).get('v');
+  if (wantedVideo) {
+    const idx = VIDEOS.findIndex(v => videoFileFor(v) === wantedVideo);
+    if (idx !== -1) selectVideoByIndex(idx);
+  }
+}
+
+// ─────────────────────────────────────────────
+// LOAD VIDEO
+// ─────────────────────────────────────────────
+function loadVideo(v) {
+  current = v;
+  // Reflect the current video in the URL so it can be linked / bookmarked.
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set('v', videoFileFor(v));
+    history.replaceState(null, '', url);
+  } catch (e) { /* non-browser / file: mode */ }
+  annotations = [];
+  masks = [];
+  if (maskMode) setMaskMode(false);
+  selectedSceneSegments = new Set();
+  activeSceneStatus = null;
+  activeJobId = null;
+  activeJobSceneId = '';
+  clearTimeout(jobPollTimer);
+  stopScenePreview();
+  thumbAbort = true;
+  thumbs = [];
+
+  g('vidPlaceholder').style.display = 'none';
+  vid.style.display = 'block';
+  g('vidOverlay').style.display = 'block';
+  g('vidTitle').textContent = v.description;
+  g('vidMeta').textContent  = v.date + ' · ' + v.town;
+
+  fsIn.innerHTML = '';
+  g('filmstripStatus').textContent = 'Loading…';
+
+  renderAnnotations();
+  renderReconstructionPanel();
+  setControlsEnabled(false);
+  g('btnCreateScene').disabled = false;
+  g('btnSaveRepo').disabled = true;
+  g('btnExport').disabled = true;
+
+  vid.src = v.video_url;
+  vid.load();
+  loadSavedAnnotations(v);
+}
+
+function videoFileFor(v) {
+  try { return new URL(v.video_url).pathname.split('/').pop(); }
+  catch { return (v.video_url || '').split('/').pop(); }
+}
+
+function videoStatusFor(video) {
+  const status = videoStatuses[videoFileFor(video)] || {};
+  return status.has_scene ? 'scene' : (status.annotated ? 'annotated' : 'missing');
+}
+
+function updateVideoPickerButton() {
+  const sel = g('videoSelect');
+  const dot = g('videoPickerDot');
+  const label = g('videoPickerLabel');
+  const value = sel.value;
+  if (!value) {
+    dot.className = 'status-dot missing';
+    label.textContent = 'Select a video';
+    return;
+  }
+  const video = VIDEOS[Number(value)];
+  const statusName = videoStatusFor(video);
+  dot.className = `status-dot ${statusName}`;
+  label.textContent = `${video.date} - ${video.description} (${video.town})`;
+}
+
+function selectVideoByIndex(index) {
+  const sel = g('videoSelect');
+  sel.value = String(index);
+  updateVideoPickerButton();
+  closeVideoPicker();
+  const video = VIDEOS[index];
+  if (video) loadVideo(video);
+}
+
+function renderVideoPickerMenu() {
+  const menu = g('videoPickerMenu');
+  const selected = g('videoSelect').value;
+  menu.innerHTML = '';
+  VIDEOS.forEach((video, index) => {
+    const statusName = videoStatusFor(video);
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = `video-picker-option${String(index) === selected ? ' active' : ''}`;
+    row.dataset.value = String(index);
+    const dot = document.createElement('span');
+    dot.className = `status-dot ${statusName}`;
+    const text = document.createElement('span');
+    text.className = 'video-picker-label';
+    text.textContent = `${video.date} - ${video.description} (${video.town})`;
+    row.append(dot, text);
+    row.addEventListener('click', () => selectVideoByIndex(index));
+    menu.appendChild(row);
+  });
+}
+
+function openVideoPicker() {
+  renderVideoPickerMenu();
+  g('videoPickerMenu').hidden = false;
+}
+
+function closeVideoPicker() {
+  g('videoPickerMenu').hidden = true;
+}
+
+function toggleVideoPicker() {
+  if (g('videoPickerMenu').hidden) openVideoPicker();
+  else closeVideoPicker();
+}
+
+function applyVideoStatusOptions() {
+  const sel = g('videoSelect');
+  [...sel.options].forEach(option => {
+    if (!option.value) return;
+    const video = VIDEOS[Number(option.value)];
+    const status = videoStatuses[videoFileFor(video)] || {};
+    const statusName = videoStatusFor(video);
+    const mark = statusName === 'scene' ? '●' : (statusName === 'annotated' ? '●' : '●');
+    option.className = `status-${statusName}`;
+    option.dataset.status = statusName;
+    option.textContent = `${mark} ${option.dataset.baseText}`;
+    option.title = status.has_scene
+      ? '3D scene available'
+      : (status.annotated ? 'Annotated, no 3D scene yet' : 'No annotation saved');
+  });
+  renderVideoPickerMenu();
+  updateVideoPickerButton();
+}
+
+async function loadVideoStatuses() {
+  try {
+    const res = await fetch(`${API_BASE}/api/video-status`, {cache: 'no-store'});
+    if (!res.ok) return;
+    const payload = await res.json();
+    videoStatuses = payload.videos || {};
+    applyVideoStatusOptions();
+  } catch {
+    videoStatuses = {};
+  }
+}
+
+async function loadSavedAnnotations(v) {
+  const file = videoFileFor(v);
+  try {
+    const res = await fetch(`${API_BASE}/api/annotations?video_file=${encodeURIComponent(file)}`);
+    if (!res.ok) return;
+    const payload = await res.json();
+    if (!payload.found || !payload.annotation) return;
+    const d = payload.annotation;
+    annotations = (d.segments || []).map(s => ({
+      id: Date.now() + Math.random(),
+      time: s.time,
+      type: s.type,
+      comment: s.comment || '',
+      thumb: null,
+    }));
+    masks = normalizeMasks(d.exclusion_masks);
+    renderAnnotations();
+    updateFilmstripMarkers();
+    renderReconstructionPanel();
+    updateMaskOverlay();
+    loadVideoStatuses();
+  } catch {
+    g('reconStatus').textContent = 'Start the local tool server to load saved annotations and scenes.';
+  }
+}
+
+// ─────────────────────────────────────────────
+// FILMSTRIP GENERATION
+// ─────────────────────────────────────────────
+async function generateFilmstrip() {
+  const dur = vid.duration;
+  if (!dur || isNaN(dur)) return;
+
+  const count = Math.min(200, Math.max(20, Math.ceil(dur * 2)));
+  thumbAbort = false;
+  thumbs = new Array(count).fill(null);
+
+  fsIn.innerHTML = '';
+
+  // Placeholder divs
+  const divs = [];
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    d.className = 'fs-thumb loading';
+    d.dataset.time = ((i / count) * dur).toFixed(3);
+    fsIn.appendChild(d);
+    divs.push(d);
+  }
+
+  // Add cursor inside fsIn
+  const cursor = document.createElement('div');
+  cursor.id = 'fsCursor';
+  cursor.className = 'fs-cursor';
+  fsIn.appendChild(cursor);
+
+  // Load thumb video
+  tvid.src = vid.src;
+  tvid.load();
+  await new Promise((res, rej) => {
+    tvid.addEventListener('loadedmetadata', res, {once: true});
+    tvid.addEventListener('error', rej, {once: true});
+  }).catch(() => {});
+
+  g('filmstripStatus').textContent = '0%';
+
+  for (let i = 0; i < count; i++) {
+    if (thumbAbort) break;
+
+    const time = (i / count) * dur;
+    const canvas = await captureAt(tvid, time);
+    if (thumbAbort) break;
+
+    thumbs[i] = {time, canvas};
+
+    if (canvas && divs[i]) {
+      divs[i].classList.remove('loading');
+      divs[i].innerHTML = '';
+      divs[i].appendChild(canvas);
+    }
+
+    if (i % 5 === 0)
+      g('filmstripStatus').textContent = Math.round(((i + 1) / count) * 100) + '%';
+  }
+
+  if (!thumbAbort) {
+    g('filmstripStatus').textContent = count + ' frames';
+    updateFilmstripMarkers();
+    // Fill thumb for any annotations added before filmstrip completed
+    annotations.forEach(a => {
+      if (!a.thumb) a.thumb = thumbForTime(a.time);
+    });
+    renderAnnotations();
+  }
+}
+
+function captureAt(v, time) {
+  return new Promise(res => {
+    const timer = setTimeout(() => {
+      v.removeEventListener('seeked', onSeeked);
+      res(null);
+    }, 4000);
+
+    function onSeeked() {
+      clearTimeout(timer);
+      v.removeEventListener('seeked', onSeeked);
+      const c = document.createElement('canvas');
+      c.width = TW; c.height = TH;
+      try { c.getContext('2d').drawImage(v, 0, 0, TW, TH); } catch(e) {}
+      res(c);
+    }
+
+    v.addEventListener('seeked', onSeeked);
+    v.currentTime = time;
+  });
+}
+
+function thumbForTime(t) {
+  if (!thumbs.length || !vid.duration) return null;
+  const idx = Math.round((t / vid.duration) * (thumbs.length - 1));
+  const th = thumbs[Math.max(0, Math.min(idx, thumbs.length - 1))];
+  return th ? th.canvas : null;
+}
+
+// ─────────────────────────────────────────────
+// PLAYBACK
+// ─────────────────────────────────────────────
+function seek(t) {
+  vid.currentTime = Math.max(0, Math.min(t, vid.duration || 0));
+}
+
+function step(n) { seek(vid.currentTime + n / FPS); }
+
+function togglePlay() {
+  vid.paused ? vid.play() : vid.pause();
+}
+
+// ─────────────────────────────────────────────
+// TIME DISPLAY & CURSOR
+// ─────────────────────────────────────────────
+function fmt(s) {
+  if (!s || isNaN(s)) return '0:00.0';
+  const m = Math.floor(s / 60);
+  return m + ':' + (s % 60).toFixed(1).padStart(4, '0');
+}
+
+function onTimeUpdate() {
+  const cur = vid.currentTime, dur = vid.duration || 0;
+  g('timeDisp').textContent = fmt(cur) + ' / ' + fmt(dur);
+  g('markAt').textContent   = fmt(cur);
+  if (dur > 0) g('timeSlider').value = (cur / dur) * 10000;
+
+  const cursor = g('fsCursor');
+  if (!cursor || !dur) return;
+  const iw = fsIn.scrollWidth;
+  const x = (cur / dur) * iw;
+  cursor.style.left = x + 'px';
+  cursor.style.display = 'block';
+
+  // Auto-scroll to keep cursor visible when playing
+  if (!vid.paused) {
+    const cw = fsCon.clientWidth;
+    const sl = fsCon.scrollLeft;
+    if (x < sl + 60 || x > sl + cw - 60)
+      fsCon.scrollLeft = Math.max(0, x - cw / 2);
+  }
+}
+
+// ─────────────────────────────────────────────
+// ANNOTATIONS
+// ─────────────────────────────────────────────
+function markSegment() {
+  if (!current || vid.readyState < 1) return;
+
+  const time    = vid.currentTime;
+  const type    = g('segType').value;
+  const comment = g('segComment').value.trim();
+
+  // Capture frame from main video
+  const thumb = (() => {
+    const c = document.createElement('canvas');
+    c.width = 64; c.height = 36;
+    try { c.getContext('2d').drawImage(vid, 0, 0, 64, 36); } catch(e) { return null; }
+    return c;
+  })();
+
+  const ann = {id: Date.now() + Math.random(), time, type, comment, thumb};
+  const i = annotations.findIndex(a => a.time > time);
+  if (i === -1) annotations.push(ann); else annotations.splice(i, 0, ann);
+
+  g('segComment').value = '';
+  renderAnnotations();
+  updateFilmstripMarkers();
+  renderReconstructionPanel();
+}
+
+function deleteAnn(id) {
+  annotations = annotations.filter(a => a.id !== id);
+  renderAnnotations();
+  updateFilmstripMarkers();
+  renderReconstructionPanel();
+}
+
+function renderAnnotations() {
+  const list = g('segList');
+  g('segCount').textContent = annotations.length;
+
+  if (!annotations.length) {
+    list.innerHTML = '<p class="empty-state">No segments marked yet</p>';
+    return;
+  }
+
+  list.innerHTML = '';
+  annotations.forEach(ann => {
+    const t = SEG[ann.type] || {label: ann.type, color:'#888'};
+    const item = document.createElement('div');
+    item.className = 'seg-item';
+
+    // Thumbnail
+    const thumb = document.createElement('div');
+    thumb.className = 'seg-thumb';
+    if (ann.thumb) {
+      const c2 = document.createElement('canvas');
+      c2.width = 64; c2.height = 36;
+      try { c2.getContext('2d').drawImage(ann.thumb, 0, 0, 64, 36); } catch(e) {}
+      thumb.appendChild(c2);
+    }
+
+    // Info
+    const info = document.createElement('div');
+    info.className = 'seg-info';
+    info.innerHTML =
+      `<span class="seg-type" style="color:${t.color}">${t.label}</span>` +
+      `<span class="seg-time">${fmt(ann.time)}</span>` +
+      (ann.comment ? `<span class="seg-comment" title="${ann.comment}">${ann.comment}</span>` : '');
+
+    // Delete button
+    const del = document.createElement('button');
+    del.className = 'seg-del';
+    del.textContent = '✕';
+    del.title = 'Remove';
+    del.addEventListener('click', e => { e.stopPropagation(); deleteAnn(ann.id); });
+
+    item.appendChild(thumb);
+    item.appendChild(info);
+    item.appendChild(del);
+    item.addEventListener('click', () => seek(ann.time));
+    list.appendChild(item);
+  });
+}
+
+function updateFilmstripMarkers() {
+  document.querySelectorAll('.fs-marker').forEach(e => e.remove());
+  if (!vid.duration) return;
+  const iw = fsIn.scrollWidth;
+  const dur = vid.duration;
+  annotations.forEach(ann => {
+    const t = SEG[ann.type] || {color:'#888'};
+    const m = document.createElement('div');
+    m.className = 'fs-marker';
+    m.style.left = ((ann.time / dur) * iw) + 'px';
+    m.style.background = t.color;
+    m.title = (SEG[ann.type] || {label:ann.type}).label + ' ' + fmt(ann.time);
+    fsIn.appendChild(m);
+  });
+}
+
+// ─────────────────────────────────────────────
+// 3D SCENE / VGGT RECONSTRUCTION
+// ─────────────────────────────────────────────
+function buildFlightIntervals() {
+  if (!current) return [];
+  const markers = [...annotations].sort((a, b) => a.time - b.time);
+  const flightIndexes = markers
+    .map((marker, index) => FLIGHT_TYPES.has(marker.type) ? index : -1)
+    .filter(index => index >= 0);
+  const intervals = [];
+  flightIndexes.forEach((markerIndex, localIndex) => {
+    const marker = markers[markerIndex];
+    let endMarker = null;
+    for (const candidate of markers.slice(markerIndex + 1)) {
+      if (!FLIGHT_TYPES.has(candidate.type)) {
+        endMarker = candidate;
+        break;
+      }
+    }
+    const end = endMarker ? endMarker.time : (vid.duration || marker.time);
+    if (end <= marker.time) return;
+    intervals.push({
+      segment_id: `seg${String(localIndex + 1).padStart(2, '0')}`,
+      label: `seg${String(localIndex + 1).padStart(2, '0')}`,
+      start_s: Number(marker.time.toFixed(3)),
+      end_s: Number(end.toFixed(3)),
+      duration_s: Number((end - marker.time).toFixed(3)),
+      start_type: marker.type,
+      end_type: endMarker ? endMarker.type : 'video_end',
+      is_attack: localIndex === flightIndexes.length - 1,
+    });
+  });
+  return intervals;
+}
+
+function selectedIntervals() {
+  return buildFlightIntervals().filter(seg => selectedSceneSegments.has(seg.segment_id));
+}
+
+function sceneSampleFps() {
+  const fps = Number(g('sceneSampleFps').value);
+  return Number.isFinite(fps) && fps > 0 ? Math.max(0.5, Math.min(10, fps)) : 3;
+}
+
+function estimatedImageCount() {
+  const duration = selectedIntervals().reduce((sum, seg) => sum + Math.max(0, seg.duration_s || 0), 0);
+  if (!duration) return 0;
+  return Math.max(1, Math.round(duration * sceneSampleFps()));
+}
+
+const VGGT_FRAME_WARN_THRESHOLD = 125;
+function updateSceneImageCount() {
+  const count = estimatedImageCount();
+  const el = g('sceneImageCount');
+  const heavy = count > VGGT_FRAME_WARN_THRESHOLD;
+  el.textContent = count ? (heavy ? `${count} ⚠` : `${count}`) : '0';
+  el.style.color = heavy ? 'var(--red)' : '';
+  el.title = heavy
+    ? `${count} frames (> ${VGGT_FRAME_WARN_THRESHOLD}). VGGT may be slow/memory-heavy — reconstruction still uses all frames.`
+    : '';
+}
+
+function updateCropBoxOverlay() {
+  const overlay = g('cropBoxOverlay');
+  if (!overlay) return;
+  if (!current || !g('sceneDialog').open || g('sceneCropPreset').value !== 'central_clean' || !vid.videoWidth || vid.style.display === 'none') {
+    overlay.style.display = 'none';
+    return;
+  }
+  const videoRect = vid.getBoundingClientRect();
+  const wrapperRect = vid.parentElement.getBoundingClientRect();
+  if (!videoRect.width || !videoRect.height) {
+    overlay.style.display = 'none';
+    return;
+  }
+  overlay.style.display = 'block';
+  overlay.style.left = `${videoRect.left - wrapperRect.left + videoRect.width * CENTRAL_CLEAN_CROP.x}px`;
+  overlay.style.top = `${videoRect.top - wrapperRect.top + videoRect.height * CENTRAL_CLEAN_CROP.y}px`;
+  overlay.style.width = `${videoRect.width * CENTRAL_CLEAN_CROP.w}px`;
+  overlay.style.height = `${videoRect.height * CENTRAL_CLEAN_CROP.h}px`;
+}
+
+// ─────────────────────────────────────────────
+// EXCLUSION MASKS (regions painted black + excluded from reconstruction)
+// Stored in normalized [0,1] coords relative to the video frame.
+// ─────────────────────────────────────────────
+// maskMode is declared with the top-level state above (init/loadVideo read it early)
+let maskDraft = null;
+let maskDragStart = null;
+const SVGNS = 'http://www.w3.org/2000/svg';
+
+const clamp01 = n => Math.min(1, Math.max(0, Number(n) || 0));
+const r3 = n => Math.round(Number(n) * 1000) / 1000;
+
+function roundMask(m) {
+  if (m.type === 'rect') return {type:'rect', x:r3(m.x), y:r3(m.y), w:r3(m.w), h:r3(m.h)};
+  if (m.type === 'ellipse') return {type:'ellipse', cx:r3(m.cx), cy:r3(m.cy), rx:r3(m.rx), ry:r3(m.ry)};
+  return {type:'polygon', points:(m.points||[]).map(p => [r3(p[0]), r3(p[1])])};
+}
+
+function normalizeMasks(list) {
+  if (!Array.isArray(list)) return [];
+  return list.map(m => {
+    if (m.type === 'rect') return {type:'rect', x:clamp01(m.x), y:clamp01(m.y), w:clamp01(m.w), h:clamp01(m.h)};
+    if (m.type === 'ellipse') return {type:'ellipse', cx:clamp01(m.cx), cy:clamp01(m.cy), rx:clamp01(m.rx), ry:clamp01(m.ry)};
+    if (m.type === 'polygon') return {type:'polygon', points:(m.points||[]).map(p => [clamp01(p[0]), clamp01(p[1])])};
+    return null;
+  }).filter(Boolean);
+}
+
+function maskSvg() { return g('maskOverlay'); }
+
+function updateMaskOverlay() {
+  const svg = maskSvg();
+  if (!svg) return;
+  if (!current || !vid.videoWidth || vid.style.display === 'none') { svg.style.display = 'none'; return; }
+  const vr = vid.getBoundingClientRect();
+  const wr = vid.parentElement.getBoundingClientRect();
+  if (!vr.width || !vr.height) { svg.style.display = 'none'; return; }
+  svg.style.display = 'block';
+  svg.style.left = `${vr.left - wr.left}px`;
+  svg.style.top = `${vr.top - wr.top}px`;
+  svg.style.width = `${vr.width}px`;
+  svg.style.height = `${vr.height}px`;
+  renderMasks();
+}
+
+function maskPointFromEvent(e) {
+  const r = maskSvg().getBoundingClientRect();
+  return [clamp01((e.clientX - r.left) / r.width), clamp01((e.clientY - r.top) / r.height)];
+}
+
+function maskShapeEl(m, cls) {
+  let el;
+  if (m.type === 'rect') {
+    el = document.createElementNS(SVGNS, 'rect');
+    el.setAttribute('x', Math.min(m.x, m.x + m.w)); el.setAttribute('y', Math.min(m.y, m.y + m.h));
+    el.setAttribute('width', Math.abs(m.w)); el.setAttribute('height', Math.abs(m.h));
+  } else if (m.type === 'ellipse') {
+    el = document.createElementNS(SVGNS, 'ellipse');
+    el.setAttribute('cx', m.cx); el.setAttribute('cy', m.cy);
+    el.setAttribute('rx', Math.abs(m.rx)); el.setAttribute('ry', Math.abs(m.ry));
+  } else {
+    el = document.createElementNS(SVGNS, 'polygon');
+    el.setAttribute('points', (m.points || []).map(p => p.join(',')).join(' '));
+  }
+  el.setAttribute('class', cls);
+  return el;
+}
+
+function renderMasks() {
+  const svg = maskSvg();
+  if (!svg) return;
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  masks.forEach(m => svg.appendChild(maskShapeEl(m, 'mask-shape')));
+  if (maskDraft) svg.appendChild(maskShapeEl(maskDraft, 'mask-draft'));
+  if (g('maskCount')) g('maskCount').textContent = String(masks.length);
+  renderMaskList();
+}
+
+function renderMaskList() {
+  const box = g('maskList');
+  if (!box) return;
+  box.innerHTML = '';
+  masks.forEach((m, i) => {
+    const row = document.createElement('div');
+    row.className = 'mask-item';
+    const label = document.createElement('span');
+    label.textContent = `${i + 1}. ${m.type}`;
+    const del = document.createElement('button');
+    del.type = 'button'; del.textContent = 'Delete';
+    del.addEventListener('click', () => { masks.splice(i, 1); renderMasks(); });
+    row.append(label, del);
+    box.appendChild(row);
+  });
+}
+
+function setMaskMode(on) {
+  maskMode = !!on;
+  maskDraft = null;
+  maskDragStart = null;
+  const svg = maskSvg();
+  if (svg) svg.classList.toggle('active', maskMode);
+  const btn = g('btnMaskMode');
+  if (btn) { btn.classList.toggle('active', maskMode); btn.textContent = maskMode ? 'Done drawing' : 'Draw masks'; }
+  if (g('maskHint')) g('maskHint').style.display = maskMode ? 'block' : 'none';
+  updateMaskOverlay();
+}
+
+function bindMaskEvents() {
+  const svg = maskSvg();
+  if (!svg) return;
+  svg.addEventListener('pointerdown', e => {
+    if (!maskMode) return;
+    e.preventDefault();
+    const shape = g('maskShape').value;
+    const p = maskPointFromEvent(e);
+    if (shape === 'polygon') {
+      if (!maskDraft || maskDraft.type !== 'polygon') maskDraft = {type:'polygon', points:[]};
+      maskDraft.points.push(p);
+      renderMasks();
+      return;
+    }
+    maskDragStart = p;
+    maskDraft = shape === 'rect'
+      ? {type:'rect', x:p[0], y:p[1], w:0, h:0}
+      : {type:'ellipse', cx:p[0], cy:p[1], rx:0, ry:0};
+    try { svg.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!maskMode || !maskDragStart || !maskDraft) return;
+    const p = maskPointFromEvent(e);
+    if (maskDraft.type === 'rect') {
+      maskDraft.w = p[0] - maskDragStart[0]; maskDraft.h = p[1] - maskDragStart[1];
+    } else if (maskDraft.type === 'ellipse') {
+      maskDraft.cx = (maskDragStart[0] + p[0]) / 2; maskDraft.cy = (maskDragStart[1] + p[1]) / 2;
+      maskDraft.rx = Math.abs(p[0] - maskDragStart[0]) / 2; maskDraft.ry = Math.abs(p[1] - maskDragStart[1]) / 2;
+    }
+    renderMasks();
+  });
+  const finishDrag = () => {
+    if (!maskDragStart || !maskDraft) return;
+    if (maskDraft.type === 'rect') {
+      if (maskDraft.w < 0) { maskDraft.x += maskDraft.w; maskDraft.w = -maskDraft.w; }
+      if (maskDraft.h < 0) { maskDraft.y += maskDraft.h; maskDraft.h = -maskDraft.h; }
+    }
+    const min = 0.006;
+    const big = maskDraft.type === 'rect'
+      ? (maskDraft.w > min && maskDraft.h > min)
+      : (maskDraft.rx > min && maskDraft.ry > min);
+    if (big) masks.push(maskDraft);
+    maskDraft = null; maskDragStart = null; renderMasks();
+  };
+  svg.addEventListener('pointerup', finishDrag);
+  svg.addEventListener('pointercancel', finishDrag);
+  svg.addEventListener('dblclick', e => {
+    if (!maskMode) return;
+    e.preventDefault();
+    if (maskDraft && maskDraft.type === 'polygon' && maskDraft.points.length >= 3) masks.push(maskDraft);
+    maskDraft = null; renderMasks();
+  });
+}
+
+function sceneKeyForSelection() {
+  if (!current) return '';
+  return `${videoFileFor(current)}::${[...selectedSceneSegments].sort().join(',')}`;
+}
+
+function renderReconstructionPanel() {
+  const box = g('reconSegments');
+  const intervals = buildFlightIntervals();
+  const selectedStillValid = new Set(intervals.map(seg => seg.segment_id));
+  selectedSceneSegments = new Set([...selectedSceneSegments].filter(id => selectedStillValid.has(id)));
+  if (!selectedSceneSegments.size && intervals.length) {
+    selectedSceneSegments.add(intervals[intervals.length - 1].segment_id);
+  }
+
+  g('reconSummary').textContent = intervals.length
+    ? `${intervals.length} flight segment${intervals.length === 1 ? '' : 's'} detected. Select one or more to concatenate.`
+    : 'No flight segments yet. Add Flight Start / New Flight Start markers.';
+
+  box.innerHTML = '';
+  intervals.forEach(seg => {
+    const row = document.createElement('label');
+    row.className = 'recon-seg';
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = selectedSceneSegments.has(seg.segment_id);
+    input.addEventListener('change', () => {
+      if (input.checked) selectedSceneSegments.add(seg.segment_id);
+      else selectedSceneSegments.delete(seg.segment_id);
+      updateSceneImageCount();
+      updateSceneButtons();
+      refreshSceneStatus();
+    });
+    const main = document.createElement('div');
+    main.className = 'recon-seg-main';
+    const title = document.createElement('div');
+    title.className = 'recon-seg-title';
+    title.textContent = seg.label;
+    const time = document.createElement('div');
+    time.className = 'recon-seg-time';
+    time.textContent = `${fmt(seg.start_s)} - ${fmt(seg.end_s)} | ${seg.duration_s.toFixed(1)}s`;
+    main.appendChild(title);
+    main.appendChild(time);
+    const pill = document.createElement('span');
+    pill.className = seg.is_attack ? 'pill attack' : 'pill';
+    pill.textContent = seg.is_attack ? 'attack' : 'flight';
+    const play = document.createElement('button');
+    play.type = 'button';
+    play.title = `Play ${seg.label}`;
+    play.textContent = '▶';
+    play.addEventListener('click', event => {
+      event.preventDefault();
+      playSceneSegments([seg]);
+    });
+    row.appendChild(input);
+    row.appendChild(main);
+    row.appendChild(pill);
+    row.appendChild(play);
+    box.appendChild(row);
+  });
+  updateSceneImageCount();
+  updateCropBoxOverlay();
+  updateSceneButtons();
+  refreshSceneStatus();
+}
+
+function updateSceneButtons() {
+  const hasSelection = !!current && selectedSceneSegments.size > 0;
+  const selectedSceneId = activeSceneStatus && activeSceneStatus.scene_id;
+  const runningForSelection = !!activeJobId && !!selectedSceneId && activeJobSceneId === selectedSceneId;
+  updateSceneImageCount();
+  g('btnRunScene').disabled = !hasSelection || runningForSelection;
+  g('btnOpenScene').disabled = !(activeSceneStatus && activeSceneStatus.exists);
+  g('btnPlaySelectedScene').disabled = !hasSelection;
+}
+
+async function refreshSceneStatus() {
+  if (!current || !selectedSceneSegments.size) {
+    activeSceneStatus = null;
+    g('reconStatus').textContent = 'Select flight segments to build a scene.';
+    updateSceneButtons();
+    return;
+  }
+  const key = sceneKeyForSelection();
+  lastSceneKey = key;
+  const segments = [...selectedSceneSegments].sort().join(',');
+  try {
+    const res = await fetch(`${API_BASE}/api/scenes/status?video_file=${encodeURIComponent(videoFileFor(current))}&segments=${encodeURIComponent(segments)}`);
+    if (!res.ok || lastSceneKey !== key) return;
+    activeSceneStatus = await res.json();
+	    g('reconStatus').textContent = activeSceneStatus.exists
+	      ? `Scene ready: ${activeSceneStatus.scene_id}`
+	      : `No saved scene for ${segments}.`;
+	    refreshJobManager({reattach: true});
+	  } catch {
+	    activeSceneStatus = null;
+	    g('reconStatus').textContent = 'Local tool server is not running.';
+	  }
+	  updateSceneButtons();
+	}
+
+function jobIsActive(job) {
+  return job && (job.status === 'queued' || job.status === 'running');
+}
+
+function jobAge(job) {
+  const updated = Number(job.updated_at || job.created_at || 0) * 1000;
+  if (!updated) return '';
+  const seconds = Math.max(0, Math.round((Date.now() - updated) / 1000));
+  if (seconds < 60) return `${seconds}s ago`;
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  return `${Math.round(minutes / 60)}h ago`;
+}
+
+function setActiveJob(job) {
+  activeJobId = job.id;
+  activeJobSceneId = job.scene_id || '';
+  g('reconLog').hidden = false;
+}
+
+function renderJobList(jobs) {
+  const list = g('jobList');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!jobs.length) {
+    const empty = document.createElement('div');
+    empty.className = 'job-meta';
+    empty.textContent = 'No recent reconstruction jobs.';
+    list.appendChild(empty);
+    return;
+  }
+  jobs.slice(0, 6).forEach(job => {
+    const row = document.createElement('div');
+    row.className = 'job-row';
+    const dot = document.createElement('span');
+    dot.className = `job-dot ${job.status || ''}`;
+    const main = document.createElement('div');
+    main.className = 'job-main';
+    const title = document.createElement('div');
+    title.className = 'job-title';
+    title.textContent = job.scene_id || job.id;
+    const meta = document.createElement('div');
+    meta.className = 'job-meta';
+    meta.textContent = `${job.status || 'unknown'} | ${job.step || 'queued'}${jobAge(job) ? ` | ${jobAge(job)}` : ''}`;
+    main.append(title, meta);
+    const action = document.createElement('button');
+    action.type = 'button';
+    action.className = 'job-action';
+    action.textContent = job.status === 'done' && job.viewer_url ? 'Open' : (jobIsActive(job) ? 'Watch' : 'Show');
+    action.addEventListener('click', () => {
+      if (job.status === 'done' && job.viewer_url) {
+        window.open(`${API_BASE}${job.viewer_url}`, '_blank', 'noopener');
+        return;
+      }
+      setActiveJob(job);
+      g('reconStatus').textContent = `${job.status} | ${job.step}`;
+      g('reconLog').textContent = (job.logs || []).slice(-80).join('\n');
+      if (jobIsActive(job)) pollSceneJob();
+    });
+    row.append(dot, main, action);
+    list.appendChild(row);
+  });
+}
+
+// Reflect overall reconstruction-job state on the header Jobs button.
+function jobsOverallStatus(jobs) {
+  if (jobs.some(j => j.status === 'running' || j.status === 'queued')) return 'running';
+  if (jobs.some(j => j.status === 'error' || j.status === 'stale')) return 'error';
+  if (jobs.some(j => j.status === 'done')) return 'done';
+  return '';
+}
+
+function updateJobsHeaderStatus(jobs) {
+  const dot = g('jobsHeaderDot');
+  if (!dot) return;
+  const status = jobsOverallStatus(jobs || []);
+  dot.className = 'hdr-status-dot ' + status;
+  const titles = {running: 'Reconstruction job running', error: 'A reconstruction job failed',
+                  done: 'Reconstruction jobs (latest done)', '': 'Reconstruction jobs'};
+  g('btnJobs').title = titles[status];
+}
+
+function openJobsDialog() {
+  refreshJobManager({reattach: true});
+  const d = g('jobsDialog');
+  if (typeof d.showModal === 'function') d.showModal();
+  else d.setAttribute('open', '');
+}
+
+async function refreshJobManager(options = {}) {
+  const {reattach = false} = options;
+  if (!current) {
+    renderJobList([]);
+    updateJobsHeaderStatus([]);
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/api/jobs?video_file=${encodeURIComponent(videoFileFor(current))}`, {cache: 'no-store'});
+    if (!res.ok) return;
+    const payload = await res.json();
+    const jobs = payload.jobs || [];
+    renderJobList(jobs);
+    updateJobsHeaderStatus(jobs);
+    const selectedSceneId = activeSceneStatus && activeSceneStatus.scene_id;
+    const matchingActive = selectedSceneId
+      ? jobs.find(job => job.scene_id === selectedSceneId && jobIsActive(job))
+      : null;
+    if (reattach && matchingActive && activeJobId !== matchingActive.id) {
+      setActiveJob(matchingActive);
+      g('reconStatus').textContent = `${matchingActive.status} | ${matchingActive.step}`;
+      updateSceneButtons();
+      pollSceneJob();
+    }
+  } catch {
+    renderJobList([]);
+    updateJobsHeaderStatus([]);
+  }
+}
+
+function sceneRequestBody() {
+  const segments = selectedIntervals();
+  return {
+    video_file: videoFileFor(current),
+    video_url: current.video_url,
+    description: current.description,
+    date: current.date,
+    town: current.town,
+    annotations: annotations.map(a => ({
+      time: Number(a.time.toFixed(3)),
+      type: a.type,
+      comment: a.comment || '',
+    })),
+    segments,
+    sample_fps: sceneSampleFps(),
+    target_frames: 0,
+    default_scale_m_per_unit: Number(g('sceneDefaultScale').value) || 117.6,
+    crop_preset: g('sceneCropPreset').value,
+    width: Number(g('sceneWidth').value) || 660,
+    focal_px: 812,
+    refresh_vggt: true,
+    render_camera_views: true,
+  };
+}
+
+async function runSceneJob() {
+  if (!current || !selectedSceneSegments.size) return;
+  g('btnRunScene').disabled = true;
+  g('btnOpenScene').disabled = true;
+  g('reconLog').hidden = false;
+  g('reconLog').textContent = '';
+  g('reconStatus').textContent = 'Starting reconstruction job...';
+  try {
+    const res = await fetch(`${API_BASE}/api/reconstruct`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(sceneRequestBody()),
+    });
+	    const payload = await res.json();
+	    if (!res.ok) throw new Error(payload.error || 'Failed to start reconstruction');
+	    activeJobId = payload.job_id;
+	    activeJobSceneId = payload.scene_id || '';
+	    g('reconStatus').textContent = payload.reused ? 'Reattached to running reconstruction job...' : 'Reconstruction job started...';
+	    refreshJobManager();
+	    pollSceneJob();
+	  } catch (err) {
+	    g('reconStatus').textContent = err.message;
+    updateSceneButtons();
+  }
+}
+
+async function pollSceneJob() {
+  if (!activeJobId) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/jobs/${activeJobId}`);
+	    const job = await res.json();
+	    activeJobSceneId = job.scene_id || activeJobSceneId;
+	    g('reconStatus').textContent = `${job.status} | ${job.step}`;
+	    g('reconLog').textContent = (job.logs || []).slice(-80).join('\n');
+	    g('reconLog').scrollTop = g('reconLog').scrollHeight;
+	    updateSceneButtons();
+	    if (job.status === 'done') {
+	      activeJobId = null;
+	      activeJobSceneId = '';
+	      activeSceneStatus = {exists: true, scene_id: job.scene_id, viewer_url: job.viewer_url};
+	      refreshJobManager();
+	      updateSceneButtons();
+	      return;
+	    }
+	    if (job.status === 'error' || job.status === 'stale') {
+	      activeJobId = null;
+	      activeJobSceneId = '';
+	      refreshJobManager();
+	      updateSceneButtons();
+	      return;
+	    }
+  } catch (err) {
+    g('reconStatus').textContent = err.message;
+  }
+  clearTimeout(jobPollTimer);
+  jobPollTimer = setTimeout(pollSceneJob, 2000);
+}
+
+function openScene() {
+  if (!activeSceneStatus || !activeSceneStatus.exists) return;
+  window.open(`${API_BASE}${activeSceneStatus.viewer_url}`, '_blank', 'noopener');
+}
+
+function browseScenes() {
+  window.open(`${API_BASE}/scenes/`, '_blank', 'noopener');
+}
+
+function openSceneDialog() {
+  if (!current) return;
+  renderReconstructionPanel();
+  g('sceneDialog').showModal();
+  refreshJobManager({reattach: true});
+  updateCropBoxOverlay();
+}
+
+function closeSceneDialog() {
+  stopScenePreview();
+  g('sceneDialog').close();
+  updateCropBoxOverlay();
+}
+
+function playSceneSegments(segments) {
+  if (!current || !segments.length) return;
+  scenePreviewQueue = segments
+    .filter(seg => Number.isFinite(seg.start_s) && Number.isFinite(seg.end_s) && seg.end_s > seg.start_s)
+    .sort((a, b) => a.start_s - b.start_s);
+  if (!scenePreviewQueue.length) return;
+  scenePreviewIndex = 0;
+  g('btnStopScenePreview').disabled = false;
+  seek(scenePreviewQueue[0].start_s);
+  vid.play();
+}
+
+function playSelectedSceneSegments() {
+  playSceneSegments(selectedIntervals());
+}
+
+function stopScenePreview() {
+  scenePreviewQueue = [];
+  scenePreviewIndex = -1;
+  if (g('btnStopScenePreview')) g('btnStopScenePreview').disabled = true;
+  if (!vid.paused) vid.pause();
+}
+
+function onScenePreviewTimeUpdate() {
+  if (scenePreviewIndex < 0 || !scenePreviewQueue.length) return;
+  const active = scenePreviewQueue[scenePreviewIndex];
+  if (vid.currentTime < active.end_s) return;
+  scenePreviewIndex += 1;
+  if (scenePreviewIndex >= scenePreviewQueue.length) {
+    stopScenePreview();
+    seek(active.end_s);
+    return;
+  }
+  seek(scenePreviewQueue[scenePreviewIndex].start_s);
+  vid.play();
+}
+
+// ─────────────────────────────────────────────
+// SAVE / LOAD JSON
+// ─────────────────────────────────────────────
+function annotationPayload() {
+  if (!current) return;
+  const stem = current.video_url.split('/').pop().replace('.mp4','');
+  return {
+    video_file:  stem + '.mp4',
+    video_url:   current.video_url,
+    description: current.description,
+    date:        current.date,
+    town:        current.town,
+    annotated_at: new Date().toISOString(),
+    segments: annotations.map(a => ({
+      time:           parseFloat(a.time.toFixed(3)),
+      time_formatted: fmt(a.time),
+      type:           a.type,
+      label:          (SEG[a.type] || {label:a.type}).label,
+      comment:        a.comment || '',
+    })),
+    exclusion_masks: masks.map(roundMask),
+  };
+}
+
+function downloadAnnotationJSON(data) {
+  const stem = data.video_file.replace('.mp4', '');
+  const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], {type:'application/json'}));
+  const a = document.createElement('a');
+  a.href = url; a.download = stem + '_annotations.json';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// Update the text label of an icon button without clobbering its <svg>.
+function setBtnLabel(btnId, text) {
+  const btn = g(btnId);
+  if (!btn) return;
+  const span = btn.querySelector('span:not(.hdr-status-dot)');
+  if (span) span.textContent = text;
+}
+
+// Save the current annotation to the repo (where the UI reads annotations from).
+async function saveToRepo() {
+  const data = annotationPayload();
+  if (!data) return;
+  g('btnSaveRepo').disabled = true;
+  try {
+    if (location.protocol === 'file:') throw new Error('file mode');
+    const res = await fetch(`${API_BASE}/api/annotations`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    });
+    const payload = await res.json();
+    if (!res.ok) throw new Error(payload.error || 'Failed to save annotation');
+    setBtnLabel('btnSaveRepo', 'Saved');
+    await loadVideoStatuses();
+    setTimeout(() => setBtnLabel('btnSaveRepo', 'Save'), 1200);
+  } catch {
+    setBtnLabel('btnSaveRepo', 'Save failed');
+    alert('Could not save to the repo. Is the tool server running?\nUse Export to download the JSON file instead.');
+    setTimeout(() => setBtnLabel('btnSaveRepo', 'Save'), 1600);
+  } finally {
+    g('btnSaveRepo').disabled = !current;
+  }
+}
+
+// Export the current annotation to a downloaded JSON file.
+function exportJSON() {
+  const data = annotationPayload();
+  if (!data) return;
+  downloadAnnotationJSON(data);
+}
+
+function loadJSON(file) {
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      const idx = VIDEOS.findIndex(v => v.video_url === d.video_url ||
+        v.video_url.endsWith('/' + d.video_file));
+      if (idx !== -1) {
+        g('videoSelect').value = idx;
+        updateVideoPickerButton();
+        loadVideo(VIDEOS[idx]);
+        vid.addEventListener('loadedmetadata', () => {
+          annotations = (d.segments || []).map(s => ({
+            id: Date.now() + Math.random(),
+            time: s.time, type: s.type,
+            comment: s.comment || '', thumb: null,
+          }));
+          masks = normalizeMasks(d.exclusion_masks);
+          renderAnnotations();
+          updateFilmstripMarkers();
+          renderReconstructionPanel();
+          updateMaskOverlay();
+        }, {once: true});
+      } else {
+        alert('Could not find matching video for this annotation file.');
+      }
+    } catch(err) { alert('Failed to parse JSON: ' + err.message); }
+  };
+  r.readAsText(file);
+}
+
+// ─────────────────────────────────────────────
+// CONTROLS ENABLE / DISABLE
+// ─────────────────────────────────────────────
+function setControlsEnabled(on) {
+  ['btnStart','btnJBack','btnPrev','btnPlay','btnNext','btnJFwd','btnEnd','btnMark']
+    .forEach(id => { g(id).disabled = !on; });
+  g('timeSlider').disabled = !on;
+}
+
+// ─────────────────────────────────────────────
+// EVENT LISTENERS
+// ─────────────────────────────────────────────
+function markAs(type) {
+  g('segType').value = type;
+  markSegment();
+}
+
+function bindEvents() {
+  // Video selector
+  g('videoSelect').addEventListener('change', e => {
+    const v = VIDEOS[e.target.value];
+    updateVideoPickerButton();
+    if (v) loadVideo(v);
+  });
+  g('videoPickerButton').addEventListener('click', toggleVideoPicker);
+  document.addEventListener('click', e => {
+    if (!g('videoPicker').contains(e.target)) closeVideoPicker();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeVideoPicker();
+  });
+
+  // Video events
+  vid.addEventListener('loadedmetadata', () => {
+    setControlsEnabled(true);
+    g('btnSaveRepo').disabled = false;
+    g('btnExport').disabled = false;
+    onTimeUpdate();
+    renderReconstructionPanel();
+    updateCropBoxOverlay();
+    updateMaskOverlay();
+    generateFilmstrip();
+    refreshJobManager();
+  });
+  vid.addEventListener('loadeddata', () => { updateCropBoxOverlay(); updateMaskOverlay(); });
+  vid.addEventListener('timeupdate', () => {
+    onTimeUpdate();
+    onScenePreviewTimeUpdate();
+  });
+  vid.addEventListener('play',  () => { g('btnPlay').innerHTML = '&#9646;&#9646;'; });
+  vid.addEventListener('pause', () => { g('btnPlay').innerHTML = '&#9654;'; });
+  vid.addEventListener('ended', () => { g('btnPlay').innerHTML = '&#9654;'; });
+
+  // Playback buttons
+  g('btnPlay').addEventListener('click', togglePlay);
+  g('btnStart').addEventListener('click', () => seek(0));
+  g('btnEnd').addEventListener('click',   () => seek(vid.duration));
+  g('btnPrev').addEventListener('click',  () => step(-1));
+  g('btnNext').addEventListener('click',  () => step(1));
+  g('btnJBack').addEventListener('click', () => step(-10));
+  g('btnJFwd').addEventListener('click',  () => step(10));
+
+  // Time slider
+  g('timeSlider').addEventListener('input', e => {
+    seek((e.target.value / 10000) * vid.duration);
+  });
+
+  // Filmstrip click + drag to scrub. fsIn is what scrolls inside fsCon, so its
+  // getBoundingClientRect().left already reflects the scroll offset -- mapping the
+  // pointer straight against it (no extra scrollLeft) matches the playhead cursor,
+  // which is positioned at (cur/dur)*scrollWidth.
+  const fsTimeFromEvent = e => {
+    const rect = fsIn.getBoundingClientRect();
+    const x = Math.max(0, Math.min(e.clientX - rect.left, fsIn.scrollWidth));
+    return (x / fsIn.scrollWidth) * (vid.duration || 0);
+  };
+  let fsScrubbing = false;
+  fsCon.addEventListener('pointerdown', e => {
+    if (!vid.duration) return;
+    fsScrubbing = true;
+    try { fsCon.setPointerCapture(e.pointerId); } catch (_) {}
+    seek(fsTimeFromEvent(e));
+    e.preventDefault();
+  });
+  fsCon.addEventListener('pointermove', e => {
+    if (fsScrubbing && vid.duration) seek(fsTimeFromEvent(e));
+  });
+  const endFsScrub = () => { fsScrubbing = false; };
+  fsCon.addEventListener('pointerup', endFsScrub);
+  fsCon.addEventListener('pointercancel', endFsScrub);
+
+  // Segment controls
+  g('btnMark').addEventListener('click', markSegment);
+  g('segComment').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); markSegment(); }
+  });
+
+  // Save (repo) / import / export
+  g('btnSaveRepo').addEventListener('click', saveToRepo);
+  g('btnExport').addEventListener('click', exportJSON);
+  g('btnImport').addEventListener('click', () => g('jsonFile').click());
+  g('jsonFile').addEventListener('change', e => {
+    if (e.target.files[0]) { loadJSON(e.target.files[0]); e.target.value = ''; }
+  });
+
+  // Jobs window
+  g('btnJobs').addEventListener('click', openJobsDialog);
+  g('btnViewJobs').addEventListener('click', openJobsDialog);
+  g('btnCloseJobsDialog').addEventListener('click', () => g('jobsDialog').close());
+  // Keep the header jobs status live even when the dialog is closed.
+  setInterval(() => { if (current) refreshJobManager(); }, 5000);
+
+  // 3D scene reconstruction
+  g('btnCreateScene').addEventListener('click', openSceneDialog);
+  g('btnCloseSceneDialog').addEventListener('click', closeSceneDialog);
+  g('sceneDialog').addEventListener('close', () => {
+    stopScenePreview();
+    updateCropBoxOverlay();
+  });
+  g('btnPlaySelectedScene').addEventListener('click', playSelectedSceneSegments);
+  g('btnStopScenePreview').addEventListener('click', stopScenePreview);
+  g('btnRunScene').addEventListener('click', runSceneJob);
+  g('btnOpenScene').addEventListener('click', openScene);
+  g('btnBrowseScenes').addEventListener('click', browseScenes);
+  g('btnRefreshJobs').addEventListener('click', () => refreshJobManager({reattach: true}));
+  g('sceneSampleFps').addEventListener('input', updateSceneImageCount);
+  ['sceneSampleFps','sceneDefaultScale','sceneCropPreset','sceneWidth'].forEach(id => {
+    g(id).addEventListener('change', () => {
+      updateSceneImageCount();
+      updateCropBoxOverlay();
+      refreshSceneStatus();
+    });
+  });
+  window.addEventListener('resize', () => { updateCropBoxOverlay(); updateMaskOverlay(); });
+  // Exclusion masks
+  bindMaskEvents();
+  g('btnMaskMode').addEventListener('click', () => setMaskMode(!maskMode));
+  g('btnMaskClear').addEventListener('click', () => { masks = []; maskDraft = null; renderMasks(); });
+  g('maskShape').addEventListener('change', () => { maskDraft = null; renderMasks(); });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    const tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+    switch(e.key) {
+      case ' ':          e.preventDefault(); if (current) togglePlay(); break;
+      case 'ArrowLeft':  e.preventDefault(); if (current) step(e.shiftKey ? -10 : -1); break;
+      case 'ArrowRight': e.preventDefault(); if (current) step(e.shiftKey ?  10 :  1); break;
+      case 'Home':       e.preventDefault(); if (current) seek(0); break;
+      case 'End':        e.preventDefault(); if (current) seek(vid.duration); break;
+      case 'm': case 'M': markSegment(); break;
+      case 'b': case 'B': markAs('banner_start'); break;
+      case 'f': case 'F': markAs('flight_start'); break;
+      case 'n': case 'N': markAs('new_flight_start'); break;
+      case 'p': case 'P': markAs('pause_start'); break;
+      case 'r': case 'R': markAs('replay_start'); break;
+      case 'e': case 'E': markAs('end'); break;
+      case 'o': case 'O': markAs('other'); break;
+    }
+  });
+}
+
+// Run init last, once every top-level declaration above has been initialized.
+init();
+</script>
+</body>
+</html>

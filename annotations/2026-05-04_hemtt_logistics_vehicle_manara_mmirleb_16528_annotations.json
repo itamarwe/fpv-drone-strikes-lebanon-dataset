@@ -1,0 +1,31 @@
+{
+  "video_file": "2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528.mp4",
+  "description": "HEMTT logistics vehicle, Manara site (Ababil dive drone)",
+  "date": "2026-05-04",
+  "town": "Manara",
+  "annotated_at": "2026-07-03T12:43:18Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 7.99,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 42.771,
+      "time_formatted": "0:42.8",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

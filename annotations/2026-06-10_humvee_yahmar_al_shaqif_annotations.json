@@ -1,0 +1,66 @@
+{
+  "video_file": "2026-06-10_humvee_yahmar_al_shaqif.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-10_humvee_yahmar_al_shaqif.mp4",
+  "description": "Military Hummer, eastern outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+  "date": "2026-06-10",
+  "town": "Yahmor al-Shaqif",
+  "annotated_at": "2026-06-27T10:57:42.261Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 7.933,
+      "time_formatted": "0:07.9",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 21.033,
+      "time_formatted": "0:21.0",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 21.733,
+      "time_formatted": "0:21.7",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 32.9,
+      "time_formatted": "0:32.9",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 38.067,
+      "time_formatted": "0:38.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 42.033,
+      "time_formatted": "0:42.0",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

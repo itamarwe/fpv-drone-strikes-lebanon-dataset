@@ -1,0 +1,87 @@
+{
+  "video_file": "2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154.mp4",
+  "description": "Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+  "date": "2026-05-28",
+  "town": "Zawtar al-Sharqiyah",
+  "annotated_at": "2026-07-03T12:07:22Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.063,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 17.757,
+      "time_formatted": "0:17.8",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 17.79,
+      "time_formatted": "0:17.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 20.133,
+      "time_formatted": "0:20.1",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 21.833,
+      "time_formatted": "0:21.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 35.448,
+      "time_formatted": "0:35.4",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 37.348,
+      "time_formatted": "0:37.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 40.339,
+      "time_formatted": "0:40.3",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 41.906,
+      "time_formatted": "0:41.9",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 43.259,
+      "time_formatted": "0:43.3",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "video_file": "2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif.mp4",
+  "description": "Israeli army vehicles, outskirts of Yohmor al-Shaqif (Ababil dive drones)",
+  "date": "2026-06-08",
+  "town": "Yahmor al-Shaqif",
+  "annotated_at": "2026-06-27T11:01:33.377Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 20.167,
+      "time_formatted": "0:20.2",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 23.033,
+      "time_formatted": "0:23.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 24.633,
+      "time_formatted": "0:24.6",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "video_file": "2026-05-27_merkava_tank_on_military_route.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_merkava_tank_on_military_route.mp4",
+  "description": "Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+  "date": "2026-05-27",
+  "town": "Zawtar al-Sharqiyah",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.72,
+      "time_formatted": "0:00.7",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 76.84,
+      "time_formatted": "1:16.8",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 114.96,
+      "time_formatted": "1:55.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 132.04,
+      "time_formatted": "2:12.0",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 133.52,
+      "time_formatted": "2:13.5",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 138.52,
+      "time_formatted": "2:18.5",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 140,
+      "time_formatted": "2:20.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 142.2,
+      "time_formatted": "2:22.2",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 143.6,
+      "time_formatted": "2:23.6",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 144.68,
+      "time_formatted": "2:24.7",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 145.44,
+      "time_formatted": "2:25.4",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 145.8,
+      "time_formatted": "2:25.8",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    }
+  ]
+}

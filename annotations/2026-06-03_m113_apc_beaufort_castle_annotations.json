@@ -1,0 +1,59 @@
+{
+  "video_file": "2026-06-03_m113_apc_beaufort_castle.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_m113_apc_beaufort_castle.mp4",
+  "description": "Troop carrier, vicinity of Beaufort Castle (Ababil dive drone)",
+  "date": "2026-06-03",
+  "town": "Beaufort Castle",
+  "annotated_at": "2026-07-03T10:55:04Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 19.467,
+      "time_formatted": "0:19.5",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 20.167,
+      "time_formatted": "0:20.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 24.6,
+      "time_formatted": "0:24.6",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 29.833,
+      "time_formatted": "0:29.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 38.827,
+      "time_formatted": "0:38.8",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

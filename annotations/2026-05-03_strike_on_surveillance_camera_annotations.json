@@ -1,0 +1,87 @@
+{
+  "video_file": "2026-05-03_strike_on_surveillance_camera.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-03_strike_on_surveillance_camera.mp4",
+  "description": "Observation and surveillance camera, al-Bayyada (dive drone)",
+  "date": "2026-05-03",
+  "town": "Al Bayada / Bayyadah",
+  "annotated_at": "2026-07-03T12:41:49Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.073,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 12.107,
+      "time_formatted": "0:12.1",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 12.773,
+      "time_formatted": "0:12.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 16.507,
+      "time_formatted": "0:16.5",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 17.173,
+      "time_formatted": "0:17.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 20.807,
+      "time_formatted": "0:20.8",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 21.44,
+      "time_formatted": "0:21.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 39.64,
+      "time_formatted": "0:39.6",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 44.607,
+      "time_formatted": "0:44.6",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 56.007,
+      "time_formatted": "0:56.0",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

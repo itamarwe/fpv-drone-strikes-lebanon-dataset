@@ -1,0 +1,52 @@
+{
+  "video_file": "2026-06-08_command_and_control_vehicle_beaufort_castle.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-08_command_and_control_vehicle_beaufort_castle.mp4",
+  "description": "Command-and-control vehicle, outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+  "date": "2026-06-08",
+  "town": "Yahmor al-Shaqif",
+  "annotated_at": "2026-06-27T11:02:23.993Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 20.9,
+      "time_formatted": "0:20.9",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 24.7,
+      "time_formatted": "0:24.7",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 26.533,
+      "time_formatted": "0:26.5",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "video_file": "2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16118.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16118.mp4",
+  "description": "Israeli army soldier, vicinity of Khirbet al-Manara site (dive drone)",
+  "date": "2026-05-12",
+  "town": "Manara",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.72,
+      "time_formatted": "0:00.7",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 32.24,
+      "time_formatted": "0:32.2",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 37.12,
+      "time_formatted": "0:37.1",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 49.04,
+      "time_formatted": "0:49.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 50.64,
+      "time_formatted": "0:50.6",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 51.28,
+      "time_formatted": "0:51.3",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 51.64,
+      "time_formatted": "0:51.6",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 52.2,
+      "time_formatted": "0:52.2",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    }
+  ]
+}

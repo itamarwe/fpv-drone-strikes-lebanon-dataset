@@ -1,0 +1,52 @@
+{
+  "video_file": "2026-06-07_merkava_tank_beaufort_castle.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-07_merkava_tank_beaufort_castle.mp4",
+  "description": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+  "date": "2026-06-07",
+  "town": "Beaufort Castle",
+  "annotated_at": "2026-06-27T11:04:38.292Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 28.367,
+      "time_formatted": "0:28.4",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 31.5,
+      "time_formatted": "0:31.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 33.1,
+      "time_formatted": "0:33.1",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "video_file": "2026-05-03_company_commander_tank_bayyadah_mmirleb_16007.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-03_company_commander_tank_bayyadah_mmirleb_16007.mp4",
+  "description": "Armored-company commander's tank, al-Bayyada (dive drone)",
+  "date": "2026-05-03",
+  "town": "Al Bayada / Bayyadah",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.72,
+      "time_formatted": "0:00.7",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8,
+      "time_formatted": "0:08.0",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 20.96,
+      "time_formatted": "0:21.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 31.88,
+      "time_formatted": "0:31.9",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 36.88,
+      "time_formatted": "0:36.9",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 39.72,
+      "time_formatted": "0:39.7",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 41.56,
+      "time_formatted": "0:41.6",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 41.92,
+      "time_formatted": "0:41.9",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 48.36,
+      "time_formatted": "0:48.4",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 49.36,
+      "time_formatted": "0:49.4",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    }
+  ]
+}

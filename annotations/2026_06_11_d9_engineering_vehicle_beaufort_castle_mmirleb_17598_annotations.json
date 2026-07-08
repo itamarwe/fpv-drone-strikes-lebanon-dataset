@@ -1,0 +1,107 @@
+{
+  "video_file": "2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.mp4",
+  "description": "D9 engineering vehicle, vicinity of Beaufort Castle (Ababil dive drone)",
+  "date": "2026-06-11",
+  "town": "Beaufort Castle",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.72,
+      "time_formatted": "0:00.7",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8,
+      "time_formatted": "0:08.0",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 19.84,
+      "time_formatted": "0:19.8",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 32.32,
+      "time_formatted": "0:32.3",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 43.16,
+      "time_formatted": "0:43.2",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 44.32,
+      "time_formatted": "0:44.3",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 45.72,
+      "time_formatted": "0:45.7",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 46.16,
+      "time_formatted": "0:46.2",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 59.68,
+      "time_formatted": "0:59.7",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 60.32,
+      "time_formatted": "1:00.3",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 60.68,
+      "time_formatted": "1:00.7",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "video_file": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492.mp4",
+  "description": "Troop carrier, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+  "date": "2026-06-03",
+  "town": "Zawtar al-Sharqiyah",
+  "annotated_at": "2026-07-03T10:51:24Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.06,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 12.633,
+      "time_formatted": "0:12.6",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 13.3,
+      "time_formatted": "0:13.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 18.9,
+      "time_formatted": "0:18.9",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 19.633,
+      "time_formatted": "0:19.6",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 30.9,
+      "time_formatted": "0:30.9",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 35.567,
+      "time_formatted": "0:35.6",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 37.72,
+      "time_formatted": "0:37.7",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    }
+  ]
+}

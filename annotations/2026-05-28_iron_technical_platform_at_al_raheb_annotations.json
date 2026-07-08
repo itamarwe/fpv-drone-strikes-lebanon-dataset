@@ -1,0 +1,73 @@
+{
+  "video_file": "2026-05-28_iron_technical_platform_at_al_raheb.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-28_iron_technical_platform_at_al_raheb.mp4",
+  "description": "Iron technical platform at al raheb",
+  "date": "2026-05-28",
+  "town": "Khiam",
+  "annotated_at": "2026-07-03T12:03:57Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.074,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 12.088,
+      "time_formatted": "0:12.1",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 12.821,
+      "time_formatted": "0:12.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 16.521,
+      "time_formatted": "0:16.5",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 17.188,
+      "time_formatted": "0:17.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 23.358,
+      "time_formatted": "0:23.4",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 28.358,
+      "time_formatted": "0:28.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 35.058,
+      "time_formatted": "0:35.1",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

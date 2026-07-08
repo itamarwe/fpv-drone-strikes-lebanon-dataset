@@ -1,0 +1,73 @@
+{
+  "video_file": "2026-06-03_humvee_zawtar_al_sharqiyah.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-03_humvee_zawtar_al_sharqiyah.mp4",
+  "description": "Military Hummer, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+  "date": "2026-06-03",
+  "town": "Zawtar al-Sharqiyah",
+  "annotated_at": "2026-07-03T10:56:49Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 14.233,
+      "time_formatted": "0:14.2",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 14.967,
+      "time_formatted": "0:15.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 22.533,
+      "time_formatted": "0:22.5",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 23.3,
+      "time_formatted": "0:23.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 33.333,
+      "time_formatted": "0:33.3",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 38.433,
+      "time_formatted": "0:38.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 39.933,
+      "time_formatted": "0:39.9",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

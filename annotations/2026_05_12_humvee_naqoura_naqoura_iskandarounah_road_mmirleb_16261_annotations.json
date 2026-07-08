@@ -1,0 +1,107 @@
+{
+  "video_file": "2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.mp4",
+  "description": "Humvee on the Naqoura-Iskandaroun road (dive drone)",
+  "date": "2026-05-12",
+  "town": "Naqoura",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.72,
+      "time_formatted": "0:00.7",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 20.76,
+      "time_formatted": "0:20.8",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 24.88,
+      "time_formatted": "0:24.9",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 47.4,
+      "time_formatted": "0:47.4",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 47.92,
+      "time_formatted": "0:47.9",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 48.84,
+      "time_formatted": "0:48.8",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 59.24,
+      "time_formatted": "0:59.2",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 59.8,
+      "time_formatted": "0:59.8",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 60.28,
+      "time_formatted": "1:00.3",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 61.28,
+      "time_formatted": "1:01.3",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "video_file": "2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586.mp4",
+  "description": "\"Namera\" troop carrier, newly established Hamamis Hill site opposite Khiam (Ababil dive drone)",
+  "date": "2026-06-13",
+  "town": "Khiam",
+  "annotated_at": "2026-06-27T10:37:29.388Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 39.567,
+      "time_formatted": "0:39.6",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "video_file": "2026-05-01_strike_on_soldiers.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-01_strike_on_soldiers.mp4",
+  "description": "Israeli army soldiers, al-Bayyada (dive drone)",
+  "date": "2026-05-01",
+  "town": "Al Bayada / Bayyadah",
+  "annotated_at": "2026-07-04T06:38:47Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.064,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 43.28,
+      "time_formatted": "0:43.3",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 50.48,
+      "time_formatted": "0:50.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 53.08,
+      "time_formatted": "0:53.1",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 57.926,
+      "time_formatted": "0:57.9",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 59.253,
+      "time_formatted": "0:59.3",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ],
+  "exclusion_masks": [
+    {
+      "type": "rect",
+      "x": 0.79,
+      "y": 0.513,
+      "w": 0.21,
+      "h": 0.285
+    },
+    {
+      "type": "rect",
+      "x": 0.076,
+      "y": 0.697,
+      "w": 0.059,
+      "h": 0.133
+    },
+    {
+      "type": "rect",
+      "x": 0.002,
+      "y": 0,
+      "w": 0.341,
+      "h": 0.459
+    },
+    {
+      "type": "rect",
+      "x": 0.656,
+      "y": 0.005,
+      "w": 0.344,
+      "h": 0.502
+    },
+    {
+      "type": "rect",
+      "x": 0.346,
+      "y": 0.01,
+      "w": 0.31,
+      "h": 0.213
+    },
+    {
+      "type": "rect",
+      "x": 0.458,
+      "y": 0.543,
+      "w": 0.08,
+      "h": 0.083
+    }
+  ]
+}

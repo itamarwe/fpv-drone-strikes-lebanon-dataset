@@ -1,0 +1,73 @@
+{
+  "video_file": "2026-05-31_namer_vehicle_and_apc_in_dibel.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-31_namer_vehicle_and_apc_in_dibel.mp4",
+  "description": "\"Namera\" vehicle and troop carrier, Dibel (Ababil dive drone)",
+  "date": "2026-05-31",
+  "town": "Dibel / Debel",
+  "annotated_at": "2026-07-03T11:54:46Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.085,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 16.785,
+      "time_formatted": "0:16.8",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 21.985,
+      "time_formatted": "0:22.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 44.485,
+      "time_formatted": "0:44.5",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    },
+    {
+      "time": 53.819,
+      "time_formatted": "0:53.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 75.385,
+      "time_formatted": "1:15.4",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 83.252,
+      "time_formatted": "1:23.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 86.352,
+      "time_formatted": "1:26.4",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

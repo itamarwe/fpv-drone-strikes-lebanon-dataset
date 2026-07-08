@@ -1,0 +1,80 @@
+{
+  "video_file": "2026-06-11_merkava_tank_tayr_harfa_ababil_drone.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.mp4",
+  "description": "Merkava tank, Tayr Harfa (Ababil dive drone)",
+  "date": "2026-06-11",
+  "town": "Tayr Harfa",
+  "annotated_at": "2026-06-27T10:52:56.394Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 13.967,
+      "time_formatted": "0:14.0",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 19.033,
+      "time_formatted": "0:19.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 23.567,
+      "time_formatted": "0:23.6",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 24.167,
+      "time_formatted": "0:24.2",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 29.3,
+      "time_formatted": "0:29.3",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 34.3,
+      "time_formatted": "0:34.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 37.7,
+      "time_formatted": "0:37.7",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

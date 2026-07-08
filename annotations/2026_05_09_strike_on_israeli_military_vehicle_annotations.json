@@ -1,0 +1,115 @@
+{
+  "video_file": "2026-05-09_strike_on_israeli_military_vehicle.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_israeli_military_vehicle.mp4",
+  "description": "Military vehicle, Khallet al-Raj in Deir Siryan (dive drone)",
+  "date": "2026-05-09",
+  "town": "Deir Seryan / Khallet al-Raj",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.76,
+      "time_formatted": "0:00.8",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8.04,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 31.8,
+      "time_formatted": "0:31.8",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 36.04,
+      "time_formatted": "0:36.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 47.56,
+      "time_formatted": "0:47.6",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 48.84,
+      "time_formatted": "0:48.8",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 53.16,
+      "time_formatted": "0:53.2",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 59.84,
+      "time_formatted": "0:59.8",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 73.04,
+      "time_formatted": "1:13.0",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 73.8,
+      "time_formatted": "1:13.8",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 74.32,
+      "time_formatted": "1:14.3",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 75.32,
+      "time_formatted": "1:15.3",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    }
+  ]
+}

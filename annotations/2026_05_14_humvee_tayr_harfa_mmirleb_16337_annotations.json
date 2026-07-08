@@ -1,0 +1,107 @@
+{
+  "video_file": "2026-05-14_humvee_tayr_harfa_mmirleb_16337.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-14_humvee_tayr_harfa_mmirleb_16337.mp4",
+  "description": "Military Hummer, Tayr Harfa (dive drone)",
+  "date": "2026-05-14",
+  "town": "Tayr Harfa",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.72,
+      "time_formatted": "0:00.7",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 12.4,
+      "time_formatted": "0:12.4",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 22.72,
+      "time_formatted": "0:22.7",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 27.44,
+      "time_formatted": "0:27.4",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 31.24,
+      "time_formatted": "0:31.2",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 33.92,
+      "time_formatted": "0:33.9",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 42.08,
+      "time_formatted": "0:42.1",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 42.68,
+      "time_formatted": "0:42.7",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 43.08,
+      "time_formatted": "0:43.1",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 43.92,
+      "time_formatted": "0:43.9",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    }
+  ]
+}

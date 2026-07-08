@@ -1,0 +1,52 @@
+{
+  "video_file": "2026-06-05_humvee_near_khiam.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-05_humvee_near_khiam.mp4",
+  "description": "Humvee carrying Israeli army soldiers, city of Khiam (Ababil dive drone)",
+  "date": "2026-06-05",
+  "town": "Khiam",
+  "annotated_at": "2026-06-27T11:15:00.610Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.067,
+      "time_formatted": "0:00.1",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 23.333,
+      "time_formatted": "0:23.3",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 26.858,
+      "time_formatted": "0:26.9",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 28.492,
+      "time_formatted": "0:28.5",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

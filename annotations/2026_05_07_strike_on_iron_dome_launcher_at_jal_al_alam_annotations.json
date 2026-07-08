@@ -1,0 +1,131 @@
+{
+  "video_file": "2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.mp4",
+  "description": "Iron Dome platform and its crew, Jal al-Alam site (two dive drones)",
+  "date": "2026-05-07",
+  "town": "Border Israel opposite Alma al-Shaab",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.76,
+      "time_formatted": "0:00.8",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8.04,
+      "time_formatted": "0:08.0",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 37.32,
+      "time_formatted": "0:37.3",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 42.12,
+      "time_formatted": "0:42.1",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 44.48,
+      "time_formatted": "0:44.5",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 45.64,
+      "time_formatted": "0:45.6",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 55.24,
+      "time_formatted": "0:55.2",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 73.04,
+      "time_formatted": "1:13.0",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 79.72,
+      "time_formatted": "1:19.7",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 80.62,
+      "time_formatted": "1:20.6",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 84.52,
+      "time_formatted": "1:24.5",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 86.8,
+      "time_formatted": "1:26.8",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 93.68,
+      "time_formatted": "1:33.7",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 94.68,
+      "time_formatted": "1:34.7",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    }
+  ]
+}

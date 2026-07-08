@@ -1,0 +1,45 @@
+{
+  "video_file": "2026-06-01_merkava_tank_near_yahmor_al_shqif.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-01_merkava_tank_near_yahmor_al_shqif.mp4",
+  "description": "Merkava tank, southern outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+  "date": "2026-06-01",
+  "town": "Yahmor al-Shaqif",
+  "annotated_at": "2026-07-03T11:49:48Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 23.207,
+      "time_formatted": "0:23.2",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 26.173,
+      "time_formatted": "0:26.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 27.433,
+      "time_formatted": "0:27.4",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

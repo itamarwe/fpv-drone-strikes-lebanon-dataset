@@ -1,0 +1,66 @@
+{
+  "video_file": "2026-06-09_namer_apc_metula_southern_outskirts_khiam.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-06-09_namer_apc_metula_southern_outskirts_khiam.mp4",
+  "description": "\"Namera\" vehicle, city of Khiam (Ababil dive drone)",
+  "date": "2026-06-09",
+  "town": "Khiam",
+  "annotated_at": "2026-06-27T11:00:26.411Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 0.5,
+      "time_formatted": "0:00.5",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.367,
+      "time_formatted": "0:08.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 20.1,
+      "time_formatted": "0:20.1",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 20.767,
+      "time_formatted": "0:20.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 30.533,
+      "time_formatted": "0:30.5",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 35.567,
+      "time_formatted": "0:35.6",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 40.233,
+      "time_formatted": "0:40.2",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

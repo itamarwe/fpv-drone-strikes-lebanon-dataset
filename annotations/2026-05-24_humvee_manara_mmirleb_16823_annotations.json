@@ -1,0 +1,59 @@
+{
+  "video_file": "2026-05-24_humvee_manara_mmirleb_16823.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-24_humvee_manara_mmirleb_16823.mp4",
+  "description": "Command Hummer vehicle, Manara site (Ababil dive drone)",
+  "date": "2026-05-24",
+  "town": "Manara",
+  "annotated_at": "2026-07-03T12:21:57Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 16.1,
+      "time_formatted": "0:16.1",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 16.8,
+      "time_formatted": "0:16.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 30.6,
+      "time_formatted": "0:30.6",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 33.1,
+      "time_formatted": "0:33.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 35.134,
+      "time_formatted": "0:35.1",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "video_file": "2026-05-27_enemy_vehicle_in_northern_settlement.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-27_enemy_vehicle_in_northern_settlement.mp4",
+  "description": "Israeli army vehicle, Galilee Forests camp (Ababil dive drone)",
+  "date": "2026-05-27",
+  "town": "Shomera",
+  "annotated_at": "2026-07-03T12:12:38Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": ""
+    },
+    {
+      "time": 8.054,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 10.887,
+      "time_formatted": "0:10.9",
+      "type": "other",
+      "label": "Other",
+      "comment": ""
+    },
+    {
+      "time": 11.52,
+      "time_formatted": "0:11.5",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 24.437,
+      "time_formatted": "0:24.4",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": ""
+    },
+    {
+      "time": 29.22,
+      "time_formatted": "0:29.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": ""
+    },
+    {
+      "time": 36.62,
+      "time_formatted": "0:36.6",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": ""
+    }
+  ]
+}
