@@ -1,16 +1,16 @@
 __pycache__/
 *.pyc
 
-# Local reconstruction outputs can be large; keep them out of Git by default.
+# Local reconstruction outputs are large; S3/CloudFront is their home
+# (tools/publish_web.sh uploads them). Keep them out of git.
 scenes/
+scene_archive/
 
-# Next.js FPV tool app (synced assets + build output)
-apps/fpv-tool/node_modules/
-apps/fpv-tool/.next/
-apps/fpv-tool/next-env.d.ts
-apps/fpv-tool/public/tools/
-apps/fpv-tool/public/annotate/
-apps/fpv-tool/public/scenes/
+# Generated web artifacts (thumbnails, videos.json) — published to S3.
+build/
+
+# Node deps for the publish tooling
+node_modules/
 
 # Secrets / local env
 .env
@@ -21,8 +21,3 @@ apps/fpv-tool/public/scenes/
 tools/e2e/node_modules/
 tools/e2e/test-results/
 tools/e2e/playwright-report/
-
-
-# archived experiment scenes (local only)
-scene_archive/
-apps/fpv-tool/public/thumbnails/

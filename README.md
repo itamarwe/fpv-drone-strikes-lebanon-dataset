@@ -6,10 +6,50 @@ An interactive map view is available in [index.html](index.html). It is backed b
 
 ## Storage
 
-- Bucket: `s3://fpv-drone-strikes-lebanon-dataset`
+- Bucket: `s3://fpv-drone-strikes-lebanon-dataset` (served via CloudFront at `https://d2fioemadmrru3.cloudfront.net`)
 - Video prefix: `videos/`
-- Thumbnail prefix: `thumbnails/`
-- Video count: 161 MP4 files
+- Thumbnail prefixes: `thumbnails/` (source JPGs), `thumbnails/<slug>/<width>.webp` (generated responsive set)
+- 3D scene prefix: `scenes/<video-slug>/<scene-id>/viewer/`
+- Published annotations: `annotations/`
+- Web app manifest: `data/videos.json`
+
+## Repository layout
+
+| Path | What it is |
+| --- | --- |
+| `README.md`, `geo/`, `*.tsv` | Video references, locations, and provenance metadata |
+| `annotations/` | Flight annotations per video (source of truth, published to S3) |
+| `tools/annotator.html` | Video annotation tool (served locally by `tools/fpv_tool_server.py`) |
+| `tools/scene_viewer/` | 3D scene viewer + measurement tool (same local server) |
+| `tools/*.py` | Reconstruction pipeline (frame extraction, VGGT-Omega, scene generation) |
+| `tools/gen_thumbnails.mjs`, `tools/build_web_data.mjs`, `tools/publish_web.sh` | Web publishing tooling |
+| `scenes/` (gitignored) | Local reconstruction outputs; their public home is S3 |
+
+The local tools run with:
+
+```bash
+python tools/fpv_tool_server.py --host 127.0.0.1 --port 8766
+# annotator:     http://127.0.0.1:8766/tools/annotator.html
+# scene browser: http://127.0.0.1:8766/tools/scene_browser.html
+```
+
+The public read-only viewer at [itamarweiss.com/fpv](https://itamarweiss.com/fpv/) lives in the
+[itamarwe.github.io](https://github.com/itamarwe/itamarwe.github.io) repo and reads
+everything from CloudFront at runtime.
+
+## Updating the website data
+
+Whenever annotations change, videos are added/removed, or new scenes are
+reconstructed, publish to S3 (requires AWS credentials for the bucket):
+
+```bash
+npm install        # once, for the thumbnail generator
+npm run publish-web        # thumbnails + scenes + annotations + data manifest
+npm run publish-web:fast   # skip scene uploads (annotation/list changes only)
+```
+
+The manifest (`data/videos.json`) is cached for 5 minutes, so changes appear on
+the site within minutes — no deploy of the website is needed.
 
 ## License
 

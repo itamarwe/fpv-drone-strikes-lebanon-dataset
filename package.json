@@ -1,0 +1,14 @@
+{
+  "name": "fpv-drone-strikes-lebanon-dataset",
+  "private": true,
+  "description": "FPV drone strike dataset: video references, annotations, and the annotation/scene tooling. npm scripts here publish the web data consumed by itamarweiss.com/fpv.",
+  "scripts": {
+    "gen-thumbnails": "node tools/gen_thumbnails.mjs",
+    "build-web-data": "node tools/build_web_data.mjs",
+    "publish-web": "tools/publish_web.sh",
+    "publish-web:fast": "tools/publish_web.sh --skip-scenes"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.0"
+  }
+}

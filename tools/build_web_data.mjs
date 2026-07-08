@@ -6,7 +6,7 @@
  *  - tools/annotator.html          -> canonical VIDEOS list (date/description/town/urls)
  *  - annotations/*_annotations.json -> segment markers (manual preferred over auto)
  *  - scenes/<stem>/<sceneId>/viewer/scene_meta.json -> which videos have a 3D scene
- *  - apps/fpv-tool/public/thumbnails/manifest.json  -> responsive thumb widths + blur
+ *  - build/thumbnails/manifest.json  -> responsive thumb widths + blur
  *
  * The output is a single static JSON the app fetches at startup, so production
  * needs no backend: videos play from CloudFront, scenes/thumbnails from
@@ -16,9 +16,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const repoRoot = path.resolve(appRoot, "../..");
-const outFile = path.join(appRoot, "public", "data", "videos.json");
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+const outFile = path.join(repoRoot, "build", "web", "videos.json");
 
 function slugify(value) {
   const stem = value.replace(/\.[^./]+$/, "");
@@ -82,7 +82,7 @@ function buildSceneIndex() {
 function readThumbManifest() {
   try {
     return JSON.parse(
-      fs.readFileSync(path.join(repoRoot, "apps/fpv-tool/public/thumbnails/manifest.json"), "utf8"),
+      fs.readFileSync(path.join(repoRoot, "build/thumbnails/manifest.json"), "utf8"),
     );
   } catch {
     return {};
