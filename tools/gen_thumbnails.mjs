@@ -22,10 +22,10 @@ import sharp from "sharp";
 
 const execFileP = promisify(execFile);
 
-const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const repoRoot = path.resolve(appRoot, "../..");
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
 const annotatorPath = path.join(repoRoot, "tools", "annotator.html");
-const outDir = path.join(appRoot, "public", "thumbnails");
+const outDir = path.join(repoRoot, "build", "thumbnails");
 
 const WIDTHS = [320, 480, 640, 960, 1280]; // mobile 1x/2x, tablet, desktop 1x/2x
 const QUALITY = 78;
