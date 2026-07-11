@@ -23,7 +23,8 @@ cd "$REPO"
 echo "== 1/5 generate thumbnails (incremental) =="
 node tools/gen_thumbnails.mjs
 
-echo "== 2/5 build web data manifest =="
+echo "== 2/5 bake calibration + build web data manifest =="
+node tools/apply_calibration.mjs
 node tools/build_web_data.mjs
 
 echo "== 3/5 upload thumbnails =="
@@ -33,16 +34,19 @@ aws s3 sync build/thumbnails/ "$BUCKET/thumbnails/" \
   --cache-control "public,max-age=31536000,immutable"
 
 if [ "$SKIP_SCENES" = "0" ]; then
-  echo "== 4/5 upload scene viewer data =="
+  echo "== 4/5 upload scene viewer data (incremental, base only) =="
   for d in scenes/*/*/viewer; do
     [ -f "$d/scene_meta.json" ] || continue
-    aws s3 cp "$d/scene_meta.json" "$BUCKET/$d/" \
+    # Production ships base reconstructions only; skip density variants.
+    case "$d" in *__*) continue;; esac
+    # sync skips unchanged files (size+mtime), so re-publishing is cheap
+    aws s3 sync "$d/" "$BUCKET/$d/" \
+      --exclude "*" --include "scene_meta.json" \
       --content-type application/json --cache-control "public,max-age=300"
-    for bin in points_positions.bin points_colors.bin; do
-      [ -f "$d/$bin" ] && aws s3 cp "$d/$bin" "$BUCKET/$d/" \
-        --content-type application/octet-stream \
-        --cache-control "public,max-age=31536000"
-    done
+    aws s3 sync "$d/" "$BUCKET/$d/" \
+      --exclude "*" --include "*.bin" \
+      --content-type application/octet-stream \
+      --cache-control "public,max-age=31536000"
     [ -d "$d/camera_view_assets" ] && aws s3 sync "$d/camera_view_assets/" \
       "$BUCKET/$d/camera_view_assets/" \
       --content-type image/jpeg --cache-control "public,max-age=31536000,immutable"
