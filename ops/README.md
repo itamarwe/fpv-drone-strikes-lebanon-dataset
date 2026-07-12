@@ -38,3 +38,15 @@ aws wafv2 update-web-acl --scope CLOUDFRONT --region us-east-1 \
 ```
 
 Tune limits by editing `waf-rules.json` and re-applying.
+
+## Temporary filename redirects
+
+`cloudfront-uri-redirects.js` is associated with the distribution's default
+cache behavior as the `fpv-filename-redirects` viewer-request function. It sends
+HTTP 308 responses for legacy underscore-date annotation URLs and for the
+`barashit` to `biranit` correction.
+
+Retire the function after **2026-10-15**, once old links have had a three-month
+migration window. Before removing it, check CloudFront logs for requests that
+still match either legacy pattern. The migration record is in
+`filename-migration.json`.

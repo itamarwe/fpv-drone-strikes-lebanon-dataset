@@ -1,0 +1,99 @@
+{
+  "video_file": "2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065.mp4",
+  "description": "Newly set-up army tent, Khallet al-Raj in Deir Siryan (dive drone)",
+  "date": "2026-05-09",
+  "town": "Deir Seryan / Khallet al-Raj",
+  "auto_generated": true,
+  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": ""
+    },
+    {
+      "time": 0.72,
+      "time_formatted": "0:00.7",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 8,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 31.72,
+      "time_formatted": "0:31.7",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 36.48,
+      "time_formatted": "0:36.5",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 36.84,
+      "time_formatted": "0:36.8",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_freeze_or_black_transition"
+    },
+    {
+      "time": 47.16,
+      "time_formatted": "0:47.2",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 48.84,
+      "time_formatted": "0:48.8",
+      "type": "flight_start",
+      "source": "auto",
+      "flight_like": true,
+      "comment": "cut:keep_strong_transnet_score"
+    },
+    {
+      "time": 56.32,
+      "time_formatted": "0:56.3",
+      "type": "other",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    },
+    {
+      "time": 57.2,
+      "time_formatted": "0:57.2",
+      "type": "replay_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+    },
+    {
+      "time": 57.6,
+      "time_formatted": "0:57.6",
+      "type": "pause_start",
+      "source": "auto",
+      "flight_like": false,
+      "comment": "cut:keep_blur_transition"
+    }
+  ]
+}

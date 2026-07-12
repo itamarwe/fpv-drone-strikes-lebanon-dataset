@@ -1,0 +1,15 @@
+{
+  "applied_at": "2026-07-12",
+  "redirect_retire_after": "2026-10-15",
+  "renames": [
+    {
+      "old_stem": "2026-05-26_anti_drone_platform_barashit",
+      "new_stem": "2026-05-26_anti_drone_platform_biranit",
+      "reason": "Correct place-name spelling to match the README description and Arabic title"
+    }
+  ],
+  "annotation_rule": {
+    "old": "annotations/YYYY_MM_DD_<slug>_annotations.json",
+    "new": "annotations/YYYY-MM-DD_<slug>_annotations.json"
+  }
+}
