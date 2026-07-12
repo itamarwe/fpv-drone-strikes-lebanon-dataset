@@ -1,4 +1,4 @@
-# OpenClaw FPV ingest handoff
+# FPV ingest instructions
 
 Repository: `itamarwe/fpv-drone-strikes-lebanon-dataset`
 
@@ -42,7 +42,7 @@ npm run dataset:add -- \
   --metadata /path/to/catalog-record.json
 ```
 
-Then open a PR containing the catalog change. OpenClaw must not edit generated
+Then open a PR containing the catalog change. Ingest producers must not edit generated
 README rows, annotator lists, redirects, or the website repository directly.
 The post-merge publisher will generate and publish those views.
 
@@ -61,7 +61,7 @@ The Telegram channel + message ID is the ingestion idempotency key.
 
 ## Annotation and scene stages
 
-OpenClaw only performs discovery and initial media ingestion. Later tools attach
+The ingest producer only performs discovery and initial media ingestion. Later tools attach
 data using the same video ID:
 
 ```bash
