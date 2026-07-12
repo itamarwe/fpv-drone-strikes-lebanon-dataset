@@ -19,6 +19,7 @@ import { fileURLToPath } from "node:url";
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const outFile = path.join(repoRoot, "build", "web", "videos.json");
+const existingManifestFile = path.join(repoRoot, "build", "web", "current-videos.json");
 
 function slugify(value) {
   const stem = value.replace(/\.[^./]+$/, "");
@@ -90,9 +91,23 @@ function readThumbManifest() {
   }
 }
 
+function readExistingVideos() {
+  try {
+    const payload = JSON.parse(fs.readFileSync(existingManifestFile, "utf8"));
+    return new Map((payload.videos ?? []).map((video) => [video.videoFile, video]));
+  } catch {
+    return new Map();
+  }
+}
+
+function previousVideoFile(videoFile) {
+  return videoFile.replace("anti_drone_platform_biranit", "anti_drone_platform_barashit");
+}
+
 const annotations = readAnnotations();
 const sceneIndex = buildSceneIndex();
 const thumbs = readThumbManifest();
+const existingVideos = readExistingVideos();
 
 const seen = new Set();
 const videos = [];
@@ -104,7 +119,9 @@ for (const raw of readAnnotatorVideos()) {
   const slug = slugify(videoFile);
   const ann = annotations.get(videoFile);
   const thumb = thumbs[slug];
-  const scenePath = sceneIndex.get(slug) ?? null;
+  const existing = existingVideos.get(videoFile) ?? existingVideos.get(previousVideoFile(videoFile));
+  const existingScenePath = existing?.scenePath?.replaceAll("barashit", "biranit") ?? null;
+  const scenePath = sceneIndex.get(slug) ?? existingScenePath;
   videos.push({
     videoFile,
     slug,
@@ -113,8 +130,8 @@ for (const raw of readAnnotatorVideos()) {
     town: (raw.town ?? "").trim(),
     videoUrl,
     thumbnailUrl: (raw.thumbnail_url ?? "").trim(),
-    thumbWidths: thumb?.widths ?? null,
-    blur: thumb?.blurDataURL ?? null,
+    thumbWidths: thumb?.widths ?? existing?.thumbWidths ?? null,
+    blur: thumb?.blurDataURL ?? existing?.blur ?? null,
     scenePath,
     segments: ann?.segments ?? null,
     annotationAuto: ann ? Boolean(ann.auto_generated) : null,

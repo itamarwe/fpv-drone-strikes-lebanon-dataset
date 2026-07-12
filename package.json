@@ -3,6 +3,9 @@
   "private": true,
   "description": "FPV drone strike dataset: video references, annotations, and the annotation/scene tooling. npm scripts here publish the web data consumed by itamarweiss.com/fpv.",
   "scripts": {
+    "audit": "node tools/catalog/audit_catalog.mjs",
+    "check-public": "node tools/catalog/check_public_assets.mjs",
+    "normalize-annotations": "node tools/catalog/normalize_annotations.mjs --apply",
     "gen-thumbnails": "node tools/gen_thumbnails.mjs",
     "apply-calibration": "node tools/apply_calibration.mjs",
     "build-web-data": "node tools/build_web_data.mjs",

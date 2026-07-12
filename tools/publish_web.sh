@@ -25,6 +25,9 @@ node tools/gen_thumbnails.mjs
 
 echo "== 2/5 bake calibration + build web data manifest =="
 node tools/apply_calibration.mjs
+mkdir -p build/web
+curl -fsSL "${FPV_CDN_BASE:-https://d2fioemadmrru3.cloudfront.net}/data/videos.json" \
+  -o build/web/current-videos.json
 node tools/build_web_data.mjs
 
 echo "== 3/5 upload thumbnails =="
