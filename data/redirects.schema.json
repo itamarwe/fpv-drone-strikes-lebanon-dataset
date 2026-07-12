@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FPV dataset redirects",
+  "type": "object",
+  "required": ["schema_version", "redirects"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "redirects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "created_at", "reason"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "created_at": { "type": "string", "format": "date" },
+          "review_after": { "type": "string", "format": "date" },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

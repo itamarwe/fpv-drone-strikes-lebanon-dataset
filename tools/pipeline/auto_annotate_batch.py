@@ -14,9 +14,9 @@ For each chunk of videos this driver runs the full pipeline:
 Videos that already have an annotation file are skipped up front, so a run is
 fully resumable: re-running only processes what is still missing.
 
-The video list + metadata come from the annotator app (tools/annotator.html),
-which registers each video with a description/date/town and a cloudfront
-video_url. Videos that already have a hand or auto annotation are left untouched.
+The video list + metadata come from the generated catalog projection
+(`tools/catalog-videos.json`). Videos that already have a hand or auto
+annotation are left untouched.
 """
 from __future__ import annotations
 
@@ -30,25 +30,24 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TOOLS = ROOT / "tools"
 ANNOT_DIR = ROOT / "annotations"
-ANNOTATOR_HTML = ROOT / "tools" / "annotator.html"
+CATALOG_VIDEOS = ROOT / "tools" / "catalog-videos.json"
 DEFAULT_VIDEO_CACHE = Path("/tmp/fpv-model-benchmark/videos")
 DEFAULT_WORK_DIR = Path("/tmp/fpv-auto-annotate")
-
-VIDEO_ENTRY_RE = re.compile(
-    r"\{date:'([^']*)',description:'([^']*)',town:'([^']*)',"
-    r"thumbnail_url:'[^']*',video_url:'(https://[^']+/videos/([^']+\.mp4))'\}"
-)
-
 
 def slugify(text: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", text.lower()).strip("_")
 
 
 def load_video_meta() -> dict[str, dict]:
-    html = ANNOTATOR_HTML.read_text()
     meta: dict[str, dict] = {}
-    for date, desc, town, url, video_file in VIDEO_ENTRY_RE.findall(html):
-        meta[video_file] = {"date": date, "description": desc, "town": town, "video_url": url}
+    for video in json.loads(CATALOG_VIDEOS.read_text()):
+        video_file = video["video_url"].rsplit("/", 1)[-1]
+        meta[video_file] = {
+            "date": video["date"],
+            "description": video["description"],
+            "town": video["town"],
+            "video_url": video["video_url"],
+        }
     return meta
 
 

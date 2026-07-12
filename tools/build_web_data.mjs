@@ -3,7 +3,7 @@
  * Bundle the read-only viewer's dataset into public/data/videos.json.
  *
  * Sources (all in this repo):
- *  - tools/annotator.html          -> canonical VIDEOS list (date/description/town/urls)
+ *  - data/catalog.json             -> canonical video list and metadata
  *  - annotations/*_annotations.json -> segment markers (manual preferred over auto)
  *  - scenes/<stem>/<sceneId>/viewer/scene_meta.json -> which videos have a 3D scene
  *  - build/thumbnails/manifest.json  -> responsive thumb widths + blur
@@ -15,6 +15,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { publicVideo, readJson, readSceneManifests, sortedRecords } from "./catalog/catalog_lib.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -26,13 +27,8 @@ function slugify(value) {
   return stem.replace(/[^a-zA-Z0-9._-]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 120) || "video";
 }
 
-function readAnnotatorVideos() {
-  const html = fs.readFileSync(path.join(repoRoot, "tools", "annotator.html"), "utf8");
-  const start = html.indexOf("const VIDEOS");
-  const open = html.indexOf("[", start);
-  const close = html.indexOf("\n];", open);
-  const literal = `${html.slice(open, close)}]`;
-  return Function(`"use strict"; return (${literal});`)();
+function readCatalogVideos() {
+  return sortedRecords(readJson(path.join(repoRoot, "data/catalog.json"))).map(publicVideo);
 }
 
 // Prefer a manual annotation (no auto_generated flag) over an auto one.
@@ -64,6 +60,10 @@ function readAnnotations() {
 function buildSceneIndex() {
   const scenesDir = path.join(repoRoot, "scenes");
   const index = new Map();
+  for (const [videoId, scenes] of readSceneManifests(repoRoot)) {
+    const scene = [...scenes].sort((a, b) => a.scene_id.localeCompare(b.scene_id))[0];
+    if (scene) index.set(videoId, scene.path);
+  }
   if (!fs.existsSync(scenesDir)) return index;
   for (const stem of fs.readdirSync(scenesDir, { withFileTypes: true })) {
     if (!stem.isDirectory()) continue;
@@ -100,18 +100,20 @@ function readExistingVideos() {
   }
 }
 
-function previousVideoFile(videoFile) {
-  return videoFile.replace("anti_drone_platform_biranit", "anti_drone_platform_barashit");
+function readPreviousVideoFiles() {
+  const redirects = readJson(path.join(repoRoot, "data/redirects.json")).redirects ?? [];
+  return new Map(redirects.map(({ from, to }) => [`${to}.mp4`, `${from}.mp4`]));
 }
 
 const annotations = readAnnotations();
 const sceneIndex = buildSceneIndex();
 const thumbs = readThumbManifest();
 const existingVideos = readExistingVideos();
+const previousVideoFiles = readPreviousVideoFiles();
 
 const seen = new Set();
 const videos = [];
-for (const raw of readAnnotatorVideos()) {
+for (const raw of readCatalogVideos()) {
   const videoUrl = (raw.video_url ?? "").trim();
   const videoFile = videoUrl.split("/").pop() ?? "";
   if (!videoFile || seen.has(videoFile)) continue;
@@ -119,7 +121,8 @@ for (const raw of readAnnotatorVideos()) {
   const slug = slugify(videoFile);
   const ann = annotations.get(videoFile);
   const thumb = thumbs[slug];
-  const existing = existingVideos.get(videoFile) ?? existingVideos.get(previousVideoFile(videoFile));
+  const previousVideoFile = previousVideoFiles.get(videoFile);
+  const existing = existingVideos.get(videoFile) ?? (previousVideoFile ? existingVideos.get(previousVideoFile) : undefined);
   const existingScenePath = existing?.scenePath?.replaceAll("barashit", "biranit") ?? null;
   const scenePath = sceneIndex.get(slug) ?? existingScenePath;
   videos.push({

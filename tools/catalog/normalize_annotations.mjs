@@ -3,18 +3,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { publicVideo, readJson, sortedRecords } from "./catalog_lib.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const annotationsDir = path.join(repoRoot, "annotations");
-const annotatorPath = path.join(repoRoot, "tools", "annotator.html");
 const apply = process.argv.includes("--apply");
 
 function readCatalog() {
-  const html = fs.readFileSync(annotatorPath, "utf8");
-  const start = html.indexOf("const VIDEOS");
-  const open = html.indexOf("[", start);
-  const close = html.indexOf("\n];", open);
-  return Function(`"use strict"; return (${html.slice(open, close)}]);`)();
+  return sortedRecords(readJson(path.join(repoRoot, "data/catalog.json"))).map(publicVideo);
 }
 
 function canonicalAnnotationName(name) {

@@ -1,0 +1,22 @@
+name: Validate dataset
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run catalog:check
+      - run: npm run redirects:test
+      - run: npm run build-web-data
+      - run: node --check tools/dataset.mjs
+      - run: python -m py_compile tools/pipeline/auto_annotate_batch.py

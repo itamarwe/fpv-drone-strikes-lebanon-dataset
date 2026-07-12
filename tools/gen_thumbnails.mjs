@@ -2,7 +2,7 @@
 /**
  * Generate responsive, retina-ready thumbnails for the video gallery.
  *
- * Source list is the annotator's VIDEOS array. For each video it takes the
+ * Source list is data/catalog.json. For each video it takes the
  * published thumbnail JPG, falling back to a local reconstructed scene frame and
  * then to an ffmpeg grab from the video, and emits multiple WebP widths into
  * apps/fpv-tool/public/thumbnails/<slug>/<w>.webp cropped to a uniform 16:9, plus
@@ -19,12 +19,12 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
+import { publicVideo, readJson, sortedRecords } from "./catalog/catalog_lib.mjs";
 
 const execFileP = promisify(execFile);
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const annotatorPath = path.join(repoRoot, "tools", "annotator.html");
 const outDir = path.join(repoRoot, "build", "thumbnails");
 
 const WIDTHS = [320, 480, 640, 960, 1280]; // mobile 1x/2x, tablet, desktop 1x/2x
@@ -37,15 +37,9 @@ function slugify(value) {
   return stem.replace(/[^a-zA-Z0-9._-]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 120) || "video";
 }
 
-// Read the canonical video list from the annotator's inline VIDEOS array so the
-// generated thumbnails match exactly what the gallery renders.
 function readVideos() {
-  const html = fs.readFileSync(annotatorPath, "utf8");
-  const start = html.indexOf("const VIDEOS");
-  const open = html.indexOf("[", start);
-  const close = html.indexOf("\n];", open);
-  const literal = `${html.slice(open, close)}]`;
-  const arr = Function(`"use strict"; return (${literal});`)();
+  const catalog = readJson(path.join(repoRoot, "data/catalog.json"));
+  const arr = sortedRecords(catalog).map(publicVideo);
   const rows = [];
   const seen = new Set();
   for (const v of arr) {
@@ -162,17 +156,27 @@ async function processOne(video, manifest) {
 // Keep manifest entries whose files are still on disk, so re-runs are incremental
 // (only missing videos get re-fetched -> gentle on the CDN, resumable).
 function loadExistingManifest() {
+  const kept = {};
+  try {
+    const current = readJson(path.join(repoRoot, "build/web/current-videos.json"));
+    for (const video of current.videos ?? []) {
+      if (video.slug && video.thumbWidths?.length && video.blur) {
+        kept[video.slug] = { widths: video.thumbWidths, blurDataURL: video.blur };
+      }
+    }
+  } catch {
+    // First publish has no remote manifest to preserve.
+  }
   try {
     const m = JSON.parse(fs.readFileSync(path.join(outDir, "manifest.json"), "utf8"));
-    const kept = {};
     for (const [slug, entry] of Object.entries(m)) {
       const w = entry.widths?.[0];
       if (w && fs.existsSync(path.join(outDir, slug, `${w}.webp`))) kept[slug] = entry;
     }
-    return kept;
   } catch {
-    return {};
+    // A clean checkout has no local generated thumbnails.
   }
+  return kept;
 }
 
 async function run() {

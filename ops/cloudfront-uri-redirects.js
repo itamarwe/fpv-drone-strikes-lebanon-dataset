@@ -1,18 +1,17 @@
-// CloudFront viewer-request function. Retire after 2026-10-15 once old links
-// have had a three-month migration window.
+// Generated from data/redirects.json. Do not edit by hand.
 function handler(event) {
   var request = event.request;
   var oldUri = request.uri;
   var newUri = oldUri;
-
+  var redirects = {"2026-05-26_anti_drone_platform_barashit":"2026-05-26_anti_drone_platform_biranit"};
   if (newUri.indexOf("/annotations/") === 0) {
-    newUri = newUri.replace(
-      /^\/annotations\/(\d{4})_(\d{2})_(\d{2})_/,
-      "/annotations/$1-$2-$3_"
-    );
+    newUri = newUri.replace(/^\/annotations\/(\d{4})_(\d{2})_(\d{2})_/, "/annotations/$1-$2-$3_");
   }
-  newUri = newUri.replace(/barashit/g, "biranit");
-
+  for (var from in redirects) {
+    if (Object.prototype.hasOwnProperty.call(redirects, from)) {
+      newUri = newUri.split(from).join(redirects[from]);
+    }
+  }
   if (newUri === oldUri) return request;
   var query = request.querystring;
   var parts = [];
