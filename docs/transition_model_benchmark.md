@@ -30,7 +30,7 @@ outside the annotated flight sections.
 
 ### Local High-Recall Baseline
 
-Script: `tools/evaluate_flight_boundaries.py`
+Script: `tools/pipeline/evaluate_flight_boundaries.py`
 
 This is a deterministic FFmpeg + NumPy baseline. It samples frames, computes
 visual differences, histogram differences, simple perceptual-hash differences,
@@ -39,7 +39,7 @@ black-frame periods, and freeze periods.
 Run used:
 
 ```bash
-python3 tools/evaluate_flight_boundaries.py \
+python3 tools/pipeline/evaluate_flight_boundaries.py \
   --cut-score 0.25 \
   --peak-quantile 0.80 \
   --merge-sec 0.35 \
@@ -79,18 +79,18 @@ NumPy frames from FFmpeg.
 The reusable benchmark harness is:
 
 ```bash
-/tmp/fpv-model-benchmark/venv/bin/python tools/benchmark_transition_models.py \
+/tmp/fpv-model-benchmark/venv/bin/python tools/pipeline/benchmark_transition_models.py \
   --models baseline transnet \
   --transnet-dir /tmp/fpv-model-benchmark/TransNetV2 \
   --output /tmp/fpv-flight-boundaries/benchmark_baseline_transnet.json
 
-/tmp/fpv-model-benchmark/venv/bin/python tools/benchmark_transition_models.py \
+/tmp/fpv-model-benchmark/venv/bin/python tools/pipeline/benchmark_transition_models.py \
   --models transnet \
   --transnet-dir /tmp/fpv-model-benchmark/TransNetV2 \
   --transnet-thresholds 0.2 \
   --output /tmp/fpv-flight-boundaries/benchmark_transnet_02.json
 
-/tmp/fpv-model-benchmark/venv/bin/python tools/benchmark_transition_models.py \
+/tmp/fpv-model-benchmark/venv/bin/python tools/pipeline/benchmark_transition_models.py \
   --models omnishotcut \
   --omnishotcut-dir /tmp/fpv-model-benchmark/OmniShotCut \
   --output /tmp/fpv-flight-boundaries/benchmark_omnishotcut.json

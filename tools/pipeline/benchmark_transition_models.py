@@ -21,7 +21,7 @@ import numpy as np
 import evaluate_flight_boundaries as baseline
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 ANNOTATION_DIR = ROOT / "annotations"
 DEFAULT_CACHE_DIR = Path("/tmp/fpv-flight-boundaries")
 DEFAULT_MODEL_DIR = Path("/tmp/fpv-model-benchmark")

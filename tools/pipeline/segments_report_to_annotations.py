@@ -21,7 +21,7 @@ import json
 import re
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 ANNOTATION_DIR = ROOT / "annotations"
 
 GENERATOR = "classify_and_extract_segments+segments_report_to_annotations"

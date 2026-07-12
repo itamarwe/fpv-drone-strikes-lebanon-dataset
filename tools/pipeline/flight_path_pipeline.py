@@ -39,7 +39,7 @@ from typing import Iterable
 import numpy as np
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 ANNOTATION_DIR = ROOT / "annotations"
 GEO_CSV = ROOT / "geo" / "fpv_drone_map_records.csv"
 DEFAULT_OUT_DIR = Path("/tmp/fpv-flight-paths")

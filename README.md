@@ -23,7 +23,7 @@ An interactive map view is available in [index.html](index.html). It is backed b
 | `tools/scene_viewer/` | 3D scene viewer + measurement tool (same local server) |
 | `tools/catalog/` | Catalog and annotation normalization/audit commands |
 | `tools/e2e/` | Playwright end-to-end tests for complete browser workflows |
-| `tools/*.py` | Reconstruction pipeline (frame extraction, VGGT-Omega, scene generation) |
+| `tools/pipeline/` | Reusable reconstruction and analysis pipeline |
 | `tools/gen_thumbnails.mjs`, `tools/build_web_data.mjs`, `tools/publish_web.sh` | Web publishing tooling |
 | `scenes/` (gitignored) | Local reconstruction outputs; their public home is S3 |
 

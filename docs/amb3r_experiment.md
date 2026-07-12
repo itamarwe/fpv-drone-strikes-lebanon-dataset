@@ -51,7 +51,7 @@ I prepared an 8-frame smoke-test folder from the existing Sholef
 attack-overlap VGGT reconstruction:
 
 ```bash
-python3 tools/prepare_amb3r_experiment.py --copy
+python3 tools/pipeline/prepare_amb3r_experiment.py --copy
 ```
 
 Outputs:

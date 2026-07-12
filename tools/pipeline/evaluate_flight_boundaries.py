@@ -26,7 +26,7 @@ from typing import Iterable
 import numpy as np
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 ANNOTATION_DIR = ROOT / "annotations"
 DEFAULT_CACHE_DIR = Path("/tmp/fpv-flight-boundaries")
 FLIGHT_TYPES = {"flight_start", "new_flight_start"}
