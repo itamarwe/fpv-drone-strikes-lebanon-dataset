@@ -9,12 +9,12 @@
 #   data/videos.json                  the app manifest (list + annotations + scene index)
 #
 # Requires AWS credentials with write access to the bucket. Run from anywhere:
-#   tools/publish_web.sh                 # full publish (thumbnails, scenes, data)
-#   tools/publish_web.sh --skip-scenes   # fast: annotations + data + thumbnails only
+#   npm run publish-web                  # full publish (thumbnails, scenes, data)
+#   npm run publish-web:fast             # fast: annotations + data + thumbnails only
 set -euo pipefail
 
 BUCKET="${FPV_BUCKET:-s3://fpv-drone-strikes-lebanon-dataset}"
-REPO="$(cd "$(dirname "$0")/.." && pwd)"
+REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 SKIP_SCENES=0
 [ "${1:-}" = "--skip-scenes" ] && SKIP_SCENES=1
 
@@ -25,11 +25,11 @@ curl -fsSL "${FPV_CDN_BASE:-https://d2fioemadmrru3.cloudfront.net}/data/videos.j
   -o build/web/current-videos.json
 
 echo "== 1/5 generate thumbnails (incremental) =="
-node tools/gen_thumbnails.mjs
+node tools/publishing/gen_thumbnails.mjs
 
 echo "== 2/5 bake calibration + build web data manifest =="
-node tools/apply_calibration.mjs
-node tools/build_web_data.mjs
+node tools/publishing/apply_calibration.mjs
+node tools/publishing/build_web_data.mjs
 
 echo "== 3/5 upload thumbnails =="
 aws s3 sync build/thumbnails/ "$BUCKET/thumbnails/" \

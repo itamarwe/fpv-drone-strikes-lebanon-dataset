@@ -8,13 +8,13 @@
  * the same video so the viewer reports absolute height/speed instead of the
  * generic 117.6 m/unit fallback. Idempotent; run before publishing.
  *
- *   node tools/apply_calibration.mjs
+ *   npm run apply-calibration
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const scenesDir = path.join(repoRoot, "scenes");
 
 function readJson(p) {

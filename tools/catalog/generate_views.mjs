@@ -27,7 +27,7 @@ function commitGenerated(file, content) {
 
 const records = sortedRecords(catalog);
 const annotatorJson = `${JSON.stringify(records.map(publicVideo), null, 2)}\n`;
-commitGenerated(path.join(root, "tools/catalog-videos.json"), annotatorJson);
+commitGenerated(path.join(root, "tools/apps/annotator/catalog-videos.json"), annotatorJson);
 
 const readmePath = path.join(root, "README.md");
 const readme = fs.readFileSync(readmePath, "utf8");

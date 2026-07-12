@@ -27,15 +27,15 @@ from pathlib import Path
 from typing import Callable
 from urllib.parse import parse_qs, unquote, urlparse
 
-ROOT = Path(__file__).resolve().parents[1]
-TOOLS = Path(__file__).resolve().parent
-if str(TOOLS) not in sys.path:
-    sys.path.insert(0, str(TOOLS))
+ROOT = Path(__file__).resolve().parents[2]
+SERVER_DIR = Path(__file__).resolve().parent
+if str(SERVER_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVER_DIR))
 
 from asset_urls import asset_root_from_env, scene_data_base, scene_viewer_page_url
 DEFAULT_OUT_DIR = ROOT
 DEFAULT_VIDEO_CACHE = Path("/tmp/fpv-model-benchmark/videos")
-GENERIC_VIEWER_INDEX = ROOT / "tools" / "scene_viewer" / "index.html"
+GENERIC_VIEWER_INDEX = ROOT / "tools" / "apps" / "scene-viewer" / "index.html"
 SCENE_VIEWER_INDEX_RE = re.compile(r"^/scenes/(.+)/viewer(?:/index\.html)?/?$")
 # Soft advisory only: above this many frames VGGT reconstruction gets slow/heavy.
 # This is NOT a hard cap -- frames are capped only when max_vggt_frames > 0.
@@ -765,10 +765,18 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
         if viewer_dir is not None:
             self.serve_generic_scene_viewer(viewer_dir)
             return
+        aliases = {
+            "/tools/annotator.html": "/tools/apps/annotator/index.html",
+            "/tools/catalog-videos.json": "/tools/apps/annotator/catalog-videos.json",
+            "/tools/scene_browser.html": "/tools/apps/scene-browser/index.html",
+        }
+        path = aliases.get(path, path)
+        if path.startswith("/tools/scene_viewer/"):
+            path = path.replace("/tools/scene_viewer/", "/tools/apps/scene-viewer/", 1)
         if path in {"", "/"}:
-            target = ROOT / "tools" / "annotator.html"
+            target = ROOT / "tools" / "apps" / "annotator" / "index.html"
         elif path in {"/scenes", "/scenes/"}:
-            target = ROOT / "tools" / "scene_browser.html"
+            target = ROOT / "tools" / "apps" / "scene-browser" / "index.html"
         elif path.startswith("/tools/"):
             target = ensure_child(ROOT, path.lstrip("/"))
         elif path.startswith("/annotations/"):

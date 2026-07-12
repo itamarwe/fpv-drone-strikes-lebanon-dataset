@@ -14,7 +14,7 @@ from urllib.request import Request, urlopen
 
 SKETCHFAB_UID = "87f5bbb5b08641b782bc084ddd4082a7"
 SKETCHFAB_URL = f"https://sketchfab.com/3d-models/fpv-kamikaze-drone-low-poly-{SKETCHFAB_UID}"
-DEFAULT_OUT = Path(__file__).resolve().parent / "scene_viewer" / "assets" / "fpv_kamikaze_drone.glb"
+DEFAULT_OUT = Path(__file__).resolve().parents[1] / "apps" / "scene-viewer" / "assets" / "fpv_kamikaze_drone.glb"
 
 
 def fetch_download_url(token: str) -> str:

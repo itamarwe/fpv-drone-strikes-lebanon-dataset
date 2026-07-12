@@ -22,10 +22,10 @@ const errors = [
 const records = sortedRecords(catalog);
 const byId = new Map(records.map((record) => [record.id, record]));
 
-const generatedVideos = readJson(path.join(root, "tools/catalog-videos.json"));
+const generatedVideos = readJson(path.join(root, "tools/apps/annotator/catalog-videos.json"));
 const expectedVideos = records.map(publicVideo);
 if (JSON.stringify(generatedVideos) !== JSON.stringify(expectedVideos)) {
-  errors.push("tools/catalog-videos.json is not generated from data/catalog.json");
+  errors.push("tools/apps/annotator/catalog-videos.json is not generated from data/catalog.json");
 }
 
 const readme = fs.readFileSync(path.join(root, "README.md"), "utf8");

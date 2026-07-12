@@ -15,9 +15,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { publicVideo, readJson, readSceneManifests, sortedRecords } from "./catalog/catalog_lib.mjs";
+import { publicVideo, readJson, readSceneManifests, sortedRecords } from "../catalog/catalog_lib.mjs";
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 const outFile = path.join(repoRoot, "build", "web", "videos.json");
 const existingManifestFile = path.join(repoRoot, "build", "web", "current-videos.json");

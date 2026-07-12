@@ -11,9 +11,9 @@ import {
   validateCatalog,
   validateRedirects,
   writeJson,
-} from "./catalog/catalog_lib.mjs";
+} from "./catalog_lib.mjs";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const bucket = process.env.FPV_BUCKET ?? "s3://fpv-drone-strikes-lebanon-dataset";
 const [command, ...rawArgs] = process.argv.slice(2);
 
@@ -231,7 +231,7 @@ if (command === "add") await add(opts);
 else if (command === "annotate") annotate(opts);
 else if (command === "add-scene") addScene(opts);
 else if (command === "rename") await rename(opts);
-else if (command === "publish") run("bash", ["tools/publish_web.sh", ...(opts["skip-scenes"] ? ["--skip-scenes"] : [])]);
+else if (command === "publish") run("bash", ["tools/publishing/publish_web.sh", ...(opts["skip-scenes"] ? ["--skip-scenes"] : [])]);
 else if (command === "verify") {
   run("npm", ["run", "catalog:check"]);
   run("npm", ["run", "check-public"]);

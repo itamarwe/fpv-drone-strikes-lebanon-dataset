@@ -15,7 +15,7 @@ Videos that already have an annotation file are skipped up front, so a run is
 fully resumable: re-running only processes what is still missing.
 
 The video list + metadata come from the generated catalog projection
-(`tools/catalog-videos.json`). Videos that already have a hand or auto
+(`tools/apps/annotator/catalog-videos.json`). Videos that already have a hand or auto
 annotation are left untouched.
 """
 from __future__ import annotations
@@ -30,7 +30,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 TOOLS = ROOT / "tools"
 ANNOT_DIR = ROOT / "annotations"
-CATALOG_VIDEOS = ROOT / "tools" / "catalog-videos.json"
+CATALOG_VIDEOS = ROOT / "tools" / "apps" / "annotator" / "catalog-videos.json"
 DEFAULT_VIDEO_CACHE = Path("/tmp/fpv-model-benchmark/videos")
 DEFAULT_WORK_DIR = Path("/tmp/fpv-auto-annotate")
 

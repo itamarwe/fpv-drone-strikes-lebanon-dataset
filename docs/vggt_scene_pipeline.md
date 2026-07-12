@@ -126,7 +126,7 @@ marked differently in the scene metadata and viewer.
 
 Tool:
 
-- `tools/annotator.html`
+- `tools/apps/annotator/index.html`
 
 ### 2. Segment Selection and Frame Extraction
 
@@ -175,7 +175,7 @@ VGGT.
 
 Tool:
 
-- `tools/fpv_tool_server.py`
+- `tools/server/fpv_tool_server.py`
 
 ### 3. VGGT Reconstruction
 
@@ -345,7 +345,7 @@ Tool:
 Start the local tool server:
 
 ```bash
-/tmp/fpv-depth-venv/bin/python tools/fpv_tool_server.py \
+/tmp/fpv-depth-venv/bin/python tools/server/fpv_tool_server.py \
   --port 8766 \
   --python /tmp/fpv-depth-venv/bin/python \
   --vggt-python /tmp/fpv-depth-venv/bin/python
