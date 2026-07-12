@@ -16,10 +16,10 @@ Environment overrides:
   OMEGA_GRADIO_PORT    gradio port (default: 7860)
 
 Usage:
-  python tools/omega_pod.py up      # start pod + launch Omega, wait until ready
-  python tools/omega_pod.py down    # stop the pod
-  python tools/omega_pod.py status  # print pod + gradio state
-  python tools/omega_pod.py url     # print the gradio space URL
+  python tools/pipeline/omega_pod.py up      # start pod + launch Omega, wait until ready
+  python tools/pipeline/omega_pod.py down    # stop the pod
+  python tools/pipeline/omega_pod.py status  # print pod + gradio state
+  python tools/pipeline/omega_pod.py url     # print the gradio space URL
 """
 from __future__ import annotations
 

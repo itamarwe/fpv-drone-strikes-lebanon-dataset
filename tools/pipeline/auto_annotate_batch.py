@@ -5,11 +5,11 @@ For each chunk of videos this driver runs the full pipeline:
 
   1. write stub annotation files (video_file + video_url, empty segments)
   2. TransNetV2 transition detection      -> candidate json
-     (tools/benchmark_transition_models.py)
+     (tools/pipeline/benchmark_transition_models.py)
   3. classify flight-like segments        -> report json
-     (tools/classify_and_extract_segments.py, no clip extraction)
+     (tools/pipeline/classify_and_extract_segments.py, no clip extraction)
   4. convert report to annotator markers  -> annotations/<slug>_annotations.json
-     (tools/segments_report_to_annotations.py, tagged auto_generated)
+     (tools/pipeline/segments_report_to_annotations.py, tagged auto_generated)
 
 Videos that already have an annotation file are skipped up front, so a run is
 fully resumable: re-running only processes what is still missing.
@@ -27,10 +27,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 TOOLS = ROOT / "tools"
 ANNOT_DIR = ROOT / "annotations"
-ANNOTATOR_HTML = TOOLS / "annotator.html"
+ANNOTATOR_HTML = ROOT / "tools" / "annotator.html"
 DEFAULT_VIDEO_CACHE = Path("/tmp/fpv-model-benchmark/videos")
 DEFAULT_WORK_DIR = Path("/tmp/fpv-auto-annotate")
 

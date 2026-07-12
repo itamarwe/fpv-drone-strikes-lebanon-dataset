@@ -26,7 +26,7 @@ import cv2
 import numpy as np
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 ANNOTATION_DIR = ROOT / "annotations"
 DEFAULT_CANDIDATE_JSON = Path("/tmp/fpv-flight-boundaries/benchmark_transnet_02_continuity_raw.json")
 DEFAULT_VIDEO_CACHE_DIR = Path("/tmp/fpv-model-benchmark/videos")

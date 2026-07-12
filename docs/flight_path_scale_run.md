@@ -7,7 +7,7 @@ videos.
 
 ## What Was Built
 
-The reusable pipeline is `tools/flight_path_pipeline.py`.
+The reusable pipeline is `tools/pipeline/flight_path_pipeline.py`.
 
 It supports:
 
@@ -33,11 +33,11 @@ Heavy artifacts are written outside the repo by default:
 Commands used:
 
 ```bash
-python3 tools/flight_path_pipeline.py \
+python3 tools/pipeline/flight_path_pipeline.py \
   --out-dir /tmp/fpv-flight-paths \
   manifest
 
-python3 tools/flight_path_pipeline.py \
+python3 tools/pipeline/flight_path_pipeline.py \
   --out-dir /tmp/fpv-flight-paths \
   extract-frames \
   --video-cache-dir /tmp/fpv-model-benchmark/videos \
@@ -45,32 +45,32 @@ python3 tools/flight_path_pipeline.py \
   --width 960
 
 /Users/itamarwe/Documents/code/itamarwe.github.io/research/fpv-drone-strikes/vggt/venv/bin/python \
-  tools/flight_path_pipeline.py \
+  tools/pipeline/flight_path_pipeline.py \
   --out-dir /tmp/fpv-flight-paths \
   run-vggt \
   --max-frames 180 \
   --vggt-timeout 900
 
 /Users/itamarwe/Documents/code/itamarwe.github.io/research/fpv-drone-strikes/vggt/venv/bin/python \
-  tools/flight_path_pipeline.py \
+  tools/pipeline/flight_path_pipeline.py \
   --out-dir /tmp/fpv-flight-paths \
   extract-vggt
 
-python3 tools/flight_path_pipeline.py \
+python3 tools/pipeline/flight_path_pipeline.py \
   --out-dir /tmp/fpv-flight-paths \
   scale-report
 
-python3 tools/flight_path_pipeline.py \
+python3 tools/pipeline/flight_path_pipeline.py \
   --out-dir /tmp/fpv-flight-paths \
   visualize
 
-python3 tools/flight_path_pipeline.py \
+python3 tools/pipeline/flight_path_pipeline.py \
   --out-dir /tmp/fpv-flight-paths \
   analyze-overlap \
   --threshold 0.72 \
   --samples-per-segment 8
 
-python3 tools/flight_path_pipeline.py \
+python3 tools/pipeline/flight_path_pipeline.py \
   --out-dir /tmp/fpv-flight-paths \
   extract-group-frames \
   --recon-subdir attack_reconstructions \
@@ -146,7 +146,7 @@ If a Hugging Face token is available, set `HF_TOKEN` before rerunning:
 ```bash
 export HF_TOKEN=...
 /Users/itamarwe/Documents/code/itamarwe.github.io/research/fpv-drone-strikes/vggt/venv/bin/python \
-  tools/flight_path_pipeline.py \
+  tools/pipeline/flight_path_pipeline.py \
   --out-dir /tmp/fpv-flight-paths \
   run-vggt \
   --max-frames 180 \
@@ -177,7 +177,7 @@ Speed priors are no longer used as the default scale factor. They can be enabled
 as optional sanity checks, but they are not measurement-based scale.
 
 An automatic scale-voting prototype now lives in
-`tools/auto_scale_hypotheses.py`; see `docs/automatic_scale_pipeline.md`.
+`tools/pipeline/auto_scale_hypotheses.py`; see `docs/automatic_scale_pipeline.md`.
 It generates scale hypotheses from object/depth detections and accepts a metric
 scale only when multiple cues agree.
 

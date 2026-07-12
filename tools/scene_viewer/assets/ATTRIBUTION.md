@@ -10,7 +10,7 @@ Download into this folder:
 
 ```bash
 export SKETCHFAB_API_TOKEN=your_token
-python tools/download_fpv_drone_model.py
+python tools/pipeline/download_fpv_drone_model.py
 ```
 
 If the GLB is missing, the viewer falls back to a built-in procedural ~15 inch FPV model.

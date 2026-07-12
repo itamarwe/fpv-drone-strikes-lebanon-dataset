@@ -92,7 +92,7 @@ geometrically compatible. A robust sequence is:
 
 ### Baseline implemented in this repo
 
-I added `tools/evaluate_flight_boundaries.py`.
+I added `tools/pipeline/evaluate_flight_boundaries.py`.
 
 It streams each annotated CloudFront MP4 with FFmpeg, samples frames, computes
 lightweight visual features, detects candidate boundaries, and evaluates whether
@@ -104,16 +104,16 @@ by default, not in the repo.
 Commands used:
 
 ```bash
-python3 tools/evaluate_flight_boundaries.py \
+python3 tools/pipeline/evaluate_flight_boundaries.py \
   --json-out /tmp/fpv-flight-boundaries/results_baseline.json
 
-python3 tools/evaluate_flight_boundaries.py \
+python3 tools/pipeline/evaluate_flight_boundaries.py \
   --cut-score 0.25 \
   --peak-quantile 0.80 \
   --merge-sec 0.35 \
   --json-out /tmp/fpv-flight-boundaries/results_high_recall.json
 
-python3 tools/evaluate_flight_boundaries.py \
+python3 tools/pipeline/evaluate_flight_boundaries.py \
   --fps 10 \
   --cut-score 0.25 \
   --peak-quantile 0.80 \
@@ -140,7 +140,7 @@ replays.
 
 ## 2. Scale: pixels/reconstruction units to meters
 
-Implementation/run note: `tools/flight_path_pipeline.py` now parses the 25
+Implementation/run note: `tools/pipeline/flight_path_pipeline.py` now parses the 25
 annotation files into 69 flight intervals, marks the last interval per video as
 the attack segment, extracts VGGT-ready frames, parses VGGT `.glb` outputs into
 relative camera paths, and writes scale/plot artifacts. See

@@ -13,7 +13,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 ANNOTATION_DIR = ROOT / "annotations"
 FLIGHT_TYPES = {"flight_start", "new_flight_start"}
 

@@ -182,7 +182,7 @@ Tool:
 The backend calls the existing pipeline:
 
 ```bash
-python tools/flight_path_pipeline.py \
+python tools/pipeline/flight_path_pipeline.py \
   --out-dir <repo-root> \
   run-vggt \
   --recon-subdir scenes \
@@ -198,14 +198,14 @@ same scene id.
 
 Tool:
 
-- `tools/flight_path_pipeline.py`
+- `tools/pipeline/flight_path_pipeline.py`
 
 ### 4. Extract Point Cloud and Relative Camera Path
 
 After VGGT finishes, the backend runs:
 
 ```bash
-python tools/flight_path_pipeline.py \
+python tools/pipeline/flight_path_pipeline.py \
   --out-dir <repo-root> \
   extract-vggt \
   --recon-subdir scenes \
@@ -224,14 +224,14 @@ not from a unique per-camera node transform.
 
 Tool:
 
-- `tools/flight_path_pipeline.py`
+- `tools/pipeline/flight_path_pipeline.py`
 
 ### 5. Camera-View Reprojection Diagnostics
 
 The backend can render the VGGT point cloud from recovered camera poses:
 
 ```bash
-python tools/render_vggt_reprojection_samples.py \
+python tools/pipeline/render_vggt_reprojection_samples.py \
   <scene_dir> \
   --out-dir <scene_dir>/camera_views \
   --samples 1,2,3,... \
@@ -247,7 +247,7 @@ Those settings are now the default for the server-generated camera-view assets.
 
 Tool:
 
-- `tools/render_vggt_reprojection_samples.py`
+- `tools/pipeline/render_vggt_reprojection_samples.py`
 
 ### 6. Ground Grid and AGL Height
 
@@ -269,7 +269,7 @@ The viewer clamps negative heights to zero for display.
 
 Tool:
 
-- `tools/create_vggt_threejs_viewer.py`
+- `tools/pipeline/create_vggt_threejs_viewer.py`
 
 ### 7. Metric Scale
 
@@ -298,10 +298,10 @@ the fitted ground plane. VGGT alone does not determine meters.
 Related scale research/tools:
 
 - `docs/automatic_scale_pipeline.md`
-- `tools/auto_scale_hypotheses.py`
-- `tools/vggt_metric_depth_scale_votes.py`
-- `tools/fit_vggt_object_box.py`
-- `tools/segment_object_with_sam.py`
+- `tools/pipeline/auto_scale_hypotheses.py`
+- `tools/pipeline/vggt_metric_depth_scale_votes.py`
+- `tools/pipeline/fit_vggt_object_box.py`
+- `tools/pipeline/segment_object_with_sam.py`
 
 ### 8. Speed and Distance
 
@@ -338,7 +338,7 @@ The generated Three.js viewer shows:
 
 Tool:
 
-- `tools/create_vggt_threejs_viewer.py`
+- `tools/pipeline/create_vggt_threejs_viewer.py`
 
 ## Local Server Commands
 

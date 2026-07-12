@@ -91,7 +91,7 @@ path is already georegistered enough to sample terrain.
 
 ## Voting
 
-`tools/auto_scale_hypotheses.py` emits `auto_scale_votes.csv` where each row is
+`tools/pipeline/auto_scale_hypotheses.py` emits `auto_scale_votes.csv` where each row is
 one scale vote:
 
 - object label
@@ -134,17 +134,17 @@ objects such as `namer apc`. The filter is enabled by default for `estimate` and
 Write object priors and a detection template:
 
 ```bash
-python3 tools/auto_scale_hypotheses.py write-priors \
+python3 tools/pipeline/auto_scale_hypotheses.py write-priors \
   --out /tmp/fpv-flight-paths/auto_scale_object_priors.json
 
-python3 tools/auto_scale_hypotheses.py write-detection-template \
+python3 tools/pipeline/auto_scale_hypotheses.py write-detection-template \
   --out /tmp/fpv-flight-paths/detections_template.csv
 ```
 
 Run optional zero-shot detection, if `transformers` is installed:
 
 ```bash
-python3 tools/auto_scale_hypotheses.py detect-zeroshot \
+python3 tools/pipeline/auto_scale_hypotheses.py detect-zeroshot \
   --recon-dir /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap \
   --out /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap/auto_detections.csv \
   --model google/owlv2-base-patch16-ensemble \
@@ -155,7 +155,7 @@ python3 tools/auto_scale_hypotheses.py detect-zeroshot \
 Estimate scale from detections:
 
 ```bash
-python3 tools/auto_scale_hypotheses.py estimate \
+python3 tools/pipeline/auto_scale_hypotheses.py estimate \
   --recon-dir /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap \
   --detections /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap/auto_detections.csv \
   --hfov-deg 90
@@ -169,7 +169,7 @@ Outputs:
 Visualize the object measurements and vote cluster:
 
 ```bash
-python3 tools/auto_scale_hypotheses.py visualize \
+python3 tools/pipeline/auto_scale_hypotheses.py visualize \
   --recon-dir /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap \
   --detections /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap/owlv2_detections.csv \
   --hfov-deg 90
@@ -187,14 +187,14 @@ The automatic scale-voting engine is implemented and a first OWLv2 zero-shot
 test was run on the Sholef attack-overlap reconstruction:
 
 ```bash
-/tmp/fpv-model-benchmark/venv/bin/python tools/auto_scale_hypotheses.py detect-zeroshot \
+/tmp/fpv-model-benchmark/venv/bin/python tools/pipeline/auto_scale_hypotheses.py detect-zeroshot \
   --recon-dir /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap \
   --out /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap/owlv2_detections.csv \
   --threshold 0.08 \
   --frame-step 12 \
   --device cpu
 
-python3 tools/auto_scale_hypotheses.py estimate \
+python3 tools/pipeline/auto_scale_hypotheses.py estimate \
   --recon-dir /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap \
   --detections /tmp/fpv-flight-paths/attack_reconstructions/2026-06-06_sholef_howitzer_adaissah_attack_overlap/owlv2_detections.csv \
   --hfov-deg 90

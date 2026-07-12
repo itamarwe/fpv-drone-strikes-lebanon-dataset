@@ -1383,7 +1383,7 @@ def maybe_render_camera_views(state: ToolState, scene_dir: Path, frame_count: in
         run_command(
             [
                 state.python,
-                str(ROOT / "tools" / "render_vggt_reprojection_samples.py"),
+                str(ROOT / "tools" / "pipeline" / "render_vggt_reprojection_samples.py"),
                 str(scene_dir),
                 "--out-dir",
                 str(out_dir),
@@ -1496,7 +1496,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
             vggt_config = manifest["model_config"]["vggt"]  # type: ignore[index]
             vggt_cmd = [
                 state.vggt_python,
-                str(ROOT / "tools" / "flight_path_pipeline.py"),
+                str(ROOT / "tools" / "pipeline" / "flight_path_pipeline.py"),
                 "--out-dir",
                 str(state.out_dir),
                 "run-vggt",
@@ -1538,7 +1538,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
         run_command(
             [
                 state.python,
-                str(ROOT / "tools" / "flight_path_pipeline.py"),
+                str(ROOT / "tools" / "pipeline" / "flight_path_pipeline.py"),
                 "--out-dir",
                 str(state.out_dir),
                 "extract-vggt",
@@ -1576,7 +1576,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
         run_command(
             [
                 state.python,
-                str(ROOT / "tools" / "create_vggt_threejs_viewer.py"),
+                str(ROOT / "tools" / "pipeline" / "create_vggt_threejs_viewer.py"),
                 str(scene_dir),
                 "--out-dir",
                 str(scene_dir / "viewer"),
