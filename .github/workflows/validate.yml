@@ -18,5 +18,5 @@ jobs:
       - run: npm run catalog:check
       - run: npm run redirects:test
       - run: npm run build-web-data
-      - run: node --check tools/dataset.mjs
+      - run: node --check tools/catalog/dataset.mjs
       - run: python -m py_compile tools/pipeline/auto_annotate_batch.py

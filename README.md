@@ -15,7 +15,7 @@ An interactive map view is available in [index.html](index.html). It is backed b
 
 The checked-in [`data/catalog.json`](data/catalog.json) is the single source of
 truth for video identity and descriptive metadata. README rows,
-`tools/catalog-videos.json`, and the public web manifest are generated from it.
+`tools/apps/annotator/catalog-videos.json`, and the public web manifest are generated from it.
 
 ## Repository layout
 
@@ -25,21 +25,25 @@ truth for video identity and descriptive metadata. README rows,
 | `data/catalog.json`, `data/redirects.json` | Canonical video registry and permanent rename registry |
 | `annotations/` | Flight annotations per video (source of truth, published to S3) |
 | `scene-manifests/` | Lightweight checked-in references to public scenes |
-| `tools/annotator.html` | Video annotation tool (served locally by `tools/fpv_tool_server.py`) |
-| `tools/scene_viewer/` | 3D scene viewer + measurement tool (same local server) |
+| `tools/apps/` | Annotator, scene browser, and 3D scene viewer/measurement UI |
+| `tools/server/` | Local API/static server for the browser tools |
 | `tools/catalog/` | Catalog and annotation normalization/audit commands |
 | `tools/e2e/` | Playwright end-to-end tests for complete browser workflows |
 | `tools/pipeline/` | Reusable reconstruction and analysis pipeline |
-| `tools/gen_thumbnails.mjs`, `tools/build_web_data.mjs`, `tools/publish_web.sh` | Web publishing tooling |
+| `tools/publishing/` | Web manifest, thumbnail, calibration, and publishing tooling |
+| `tools/media/` | Source-media replacement and download maintenance |
 | `scenes/` (gitignored) | Local reconstruction outputs; their public home is S3 |
 
 The local tools run with:
 
 ```bash
-python tools/fpv_tool_server.py --host 127.0.0.1 --port 8766
-# annotator:     http://127.0.0.1:8766/tools/annotator.html
-# scene browser: http://127.0.0.1:8766/tools/scene_browser.html
+python tools/server/fpv_tool_server.py --host 127.0.0.1 --port 8766
+# annotator:     http://127.0.0.1:8766/tools/apps/annotator/index.html
+# scene browser: http://127.0.0.1:8766/tools/apps/scene-browser/index.html
 ```
+
+The previous `/tools/annotator.html`, `/tools/scene_browser.html`, and
+`/tools/scene_viewer/*` URLs remain available as compatibility aliases.
 
 The public read-only viewer at [itamarweiss.com/fpv](https://itamarweiss.com/fpv/) lives in the
 [itamarwe.github.io](https://github.com/itamarwe/itamarwe.github.io) repo and reads
@@ -66,7 +70,7 @@ npm run publish-web:fast   # skip scene uploads (annotation/list changes only)
 npm run dataset:verify
 ```
 
-Do not edit generated README rows or `tools/catalog-videos.json` by hand.
+Do not edit generated README rows or `tools/apps/annotator/catalog-videos.json` by hand.
 Annotation filenames use the same video stem with an `_annotations.json` suffix.
 
 The manifest (`data/videos.json`) is cached for 5 minutes, so changes appear on

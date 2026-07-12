@@ -3,7 +3,7 @@
 
 `classify_and_extract_segments.py` emits a report with, per video, a list of
 `intervals` split at kept transition boundaries and flagged `flight_like`. The
-annotator web app (`tools/annotator.html`) instead speaks a marker timeline:
+annotator web app (`tools/apps/annotator/index.html`) instead speaks a marker timeline:
 each entry is a `{time, type, ...}` where a flight segment runs from a
 `flight_start`/`new_flight_start` marker until the next non-flight marker.
 

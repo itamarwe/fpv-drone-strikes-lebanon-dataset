@@ -19,11 +19,11 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
-import { publicVideo, readJson, sortedRecords } from "./catalog/catalog_lib.mjs";
+import { publicVideo, readJson, sortedRecords } from "../catalog/catalog_lib.mjs";
 
 const execFileP = promisify(execFile);
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 const outDir = path.join(repoRoot, "build", "thumbnails");
 

@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 const SCENE_VIEWER =
   "/scenes/2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447/2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447_seg01/viewer/index.html";
 
-const OPTIONAL_404 = /\/tools\/scene_viewer\/assets\/fpv_kamikaze_drone\.glb$/;
+const OPTIONAL_404 = /\/tools\/apps\/scene-viewer\/assets\/fpv_kamikaze_drone\.glb$/;
 
 test("scene viewer loads without 404s", async ({ page }) => {
   const failed: string[] = [];

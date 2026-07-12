@@ -11,7 +11,7 @@ import subprocess
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 README = ROOT / "README.md"
 CSV = ROOT / "geo" / "fpv_drone_map_records.csv"
 MANIFEST = ROOT / "2026-06-21_fpv_renamed_from_first_frames_manifest.tsv"

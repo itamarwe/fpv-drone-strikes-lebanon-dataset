@@ -39,7 +39,7 @@ import omega_pod
 ROOT = Path(__file__).resolve().parent.parent
 ANNOTATION_DIR = ROOT / "annotations"
 BATCH_SCRIPT = ROOT / "tools" / "run_vggt_batch_from_annotations.py"
-SERVER_SCRIPT = ROOT / "tools" / "fpv_tool_server.py"
+SERVER_SCRIPT = ROOT / "tools" / "server" / "fpv_tool_server.py"
 
 # The frame-extraction server needs cv2 / onnxruntime; point at whatever
 # interpreter has them (override with FPV_SERVER_PYTHON).
