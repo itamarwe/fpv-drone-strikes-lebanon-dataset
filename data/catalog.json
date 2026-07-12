@@ -1,0 +1,2091 @@
+{
+  "schema_version": 1,
+  "videos": [
+    {
+      "id": "2026-06-17_force_position_kfar_tebnit_mmirleb_17590",
+      "date": "2026-06-17",
+      "description": "Infiltrating Israeli army force position, outskirts of Kfar Tebnit (Ababil dive drone)",
+      "original_title": "استهداف تموضع قُوّة مُتسلّلة تابعة لجيش العدوّ الإسرائيلي في أطراف بلدة كفرتبنيت جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Kfar Tebnit",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-17_force_position_kfar_tebnit_mmirleb_17590.mp4",
+        "thumbnail_key": "thumbnails/2026-06-17_force_position_kfar_tebnit_mmirleb_17590.jpg"
+      }
+    },
+    {
+      "id": "2026-06-14_engineering_vehicle_arnoun_ababil_drone",
+      "date": "2026-06-14",
+      "description": "Israeli army engineering vehicle, outskirts of Arnoun (Ababil dive drone)",
+      "original_title": "استهداف آليّة هندسيّة تابعة لجيش العدوّ الإسرائيلي في أطراف بلدة أرنون جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Arnoun",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-14_engineering_vehicle_arnoun_ababil_drone.mp4",
+        "thumbnail_key": "thumbnails/2026-06-14_engineering_vehicle_arnoun_ababil_drone.jpg"
+      }
+    },
+    {
+      "id": "2026-06-13_command_center_beaufort_castle_mmirleb_17580",
+      "date": "2026-06-13",
+      "description": "Newly established Israeli army command center, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف مركز قيادي مُستحدث تابع لجيش العدوّ الإسرائيلي في محيط قلعة الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-13_command_center_beaufort_castle_mmirleb_17580.mp4",
+        "thumbnail_key": "thumbnails/2026-06-13_command_center_beaufort_castle_mmirleb_17580.jpg"
+      }
+    },
+    {
+      "id": "2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586",
+      "date": "2026-06-13",
+      "description": "\"Namera\" troop carrier, newly established Hamamis Hill site opposite Khiam (Ababil dive drone)",
+      "original_title": "استهداف ناقلة جند \"نميرا\" تابعة لجيش العدوّ الإسرائيلي في موقع مرتفع الحمامص المُستحدث مقابل بلدة الخيام جنوبيّ لبنان بمحلّقة أبابيل الإنقضاضيّة",
+      "town": "Khiam",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586.mp4",
+        "thumbnail_key": "thumbnails/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586.jpg"
+      }
+    },
+    {
+      "id": "2026-06-13_excavator_majdal_zoun",
+      "date": "2026-06-13",
+      "description": "Israeli army engineering vehicle, outskirts of Majdal Zoun (Ababil dive drone)",
+      "original_title": "استهداف آليّة هندسيّة تابعة لجيش العدوّ الإسرائيلي في أطراف بلدة مجدل زون جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Majdal Zoun",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-13_excavator_majdal_zoun.mp4",
+        "thumbnail_key": "thumbnails/2026-06-13_excavator_majdal_zoun.jpg"
+      }
+    },
+    {
+      "id": "2026-06-13_logistics_position_bayyadah_mmirleb_17434",
+      "date": "2026-06-13",
+      "description": "Israeli army logistics point, al-Bayyada (Ababil dive drone)",
+      "original_title": "استهداف نقطة لوجستيّة تابعة لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-13_logistics_position_bayyadah_mmirleb_17434.mp4",
+        "thumbnail_key": "thumbnails/2026-06-13_logistics_position_bayyadah_mmirleb_17434.jpg"
+      }
+    },
+    {
+      "id": "2026-06-12_merkava_tank_yahmor_al_shqif",
+      "date": "2026-06-12",
+      "description": "Merkava tank, eastern outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في الأطراف الشرقيّة لبلدة يُحمر الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Yahmor al-Shaqif",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-12_merkava_tank_yahmor_al_shqif.mp4",
+        "thumbnail_key": "thumbnails/2026-06-12_merkava_tank_yahmor_al_shqif.jpg"
+      }
+    },
+    {
+      "id": "2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone",
+      "date": "2026-06-12",
+      "description": "D9 bulldozer, Tayr Harfa (Ababil dive drone)",
+      "original_title": "استهداف جرّافة دي 9 تابعة لجيش العدوّ الإسرائيلي في بلدة طيرحرفا جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Tayr Harfa",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.mp4",
+        "thumbnail_key": "thumbnails/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone.jpg"
+      }
+    },
+    {
+      "id": "2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595",
+      "date": "2026-06-12",
+      "description": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في محيط قلعة الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595.mp4",
+        "thumbnail_key": "thumbnails/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595.jpg"
+      }
+    },
+    {
+      "id": "2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598",
+      "date": "2026-06-11",
+      "description": "D9 engineering vehicle, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف آليّة هندسيّة (D9) تابعة لجيش العدوّ الإسرائيلي في محيط قلعة الشقيف جنوبيّ لبنان بمحلّقة أبابيل الإنقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.mp4",
+        "thumbnail_key": "thumbnails/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598.jpg"
+      }
+    },
+    {
+      "id": "2026-06-11_israeli_soldiers_adaissah_mmirleb_17602",
+      "date": "2026-06-11",
+      "description": "Israeli army soldiers, Adaisseh (Ababil dive drone)",
+      "original_title": "استهداف جنود جيش العدوّ الإسرائيلي في بلدة العديسة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Adaissah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.mp4",
+        "thumbnail_key": "thumbnails/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602.jpg"
+      }
+    },
+    {
+      "id": "2026-06-11_merkava_tank_tayr_harfa_ababil_drone",
+      "date": "2026-06-11",
+      "description": "Merkava tank, Tayr Harfa (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في بلدة طيرحرفا جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Tayr Harfa",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.mp4",
+        "thumbnail_key": "thumbnails/2026-06-11_merkava_tank_tayr_harfa_ababil_drone.jpg"
+      }
+    },
+    {
+      "id": "2026-06-10_merkava_tank_beaufort_castle",
+      "date": "2026-06-10",
+      "description": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في مُحيط قلعة الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-10_merkava_tank_beaufort_castle.mp4",
+        "thumbnail_key": "thumbnails/2026-06-10_merkava_tank_beaufort_castle.jpg"
+      }
+    },
+    {
+      "id": "2026-06-10_humvee_yahmar_al_shaqif",
+      "date": "2026-06-10",
+      "description": "Military Hummer, eastern outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+      "original_title": "استهداف هامر عسكري تابعة لجيش العدوّ الإسرائيلي في الأطراف الشرقيّة لبلدة يُحمر الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Yahmor al-Shaqif",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-10_humvee_yahmar_al_shaqif.mp4",
+        "thumbnail_key": "thumbnails/2026-06-10_humvee_yahmar_al_shaqif.jpg"
+      }
+    },
+    {
+      "id": "2026-06-09_namer_apc_metula_southern_outskirts_khiam",
+      "date": "2026-06-09",
+      "description": "\"Namera\" vehicle, city of Khiam (Ababil dive drone)",
+      "original_title": "استهداف آليّة نميرا تابعة لجيش العدوّ الإسرائيلي في مدينة الخِيام جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Khiam",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-09_namer_apc_metula_southern_outskirts_khiam.mp4",
+        "thumbnail_key": "thumbnails/2026-06-09_namer_apc_metula_southern_outskirts_khiam.jpg"
+      }
+    },
+    {
+      "id": "2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif",
+      "date": "2026-06-08",
+      "description": "Israeli army vehicles, outskirts of Yohmor al-Shaqif (Ababil dive drones)",
+      "original_title": "استهداف آليّات تابعة لجيش العدوّ الإسرائيلي في أطراف بلدة يحمر الشقيف جنوب لبنان بِمُحلّقات أبابيل الانقضاضيّة",
+      "town": "Yahmor al-Shaqif",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif.mp4",
+        "thumbnail_key": "thumbnails/2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif.jpg"
+      }
+    },
+    {
+      "id": "2026-06-08_command_and_control_vehicle_beaufort_castle",
+      "date": "2026-06-08",
+      "description": "Command-and-control vehicle, outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+      "original_title": "استهداف آليّة قيادة وسيطرة تابعة لجيش العدوّ الإسرائيلي في أطراف بلدة يحمر الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Yahmor al-Shaqif",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-08_command_and_control_vehicle_beaufort_castle.mp4",
+        "thumbnail_key": "thumbnails/2026-06-08_command_and_control_vehicle_beaufort_castle.jpg"
+      }
+    },
+    {
+      "id": "2026-06-07_merkava_tank_beaufort_castle",
+      "date": "2026-06-07",
+      "description": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في محيط قلعة الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-07_merkava_tank_beaufort_castle.mp4",
+        "thumbnail_key": "thumbnails/2026-06-07_merkava_tank_beaufort_castle.jpg"
+      }
+    },
+    {
+      "id": "2026-06-07_command_namer_vehicle_yahmor_al_shqif",
+      "date": "2026-06-07",
+      "description": "Command \"Namera\" vehicle, outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+      "original_title": "استهداف آليّة نميرا قياديّة تابعة لجيش العدوّ الإسرائيلي في أطراف بلدة يحمر الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Yahmor al-Shaqif",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-07_command_namer_vehicle_yahmor_al_shqif.mp4",
+        "thumbnail_key": "thumbnails/2026-06-07_command_namer_vehicle_yahmor_al_shqif.jpg"
+      }
+    },
+    {
+      "id": "2026-06-06_sholef_howitzer_adaissah",
+      "date": "2026-06-06",
+      "description": "Artillery vehicle, Adaisseh (Ababil dive drone)",
+      "original_title": "استهداف آليّة مدفعيّة تابعة لجيش العدوّ الإسرائيلي في بلدة العديسة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Adaissah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-06_sholef_howitzer_adaissah.mp4",
+        "thumbnail_key": "thumbnails/2026-06-06_sholef_howitzer_adaissah.jpg"
+      }
+    },
+    {
+      "id": "2026-06-06_merkava_tank_blat_position",
+      "date": "2026-06-06",
+      "description": "Merkava tank, newly established Blat site (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في موقع بلاط المستحدث جنوب لبنان بمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Jabal Blat",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-06_merkava_tank_blat_position.mp4",
+        "thumbnail_key": "thumbnails/2026-06-06_merkava_tank_blat_position.jpg"
+      }
+    },
+    {
+      "id": "2026-06-06_artillery_vehicle_adaissah_mmirleb_17504",
+      "date": "2026-06-06",
+      "description": "Artillery vehicle, Adaisseh (Ababil dive drone)",
+      "original_title": "استهداف آليّة مدفعيّة تابعة لجيش العدوّ الإسرائيلي في بلدة العديسة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Adaissah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-06_artillery_vehicle_adaissah_mmirleb_17504.mp4",
+        "thumbnail_key": "thumbnails/2026-06-06_artillery_vehicle_adaissah_mmirleb_17504.jpg"
+      }
+    },
+    {
+      "id": "2026-06-05_humvee_near_khiam",
+      "date": "2026-06-05",
+      "description": "Humvee carrying Israeli army soldiers, city of Khiam (Ababil dive drone)",
+      "original_title": "استهداف آليّة هامفي تقلُّ جنود جيش العدوّ الإسرائيلي في مدينة الخيام جنوبيّ لبنان بمحلّقة أبابيل الإنقضاضيّة",
+      "town": "Khiam",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-05_humvee_near_khiam.mp4",
+        "thumbnail_key": "thumbnails/2026-06-05_humvee_near_khiam.jpg"
+      }
+    },
+    {
+      "id": "2026-06-05_soldiers_khiam_mmirleb_17315",
+      "date": "2026-06-05",
+      "description": "Israeli army soldiers, city of Khiam (Ababil dive drone)",
+      "original_title": "استهداف جنود جيش العدوّ الإسرائيلي في مدينة الخيام بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Khiam",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-05_soldiers_khiam_mmirleb_17315.mp4",
+        "thumbnail_key": "thumbnails/2026-06-05_soldiers_khiam_mmirleb_17315.jpg"
+      }
+    },
+    {
+      "id": "2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447",
+      "date": "2026-06-05",
+      "description": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في محيط قلعة الشقيف جنوبيّ لبنان بمحلّقة أبابيل الإنقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447.mp4",
+        "thumbnail_key": "thumbnails/2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447.jpg"
+      }
+    },
+    {
+      "id": "2026-06-04_merkava_tank_beaufort_castle_02",
+      "date": "2026-06-04",
+      "description": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في محيط قلعة الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-04_merkava_tank_beaufort_castle_02.mp4",
+        "thumbnail_key": "thumbnails/2026-06-04_merkava_tank_beaufort_castle_02.jpg"
+      }
+    },
+    {
+      "id": "2026-06-04_merkava_tank_beaufort_castle",
+      "date": "2026-06-04",
+      "description": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في محيط قلعة الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-04_merkava_tank_beaufort_castle.mp4",
+        "thumbnail_key": "thumbnails/2026-06-04_merkava_tank_beaufort_castle.jpg"
+      }
+    },
+    {
+      "id": "2026-06-03_merkava_tank_zawtar_al_sharqiyah",
+      "date": "2026-06-03",
+      "description": "Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في الأطراف الجنوبيّة لبلدة زوطر الشرقيّة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-03_merkava_tank_zawtar_al_sharqiyah.mp4",
+        "thumbnail_key": "thumbnails/2026-06-03_merkava_tank_zawtar_al_sharqiyah.jpg"
+      }
+    },
+    {
+      "id": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492",
+      "date": "2026-06-03",
+      "description": "Troop carrier, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف ناقلة جُند تابعة لجيش العدوّ الإسرائيلي في الأطراف الجنوبيّة لبلدة زوطر الشرقيّة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492.mp4",
+        "thumbnail_key": "thumbnails/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492.jpg"
+      }
+    },
+    {
+      "id": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521",
+      "date": "2026-06-03",
+      "description": "Troop carrier, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف ناقلة جُند تابعة لجيش العدوّ الإسرائيلي في الأطراف الجنوبيّة لبلدة زوطر الشرقيّة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521.mp4",
+        "thumbnail_key": "thumbnails/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521.jpg"
+      }
+    },
+    {
+      "id": "2026-06-03_m113_apc_beaufort_castle",
+      "date": "2026-06-03",
+      "description": "Troop carrier, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف ناقلة جُند تابعة لجيش العدوّ الإسرائيلي في محيط قلعة الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-03_m113_apc_beaufort_castle.mp4",
+        "thumbnail_key": "thumbnails/2026-06-03_m113_apc_beaufort_castle.jpg"
+      }
+    },
+    {
+      "id": "2026-06-03_humvee_zawtar_al_sharqiyah",
+      "date": "2026-06-03",
+      "description": "Military Hummer, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف هامر عسكري تابع لجيش العدوّ الإسرائيلي في الأطراف الجنوبيّة لبلدة زوطر الشرقيّة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-03_humvee_zawtar_al_sharqiyah.mp4",
+        "thumbnail_key": "thumbnails/2026-06-03_humvee_zawtar_al_sharqiyah.jpg"
+      }
+    },
+    {
+      "id": "2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah",
+      "date": "2026-06-02",
+      "description": "Israeli army soldiers, eastern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف جُنود تابعين لجيش العدوّ الإسرائيلي في الأطراف الشرقيّة لبلدة زوطر الشرقيّة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah.mp4",
+        "thumbnail_key": "thumbnails/2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah.jpg"
+      }
+    },
+    {
+      "id": "2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif",
+      "date": "2026-06-02",
+      "description": "Soldier gathering + \"Namera\" vehicle, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drones)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي وآليّة نميرا في الأطراف الجنوبيّة لبلدة زوطر الشرقيّة جنوب لبنان بِمُحلّقات أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif.mp4",
+        "thumbnail_key": "thumbnails/2026-06-02_soldiers_and_namer_vehicle_near_yahmor_al_shqif.jpg"
+      }
+    },
+    {
+      "id": "2026-06-02_namer_vehicle_near_yahmor_al_shqif",
+      "date": "2026-06-02",
+      "description": "\"Namera\" vehicle, southern outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+      "original_title": "استهداف آليّة نميرا تابعة لجيش العدوّ الإسرائيلي في الأطراف الجنوبيّة لبلدة يحمر الشقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Yahmor al-Shaqif",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-02_namer_vehicle_near_yahmor_al_shqif.mp4",
+        "thumbnail_key": "thumbnails/2026-06-02_namer_vehicle_near_yahmor_al_shqif.jpg"
+      }
+    },
+    {
+      "id": "2026-06-02_merkava_tank_near_yahmor_al_shqif",
+      "date": "2026-06-02",
+      "description": "Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في الأطراف الجنوبيّة لبلدة زوطر الشرقيّة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-02_merkava_tank_near_yahmor_al_shqif.mp4",
+        "thumbnail_key": "thumbnails/2026-06-02_merkava_tank_near_yahmor_al_shqif.jpg"
+      }
+    },
+    {
+      "id": "2026-06-01_soldiers_near_yahmor_al_shqif",
+      "date": "2026-06-01",
+      "description": "Israeli army soldier gathering, southern outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي على الأطراف الجنوبيّة لبلدة يحمر الشقيف بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Yahmor al-Shaqif",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-01_soldiers_near_yahmor_al_shqif.mp4",
+        "thumbnail_key": "thumbnails/2026-06-01_soldiers_near_yahmor_al_shqif.jpg"
+      }
+    },
+    {
+      "id": "2026-06-01_merkava_tank_near_yahmor_al_shqif",
+      "date": "2026-06-01",
+      "description": "Merkava tank, southern outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في الأطراف الجنوبيّة لبلدة يحمر الشقيف جنوب لبنان بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Yahmor al-Shaqif",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-06-01_merkava_tank_near_yahmor_al_shqif.mp4",
+        "thumbnail_key": "thumbnails/2026-06-01_merkava_tank_near_yahmor_al_shqif.jpg"
+      }
+    },
+    {
+      "id": "2026-05-31_soldiers_gathering_near_border_site",
+      "date": "2026-05-31",
+      "description": "Israeli army soldier gathering, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في محيط قلعة الشقيف بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-31_soldiers_gathering_near_border_site.mp4",
+        "thumbnail_key": "thumbnails/2026-05-31_soldiers_gathering_near_border_site.jpg"
+      }
+    },
+    {
+      "id": "2026-05-31_namer_vehicle_and_apc_in_dibel",
+      "date": "2026-05-31",
+      "description": "\"Namera\" vehicle and troop carrier, Dibel (Ababil dive drone)",
+      "original_title": "استهداف آليّة نميرا وناقلة جُند تابعة لجيش العدوّ الإسرائيلي في بلدة دبل جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Dibel / Debel",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-31_namer_vehicle_and_apc_in_dibel.mp4",
+        "thumbnail_key": "thumbnails/2026-05-31_namer_vehicle_and_apc_in_dibel.jpg"
+      }
+    },
+    {
+      "id": "2026-05-31_humvee_vehicle_at_al_assi",
+      "date": "2026-05-31",
+      "description": "Soldiers' position and \"Humvee\" vehicle, vicinity of Beaufort Castle (two Ababil dive drones)",
+      "original_title": "استهداف نقطة تموضع جنود وآليّة \"هامفي\" تابعة لجيش العدوّ الإسرائيلي في محيط قلعة الشقيف بمحلّقتَي أبابيل الانقضاضيّة",
+      "town": "Border area opposite Mays al-Jabal",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-31_humvee_vehicle_at_al_assi.mp4",
+        "thumbnail_key": "thumbnails/2026-05-31_humvee_vehicle_at_al_assi.jpg"
+      }
+    },
+    {
+      "id": "2026-05-30_merkava_tank_in_border_area",
+      "date": "2026-05-30",
+      "description": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في محيط قلعة شقيف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Beaufort Castle",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-30_merkava_tank_in_border_area.mp4",
+        "thumbnail_key": "thumbnails/2026-05-30_merkava_tank_in_border_area.jpg"
+      }
+    },
+    {
+      "id": "2026-05-30_technical_equipment_rashaf_mmirleb_17060",
+      "date": "2026-05-30",
+      "description": "Israeli army technical equipment, Rashaf (Ababil dive drone)",
+      "original_title": "استهداف تجهيزات فنيّة تابعة لجيش العدوّ الإسرائيلي في بلدة رشاف جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Rachaf / Rashaf",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-30_technical_equipment_rashaf_mmirleb_17060.mp4",
+        "thumbnail_key": "thumbnails/2026-05-30_technical_equipment_rashaf_mmirleb_17060.jpg"
+      }
+    },
+    {
+      "id": "2026-05-29_soldier_at_misgav_am",
+      "date": "2026-05-29",
+      "description": "Israeli army soldier, Misgav Am site (Ababil dive drone)",
+      "original_title": "استهداف جُندي تابع لجيش العدوّ الإسرائيلي في موقع مسغاف عام شمال فلسطين المُحتلّة بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Misgav Am",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-29_soldier_at_misgav_am.mp4",
+        "thumbnail_key": "thumbnails/2026-05-29_soldier_at_misgav_am.jpg"
+      }
+    },
+    {
+      "id": "2026-05-29_namer_apc_in_ainata",
+      "date": "2026-05-29",
+      "description": "Troop carrier, Ainata (Ababil dive drone)",
+      "original_title": "استهداف ناقلة جُند تابعة لجيش العدوّ الإسرائيلي في بلدة عيناتا جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Ainata",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-29_namer_apc_in_ainata.mp4",
+        "thumbnail_key": "thumbnails/2026-05-29_namer_apc_in_ainata.jpg"
+      }
+    },
+    {
+      "id": "2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16993",
+      "date": "2026-05-28",
+      "description": "Iron Dome launcher vehicle, city of Khiam (Ababil dive drone)",
+      "original_title": "استهداف آليّة لِناشر قبّة حديديّة تابعة لجيش العدوّ الإسرائيلي في مدينة الخِيام جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Khiam",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16993.mp4",
+        "thumbnail_key": "thumbnails/2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16993.jpg"
+      }
+    },
+    {
+      "id": "2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154",
+      "date": "2026-05-28",
+      "description": "Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي على الأطراف الجنوبيّة لبلدة زوطر الشرقيّة جنوبيّ لبنان بمحلّقة أبابيل الإنقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154.mp4",
+        "thumbnail_key": "thumbnails/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154.jpg"
+      }
+    },
+    {
+      "id": "2026-05-27_merkava_tank_on_military_route",
+      "date": "2026-05-27",
+      "description": "Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي على الأطراف الجنوبيّة لبلدة زوطر الشرقيّة بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-27_merkava_tank_on_military_route.mp4",
+        "thumbnail_key": "thumbnails/2026-05-27_merkava_tank_on_military_route.jpg"
+      }
+    },
+    {
+      "id": "2026-05-27_iron_technical_platform_at_jal_al_alam",
+      "date": "2026-05-27",
+      "description": "Iron Dome platform, Jal al-Alam site (Ababil dive drone)",
+      "original_title": "استهداف منصّة قبّة حديديّة تابعة لجيش العدوّ الإسرائيلي في موقع جل العلام شمال فلسطين المحتلّة بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Border near Rosh HaNikra",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-27_iron_technical_platform_at_jal_al_alam.mp4",
+        "thumbnail_key": "thumbnails/2026-05-27_iron_technical_platform_at_jal_al_alam.jpg"
+      }
+    },
+    {
+      "id": "2026-05-27_enemy_vehicle_in_northern_settlement",
+      "date": "2026-05-27",
+      "description": "Israeli army vehicle, Galilee Forests camp (Ababil dive drone)",
+      "original_title": "استهداف آليّة تابعة لجيش العدوّ الإسرائيلي في معسكر غابات الجليل شمال فلسطين المحتلّة بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Shomera",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-27_enemy_vehicle_in_northern_settlement.mp4",
+        "thumbnail_key": "thumbnails/2026-05-27_enemy_vehicle_in_northern_settlement.jpg"
+      }
+    },
+    {
+      "id": "2026-05-26_merkava_tank_in_rashaf",
+      "date": "2026-05-26",
+      "description": "Two Merkava tanks, Rashaf (Ababil dive drones)",
+      "original_title": "استهداف دبّابتَي ميركافا تابعتين لجيش العدوّ الإسرائيلي في بلدة رشاف جنوب لبنان بِمُحلّقات أبابيل الانقضاضيّة",
+      "town": "Rachaf / Rashaf",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-26_merkava_tank_in_rashaf.mp4",
+        "thumbnail_key": "thumbnails/2026-05-26_merkava_tank_in_rashaf.jpg"
+      }
+    },
+    {
+      "id": "2026-05-26_communications_equipment_at_al_assi",
+      "date": "2026-05-26",
+      "description": "Communications equipment, al-Assi site on the southern Lebanese border (Ababil dive drone)",
+      "original_title": "استهداف أجهزة اتّصالات تابعة لجيش العدوّ الإسرائيلي في موقع العاصي على الحدود اللبنانيّة الجنوبيّة بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Border area opposite Mays al-Jabal",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-26_communications_equipment_at_al_assi.mp4",
+        "thumbnail_key": "thumbnails/2026-05-26_communications_equipment_at_al_assi.jpg"
+      }
+    },
+    {
+      "id": "2026-05-26_anti_drone_platform_biranit",
+      "date": "2026-05-26",
+      "description": "Iron Dome platform, \"Biranit\" barracks on the southern Lebanese border (Ababil dive drone)",
+      "original_title": "استهداف منصّة قبّة حديديّة تابعة لجيش العدوّ الإسرائيلي في ثكنة \"برانيت\" على الحدود اللبنانيّة الجنوبيّة بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Biranit barracks (Israel), approx",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-26_anti_drone_platform_biranit.mp4",
+        "thumbnail_key": "thumbnails/2026-05-26_anti_drone_platform_biranit.jpg"
+      }
+    },
+    {
+      "id": "2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068",
+      "date": "2026-05-26",
+      "description": "Military Hummer at the riverbed, Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف آليّة هامر تابعة لجيش العدوّ الإسرائيلي عند مجرى النهر في بلدة زوطر الشرقيّة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068.mp4",
+        "thumbnail_key": "thumbnails/2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068.jpg"
+      }
+    },
+    {
+      "id": "2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143",
+      "date": "2026-05-26",
+      "description": "D9 bulldozer, Zawtar al-Sharqiyah (Ababil dive drone)",
+      "original_title": "استهداف جرّافة دي 9 تابعة لجيش العدوّ الإسرائيلي في بلدة زوطر الشرقيّة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Zawtar al-Sharqiyah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143.mp4",
+        "thumbnail_key": "thumbnails/2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143.jpg"
+      }
+    },
+    {
+      "id": "2026-05-25_two_israeli_army_vehicles",
+      "date": "2026-05-25",
+      "description": "Two Israeli army vehicles, Naqoura naval site on the southern Lebanese border (two Ababil dive drones)",
+      "original_title": "استهداف آليّتين تابعتين لجيش العدوّ الإسرائيلي عند موقع الناقورة البحريّ على الحدود اللبنانيّة الجنوبيّة بمحلّقتَي أبابيل الانقضاضيّة",
+      "town": "Naqoura",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-25_two_israeli_army_vehicles.mp4",
+        "thumbnail_key": "thumbnails/2026-05-25_two_israeli_army_vehicles.jpg"
+      }
+    },
+    {
+      "id": "2026-05-25_soldiers_position_tent_hadab_al_bustan",
+      "date": "2026-05-25",
+      "description": "Soldiers' positioning tent, Hadab al-Bustan site (Ababil dive drone)",
+      "original_title": "استهداف خيمة تموضع لجنود جيش العدوّ الإسرائيلي في موقع حدب البستان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Manor Ridge",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-25_soldiers_position_tent_hadab_al_bustan.mp4",
+        "thumbnail_key": "thumbnails/2026-05-25_soldiers_position_tent_hadab_al_bustan.jpg"
+      }
+    },
+    {
+      "id": "2026-05-25_command_room_tayr_harfa",
+      "date": "2026-05-25",
+      "description": "Command room, \"Avivim\" barracks on the southern Lebanese border (Ababil dive drone)",
+      "original_title": "استهداف غرفة قيادة تابعة لجيش العدوّ الإسرائيلي في ثكنة \"افيفيم\" على الحدود اللبنانيّة الجنوبيّة بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Avivim barracks (Israel), approx",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-25_command_room_tayr_harfa.mp4",
+        "thumbnail_key": "thumbnails/2026-05-25_command_room_tayr_harfa.jpg"
+      }
+    },
+    {
+      "id": "2026-05-24_namer_apc_taybeh",
+      "date": "2026-05-24",
+      "description": "\"Namera\" vehicle, Taybeh (Ababil dive drone)",
+      "original_title": "استهداف آليّة نميرا تابعة جيش العدوّ الإسرائيلي في بلدة الطيبة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Taybeh",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-24_namer_apc_taybeh.mp4",
+        "thumbnail_key": "thumbnails/2026-05-24_namer_apc_taybeh.jpg"
+      }
+    },
+    {
+      "id": "2026-05-24_humvee_manara_mmirleb_16823",
+      "date": "2026-05-24",
+      "description": "Command Hummer vehicle, Manara site (Ababil dive drone)",
+      "original_title": "استهداف آليّة هامر قياديّة تابعة لجيش العدوّ الإسرائيلي في موقع المنارة بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Manara",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-24_humvee_manara_mmirleb_16823.mp4",
+        "thumbnail_key": "thumbnails/2026-05-24_humvee_manara_mmirleb_16823.jpg"
+      }
+    },
+    {
+      "id": "2026-05-23_soldier_gathering_bayyadah",
+      "date": "2026-05-23",
+      "description": "Israeli army soldier gathering, al-Bayyada (Ababil dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة أبابيل الانقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-23_soldier_gathering_bayyadah.mp4",
+        "thumbnail_key": "thumbnails/2026-05-23_soldier_gathering_bayyadah.jpg"
+      }
+    },
+    {
+      "id": "2026-05-23_two_iron_dome_platforms_ramim",
+      "date": "2026-05-23",
+      "description": "Two Iron Dome platforms, Ramim (Hounin) barracks (two Ababil dive drones)",
+      "original_title": "استهداف منصّتَي قبّة حديديّة تابعتَين لجيش العدوّ الإسرائيلي في ثكنة راميم (هونين) بِمُحلّقتَي أبابيل الانقضاضيّة",
+      "town": "Ramim Ridge",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-23_two_iron_dome_platforms_ramim.mp4",
+        "thumbnail_key": "thumbnails/2026-05-23_two_iron_dome_platforms_ramim.jpg"
+      }
+    },
+    {
+      "id": "2026-05-23_anti_drone_system_jardah",
+      "date": "2026-05-23",
+      "description": "Counter-drone system, al-Jardah site on the southern Lebanese border (Ababil dive drone)",
+      "original_title": "استهداف منظومة مضادّة للمحلّقات تابعة لجيش العدوّ الإسرائيلي عند موقع الجرداح على الحدود اللبنانيّة الجنوبيّة بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Border Israel in front of Alma al-Shaab",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-23_anti_drone_system_jardah.mp4",
+        "thumbnail_key": "thumbnails/2026-05-23_anti_drone_system_jardah.jpg"
+      }
+    },
+    {
+      "id": "2026-05-22_soldier_manara",
+      "date": "2026-05-22",
+      "description": "Israeli army soldier, Manara site (Ababil dive drone)",
+      "original_title": "استهداف أحد جنود جيش العدو الإسرائيلي في موقع المنارة شمال فلسطين المحتلة بِمُحلّقة أبابيل الإنقضاضيّة",
+      "town": "Manara",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-22_soldier_manara.mp4",
+        "thumbnail_key": "thumbnails/2026-05-22_soldier_manara.jpg"
+      }
+    },
+    {
+      "id": "2026-05-22_merkava_tank_markaba",
+      "date": "2026-05-22",
+      "description": "Merkava tank, Markaba (Ababil dive drone)",
+      "original_title": "استهداف دبابة ميركافا لجيش العدو الإسرائيلي في بلدة مركبا جنوب لبنان بِمُحلّقة أبابيل الإنقضاضيّة",
+      "town": "Markaba",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-22_merkava_tank_markaba.mp4",
+        "thumbnail_key": "thumbnails/2026-05-22_merkava_tank_markaba.jpg"
+      }
+    },
+    {
+      "id": "2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan",
+      "date": "2026-05-21",
+      "description": "Engineering vehicle, Khallet al-Raj at the outskirts of Deir Siryan (dive drone)",
+      "original_title": "استهداف آليّة هندسيّة تابعة لجيش العدوّ الإسرائيلي في خلّة الراج عند أطراف بلدة دير سريان بمحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan.mp4",
+        "thumbnail_key": "thumbnails/2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan.jpg"
+      }
+    },
+    {
+      "id": "2026-05-20_namer_apc_hadatha",
+      "date": "2026-05-20",
+      "description": "\"Namera\" vehicle, Hadatha (Ababil dive drone)",
+      "original_title": "استهداف آلية نميرا لجيش العدو الإسرائيلي في بلدة حداثا جنوب لبنان بِمُحلّقة أبابيل الإنقضاضيّة",
+      "town": "Haddatha",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-20_namer_apc_hadatha.mp4",
+        "thumbnail_key": "thumbnails/2026-05-20_namer_apc_hadatha.jpg"
+      }
+    },
+    {
+      "id": "2026-05-20_armored_brigade_401_hq_debel",
+      "date": "2026-05-20",
+      "description": "Newly established HQ of the 401st Armored Brigade, Dibel (swarm of Ababil dive drones)",
+      "original_title": "استهداف المقرّ المستحدث لقيادة لواء المدرّعات 401 التابع لجيش العدوّ الإسرائيلي في بلدة دبل بسربٍ من محلّقات أبابيل الإنقضاضيّة",
+      "town": "Dibel / Debel",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-20_armored_brigade_401_hq_debel.mp4",
+        "thumbnail_key": "thumbnails/2026-05-20_armored_brigade_401_hq_debel.jpg"
+      }
+    },
+    {
+      "id": "2026-05-19_military_vehicle_misgav_am",
+      "date": "2026-05-19",
+      "description": "Military vehicle, Misgav Am settlement (Ababil dive drone)",
+      "original_title": "استهداف آليّة عسكرية تابعة لجيش العدوّ الإسرائيلي في مستوطنة مسغاف عام بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Misgav Am",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-19_military_vehicle_misgav_am.mp4",
+        "thumbnail_key": "thumbnails/2026-05-19_military_vehicle_misgav_am.jpg"
+      }
+    },
+    {
+      "id": "2026-05-19_iron_dome_platform_misgav_am_mmirleb_16697",
+      "date": "2026-05-19",
+      "description": "Iron Dome platform, Misgav Am settlement on the southern Lebanese border (Ababil dive drone)",
+      "original_title": "استهداف منصّة قبّة حديديّة تابعة لجيش العدوّ الإسرائيلي في مستوطنة مسكاف عام على الحدود اللبنانيّة الجنوبيّة بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Misgav Am",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-19_iron_dome_platform_misgav_am_mmirleb_16697.mp4",
+        "thumbnail_key": "thumbnails/2026-05-19_iron_dome_platform_misgav_am_mmirleb_16697.jpg"
+      }
+    },
+    {
+      "id": "2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16395",
+      "date": "2026-05-19",
+      "description": "Iron Dome platform, Jal al-Alam site (dive drone)",
+      "original_title": "استهداف منصّة قبّة حديديّة لجيش العدوّ الإسرائيلي في موقع جلّ العلام بمحلّقة انقضاضيّة",
+      "town": "Border near Rosh HaNikra",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16395.mp4",
+        "thumbnail_key": "thumbnails/2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16395.jpg"
+      }
+    },
+    {
+      "id": "2026-05-19_communications_vehicle_taybeh_mmirleb_16552",
+      "date": "2026-05-19",
+      "description": "Communications vehicle, Taybeh (Ababil dive drone)",
+      "original_title": "استهداف آليّة اتصالات تابعة لجيش العدوّ الإسرائيلي في بلدة الطيّبة جنوبي لبنان بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Taybeh",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-19_communications_vehicle_taybeh_mmirleb_16552.mp4",
+        "thumbnail_key": "thumbnails/2026-05-19_communications_vehicle_taybeh_mmirleb_16552.jpg"
+      }
+    },
+    {
+      "id": "2026-05-19_engineering_vehicle_khiam_mmirleb_16767",
+      "date": "2026-05-19",
+      "description": "Engineering vehicle, city of Khiam (Ababil dive drone)",
+      "original_title": "استهداف آليّة هندسيّة تابعة لجيش العدوّ الإسرائيلي في مدينة الخيام بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Khiam",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-19_engineering_vehicle_khiam_mmirleb_16767.mp4",
+        "thumbnail_key": "thumbnails/2026-05-19_engineering_vehicle_khiam_mmirleb_16767.jpg"
+      }
+    },
+    {
+      "id": "2026-05-18_iron_dome_platform_shomera",
+      "date": "2026-05-18",
+      "description": "Iron Dome platform, Shomera settlement (dive drone)",
+      "original_title": "استهداف منصّة قبّة حديديّة لجيش العدوّ الإسرائيلي في مستوطنة شوميرا بمحلّقة انقضاضيّة",
+      "town": "Near Shomera (Israel), approx",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-18_iron_dome_platform_shomera.mp4",
+        "thumbnail_key": "thumbnails/2026-05-18_iron_dome_platform_shomera.jpg"
+      }
+    },
+    {
+      "id": "2026-05-18_brigade_300_commander_vehicle_shomera_mmirleb_16516",
+      "date": "2026-05-18",
+      "description": "Vehicle of the 300th Brigade commander, Shomera barracks (Ababil dive drone)",
+      "original_title": "استهداف آليّة قائد اللواء 300 التابع لجيش العدوّ الإسرائيلي في ثكنة شوميرا في مستوطنة شوميرا شمال فلسطين المُحتلّة بِمُحلّقة أبابيل الإنقضاضيّة",
+      "town": "Near Shomera (Israel), approx",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-18_brigade_300_commander_vehicle_shomera_mmirleb_16516.mp4",
+        "thumbnail_key": "thumbnails/2026-05-18_brigade_300_commander_vehicle_shomera_mmirleb_16516.jpg"
+      }
+    },
+    {
+      "id": "2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16558",
+      "date": "2026-05-18",
+      "description": "Engineering vehicle, Khallet al-Raj (Ababil dive drone)",
+      "original_title": "استهداف آليّة هندسيّة تابعة لجيش العدوّ الإسرائيلي في خلّة الراج بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16558.mp4",
+        "thumbnail_key": "thumbnails/2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16558.jpg"
+      }
+    },
+    {
+      "id": "2026-05-17_logistics_position_bayyadah_iskandarounah_mmirleb_16413",
+      "date": "2026-05-17",
+      "description": "Enemy logistics position, Iskandarounah in al-Bayyada (dive drone)",
+      "original_title": "استهداف تموضع لوجستي للعدو في اسكندرونة بيلدة البيّاضة جنوب لبنان بِمُحلّقة إنقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-17_logistics_position_bayyadah_iskandarounah_mmirleb_16413.mp4",
+        "thumbnail_key": "thumbnails/2026-05-17_logistics_position_bayyadah_iskandarounah_mmirleb_16413.jpg"
+      }
+    },
+    {
+      "id": "2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443",
+      "date": "2026-05-17",
+      "description": "\"Buggy\" vehicle, Iskandarounah in al-Bayyada (dive drone)",
+      "original_title": "استهداف آليّة باغي تابعة لجيش العدوّ الإسرائيلي في اسكندرونة في بلدة البيّاضة جنوب لبنان بِمُحلّقة إنقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443.mp4",
+        "thumbnail_key": "thumbnails/2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443.jpg"
+      }
+    },
+    {
+      "id": "2026-05-16_hummer_iskandarounah_naqoura",
+      "date": "2026-05-16",
+      "description": "Military Hummer, Iskandarounah in al-Bayyada (dive drone)",
+      "original_title": "استهداف هامر عسكري تابع لجيش العدوّ الإسرائيلي في اسكندرونة في بلدة البيّاضة جنوب لبنان بِمُحلّقة إنقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-16_hummer_iskandarounah_naqoura.mp4",
+        "thumbnail_key": "thumbnails/2026-05-16_hummer_iskandarounah_naqoura.jpg"
+      }
+    },
+    {
+      "id": "2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16319",
+      "date": "2026-05-16",
+      "description": "Engineering vehicle, Khallet Raj in Deir Siryan (dive drone)",
+      "original_title": "استهداف آليّة هندسيّة تابعة لجيش العدوّ الإسرائيلي في خلّة راج في بلدة ديرسريان جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16319.mp4",
+        "thumbnail_key": "thumbnails/2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16319.jpg"
+      }
+    },
+    {
+      "id": "2026-05-16_merkava_tank_bayyadah_mmirleb_16351",
+      "date": "2026-05-16",
+      "description": "Merkava tank, al-Bayyada (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة إنقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-16_merkava_tank_bayyadah_mmirleb_16351.mp4",
+        "thumbnail_key": "thumbnails/2026-05-16_merkava_tank_bayyadah_mmirleb_16351.jpg"
+      }
+    },
+    {
+      "id": "2026-05-16_namer_vehicle_taybeh_mmirleb_16531",
+      "date": "2026-05-16",
+      "description": "\"Namera\" vehicle, Taybeh (Ababil dive drone)",
+      "original_title": "استهداف الية نميرا التّابعة لجيش العدو الإسرائيلي في بلدة الطيّبة جنوب لبنان بِمُحلّقة أبابيل الإنقضاضيّة",
+      "town": "Taybeh",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-16_namer_vehicle_taybeh_mmirleb_16531.mp4",
+        "thumbnail_key": "thumbnails/2026-05-16_namer_vehicle_taybeh_mmirleb_16531.jpg"
+      }
+    },
+    {
+      "id": "2026-05-15_engineering_vehicle_khiam",
+      "date": "2026-05-15",
+      "description": "Engineering vehicle, city of Khiam (dive drone)",
+      "original_title": "استهداف الية هندسيّة تابعة لجيش العدوّ الإسرائيلي في مدينة الخيام جنوب لبنان بمحلّقة إنقضاضيّة",
+      "town": "Khiam",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-15_engineering_vehicle_khiam.mp4",
+        "thumbnail_key": "thumbnails/2026-05-15_engineering_vehicle_khiam.jpg"
+      }
+    },
+    {
+      "id": "2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16301",
+      "date": "2026-05-15",
+      "description": "Troop carrier, Khallet Raj area in Deir Siryan (dive drone)",
+      "original_title": "استهداف ناقلة جند لجيش العدوّ الإسرائيلي في منطقة خلّة راج في بلدة ديرسريان جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16301.mp4",
+        "thumbnail_key": "thumbnails/2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16301.jpg"
+      }
+    },
+    {
+      "id": "2026-05-14_strike_on_military_tanker_near_bint_jbeil",
+      "date": "2026-05-14",
+      "description": "Military tanker, city of Bint Jbeil (Ababil dive drone)",
+      "original_title": "استهداف صهريج عسكري لجيش العدو الإسرائيلي في مدينة بنت جبيل جنوب لبنان بِمُحلّقة أبابيل الإنقضاضيّة",
+      "town": "Bint Jbeil",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-14_strike_on_military_tanker_near_bint_jbeil.mp4",
+        "thumbnail_key": "thumbnails/2026-05-14_strike_on_military_tanker_near_bint_jbeil.jpg"
+      }
+    },
+    {
+      "id": "2026-05-14_merkava_tank_bint_jbeil_mmirleb_16493",
+      "date": "2026-05-14",
+      "description": "Merkava tank, city of Bint Jbeil (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في مدينة بنت جبيل جنوب لبنان بمحلّقة إنقضاضيّة",
+      "town": "Bint Jbeil",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-14_merkava_tank_bint_jbeil_mmirleb_16493.mp4",
+        "thumbnail_key": "thumbnails/2026-05-14_merkava_tank_bint_jbeil_mmirleb_16493.jpg"
+      }
+    },
+    {
+      "id": "2026-05-14_merkava_tank_aytaroun",
+      "date": "2026-05-14",
+      "description": "Merkava tank, Taybeh (Ababil dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في بلدة الطيبة في جنوب لبنان بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Taybeh",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-14_merkava_tank_aytaroun.mp4",
+        "thumbnail_key": "thumbnails/2026-05-14_merkava_tank_aytaroun.jpg"
+      }
+    },
+    {
+      "id": "2026-05-14_wireless_communications_system_blat_mmirleb_16285",
+      "date": "2026-05-14",
+      "description": "Wireless communications system, newly established Blat site opposite Ramyah (dive drone)",
+      "original_title": "استهداف منظومة اتصالات لاسلكيّة تابعة لجيش العدوّ الإسرائيلي في موقع بلاط المستحدث مقابل بلدة رامية جنوبيّ لبنان بمحلّقةٍ إنقضاضيّة",
+      "town": "Jabal Blat",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-14_wireless_communications_system_blat_mmirleb_16285.mp4",
+        "thumbnail_key": "thumbnails/2026-05-14_wireless_communications_system_blat_mmirleb_16285.jpg"
+      }
+    },
+    {
+      "id": "2026-05-14_soldiers_gathering_naqoura_ras_naqoura_mmirleb_16294",
+      "date": "2026-05-14",
+      "description": "Soldier gathering, Ras al-Naqoura military site (dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في موقع رأس الناقورة العسكري جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Naqoura",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-14_soldiers_gathering_naqoura_ras_naqoura_mmirleb_16294.mp4",
+        "thumbnail_key": "thumbnails/2026-05-14_soldiers_gathering_naqoura_ras_naqoura_mmirleb_16294.jpg"
+      }
+    },
+    {
+      "id": "2026-05-14_namer_vehicle_rashaf_mmirleb_16312",
+      "date": "2026-05-14",
+      "description": "\"Namera\" vehicle, Rashaf (dive drone)",
+      "original_title": "استهداف اليّة \"نميرا\" تابعة لجيش العدوّ الإسرائيلي في بلدة رشاف جنوبيّ لبنان بمحلّقةٍ إنقضاضيّة",
+      "town": "Rachaf / Rashaf",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-14_namer_vehicle_rashaf_mmirleb_16312.mp4",
+        "thumbnail_key": "thumbnails/2026-05-14_namer_vehicle_rashaf_mmirleb_16312.jpg"
+      }
+    },
+    {
+      "id": "2026-05-14_humvee_tayr_harfa_mmirleb_16337",
+      "date": "2026-05-14",
+      "description": "Military Hummer, Tayr Harfa (dive drone)",
+      "original_title": "استهداف هامر عسكري تابع لجيش العدوّ الإسرائيلي في بلدة طيرحرفا جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Tayr Harfa",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-14_humvee_tayr_harfa_mmirleb_16337.mp4",
+        "thumbnail_key": "thumbnails/2026-05-14_humvee_tayr_harfa_mmirleb_16337.jpg"
+      }
+    },
+    {
+      "id": "2026-05-13_strike_on_merkava_tank_near_aita_al_shaab",
+      "date": "2026-05-13",
+      "description": "Merkava tank, Aynata (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في بلدة عيناثا جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Ainata",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-13_strike_on_merkava_tank_near_aita_al_shaab.mp4",
+        "thumbnail_key": "thumbnails/2026-05-13_strike_on_merkava_tank_near_aita_al_shaab.jpg"
+      }
+    },
+    {
+      "id": "2026-05-13_strike_on_armored_personnel_carrier",
+      "date": "2026-05-13",
+      "description": "Armored troop carrier, city of Bint Jbeil (dive drone)",
+      "original_title": "استهداف ناقلة جُند مدرّعة تابعة لجيش العدوّ الإسرائيلي في مدينة بنت جبيل جنوب لبنان بمُحلّقة انقضاضيّة",
+      "town": "Bint Jbeil",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-13_strike_on_armored_personnel_carrier.mp4",
+        "thumbnail_key": "thumbnails/2026-05-13_strike_on_armored_personnel_carrier.jpg"
+      }
+    },
+    {
+      "id": "2026-05-12_strike_on_soldiers_and_vehicles",
+      "date": "2026-05-12",
+      "description": "Israeli army vehicles and soldiers, al-Abbad site on the southern Lebanese border (swarm of dive drones)",
+      "original_title": "استهداف آليّات وجنود جيش العدوّ الإسرائيلي في موقع العبّاد على الحدود اللبنانيّة الجنوبيّة بسربٍ من المحلّقات الإنقضاضيّة",
+      "town": "Margaliot",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-12_strike_on_soldiers_and_vehicles.mp4",
+        "thumbnail_key": "thumbnails/2026-05-12_strike_on_soldiers_and_vehicles.jpg"
+      }
+    },
+    {
+      "id": "2026-05-12_strike_on_namer_apc_near_houla",
+      "date": "2026-05-12",
+      "description": "\"Namera\" vehicle, Houla (dive drone)",
+      "original_title": "استهداف آليّة نميرا تابعة لجيش العدوّ الإسرائيلي في بلدة حولا بِمُحلّقة انقضاضيّة",
+      "town": "Houla",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-12_strike_on_namer_apc_near_houla.mp4",
+        "thumbnail_key": "thumbnails/2026-05-12_strike_on_namer_apc_near_houla.jpg"
+      }
+    },
+    {
+      "id": "2026-05-12_strike_on_humvee",
+      "date": "2026-05-12",
+      "description": "Humvee on the Naqoura-Iskandaroun road (dive drone)",
+      "original_title": "استهداف آليّة هامفي تابعة لجيش العدوّ الإسرائيلي على طريق الناقورة - الإسكندرون جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Naqoura",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-12_strike_on_humvee.mp4",
+        "thumbnail_key": "thumbnails/2026-05-12_strike_on_humvee.jpg"
+      }
+    },
+    {
+      "id": "2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa",
+      "date": "2026-05-12",
+      "description": "Engineering vehicle, Tayr Harfa (dive drone)",
+      "original_title": "استهداف آليّة هندسيّة تابعة لجيش العدوّ الإسرائيلي في بلدة طيرحرفا بِمُحلّقة انقضاضيّة",
+      "town": "Tayr Harfa",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa.mp4",
+        "thumbnail_key": "thumbnails/2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa.jpg"
+      }
+    },
+    {
+      "id": "2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16106",
+      "date": "2026-05-12",
+      "description": "Merkava tank, vicinity of Khirbet al-Manara site (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في محيط موقع خربة المنارة على الحدود الجنوبيّة اللبنانيّة بِمُحلّقة انقضاضيّة",
+      "town": "Manara",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16106.mp4",
+        "thumbnail_key": "thumbnails/2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16106.jpg"
+      }
+    },
+    {
+      "id": "2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16118",
+      "date": "2026-05-12",
+      "description": "Israeli army soldier, vicinity of Khirbet al-Manara site (dive drone)",
+      "original_title": "استهداف جندي من جيش العدوّ الإسرائيلي في محيط موقع خربة المنارة على الحدود الجنوبيّة اللبنانيّة بِمُحلّقة انقضاضيّة",
+      "town": "Manara",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16118.mp4",
+        "thumbnail_key": "thumbnails/2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16118.jpg"
+      }
+    },
+    {
+      "id": "2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261",
+      "date": "2026-05-12",
+      "description": "Humvee on the Naqoura-Iskandaroun road (dive drone)",
+      "original_title": "استهداف آليّة هامفي تابعة لجيش العدوّ الإسرائيلي على طريق الناقورة - الإسكندرون جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Naqoura",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.mp4",
+        "thumbnail_key": "thumbnails/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.jpg"
+      }
+    },
+    {
+      "id": "2026-05-11_strike_on_soldier_near_dhayra",
+      "date": "2026-05-11",
+      "description": "Israeli army soldier, Taybeh (dive drone)",
+      "original_title": "استهداف جندي من جيش العدوّ الإسرائيلي في بلدة الطيّبة جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Taybeh",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-11_strike_on_soldier_near_dhayra.mp4",
+        "thumbnail_key": "thumbnails/2026-05-11_strike_on_soldier_near_dhayra.jpg"
+      }
+    },
+    {
+      "id": "2026-05-11_strike_on_logistics_vehicle_near_tayr_harfa",
+      "date": "2026-05-11",
+      "description": "HEMTT logistics vehicle, Tayr Harfa (dive drone)",
+      "original_title": "استهداف آليّة لوجستيّة (هيمت) تابعة لجيش العدوّ الإسرائيلي في بلدة طيرحرفا جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Tayr Harfa",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-11_strike_on_logistics_vehicle_near_tayr_harfa.mp4",
+        "thumbnail_key": "thumbnails/2026-05-11_strike_on_logistics_vehicle_near_tayr_harfa.jpg"
+      }
+    },
+    {
+      "id": "2026-05-11_strike_on_engineering_vehicle_near_khiam",
+      "date": "2026-05-11",
+      "description": "Engineering vehicle, al-Bayyada (dive drone)",
+      "original_title": "استهداف آليّة هندسيّة تابعة لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-11_strike_on_engineering_vehicle_near_khiam.mp4",
+        "thumbnail_key": "thumbnails/2026-05-11_strike_on_engineering_vehicle_near_khiam.jpg"
+      }
+    },
+    {
+      "id": "2026-05-11_strike_on_d9_engineering_vehicle_near_naqoura",
+      "date": "2026-05-11",
+      "description": "D9 engineering vehicle on the Naqoura road (dive drone)",
+      "original_title": "استهداف آليّة هندسيّة (D9) تابعة لجيش العدوّ الإسرائيلي على طريق بلدة الناقورة جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Naqoura",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-11_strike_on_d9_engineering_vehicle_near_naqoura.mp4",
+        "thumbnail_key": "thumbnails/2026-05-11_strike_on_d9_engineering_vehicle_near_naqoura.jpg"
+      }
+    },
+    {
+      "id": "2026-05-10_strike_on_merkava_tank",
+      "date": "2026-05-10",
+      "description": "Merkava tank, al-Bayyada (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-10_strike_on_merkava_tank.mp4",
+        "thumbnail_key": "thumbnails/2026-05-10_strike_on_merkava_tank.jpg"
+      }
+    },
+    {
+      "id": "2026-05-10_strike_on_d9_engineering_vehicle_near_deir_siryan",
+      "date": "2026-05-10",
+      "description": "D9 engineering vehicle, Khallet al-Raj in Deir Siryan (dive drone)",
+      "original_title": "استهداف آليّة هندسيّة (D9) تابعة لجيش العدوّ الإسرائيلي عند خلّة الراج في بلدة دير سريان جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-10_strike_on_d9_engineering_vehicle_near_deir_siryan.mp4",
+        "thumbnail_key": "thumbnails/2026-05-10_strike_on_d9_engineering_vehicle_near_deir_siryan.jpg"
+      }
+    },
+    {
+      "id": "2026-05-10_strike_on_bulldozer_near_ramiya",
+      "date": "2026-05-10",
+      "description": "Bulldozer, city of Bint Jbeil (dive drone)",
+      "original_title": "استهداف جرّافة لجيش العدوّ الإسرائيلي في مدينة بنت جبيل جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Bint Jbeil",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-10_strike_on_bulldozer_near_ramiya.mp4",
+        "thumbnail_key": "thumbnails/2026-05-10_strike_on_bulldozer_near_ramiya.jpg"
+      }
+    },
+    {
+      "id": "2026-05-10_headquarters_bayyadah_mmirleb_16035",
+      "date": "2026-05-10",
+      "description": "Newly established Israeli army HQ, al-Bayyada (dive drone)",
+      "original_title": "استهداف المقر المستحدث لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-10_headquarters_bayyadah_mmirleb_16035.mp4",
+        "thumbnail_key": "thumbnails/2026-05-10_headquarters_bayyadah_mmirleb_16035.jpg"
+      }
+    },
+    {
+      "id": "2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16056",
+      "date": "2026-05-10",
+      "description": "House where Israeli soldiers were positioned, Tayr Harfa (dive drone)",
+      "original_title": "استهداف منزل يتموضع فيه جنود جيش العدوّ الإسرائيلي في بلدة طيرحرفا جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Tayr Harfa",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16056.mp4",
+        "thumbnail_key": "thumbnails/2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16056.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_strike_on_soldiers_near_shlomi",
+      "date": "2026-05-09",
+      "description": "Soldier gathering at a helicopter landing pad, Shlomi settlement (dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في مهبط مروحيّات في مستوطنة شلومي شمال فلسطين المحتلّة بمحلّقة انقضاضيّة",
+      "town": "Shlomi",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_strike_on_soldiers_near_shlomi.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_strike_on_soldiers_near_shlomi.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_strike_on_soldiers_near_deir_mimas",
+      "date": "2026-05-09",
+      "description": "Israeli army soldiers, vicinity of Deir Siryan (dive drone)",
+      "original_title": "استهداف جنود من جيش العدوّ الإسرائيلي في محيط بلدة دير سريان جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_strike_on_soldiers_near_deir_mimas.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_strike_on_soldiers_near_deir_mimas.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_strike_on_soldiers",
+      "date": "2026-05-09",
+      "description": "Soldier gathering, Jal al-Alam site on the Lebanese border (dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في موقع جلّ العلام على الحدود اللبنانيّة الفلسطينيّة بمحلّقة انقضاضيّة",
+      "town": "Jal al-Alam site, border",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_strike_on_soldiers.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_strike_on_soldiers.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_strike_on_israeli_military_vehicle",
+      "date": "2026-05-09",
+      "description": "Military vehicle, Khallet al-Raj in Deir Siryan (dive drone)",
+      "original_title": "استهداف آليّة عسكريّة تابعة لجيش العدوّ الإسرائيلي عند خلّة الراج في بلدة دير سريان جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_strike_on_israeli_military_vehicle.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_strike_on_israeli_military_vehicle.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_soldiers_gathering_shlomi_mmirleb_15970",
+      "date": "2026-05-09",
+      "description": "Soldier gathering at a helicopter landing pad, Shlomi settlement (dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في مهبط مروحيّات في مستوطنة شلومي شمال فلسطين المحتلّة بمحلّقة انقضاضيّة",
+      "town": "Shlomi",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_soldiers_gathering_shlomi_mmirleb_15970.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_soldiers_gathering_shlomi_mmirleb_15970.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988",
+      "date": "2026-05-09",
+      "description": "Soldier gathering, Jal al-Alam site on the Lebanese border (dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في موقع جلّ العلام على الحدود اللبنانيّة الفلسطينيّة بمحلّقةٍ انقضاضيّة",
+      "town": "Border Israel opposite Alma al-Shaab",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065",
+      "date": "2026-05-09",
+      "description": "Newly set-up army tent, Khallet al-Raj in Deir Siryan (dive drone)",
+      "original_title": "استهداف خيمة مستحدثة لجيش العدوّ الإسرائيلي عند خلّة الراج في بلدة دير سريان جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_humvee_bayyadah_mmirleb_16093",
+      "date": "2026-05-09",
+      "description": "Communications Humvee, al-Bayyada (dive drone)",
+      "original_title": "استهداف آليّة هامفي إتصالات لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_humvee_bayyadah_mmirleb_16093.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_humvee_bayyadah_mmirleb_16093.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_soldiers_deir_siryan_mmirleb_16168",
+      "date": "2026-05-09",
+      "description": "Israeli army soldiers, vicinity of Deir Siryan (dive drone)",
+      "original_title": "استهداف جنود من جيش العدوّ الإسرائيلي في محيط بلدة دير سريان جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_soldiers_deir_siryan_mmirleb_16168.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_soldiers_deir_siryan_mmirleb_16168.jpg"
+      }
+    },
+    {
+      "id": "2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16249",
+      "date": "2026-05-09",
+      "description": "Bulldozer, Khallet Raj area in Deir Siryan (dive drone)",
+      "original_title": "استهداف جرّافة تابعة لجيش العدوّ الإسرائيلي في منطقة خلّة راج في بلدة ديرسريان جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16249.mp4",
+        "thumbnail_key": "thumbnails/2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16249.jpg"
+      }
+    },
+    {
+      "id": "2026-05-08_strike_on_merkava_tank_near_namr_al_jamal",
+      "date": "2026-05-08",
+      "description": "Merkava tank, newly established Namr al-Jamal site opposite Alma al-Shaab (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في موقع نمر الجمل المستحدث مقابل بلدة علما الشعب جنوبيّ لبنان بمحلّقة إنقضاضيّة",
+      "town": "Border Israel opposite Alma al-Shaab",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-08_strike_on_merkava_tank_near_namr_al_jamal.mp4",
+        "thumbnail_key": "thumbnails/2026-05-08_strike_on_merkava_tank_near_namr_al_jamal.jpg"
+      }
+    },
+    {
+      "id": "2026-05-08_merkava_tank_bayyadah_mmirleb_16051",
+      "date": "2026-05-08",
+      "description": "Merkava tank, al-Bayyada (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-08_merkava_tank_bayyadah_mmirleb_16051.mp4",
+        "thumbnail_key": "thumbnails/2026-05-08_merkava_tank_bayyadah_mmirleb_16051.jpg"
+      }
+    },
+    {
+      "id": "2026-05-08_strike_on_merkava_tank",
+      "date": "2026-05-08",
+      "description": "Merkava tank, al-Bayyada (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-08_strike_on_merkava_tank.mp4",
+        "thumbnail_key": "thumbnails/2026-05-08_strike_on_merkava_tank.jpg"
+      }
+    },
+    {
+      "id": "2026-05-08_strike_on_humvee_in_naqoura",
+      "date": "2026-05-08",
+      "description": "Humvee, al-Bayyada (dive drone)",
+      "original_title": "استهداف آليّة هامفي لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-08_strike_on_humvee_in_naqoura.mp4",
+        "thumbnail_key": "thumbnails/2026-05-08_strike_on_humvee_in_naqoura.jpg"
+      }
+    },
+    {
+      "id": "2026-05-08_resistance_strikes_enemy_forces_kfar_kila",
+      "date": "2026-05-08",
+      "description": "Series of resistance strikes on Israeli army forces, Rashaf (swarm of Ababil dive drones)",
+      "original_title": "سلسِلة ضربات المقاومة ضد قوّات جيش العدو الإسرائيلي في بلدة رشاف جنوب لبنان بِسربٍ من مُحلّقات أبابيل الإنقضاضيّة",
+      "town": "Rachaf / Rashaf",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-08_resistance_strikes_enemy_forces_kfar_kila.mp4",
+        "thumbnail_key": "thumbnails/2026-05-08_resistance_strikes_enemy_forces_kfar_kila.jpg"
+      }
+    },
+    {
+      "id": "2026-05-08_humvee_bayyadah_mmirleb_16048",
+      "date": "2026-05-08",
+      "description": "Humvee, al-Bayyada (dive drone)",
+      "original_title": "استهداف آليّة هامفي لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بِمُحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-08_humvee_bayyadah_mmirleb_16048.mp4",
+        "thumbnail_key": "thumbnails/2026-05-08_humvee_bayyadah_mmirleb_16048.jpg"
+      }
+    },
+    {
+      "id": "2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam",
+      "date": "2026-05-07",
+      "description": "Iron Dome platform and its crew, Jal al-Alam site (two dive drones)",
+      "original_title": "استهداف منصّة قبّة حديديّة وطاقمها التابع لجيش العدوّ الإسرائيلي في موقع جلّ العلام على الحدود اللبنانيّة الفلسطينيّة بمحلّقتين انقضاضيّتين",
+      "town": "Border Israel opposite Alma al-Shaab",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.mp4",
+        "thumbnail_key": "thumbnails/2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.jpg"
+      }
+    },
+    {
+      "id": "2026-05-06_strike_on_soldier_group",
+      "date": "2026-05-06",
+      "description": "Israeli army soldier gathering, al-Bayyada (dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-06_strike_on_soldier_group.mp4",
+        "thumbnail_key": "thumbnails/2026-05-06_strike_on_soldier_group.jpg"
+      }
+    },
+    {
+      "id": "2026-05-06_strike_on_namer_apc_near_qouzah",
+      "date": "2026-05-06",
+      "description": "\"Namera\" troop carrier, Qouzah (dive drone)",
+      "original_title": "استهداف ناقلة جُند \"نميرا\" تابعة لجيش العدوّ الإسرائيلي في بلدة القوزح جنوبيّ لبنان بمحلّقة إنقضاضيّة",
+      "town": "Qouzah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-06_strike_on_namer_apc_near_qouzah.mp4",
+        "thumbnail_key": "thumbnails/2026-05-06_strike_on_namer_apc_near_qouzah.jpg"
+      }
+    },
+    {
+      "id": "2026-05-06_strike_on_namer_apc_near_deir_siryan",
+      "date": "2026-05-06",
+      "description": "\"Namera\" vehicle, Khallet al-Raj in Deir Siryan (dive drone)",
+      "original_title": "استهداف آليّة \"نميرا\" تابعة لجيش العدوّ الإسرائيلي عند خلّة الراج في بلدة دير سريان جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Deir Seryan / Khallet al-Raj",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-06_strike_on_namer_apc_near_deir_siryan.mp4",
+        "thumbnail_key": "thumbnails/2026-05-06_strike_on_namer_apc_near_deir_siryan.jpg"
+      }
+    },
+    {
+      "id": "2026-05-06_strike_on_namer_apc_in_bint_jbeil",
+      "date": "2026-05-06",
+      "description": "\"Namera\" vehicle, city of Bint Jbeil (dive drone)",
+      "original_title": "استهداف آليّة نميرا تابعة لجيش العدوّ الإسرائيلي في مدينة بنت جبيل جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Bint Jbeil",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-06_strike_on_namer_apc_in_bint_jbeil.mp4",
+        "thumbnail_key": "thumbnails/2026-05-06_strike_on_namer_apc_in_bint_jbeil.jpg"
+      }
+    },
+    {
+      "id": "2026-05-06_strike_on_enemy_position",
+      "date": "2026-05-06",
+      "description": "Israeli army positioning point, Taybeh (dive drone)",
+      "original_title": "استهداف نقطة تموضع تابعة لجيش العدوّ الإسرائيلي في بلدة الطيّبة جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Taybeh",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-06_strike_on_enemy_position.mp4",
+        "thumbnail_key": "thumbnails/2026-05-06_strike_on_enemy_position.jpg"
+      }
+    },
+    {
+      "id": "2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841",
+      "date": "2026-05-06",
+      "description": "Israeli army soldier gathering, Aita al-Shaab (dive drone)",
+      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في بلدة عيتا الشعب جنوبيّ لبنان بمسيّرة إنقضاضيّة",
+      "town": "Ayta ash Shab / Aita al-Shaab",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841.mp4",
+        "thumbnail_key": "thumbnails/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841.jpg"
+      }
+    },
+    {
+      "id": "2026-05-06_position_point_taybeh_mmirleb_16210",
+      "date": "2026-05-06",
+      "description": "Israeli army positioning point, Taybeh (dive drone)",
+      "original_title": "استهداف نقطة تموضع تابعة لجيش العدوّ الإسرائيلي في بلدة الطيّبة جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Taybeh",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-06_position_point_taybeh_mmirleb_16210.mp4",
+        "thumbnail_key": "thumbnails/2026-05-06_position_point_taybeh_mmirleb_16210.jpg"
+      }
+    },
+    {
+      "id": "2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347",
+      "date": "2026-05-06",
+      "description": "D9 bulldozer, Houla (dive drone)",
+      "original_title": "استهداف جرّافة دي 9 لجيش العدوّ الإسرائيلي في بلدة حولا جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Houla",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347.mp4",
+        "thumbnail_key": "thumbnails/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347.jpg"
+      }
+    },
+    {
+      "id": "2026-05-05_strike_on_merkava_tank",
+      "date": "2026-05-05",
+      "description": "Merkava tank, Qouzah (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في بلدة القوزح جنوبيّ لبنان بمحلّقة إنقضاضيّة",
+      "town": "Qouzah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-05_strike_on_merkava_tank.mp4",
+        "thumbnail_key": "thumbnails/2026-05-05_strike_on_merkava_tank.jpg"
+      }
+    },
+    {
+      "id": "2026-05-04_strike_on_troop_transport_vehicle",
+      "date": "2026-05-04",
+      "description": "Troop transport vehicle, vicinity of al-Abbad site on the southern Lebanese border (dive drone)",
+      "original_title": "استهداف آليّة لنقل جنود جيش العدوّ الإسرائيلي في محيط موقع العبّاد على الحدود اللبنانيّة الجنوبيّة بمحلّقةٍ إنقضاضيّة",
+      "town": "Sheikh Abbad hill near Houla, approx",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-04_strike_on_troop_transport_vehicle.mp4",
+        "thumbnail_key": "thumbnails/2026-05-04_strike_on_troop_transport_vehicle.jpg"
+      }
+    },
+    {
+      "id": "2026-05-04_strike_on_engineering_vehicle",
+      "date": "2026-05-04",
+      "description": "HEMTT logistics vehicle, Manara site (Ababil dive drone)",
+      "original_title": "استهداف آليّة لوجستيّة \"هيمت\" تابعة لجيش العدوّ الإسرائيلي في موقع المنارة على الحدود اللبنانيّة الجنوبيّة بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Manara",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-04_strike_on_engineering_vehicle.mp4",
+        "thumbnail_key": "thumbnails/2026-05-04_strike_on_engineering_vehicle.jpg"
+      }
+    },
+    {
+      "id": "2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528",
+      "date": "2026-05-04",
+      "description": "HEMTT logistics vehicle, Manara site (Ababil dive drone)",
+      "original_title": "استهداف آليّة لوجستيّة \"هيمت\" تابعة لجيش العدوّ الإسرائيلي في موقع المنارة على الحدود اللبنانيّة الجنوبيّة بمحلّقة أبابيل الانقضاضيّة",
+      "town": "Manara",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528.mp4",
+        "thumbnail_key": "thumbnails/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528.jpg"
+      }
+    },
+    {
+      "id": "2026-05-03_strike_on_surveillance_camera",
+      "date": "2026-05-03",
+      "description": "Observation and surveillance camera, al-Bayyada (dive drone)",
+      "original_title": "استهداف كاميرا رصد ومراقبة لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-03_strike_on_surveillance_camera.mp4",
+        "thumbnail_key": "thumbnails/2026-05-03_strike_on_surveillance_camera.jpg"
+      }
+    },
+    {
+      "id": "2026-05-03_company_commander_tank_bayyadah_mmirleb_16007",
+      "date": "2026-05-03",
+      "description": "Armored-company commander's tank, al-Bayyada (dive drone)",
+      "original_title": "استهداف دبّابة آمر سريّة مُدرّعات في جيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-03_company_commander_tank_bayyadah_mmirleb_16007.mp4",
+        "thumbnail_key": "thumbnails/2026-05-03_company_commander_tank_bayyadah_mmirleb_16007.jpg"
+      }
+    },
+    {
+      "id": "2026-05-02_strike_on_namer_apc_in_bint_jbeil",
+      "date": "2026-05-02",
+      "description": "\"Namera\" vehicle, city of Bint Jbeil (dive drone)",
+      "original_title": "استهداف آليّة نميرا تابعة لجيش العدوّ الإسرائيلي في مدينة بنت جبيل جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Bint Jbeil",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-02_strike_on_namer_apc_in_bint_jbeil.mp4",
+        "thumbnail_key": "thumbnails/2026-05-02_strike_on_namer_apc_in_bint_jbeil.jpg"
+      }
+    },
+    {
+      "id": "2026-05-02_strike_on_drone_control_system",
+      "date": "2026-05-02",
+      "description": "Drone control system, al-Bayyada (dive drone)",
+      "original_title": "استهداف منظومة تحكم بالمحلّقات تابعة لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-02_strike_on_drone_control_system.mp4",
+        "thumbnail_key": "thumbnails/2026-05-02_strike_on_drone_control_system.jpg"
+      }
+    },
+    {
+      "id": "2026-05-01_strike_on_soldiers",
+      "date": "2026-05-01",
+      "description": "Israeli army soldiers, al-Bayyada (dive drone)",
+      "original_title": "استهداف جنود جيش العدوّ الإسرائيلي في بلدة البيّاضة جنوبيّ لبنان بمحلّقة إنقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-01_strike_on_soldiers.mp4",
+        "thumbnail_key": "thumbnails/2026-05-01_strike_on_soldiers.jpg"
+      }
+    },
+    {
+      "id": "2026-05-01_strike_on_humvee",
+      "date": "2026-05-01",
+      "description": "Humvee, al-Bayyada (dive drone)",
+      "original_title": "استهداف آليّة هامفي تابعة لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-01_strike_on_humvee.mp4",
+        "thumbnail_key": "thumbnails/2026-05-01_strike_on_humvee.jpg"
+      }
+    },
+    {
+      "id": "2026-05-01_namer_vehicle_bint_jbeil_mmirleb_15898",
+      "date": "2026-05-01",
+      "description": "\"Namera\" vehicle, city of Bint Jbeil (dive drone)",
+      "original_title": "استهداف آليّة نميرا تابعة لجيش العدوّ الإسرائيلي في مدينة بنت جبيل جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Bint Jbeil",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-01_namer_vehicle_bint_jbeil_mmirleb_15898.mp4",
+        "thumbnail_key": "thumbnails/2026-05-01_namer_vehicle_bint_jbeil_mmirleb_15898.jpg"
+      }
+    },
+    {
+      "id": "2026-05-01_merkava_tank_rashaf_mmirleb_15950",
+      "date": "2026-05-01",
+      "description": "Merkava tank, Rashaf (dive drone)",
+      "original_title": "استهداف دبابة ميركافا تابعة لجيش العدوّ الإسرائيلي في بلدة رشاف جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Rachaf / Rashaf",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-05-01_merkava_tank_rashaf_mmirleb_15950.mp4",
+        "thumbnail_key": "thumbnails/2026-05-01_merkava_tank_rashaf_mmirleb_15950.jpg"
+      }
+    },
+    {
+      "id": "2026-04-30_strike_on_humvee_in_naqoura",
+      "date": "2026-04-30",
+      "description": "Hummer vehicle, al-Bayyada (dive drone)",
+      "original_title": "استهداف آليّة هامر تابعة لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بمحلّقة انقضاضيّة",
+      "town": "Al Bayada / Bayyadah",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-04-30_strike_on_humvee_in_naqoura.mp4",
+        "thumbnail_key": "thumbnails/2026-04-30_strike_on_humvee_in_naqoura.jpg"
+      }
+    },
+    {
+      "id": "2026-04-29_strike_on_merkava_tank",
+      "date": "2026-04-29",
+      "description": "Merkava tank, Beit Lif (dive drone)",
+      "original_title": "استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في بلدة بيت ليف جنوبيّ لبنان بمحلّقة إنقضاضيّة",
+      "town": "Beit Lif",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-04-29_strike_on_merkava_tank.mp4",
+        "thumbnail_key": "thumbnails/2026-04-29_strike_on_merkava_tank.jpg"
+      }
+    },
+    {
+      "id": "2026-04-24_d9_engineering_vehicle_between_taybeh_and_deir_siryan",
+      "date": "2026-04-24",
+      "description": "D9 engineering vehicle on the road between Taybeh and Deir Siryan (dive drone)",
+      "original_title": "استهداف آليّة هندسيّة (D9) تابعة لجيش العدوّ الإسرائيلي على الطريق الواصلة بين الطيّبة ودير سريان جنوبيّ لبنان بمحلّقة انقضاضيّة",
+      "town": "Taybeh",
+      "provenance": {
+        "source": "legacy_import"
+      },
+      "media": {
+        "video_key": "videos/2026-04-24_d9_engineering_vehicle_between_taybeh_and_deir_siryan.mp4",
+        "thumbnail_key": "thumbnails/2026-04-24_d9_engineering_vehicle_between_taybeh_and_deir_siryan.jpg"
+      }
+    }
+  ]
+}

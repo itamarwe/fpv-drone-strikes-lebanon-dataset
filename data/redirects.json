@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "redirects": [
+    {
+      "from": "2026-05-26_anti_drone_platform_barashit",
+      "to": "2026-05-26_anti_drone_platform_biranit",
+      "created_at": "2026-07-12",
+      "review_after": "2026-10-15",
+      "reason": "Correct place-name spelling"
+    }
+  ]
+}

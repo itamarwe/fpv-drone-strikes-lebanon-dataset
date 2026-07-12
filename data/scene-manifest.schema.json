@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FPV scene reference",
+  "type": "object",
+  "required": ["schema_version", "video_id", "scene_id", "path", "viewer_key"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "video_id": { "type": "string" },
+    "scene_id": { "type": "string" },
+    "path": { "type": "string" },
+    "viewer_key": { "type": "string" }
+  },
+  "additionalProperties": false
+}

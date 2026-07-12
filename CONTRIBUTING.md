@@ -9,32 +9,27 @@ and is served publicly through CloudFront. Public links must use the CloudFront 
 Use `YYYY-MM-DD_short_description` (lowercase, underscores). Use the **same base name**
 for the video and its thumbnail.
 
-## 1. Upload the files to S3
+## Add a video
 
 You need AWS credentials with write access to the bucket (already configured on the
 upload machine).
 
 ```bash
-NAME="2026-06-22_merkava_tank_example"          # date_description
-aws s3 cp "$NAME.mp4" "s3://fpv-drone-strikes-lebanon-dataset/videos/$NAME.mp4"
-aws s3 cp "$NAME.jpg" "s3://fpv-drone-strikes-lebanon-dataset/thumbnails/$NAME.jpg"
+npm install
+npm run dataset:add -- \
+  --video /path/to/video.mp4 \
+  --thumbnail /path/to/thumbnail.jpg \
+  --metadata /path/to/catalog-record.json
 ```
 
-Keep the `videos/` and `thumbnails/` prefixes exactly.
-
-## 2. Add a row to `README.md`
-
-Newest entry goes at the **top** of the table. Links go through CloudFront, not S3:
-
-```markdown
-| 2026-06-22 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-06-22_merkava_tank_example.jpg" alt="Merkava tank example" width="180"> | Merkava tank example | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-06-22_merkava_tank_example.mp4) |
-```
+This uploads and verifies media before updating `data/catalog.json`, then
+regenerates README and annotator views. Do not edit those generated files by
+hand. See `docs/ingest_instructions.md` for the metadata contract.
 
 ## 3. Commit & push
 
-```bash
-git add README.md && git commit -m "Add 2026-06-22 merkava tank example" && git push
-```
+Run `npm run catalog:check`, then commit the catalog and generated changes and
+open a pull request. Publishing runs after merge when AWS OIDC is configured.
 
 ## Important
 

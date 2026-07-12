@@ -7,33 +7,14 @@ Public asset base: `https://d2fioemadmrru3.cloudfront.net`
 Never commit credentials, local environment files, downloaded media, or AWS
 configuration. Never make the S3 bucket public.
 
-## Current workflow
-
-Until `data/catalog.json` and the `dataset:*` commands land:
+## Workflow
 
 1. Derive one canonical stem: `YYYY-MM-DD_short_description`, lowercase with
    underscores.
-2. Check README, the annotator list, and S3 for the stem and Telegram message ID
-   before uploading. Stop on a likely duplicate.
-3. Upload the MP4 to `videos/<stem>.mp4` and JPG to
-   `thumbnails/<stem>.jpg` in the private dataset bucket.
-4. Verify both CloudFront URLs return HTTP 200.
-5. Add the video to both `README.md` and `tools/annotator.html`, using identical
-   date, description, town, thumbnail URL, and video URL.
-6. Open a pull request. Do not edit the `itamarwe.github.io` repository: the
-   website reads the CloudFront manifest.
-7. Run `npm run publish-web:fast` after the repository change is accepted so
-   responsive thumbnails and `data/videos.json` are updated.
-8. Run `npm run check-public` after publishing and confirm the new card, video,
-   and thumbnail resolve. The current `npm run audit` requires an annotation, so
-   run it after the annotation stage until the catalog-aware validator replaces
-   it.
-
-Upload assets before publishing references. Publish `data/videos.json` last.
-
-## Target workflow
-
-After the catalog migration, replace steps 3-8 with:
+2. Check `data/catalog.json` for the stem and Telegram message ID. Stop on a
+   likely duplicate.
+3. Create a metadata JSON file using the fields below.
+4. Run:
 
 ```bash
 npm run dataset:add -- \
@@ -42,9 +23,13 @@ npm run dataset:add -- \
   --metadata /path/to/catalog-record.json
 ```
 
-Then open a PR containing the catalog change. Ingest producers must not edit generated
-README rows, annotator lists, redirects, or the website repository directly.
-The post-merge publisher will generate and publish those views.
+5. Run `npm run catalog:check` and open a PR containing the catalog and generated
+   changes.
+
+The command uploads media first, verifies both CloudFront URLs, then updates the
+catalog. Ingest producers must not edit generated README rows, annotator lists,
+redirects, or the website repository directly. The website reads the published
+manifest and needs no per-video commit.
 
 ## Required metadata
 

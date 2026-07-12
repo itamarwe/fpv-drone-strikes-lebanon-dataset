@@ -20,14 +20,15 @@ SKIP_SCENES=0
 
 cd "$REPO"
 
+mkdir -p build/web
+curl -fsSL "${FPV_CDN_BASE:-https://d2fioemadmrru3.cloudfront.net}/data/videos.json" \
+  -o build/web/current-videos.json
+
 echo "== 1/5 generate thumbnails (incremental) =="
 node tools/gen_thumbnails.mjs
 
 echo "== 2/5 bake calibration + build web data manifest =="
 node tools/apply_calibration.mjs
-mkdir -p build/web
-curl -fsSL "${FPV_CDN_BASE:-https://d2fioemadmrru3.cloudfront.net}/data/videos.json" \
-  -o build/web/current-videos.json
 node tools/build_web_data.mjs
 
 echo "== 3/5 upload thumbnails =="
@@ -58,12 +59,19 @@ else
   echo "== 4/5 (skipped scenes) =="
 fi
 
-echo "== 5/5 upload annotations + data manifest =="
+echo "== 5/5 upload annotations + redirects + data manifest =="
 aws s3 sync annotations/ "$BUCKET/annotations/" \
   --exclude "*" --include "*.json" \
   --content-type application/json --cache-control "public,max-age=300"
-# Short cache on the manifest so updates show up within minutes, no
-# CloudFront invalidation needed.
+aws s3 cp data/redirects.json "$BUCKET/data/redirects.json" \
+  --content-type application/json --cache-control "public,max-age=300"
+
+if [ "${FPV_DEPLOY_REDIRECTS:-0}" = "1" ]; then
+  ops/deploy_redirects.sh
+fi
+
+# The manifest is the public commit point: assets and redirects are available
+# before readers can observe the new catalog state.
 aws s3 cp build/web/videos.json "$BUCKET/data/videos.json" \
   --content-type application/json --cache-control "public,max-age=300"
 

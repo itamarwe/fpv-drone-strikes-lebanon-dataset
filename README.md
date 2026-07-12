@@ -13,12 +13,18 @@ An interactive map view is available in [index.html](index.html). It is backed b
 - Published annotations: `annotations/`
 - Web app manifest: `data/videos.json`
 
+The checked-in [`data/catalog.json`](data/catalog.json) is the single source of
+truth for video identity and descriptive metadata. README rows,
+`tools/catalog-videos.json`, and the public web manifest are generated from it.
+
 ## Repository layout
 
 | Path | What it is |
 | --- | --- |
 | `README.md`, `geo/`, `*.tsv` | Video references, locations, and provenance metadata |
+| `data/catalog.json`, `data/redirects.json` | Canonical video registry and permanent rename registry |
 | `annotations/` | Flight annotations per video (source of truth, published to S3) |
+| `scene-manifests/` | Lightweight checked-in references to public scenes |
 | `tools/annotator.html` | Video annotation tool (served locally by `tools/fpv_tool_server.py`) |
 | `tools/scene_viewer/` | 3D scene viewer + measurement tool (same local server) |
 | `tools/catalog/` | Catalog and annotation normalization/audit commands |
@@ -41,17 +47,27 @@ everything from CloudFront at runtime.
 
 ## Updating the website data
 
-Whenever annotations change, videos are added/removed, or new scenes are
-reconstructed, publish to S3 (requires AWS credentials for the bucket):
+Use the transactional commands for all dataset changes:
 
 ```bash
-npm install        # once, for the thumbnail generator
-npm run publish-web        # thumbnails + scenes + annotations + data manifest
-npm run publish-web:fast   # skip scene uploads (annotation/list changes only)
+npm run dataset:add -- --video /path/video.mp4 --thumbnail /path/thumb.jpg --metadata /path/record.json
+npm run dataset:annotate -- --id <video-id> --annotation /path/annotation.json
+npm run dataset:add-scene -- --id <video-id> --scene /path/scene
+npm run dataset:rename -- --from <old-id> --to <new-id> --reason "..." --execute
 ```
 
-Run `npm run audit` before publishing. Annotation filenames use the same video
-stem with an `_annotations.json` suffix and a `YYYY-MM-DD_` date prefix.
+Validate and publish with:
+
+```bash
+npm install                 # once, for the thumbnail generator
+npm run catalog:check
+npm run publish-web        # thumbnails + scenes + annotations + data manifest
+npm run publish-web:fast   # skip scene uploads (annotation/list changes only)
+npm run dataset:verify
+```
+
+Do not edit generated README rows or `tools/catalog-videos.json` by hand.
+Annotation filenames use the same video stem with an `_annotations.json` suffix.
 
 The manifest (`data/videos.json`) is cached for 5 minutes, so changes appear on
 the site within minutes — no deploy of the website is needed.
@@ -203,7 +219,7 @@ Repository metadata, manifests, and documentation are released under [CC0 1.0 Un
 | 2026-05-06 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_position_point_taybeh_mmirleb_16210.jpg" alt="Israeli army positioning point, Taybeh (dive drone)" width="180"> | Israeli army positioning point, Taybeh (dive drone) | استهداف نقطة تموضع تابعة لجيش العدوّ الإسرائيلي في بلدة الطيّبة جنوبيّ لبنان بمحلّقة انقضاضيّة | Taybeh | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_position_point_taybeh_mmirleb_16210.mp4) |
 | 2026-05-06 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347.jpg" alt="D9 bulldozer, Houla (dive drone)" width="180"> | D9 bulldozer, Houla (dive drone) | استهداف جرّافة دي 9 لجيش العدوّ الإسرائيلي في بلدة حولا جنوب لبنان بمحلّقة انقضاضيّة | Houla | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347.mp4) |
 | 2026-05-05 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-05_strike_on_merkava_tank.jpg" alt="Merkava tank, Qouzah (dive drone)" width="180"> | Merkava tank, Qouzah (dive drone) | استهداف دبّابة ميركافا تابعة لجيش العدوّ الإسرائيلي في بلدة القوزح جنوبيّ لبنان بمحلّقة إنقضاضيّة | Qouzah | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-05_strike_on_merkava_tank.mp4) |
-| 2026-05-04 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_strike_on_troop_transport_vehicle.jpg" alt="Troop transport vehicle, vicinity of al-Abbad site on the southern Lebanese border (dive drone)" width="180"> | Troop transport vehicle, vicinity of al-Abbad site on the southern Lebanese border (dive drone) | استهداف آليّة لنقل جنود جيش العدوّ الإسرائيلي في محيط موقع العبّاد على الحدود اللبنانيّة الجنوبيّة بمحلّقةٍ إنقضاضيّة | Sheikh Abbad hill, near Houla, approx | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_strike_on_troop_transport_vehicle.mp4) |
+| 2026-05-04 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_strike_on_troop_transport_vehicle.jpg" alt="Troop transport vehicle, vicinity of al-Abbad site on the southern Lebanese border (dive drone)" width="180"> | Troop transport vehicle, vicinity of al-Abbad site on the southern Lebanese border (dive drone) | استهداف آليّة لنقل جنود جيش العدوّ الإسرائيلي في محيط موقع العبّاد على الحدود اللبنانيّة الجنوبيّة بمحلّقةٍ إنقضاضيّة | Sheikh Abbad hill near Houla, approx | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_strike_on_troop_transport_vehicle.mp4) |
 | 2026-05-04 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_strike_on_engineering_vehicle.jpg" alt="HEMTT logistics vehicle, Manara site (Ababil dive drone)" width="180"> | HEMTT logistics vehicle, Manara site (Ababil dive drone) | استهداف آليّة لوجستيّة "هيمت" تابعة لجيش العدوّ الإسرائيلي في موقع المنارة على الحدود اللبنانيّة الجنوبيّة بمحلّقة أبابيل الانقضاضيّة | Manara | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_strike_on_engineering_vehicle.mp4) |
 | 2026-05-04 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528.jpg" alt="HEMTT logistics vehicle, Manara site (Ababil dive drone)" width="180"> | HEMTT logistics vehicle, Manara site (Ababil dive drone) | استهداف آليّة لوجستيّة "هيمت" تابعة لجيش العدوّ الإسرائيلي في موقع المنارة على الحدود اللبنانيّة الجنوبيّة بمحلّقة أبابيل الانقضاضيّة | Manara | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528.mp4) |
 | 2026-05-03 | <img src="https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-03_strike_on_surveillance_camera.jpg" alt="Observation and surveillance camera, al-Bayyada (dive drone)" width="180"> | Observation and surveillance camera, al-Bayyada (dive drone) | استهداف كاميرا رصد ومراقبة لجيش العدوّ الإسرائيلي في بلدة البيّاضة جنوب لبنان بمحلّقة انقضاضيّة | Al Bayada / Bayyadah | [Download](https://d2fioemadmrru3.cloudfront.net/videos/2026-05-03_strike_on_surveillance_camera.mp4) |
