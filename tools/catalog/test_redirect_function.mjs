@@ -15,7 +15,7 @@ vm.runInNewContext(fs.readFileSync(path.join(root, "ops/cloudfront-uri-redirects
 const renamed = context.handler({
   request: {
     uri: "/videos/2026-05-26_anti_drone_platform_barashit.mp4",
-    querystring: { download: { value: "yes please" }, tag: { multiValue: [{ value: "a" }, { value: "b" }] } },
+    querystring: { download: { value: "yes%20please" }, tag: { multiValue: [{ value: "a" }, { value: "b" }] } },
   },
 });
 assert.equal(renamed.statusCode, 308);

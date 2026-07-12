@@ -1,4 +1,11 @@
 // Generated from data/redirects.json. Do not edit by hand.
+function encodeQueryPart(value) {
+  try {
+    return encodeURIComponent(decodeURIComponent(value));
+  } catch (error) {
+    return encodeURIComponent(value);
+  }
+}
 function handler(event) {
   var request = event.request;
   var oldUri = request.uri;
@@ -20,10 +27,10 @@ function handler(event) {
     var item = query[key];
     if (item.multiValue) {
       for (var i = 0; i < item.multiValue.length; i++) {
-        parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(item.multiValue[i].value));
+        parts.push(encodeQueryPart(key) + "=" + encodeQueryPart(item.multiValue[i].value));
       }
     } else {
-      parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(item.value));
+      parts.push(encodeQueryPart(key) + "=" + encodeQueryPart(item.value));
     }
   }
   var location = newUri + (parts.length ? "?" + parts.join("&") : "");
