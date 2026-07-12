@@ -128,15 +128,15 @@ Acceptance: a failed upload cannot expose a broken card on the website.
 Acceptance: merging a valid dataset PR updates CloudFront and the website without
 a separate website commit or manual deployment.
 
-### 5. Switch OpenClaw to the catalog contract
+### 5. Switch ingest producers to the catalog contract
 
-- OpenClaw uploads media, then opens a PR containing one catalog record.
+- The Telegram crawler uploads media, then opens a PR containing one catalog record.
 - It never edits README or the website repository directly.
 - It records Telegram provenance and an idempotency key/message ID.
 - Reprocessing the same Telegram post must update or skip the existing record,
   never create a duplicate.
 
-Acceptance: OpenClaw can ingest the same message twice without duplicate media,
+Acceptance: the crawler can ingest the same message twice without duplicate media,
 catalog rows, or README entries.
 
 ## Pull-request split
@@ -145,7 +145,7 @@ catalog rows, or README entries.
 2. README/annotator/manifest generators switched to catalog input.
 3. Transactional publisher, redirects generator, and integrity report.
 4. GitHub Actions OIDC publishing.
-5. OpenClaw integration against the stable command contract.
+5. Crawler integration against the stable ingest command contract.
 
 This keeps each behavioral change reviewable and preserves the current working
 pipeline throughout the migration.
