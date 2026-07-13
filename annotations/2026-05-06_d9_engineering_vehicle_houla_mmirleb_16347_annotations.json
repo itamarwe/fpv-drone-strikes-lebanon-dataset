@@ -4,104 +4,64 @@
   "description": "D9 bulldozer, Houla (dive drone)",
   "date": "2026-05-06",
   "town": "Houla",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-13T09:41:59Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 0.72,
-      "time_formatted": "0:00.7",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 8,
-      "time_formatted": "0:08.0",
+      "time": 8.056,
+      "time_formatted": "0:08.1",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 12.36,
-      "time_formatted": "0:12.4",
+      "time": 12.135,
+      "time_formatted": "0:12.1",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 12.768,
+      "time_formatted": "0:12.8",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 15.92,
+      "time": 15.902,
       "time_formatted": "0:15.9",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 21.2,
-      "time_formatted": "0:21.2",
+      "time": 21.468,
+      "time_formatted": "0:21.5",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 38.2,
+      "time": 38.161,
       "time_formatted": "0:38.2",
-      "type": "other",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 38.76,
-      "time_formatted": "0:38.8",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 40.92,
-      "time_formatted": "0:40.9",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 49.04,
-      "time_formatted": "0:49.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 49.76,
-      "time_formatted": "0:49.8",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 50.76,
-      "time_formatted": "0:50.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }

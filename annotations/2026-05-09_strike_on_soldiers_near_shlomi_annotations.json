@@ -4,128 +4,80 @@
   "description": "Soldier gathering at a helicopter landing pad, Shlomi settlement (dive drone)",
   "date": "2026-05-09",
   "town": "Shlomi",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-13T09:11:02Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 0.76,
-      "time_formatted": "0:00.8",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 8.04,
-      "time_formatted": "0:08.0",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 17.56,
-      "time_formatted": "0:17.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 25.84,
-      "time_formatted": "0:25.8",
+      "time": 8.092,
+      "time_formatted": "0:08.1",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 32.28,
-      "time_formatted": "0:32.3",
+      "time": 17.434,
+      "time_formatted": "0:17.4",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 17.9,
+      "time_formatted": "0:17.9",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 25.543,
+      "time_formatted": "0:25.5",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 26.21,
+      "time_formatted": "0:26.2",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 32.38,
+      "time_formatted": "0:32.4",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 35,
+      "time": 34.98,
       "time_formatted": "0:35.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 43.12,
-      "time_formatted": "0:43.1",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 44.6,
-      "time_formatted": "0:44.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 45.4,
-      "time_formatted": "0:45.4",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 52.84,
-      "time_formatted": "0:52.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 59.6,
-      "time_formatted": "0:59.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 60.48,
-      "time_formatted": "1:00.5",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 61.48,
-      "time_formatted": "1:01.5",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 62,
-      "time_formatted": "1:02.0",
+      "time": 43.08,
+      "time_formatted": "0:43.1",
       "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }

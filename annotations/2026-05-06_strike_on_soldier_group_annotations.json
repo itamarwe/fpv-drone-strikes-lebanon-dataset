@@ -4,112 +4,96 @@
   "description": "Israeli army soldier gathering, al-Bayyada (dive drone)",
   "date": "2026-05-06",
   "town": "Al Bayada / Bayyadah",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-13T09:36:08Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 0.76,
-      "time_formatted": "0:00.8",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 8.04,
-      "time_formatted": "0:08.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 23.12,
-      "time_formatted": "0:23.1",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 33.48,
-      "time_formatted": "0:33.5",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 38.04,
-      "time_formatted": "0:38.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 50.44,
-      "time_formatted": "0:50.4",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 54.72,
-      "time_formatted": "0:54.7",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 63.04,
-      "time_formatted": "1:03.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 67.64,
-      "time_formatted": "1:07.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 74.6,
-      "time_formatted": "1:14.6",
+      "time": 8.09,
+      "time_formatted": "0:08.1",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 75.6,
-      "time_formatted": "1:15.6",
+      "time": 22.729,
+      "time_formatted": "0:22.7",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 23.429,
+      "time_formatted": "0:23.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 33.429,
+      "time_formatted": "0:33.4",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 76.12,
-      "time_formatted": "1:16.1",
+      "time": 38.363,
+      "time_formatted": "0:38.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 50.396,
+      "time_formatted": "0:50.4",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 51.063,
+      "time_formatted": "0:51.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 54.463,
+      "time_formatted": "0:54.5",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 60.263,
+      "time_formatted": "1:00.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 62.763,
+      "time_formatted": "1:02.8",
       "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }

@@ -4,144 +4,32 @@
   "description": "Two Israeli army vehicles, Naqoura naval site on the southern Lebanese border (two Ababil dive drones)",
   "date": "2026-05-25",
   "town": "Naqoura",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-13T06:44:17Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 0.72,
-      "time_formatted": "0:00.7",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 8,
+      "time": 8.042,
       "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 43.905,
+      "time_formatted": "0:43.9",
       "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 43.84,
-      "time_formatted": "0:43.8",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 45.6,
-      "time_formatted": "0:45.6",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 55.44,
-      "time_formatted": "0:55.4",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 55.8,
-      "time_formatted": "0:55.8",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 64.6,
-      "time_formatted": "1:04.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 71.48,
-      "time_formatted": "1:11.5",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 87.76,
-      "time_formatted": "1:27.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 95.08,
-      "time_formatted": "1:35.1",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 120.32,
-      "time_formatted": "2:00.3",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 121.24,
-      "time_formatted": "2:01.2",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 150.72,
-      "time_formatted": "2:30.7",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 151.88,
-      "time_formatted": "2:31.9",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 152.88,
-      "time_formatted": "2:32.9",
-      "type": "other",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 153.44,
-      "time_formatted": "2:33.4",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }

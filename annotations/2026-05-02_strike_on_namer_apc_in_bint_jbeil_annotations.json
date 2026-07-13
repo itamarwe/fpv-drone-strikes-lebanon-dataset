@@ -4,88 +4,64 @@
   "description": "\"Namera\" vehicle, city of Bint Jbeil (dive drone)",
   "date": "2026-05-02",
   "town": "Bint Jbeil",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-13T09:47:52Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 0.76,
-      "time_formatted": "0:00.8",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+      "time": 8.081,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 8.04,
-      "time_formatted": "0:08.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 24.72,
+      "time": 24.688,
       "time_formatted": "0:24.7",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 29.6,
-      "time_formatted": "0:29.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "time": 29.921,
+      "time_formatted": "0:29.9",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 37.32,
+      "time": 37.285,
       "time_formatted": "0:37.3",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 40.36,
-      "time_formatted": "0:40.4",
+      "time": 40.685,
+      "time_formatted": "0:40.7",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 44.96,
-      "time_formatted": "0:45.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 49.8,
-      "time_formatted": "0:49.8",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 50.8,
-      "time_formatted": "0:50.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "time": 44.851,
+      "time_formatted": "0:44.9",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }

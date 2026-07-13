@@ -4,88 +4,48 @@
   "description": "Merkava tank, newly established Namr al-Jamal site opposite Alma al-Shaab (dive drone)",
   "date": "2026-05-08",
   "town": "Border Israel opposite Alma al-Shaab",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-13T09:27:02Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 0.76,
-      "time_formatted": "0:00.8",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 8.04,
-      "time_formatted": "0:08.0",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 19.24,
-      "time_formatted": "0:19.2",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 24.8,
-      "time_formatted": "0:24.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 41.72,
-      "time_formatted": "0:41.7",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 42.64,
-      "time_formatted": "0:42.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 53.12,
-      "time_formatted": "0:53.1",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 53.88,
-      "time_formatted": "0:53.9",
+      "time": 8.073,
+      "time_formatted": "0:08.1",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 54.88,
-      "time_formatted": "0:54.9",
+      "time": 19.039,
+      "time_formatted": "0:19.0",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 25.106,
+      "time_formatted": "0:25.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 41.763,
+      "time_formatted": "0:41.8",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }

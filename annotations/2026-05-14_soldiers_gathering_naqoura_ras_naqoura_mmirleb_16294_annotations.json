@@ -4,96 +4,80 @@
   "description": "Soldier gathering, Ras al-Naqoura military site (dive drone)",
   "date": "2026-05-14",
   "town": "Naqoura",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-13T08:38:29Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 0.72,
-      "time_formatted": "0:00.7",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 8,
+      "time": 8.047,
       "time_formatted": "0:08.0",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 12.8,
-      "time_formatted": "0:12.8",
+      "time": 12.503,
+      "time_formatted": "0:12.5",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 18.92,
+      "time": 18.87,
       "time_formatted": "0:18.9",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 28.32,
-      "time_formatted": "0:28.3",
+      "time": 28.042,
+      "time_formatted": "0:28.0",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 34.12,
-      "time_formatted": "0:34.1",
+      "time": 34.482,
+      "time_formatted": "0:34.5",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 44.6,
-      "time_formatted": "0:44.6",
+      "time": 44.481,
+      "time_formatted": "0:44.5",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 51.76,
-      "time_formatted": "0:51.8",
+      "time": 50.581,
+      "time_formatted": "0:50.6",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 59.36,
-      "time_formatted": "0:59.4",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 60.36,
-      "time_formatted": "1:00.4",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "time": 51.583,
+      "time_formatted": "0:51.6",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }

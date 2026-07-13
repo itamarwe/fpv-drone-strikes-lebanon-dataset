@@ -4,104 +4,80 @@
   "description": "Iron Dome launcher vehicle, city of Khiam (Ababil dive drone)",
   "date": "2026-05-28",
   "town": "Khiam",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-13T06:30:22Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 0.72,
-      "time_formatted": "0:00.7",
+      "time": 8.06,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 12.05,
+      "time_formatted": "0:12.1",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 12.683,
+      "time_formatted": "0:12.7",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 16.362,
+      "time_formatted": "0:16.4",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 17.062,
+      "time_formatted": "0:17.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 23.251,
+      "time_formatted": "0:23.3",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": false
+    },
+    {
+      "time": 28.581,
+      "time_formatted": "0:28.6",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 35.071,
+      "time_formatted": "0:35.1",
       "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 8,
-      "time_formatted": "0:08.0",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 12.4,
-      "time_formatted": "0:12.4",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 16.68,
-      "time_formatted": "0:16.7",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 23.6,
-      "time_formatted": "0:23.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 28.24,
-      "time_formatted": "0:28.2",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 35,
-      "time_formatted": "0:35.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 35.52,
-      "time_formatted": "0:35.5",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 45.88,
-      "time_formatted": "0:45.9",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 46.52,
-      "time_formatted": "0:46.5",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 47.52,
-      "time_formatted": "0:47.5",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }
