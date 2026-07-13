@@ -36,9 +36,9 @@ from pathlib import Path
 
 import omega_pod
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 ANNOTATION_DIR = ROOT / "annotations"
-BATCH_SCRIPT = ROOT / "tools" / "run_vggt_batch_from_annotations.py"
+BATCH_SCRIPT = ROOT / "tools" / "pipeline" / "run_vggt_batch_from_annotations.py"
 SERVER_SCRIPT = ROOT / "tools" / "server" / "fpv_tool_server.py"
 
 # The frame-extraction server needs cv2 / onnxruntime; point at whatever
@@ -74,17 +74,26 @@ def log(msg: str) -> None:
     print(f"[reconstruct] {msg}", flush=True)
 
 
-def server_up(url: str) -> bool:
+def server_output_root(url: str) -> Path | None:
     try:
-        with urllib.request.urlopen(url + "/api/scenes", timeout=5):
-            return True
+        with urllib.request.urlopen(url + "/api/health", timeout=5) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        out_dir = payload.get("out_dir")
+        return Path(out_dir).resolve() if payload.get("ok") and out_dir else None
     except Exception:
-        return False
+        return None
 
 
-def ensure_local_server(url: str, start: bool) -> None:
-    if server_up(url):
-        log(f"local server up at {url}")
+def ensure_local_server(url: str, start: bool, out_dir: Path) -> None:
+    running_out_dir = server_output_root(url)
+    if running_out_dir:
+        expected_out_dir = out_dir.resolve()
+        if running_out_dir != expected_out_dir:
+            raise SystemExit(
+                f"[reconstruct] local server at {url} writes to {running_out_dir}, but this batch uses "
+                f"{expected_out_dir}. Restart it with --out-dir {expected_out_dir}, or use the matching --out-dir."
+            )
+        log(f"local server up at {url} with output root {running_out_dir}")
         return
     if not start:
         raise SystemExit(f"[reconstruct] local server not reachable at {url} (start it or drop --no-start-server)")
@@ -96,14 +105,14 @@ def ensure_local_server(url: str, start: bool) -> None:
     host = url.split("//", 1)[-1]
     hostname, _, port = host.partition(":")
     port = port or "8766"
-    log(f"starting local server: {SERVER_PYTHON} {SERVER_SCRIPT} --host {hostname} --port {port}")
+    log(f"starting local server: {SERVER_PYTHON} {SERVER_SCRIPT} --host {hostname} --port {port} --out-dir {out_dir}")
     logf = open("/tmp/fpv_tool_server.log", "ab")
     subprocess.Popen(
-        [SERVER_PYTHON, str(SERVER_SCRIPT), "--host", hostname, "--port", port],
+        [SERVER_PYTHON, str(SERVER_SCRIPT), "--host", hostname, "--port", port, "--out-dir", str(out_dir)],
         stdout=logf, stderr=logf, stdin=subprocess.DEVNULL, cwd=str(ROOT),
     )
     for _ in range(30):
-        if server_up(url):
+        if server_output_root(url):
             log("local server ready")
             return
         time.sleep(1)
@@ -137,10 +146,11 @@ def resolve_annotation(query: str) -> Path:
 
 
 def run_batch(annotations: list[Path], preset_flags: list[str], args: argparse.Namespace, space: str) -> int:
-    results_file = args.results_file or (ROOT / "scenes" / f".batch_{args.preset}.json")
+    results_file = args.results_file or (args.out_dir / "scenes" / f".batch_{args.preset}.json")
     cmd = [
         sys.executable, str(BATCH_SCRIPT),
         "--server", args.server,
+        "--out-dir", str(args.out_dir),
         "--annotations", *[str(a) for a in annotations],
         "--vggt-space", space,
         "--vggt-backend", "omega",
@@ -151,6 +161,11 @@ def run_batch(annotations: list[Path], preset_flags: list[str], args: argparse.N
         "--results-file", str(results_file),
         *preset_flags,
     ]
+    if args.use_pod:
+        # Each completed Omega request leaves a large Gradio upload directory
+        # behind. The batch is sequential, so cleaning here is safe and keeps a
+        # long run below the pod's workspace limit.
+        cmd.extend(["--omega-cleanup-every", "1"])
     if args.skip_existing:
         cmd.append("--skip-existing")
     log("running batch:\n  " + " ".join(cmd))
@@ -162,6 +177,7 @@ def main() -> int:
     parser.add_argument("scenes", nargs="+", help="annotation paths or scene name/date queries")
     parser.add_argument("--preset", choices=sorted(PRESETS), default="clean")
     parser.add_argument("--server", default=SERVER_URL)
+    parser.add_argument("--out-dir", type=Path, default=ROOT, help="shared scene output root for the server and batch")
     parser.add_argument("--pod-id", default=omega_pod.POD_ID)
     parser.add_argument("--stop-pod", action="store_true", help="stop the pod when the batch finishes")
     parser.add_argument("--skip-existing", action="store_true", help="skip scenes already reconstructed")
@@ -183,7 +199,7 @@ def main() -> int:
     if args.dry_run:
         return 0
 
-    ensure_local_server(args.server, args.start_server)
+    ensure_local_server(args.server, args.start_server, args.out_dir)
 
     if args.use_pod:
         space = omega_pod.up(args.pod_id, ready_timeout_s=args.ready_timeout)

@@ -17,6 +17,7 @@ Environment overrides:
 
 Usage:
   python tools/pipeline/omega_pod.py up      # start pod + launch Omega, wait until ready
+  python tools/pipeline/omega_pod.py cleanup # clear stale Gradio demo uploads between jobs
   python tools/pipeline/omega_pod.py down    # stop the pod
   python tools/pipeline/omega_pod.py status  # print pod + gradio state
   python tools/pipeline/omega_pod.py url     # print the gradio space URL
@@ -62,12 +63,16 @@ def _runpodctl(*args: str) -> subprocess.CompletedProcess:
 
 
 def pod_start(pod_id: str = POD_ID) -> None:
-    _runpodctl("pod", "start", pod_id)
+    result = _runpodctl("pod", "start", pod_id)
+    if result.returncode:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "runpodctl pod start failed")
     log(f"pod {pod_id} start requested")
 
 
 def pod_stop(pod_id: str = POD_ID) -> None:
-    _runpodctl("pod", "stop", pod_id)
+    result = _runpodctl("pod", "stop", pod_id)
+    if result.returncode:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "runpodctl pod stop failed")
     log(f"pod {pod_id} stop requested")
 
 
@@ -78,6 +83,8 @@ def ssh_info(pod_id: str = POD_ID) -> dict | None:
     after a restart, so we use the direct ip:port endpoint runpodctl reports.
     """
     res = _runpodctl("ssh", "info", pod_id)
+    if res.returncode:
+        return None
     try:
         info = json.loads(res.stdout)
     except json.JSONDecodeError:
@@ -141,6 +148,26 @@ def launch_omega(info: dict) -> None:
         pass
 
 
+def cleanup_demo_outputs(info: dict) -> None:
+    """Free transient Gradio uploads without touching checkpoints or the app.
+
+    Omega writes every upload below ``demo_outputs/input_images_*``. They are
+    safe to remove only between requests; ``up`` calls this before app.py is
+    launched, and the standalone command is for a paused batch.
+    """
+    remote = (
+        f"mkdir -p {OMEGA_DIR}/demo_outputs && "
+        f"find {OMEGA_DIR}/demo_outputs -mindepth 1 -maxdepth 1 "
+        "-type d -name 'input_images_*' -exec rm -rf {} + && "
+        "df -h /workspace"
+    )
+    result = ssh_run(info, remote, timeout=120)
+    if result.returncode:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "Omega cache cleanup failed")
+    for line in result.stdout.splitlines():
+        log(f"workspace: {line}")
+
+
 def wait_gradio(pod_id: str, timeout_s: int) -> bool:
     deadline = time.time() + timeout_s
     while time.time() < deadline:
@@ -150,7 +177,7 @@ def wait_gradio(pod_id: str, timeout_s: int) -> bool:
     return False
 
 
-def up(pod_id: str = POD_ID, ready_timeout_s: int = 600) -> str:
+def up(pod_id: str = POD_ID, ready_timeout_s: int = 600, *, clean_cache: bool = True) -> str:
     """Ensure the pod is running and Omega answers on the gradio port."""
     if gradio_status(pod_id) == 200:
         log(f"gradio already up at {space_url(pod_id)}")
@@ -168,6 +195,10 @@ def up(pod_id: str = POD_ID, ready_timeout_s: int = 600) -> str:
     if gradio_status(pod_id) == 200:
         log("gradio already serving")
         return space_url(pod_id)
+
+    if clean_cache:
+        log("clearing stale demo uploads before launch")
+        cleanup_demo_outputs(info)
 
     log("launching Omega app.py ...")
     launch_omega(info)
@@ -187,19 +218,25 @@ def status(pod_id: str = POD_ID) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("command", choices=["up", "down", "status", "url"])
+    parser.add_argument("command", choices=["up", "down", "status", "url", "cleanup"])
     parser.add_argument("--pod-id", default=POD_ID)
     parser.add_argument("--ready-timeout", type=int, default=600, help="seconds to wait for SSH / gradio")
+    parser.add_argument("--no-clean-cache", action="store_true", help="do not clear stale demo uploads before a fresh launch")
     args = parser.parse_args()
 
     if args.command == "up":
-        print(up(args.pod_id, ready_timeout_s=args.ready_timeout))
+        print(up(args.pod_id, ready_timeout_s=args.ready_timeout, clean_cache=not args.no_clean_cache))
     elif args.command == "down":
         pod_stop(args.pod_id)
     elif args.command == "status":
         status(args.pod_id)
     elif args.command == "url":
         print(space_url(args.pod_id))
+    elif args.command == "cleanup":
+        info = wait_ssh(args.pod_id, timeout_s=args.ready_timeout)
+        if not info:
+            raise SystemExit("[omega-pod] SSH did not become reachable; cannot clean demo outputs")
+        cleanup_demo_outputs(info)
     return 0
 
 

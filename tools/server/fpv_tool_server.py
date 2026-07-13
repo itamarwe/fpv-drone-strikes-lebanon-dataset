@@ -294,6 +294,10 @@ class ToolState:
     def save_job(self, job: Job) -> None:
         payload = {**job.to_json(), "request": job.request}
         path = self.job_path(job.id)
+        # A batch cleanup can remove generated scene data while this server is
+        # still alive. Recreate the runtime ledger instead of turning a newly
+        # accepted reconstruction into an opaque HTTP 500.
+        path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(payload, indent=2))
         tmp.replace(path)
