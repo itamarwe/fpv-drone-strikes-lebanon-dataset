@@ -160,6 +160,8 @@ header{position:relative;z-index:1000;display:flex;align-items:center;gap:10px;p
 .seg-item{display:flex;align-items:center;gap:8px;padding:8px 10px;
   border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
 .seg-item:hover{background:var(--surf2)}
+.seg-item.disabled{opacity:.48}
+.seg-enable{flex-shrink:0;accent-color:var(--accent);cursor:pointer}
 .seg-thumb{flex-shrink:0;width:64px;height:36px;background:var(--surf2);
   border-radius:3px;overflow:hidden;border:1px solid var(--border)}
 .seg-thumb canvas{width:64px;height:36px;display:block}
@@ -350,6 +352,7 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
         <div class="sc"><kbd>←</kbd><kbd>→</kbd> ±1 frame</div>
         <div class="sc"><kbd>⇧←</kbd><kbd>⇧→</kbd> ±10 frames</div>
         <div class="sc"><kbd>Home</kbd><kbd>End</kbd> Start/End</div>
+        <div class="sc"><kbd>X</kbd> Clear all tags</div>
       </div>
     </div>
     <div class="seg-list-hdr">
@@ -701,6 +704,7 @@ async function loadSavedAnnotations(v) {
       time: s.time,
       type: s.type,
       comment: s.comment || '',
+      enabled: s.enabled !== false,
       thumb: null,
     }));
     masks = normalizeMasks(d.exclusion_masks);
@@ -818,10 +822,40 @@ function seek(t) {
   vid.currentTime = Math.max(0, Math.min(t, vid.duration || 0));
 }
 
-function step(n) { seek(vid.currentTime + n / FPS); }
+function playbackIntervals() {
+  const markers = [...annotations].sort((a, b) => a.time - b.time);
+  const duration = vid.duration || 0;
+  return markers.map((marker, index) => ({
+    ...marker,
+    start: marker.time,
+    end: index + 1 < markers.length ? markers[index + 1].time : duration,
+  })).filter(interval => interval.end > interval.start);
+}
+
+function enabledTime(time, direction = 1) {
+  const interval = playbackIntervals().find(item =>
+    time >= item.start && time < item.end && item.enabled === false,
+  );
+  if (!interval) return time;
+  return direction < 0 ? interval.start : interval.end;
+}
+
+function seekEnabled(time, direction = 1) {
+  seek(enabledTime(time, direction));
+}
+
+function step(n) {
+  const direction = n < 0 ? -1 : 1;
+  seekEnabled(vid.currentTime + n / FPS, direction);
+}
 
 function togglePlay() {
-  vid.paused ? vid.play() : vid.pause();
+  if (vid.paused) {
+    seekEnabled(vid.currentTime, 1);
+    vid.play();
+  } else {
+    vid.pause();
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -835,6 +869,11 @@ function fmt(s) {
 
 function onTimeUpdate() {
   const cur = vid.currentTime, dur = vid.duration || 0;
+  const playableTime = enabledTime(cur, 1);
+  if (!vid.paused && playableTime !== cur) {
+    seek(playableTime);
+    return;
+  }
   g('timeDisp').textContent = fmt(cur) + ' / ' + fmt(dur);
   g('markAt').textContent   = fmt(cur);
   if (dur > 0) g('timeSlider').value = (cur / dur) * 10000;
@@ -873,7 +912,7 @@ function markSegment() {
     return c;
   })();
 
-  const ann = {id: Date.now() + Math.random(), time, type, comment, thumb};
+  const ann = {id: Date.now() + Math.random(), time, type, comment, enabled: true, thumb};
   const i = annotations.findIndex(a => a.time > time);
   if (i === -1) annotations.push(ann); else annotations.splice(i, 0, ann);
 
@@ -885,6 +924,16 @@ function markSegment() {
 
 function deleteAnn(id) {
   annotations = annotations.filter(a => a.id !== id);
+  renderAnnotations();
+  updateFilmstripMarkers();
+  renderReconstructionPanel();
+}
+
+function clearAnnotations() {
+  if (!annotations.length) return;
+  if (!confirm('Remove all annotation tags for this video? This cannot be undone.')) return;
+  annotations = [];
+  selectedSceneSegments = new Set();
   renderAnnotations();
   updateFilmstripMarkers();
   renderReconstructionPanel();
@@ -903,7 +952,20 @@ function renderAnnotations() {
   annotations.forEach(ann => {
     const t = SEG[ann.type] || {label: ann.type, color:'#888'};
     const item = document.createElement('div');
-    item.className = 'seg-item';
+    item.className = `seg-item${ann.enabled === false ? ' disabled' : ''}`;
+
+    const enabled = document.createElement('input');
+    enabled.className = 'seg-enable';
+    enabled.type = 'checkbox';
+    enabled.checked = ann.enabled !== false;
+    enabled.title = 'Include this segment in playback';
+    enabled.setAttribute('aria-label', `Include ${t.label} at ${fmt(ann.time)} in playback`);
+    enabled.addEventListener('click', event => event.stopPropagation());
+    enabled.addEventListener('change', () => {
+      ann.enabled = enabled.checked;
+      renderAnnotations();
+      updateFilmstripMarkers();
+    });
 
     // Thumbnail
     const thumb = document.createElement('div');
@@ -930,6 +992,7 @@ function renderAnnotations() {
     del.title = 'Remove';
     del.addEventListener('click', e => { e.stopPropagation(); deleteAnn(ann.id); });
 
+    item.appendChild(enabled);
     item.appendChild(thumb);
     item.appendChild(info);
     item.appendChild(del);
@@ -949,6 +1012,7 @@ function updateFilmstripMarkers() {
     m.className = 'fs-marker';
     m.style.left = ((ann.time / dur) * iw) + 'px';
     m.style.background = t.color;
+    if (ann.enabled === false) m.style.opacity = '0.3';
     m.title = (SEG[ann.type] || {label:ann.type}).label + ' ' + fmt(ann.time);
     fsIn.appendChild(m);
   });
@@ -1578,6 +1642,7 @@ function annotationPayload() {
       type:           a.type,
       label:          (SEG[a.type] || {label:a.type}).label,
       comment:        a.comment || '',
+      enabled:        a.enabled !== false,
     })),
     exclusion_masks: masks.map(roundMask),
   };
@@ -1648,7 +1713,7 @@ function loadJSON(file) {
           annotations = (d.segments || []).map(s => ({
             id: Date.now() + Math.random(),
             time: s.time, type: s.type,
-            comment: s.comment || '', thumb: null,
+            comment: s.comment || '', enabled: s.enabled !== false, thumb: null,
           }));
           masks = normalizeMasks(d.exclusion_masks);
           renderAnnotations();
@@ -1815,6 +1880,7 @@ function bindEvents() {
       case 'Home':       e.preventDefault(); if (current) seek(0); break;
       case 'End':        e.preventDefault(); if (current) seek(vid.duration); break;
       case 'm': case 'M': markSegment(); break;
+      case 'x': case 'X': clearAnnotations(); break;
       case 'b': case 'B': markAs('banner_start'); break;
       case 'f': case 'F': markAs('flight_start'); break;
       case 'n': case 'N': markAs('new_flight_start'); break;

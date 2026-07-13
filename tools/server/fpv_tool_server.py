@@ -510,6 +510,8 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
                 redirect(self, "/annotate/")
             elif path in {"/annotate", "/annotate/"}:
                 self.serve_static("/tools/apps/annotator/index.html")
+            elif path == "/annotate/catalog-videos.json":
+                self.serve_static("/tools/apps/annotator/catalog-videos.json")
             elif path == "/api/health":
                 write_json(self, {"ok": True, "out_dir": str(self.state.out_dir)})
             elif path == "/api/scenes":
