@@ -1388,20 +1388,6 @@
       }
     },
     {
-      "id": "2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261",
-      "date": "2026-05-12",
-      "description": "Humvee on the Naqoura-Iskandaroun road (dive drone)",
-      "original_title": "استهداف آليّة هامفي تابعة لجيش العدوّ الإسرائيلي على طريق الناقورة - الإسكندرون جنوب لبنان بِمُحلّقة انقضاضيّة",
-      "town": "Naqoura",
-      "provenance": {
-        "source": "legacy_import"
-      },
-      "media": {
-        "video_key": "videos/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.mp4",
-        "thumbnail_key": "thumbnails/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.jpg"
-      }
-    },
-    {
       "id": "2026-05-11_strike_on_soldier_near_dhayra",
       "date": "2026-05-11",
       "description": "Israeli army soldier, Taybeh (dive drone)",
@@ -1581,34 +1567,6 @@
       "media": {
         "video_key": "videos/2026-05-09_strike_on_israeli_military_vehicle.mp4",
         "thumbnail_key": "thumbnails/2026-05-09_strike_on_israeli_military_vehicle.jpg"
-      }
-    },
-    {
-      "id": "2026-05-09_soldiers_gathering_shlomi_mmirleb_15970",
-      "date": "2026-05-09",
-      "description": "Soldier gathering at a helicopter landing pad, Shlomi settlement (dive drone)",
-      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في مهبط مروحيّات في مستوطنة شلومي شمال فلسطين المحتلّة بمحلّقة انقضاضيّة",
-      "town": "Shlomi",
-      "provenance": {
-        "source": "legacy_import"
-      },
-      "media": {
-        "video_key": "videos/2026-05-09_soldiers_gathering_shlomi_mmirleb_15970.mp4",
-        "thumbnail_key": "thumbnails/2026-05-09_soldiers_gathering_shlomi_mmirleb_15970.jpg"
-      }
-    },
-    {
-      "id": "2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988",
-      "date": "2026-05-09",
-      "description": "Soldier gathering, Jal al-Alam site on the Lebanese border (dive drone)",
-      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في موقع جلّ العلام على الحدود اللبنانيّة الفلسطينيّة بمحلّقةٍ انقضاضيّة",
-      "town": "Border Israel opposite Alma al-Shaab",
-      "provenance": {
-        "source": "legacy_import"
-      },
-      "media": {
-        "video_key": "videos/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.mp4",
-        "thumbnail_key": "thumbnails/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.jpg"
       }
     },
     {
@@ -1836,34 +1794,6 @@
       }
     },
     {
-      "id": "2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841",
-      "date": "2026-05-06",
-      "description": "Israeli army soldier gathering, Aita al-Shaab (dive drone)",
-      "original_title": "استهداف تجمّع لجنود جيش العدوّ الإسرائيلي في بلدة عيتا الشعب جنوبيّ لبنان بمسيّرة إنقضاضيّة",
-      "town": "Ayta ash Shab / Aita al-Shaab",
-      "provenance": {
-        "source": "legacy_import"
-      },
-      "media": {
-        "video_key": "videos/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841.mp4",
-        "thumbnail_key": "thumbnails/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841.jpg"
-      }
-    },
-    {
-      "id": "2026-05-06_position_point_taybeh_mmirleb_16210",
-      "date": "2026-05-06",
-      "description": "Israeli army positioning point, Taybeh (dive drone)",
-      "original_title": "استهداف نقطة تموضع تابعة لجيش العدوّ الإسرائيلي في بلدة الطيّبة جنوبيّ لبنان بمحلّقة انقضاضيّة",
-      "town": "Taybeh",
-      "provenance": {
-        "source": "legacy_import"
-      },
-      "media": {
-        "video_key": "videos/2026-05-06_position_point_taybeh_mmirleb_16210.mp4",
-        "thumbnail_key": "thumbnails/2026-05-06_position_point_taybeh_mmirleb_16210.jpg"
-      }
-    },
-    {
       "id": "2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347",
       "date": "2026-05-06",
       "description": "D9 bulldozer, Houla (dive drone)",
@@ -1903,20 +1833,6 @@
       "media": {
         "video_key": "videos/2026-05-04_strike_on_troop_transport_vehicle.mp4",
         "thumbnail_key": "thumbnails/2026-05-04_strike_on_troop_transport_vehicle.jpg"
-      }
-    },
-    {
-      "id": "2026-05-04_strike_on_engineering_vehicle",
-      "date": "2026-05-04",
-      "description": "HEMTT logistics vehicle, Manara site (Ababil dive drone)",
-      "original_title": "استهداف آليّة لوجستيّة \"هيمت\" تابعة لجيش العدوّ الإسرائيلي في موقع المنارة على الحدود اللبنانيّة الجنوبيّة بمحلّقة أبابيل الانقضاضيّة",
-      "town": "Manara",
-      "provenance": {
-        "source": "legacy_import"
-      },
-      "media": {
-        "video_key": "videos/2026-05-04_strike_on_engineering_vehicle.mp4",
-        "thumbnail_key": "thumbnails/2026-05-04_strike_on_engineering_vehicle.jpg"
       }
     },
     {

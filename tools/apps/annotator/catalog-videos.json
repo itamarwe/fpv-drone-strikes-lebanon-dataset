@@ -693,13 +693,6 @@
     "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_soldier_manara_khirbet_al_manara_mmirleb_16118.mp4"
   },
   {
-    "date": "2026-05-12",
-    "description": "Humvee on the Naqoura-Iskandaroun road (dive drone)",
-    "town": "Naqoura",
-    "thumbnail_url": "https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.jpg",
-    "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.mp4"
-  },
-  {
     "date": "2026-05-11",
     "description": "Israeli army soldier, Taybeh (dive drone)",
     "town": "Taybeh",
@@ -789,20 +782,6 @@
     "town": "Deir Seryan / Khallet al-Raj",
     "thumbnail_url": "https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_strike_on_israeli_military_vehicle.jpg",
     "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_strike_on_israeli_military_vehicle.mp4"
-  },
-  {
-    "date": "2026-05-09",
-    "description": "Soldier gathering at a helicopter landing pad, Shlomi settlement (dive drone)",
-    "town": "Shlomi",
-    "thumbnail_url": "https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_soldiers_gathering_shlomi_mmirleb_15970.jpg",
-    "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_soldiers_gathering_shlomi_mmirleb_15970.mp4"
-  },
-  {
-    "date": "2026-05-09",
-    "description": "Soldier gathering, Jal al-Alam site on the Lebanese border (dive drone)",
-    "town": "Border Israel opposite Alma al-Shaab",
-    "thumbnail_url": "https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.jpg",
-    "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.mp4"
   },
   {
     "date": "2026-05-09",
@@ -918,20 +897,6 @@
   },
   {
     "date": "2026-05-06",
-    "description": "Israeli army soldier gathering, Aita al-Shaab (dive drone)",
-    "town": "Ayta ash Shab / Aita al-Shaab",
-    "thumbnail_url": "https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841.jpg",
-    "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_soldiers_gathering_aita_al_shaab_mmirleb_15841.mp4"
-  },
-  {
-    "date": "2026-05-06",
-    "description": "Israeli army positioning point, Taybeh (dive drone)",
-    "town": "Taybeh",
-    "thumbnail_url": "https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_position_point_taybeh_mmirleb_16210.jpg",
-    "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-06_position_point_taybeh_mmirleb_16210.mp4"
-  },
-  {
-    "date": "2026-05-06",
     "description": "D9 bulldozer, Houla (dive drone)",
     "town": "Houla",
     "thumbnail_url": "https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347.jpg",
@@ -950,13 +915,6 @@
     "town": "Sheikh Abbad hill near Houla, approx",
     "thumbnail_url": "https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_strike_on_troop_transport_vehicle.jpg",
     "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_strike_on_troop_transport_vehicle.mp4"
-  },
-  {
-    "date": "2026-05-04",
-    "description": "HEMTT logistics vehicle, Manara site (Ababil dive drone)",
-    "town": "Manara",
-    "thumbnail_url": "https://d2fioemadmrru3.cloudfront.net/thumbnails/2026-05-04_strike_on_engineering_vehicle.jpg",
-    "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-04_strike_on_engineering_vehicle.mp4"
   },
   {
     "date": "2026-05-04",
