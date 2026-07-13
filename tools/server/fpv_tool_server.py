@@ -353,6 +353,13 @@ def write_error(handler: SimpleHTTPRequestHandler, message: str, status: int = 4
     write_json(handler, {"error": message}, status=status)
 
 
+def redirect(handler: SimpleHTTPRequestHandler, location: str) -> None:
+    handler.send_response(302)
+    handler.send_header("Location", location)
+    handler.send_header("Cache-Control", "no-store")
+    handler.end_headers()
+
+
 def read_json_if_exists(path: Path) -> dict[str, object]:
     if not path.exists():
         return {}
@@ -499,7 +506,11 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
         try:
-            if path == "/api/health":
+            if path in {"", "/"}:
+                redirect(self, "/annotate/")
+            elif path in {"/annotate", "/annotate/"}:
+                self.serve_static("/tools/apps/annotator/index.html")
+            elif path == "/api/health":
                 write_json(self, {"ok": True, "out_dir": str(self.state.out_dir)})
             elif path == "/api/scenes":
                 write_json(self, {"scenes": list_scene_summaries(self.state.scenes_dir, self.state.app_base)})
