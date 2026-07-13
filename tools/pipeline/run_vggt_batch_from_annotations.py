@@ -162,8 +162,8 @@ def request_body(annotation: dict[str, Any], selected: list[dict[str, Any]], arg
     }
 
 
-def scene_dir_for(annotation: dict[str, Any], scene_id: str) -> Path:
-    return ROOT / "scenes" / slugify(annotation["video_file"]) / scene_id
+def scene_dir_for(out_dir: Path, annotation: dict[str, Any], scene_id: str) -> Path:
+    return out_dir / "scenes" / slugify(annotation["video_file"]) / scene_id
 
 
 def scene_is_complete(scene_dir: Path) -> bool:
@@ -174,8 +174,15 @@ def scene_is_complete(scene_dir: Path) -> bool:
     )
 
 
-def result_from_scene(path: Path, annotation: dict[str, Any], scene_id: str, selected: list[dict[str, Any]], status: str) -> dict[str, Any]:
-    scene_dir = scene_dir_for(annotation, scene_id)
+def result_from_scene(
+    out_dir: Path,
+    path: Path,
+    annotation: dict[str, Any],
+    scene_id: str,
+    selected: list[dict[str, Any]],
+    status: str,
+) -> dict[str, Any]:
+    scene_dir = scene_dir_for(out_dir, annotation, scene_id)
     manifest_path = scene_dir / "scene_manifest.json"
     manifest: dict[str, Any] = {}
     if manifest_path.exists():
@@ -221,10 +228,10 @@ def run_batch(args: argparse.Namespace) -> int:
         body = request_body(annotation, selected, args)
         segment_ids = ",".join(row["segment_id"] for row in selected)
         scene_id = f"{slugify(annotation['video_file'])}_{'_'.join(row['segment_id'] for row in selected)}"
-        if args.skip_existing and scene_is_complete(scene_dir_for(annotation, scene_id)):
+        if args.skip_existing and scene_is_complete(scene_dir_for(args.out_dir, annotation, scene_id)):
             if not args.quiet:
                 print(f"[{batch_index}/{len(paths)}] skip complete {scene_id}", flush=True)
-            results.append(result_from_scene(path, annotation, scene_id, selected, "skipped_complete"))
+            results.append(result_from_scene(args.out_dir, path, annotation, scene_id, selected, "skipped_complete"))
             continue
         print(f"[{batch_index}/{len(paths)}] {annotation['video_file']} -> {segment_ids} ({total_s:.3f}s @ {args.fps:g}fps)", flush=True)
         response = post_json(args.server, "/api/reconstruct", body)
@@ -245,7 +252,7 @@ def run_batch(args: argparse.Namespace) -> int:
                     print(line, flush=True)
                 last_line = line
             if job.get("status") in {"done", "error"}:
-                scene_manifest = ROOT / "scenes" / slugify(annotation["video_file"]) / scene_id / "scene_manifest.json"
+                scene_manifest = scene_dir_for(args.out_dir, annotation, scene_id) / "scene_manifest.json"
                 model_config: dict[str, Any] = {}
                 if scene_manifest.exists():
                     model_config = json.loads(scene_manifest.read_text()).get("model_config", {})
@@ -282,6 +289,7 @@ def run_batch(args: argparse.Namespace) -> int:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--server", default="http://127.0.0.1:8766")
+    parser.add_argument("--out-dir", type=Path, default=ROOT, help="scene output root configured on the FPV tool server")
     parser.add_argument("--annotations", nargs="*", help="explicit annotation JSON paths (overrides glob/offset/limit)")
     parser.add_argument("--limit", type=int, default=10)
     parser.add_argument("--offset", type=int, default=0)
@@ -321,6 +329,7 @@ def parse_args() -> argparse.Namespace:
     args = parser.parse_args()
     if not args.results_file.is_absolute():
         args.results_file = ROOT / args.results_file
+    args.out_dir = args.out_dir.resolve()
     return args
 
 
