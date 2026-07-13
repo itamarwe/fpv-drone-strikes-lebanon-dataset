@@ -4,360 +4,208 @@
   "description": "Newly established HQ of the 401st Armored Brigade, Dibel (swarm of Ababil dive drones)",
   "date": "2026-05-20",
   "town": "Dibel / Debel",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-13T07:30:05Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 8.24,
-      "time_formatted": "0:08.2",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 12.64,
-      "time_formatted": "0:12.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 14.48,
-      "time_formatted": "0:14.5",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 17.12,
-      "time_formatted": "0:17.1",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 18.52,
-      "time_formatted": "0:18.5",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 20.28,
-      "time_formatted": "0:20.3",
+      "time": 8.283,
+      "time_formatted": "0:08.3",
       "type": "other",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Other",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 21.24,
-      "time_formatted": "0:21.2",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 27.16,
-      "time_formatted": "0:27.2",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 28.16,
-      "time_formatted": "0:28.2",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 37.44,
-      "time_formatted": "0:37.4",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 44.12,
-      "time_formatted": "0:44.1",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
-    },
-    {
-      "time": 52.72,
-      "time_formatted": "0:52.7",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 56.76,
-      "time_formatted": "0:56.8",
+      "time": 44.539,
+      "time_formatted": "0:44.5",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 63.08,
-      "time_formatted": "1:03.1",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 88.08,
-      "time_formatted": "1:28.1",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 113.48,
-      "time_formatted": "1:53.5",
+      "time": 52.797,
+      "time_formatted": "0:52.8",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 123.4,
-      "time_formatted": "2:03.4",
+      "time": 63.431,
+      "time_formatted": "1:03.4",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 126.04,
-      "time_formatted": "2:06.0",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 133.24,
-      "time_formatted": "2:13.2",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 138,
-      "time_formatted": "2:18.0",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 159.48,
-      "time_formatted": "2:39.5",
+      "time": 88.215,
+      "time_formatted": "1:28.2",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 164.64,
-      "time_formatted": "2:44.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 171.6,
-      "time_formatted": "2:51.6",
+      "time": 98.501,
+      "time_formatted": "1:38.5",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 200.4,
+      "time": 112.963,
+      "time_formatted": "1:53.0",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 123.796,
+      "time_formatted": "2:03.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 133.305,
+      "time_formatted": "2:13.3",
+      "type": "new_flight_start",
+      "label": "New Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 138.141,
+      "time_formatted": "2:18.1",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 148.417,
+      "time_formatted": "2:28.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 159.921,
+      "time_formatted": "2:39.9",
+      "type": "new_flight_start",
+      "label": "New Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 164.321,
+      "time_formatted": "2:44.3",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 171.981,
+      "time_formatted": "2:52.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 200.377,
       "time_formatted": "3:20.4",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": false
     },
     {
-      "time": 205.56,
-      "time_formatted": "3:25.6",
+      "time": 205.924,
+      "time_formatted": "3:25.9",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 209.12,
+      "time": 209.113,
       "time_formatted": "3:29.1",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 214.08,
-      "time_formatted": "3:34.1",
+      "time": 214.479,
+      "time_formatted": "3:34.5",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 217.88,
-      "time_formatted": "3:37.9",
-      "type": "other",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "time": 218.343,
+      "time_formatted": "3:38.3",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 218.36,
-      "time_formatted": "3:38.4",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "time": 234.346,
+      "time_formatted": "3:54.3",
+      "type": "new_flight_start",
+      "label": "New Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 223.32,
-      "time_formatted": "3:43.3",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "time": 251.912,
+      "time_formatted": "4:11.9",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 223.88,
-      "time_formatted": "3:43.9",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "time": 252.757,
+      "time_formatted": "4:12.8",
+      "type": "new_flight_start",
+      "label": "New Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 233.6,
-      "time_formatted": "3:53.6",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
+      "time": 283.722,
+      "time_formatted": "4:43.7",
+      "type": "new_flight_start",
+      "label": "New Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 236.84,
-      "time_formatted": "3:56.8",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 252,
-      "time_formatted": "4:12.0",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 270.2,
-      "time_formatted": "4:30.2",
-      "type": "other",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 270.8,
-      "time_formatted": "4:30.8",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_strong_transnet_score"
-    },
-    {
-      "time": 287.72,
-      "time_formatted": "4:47.7",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 291.64,
-      "time_formatted": "4:51.6",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 297.6,
-      "time_formatted": "4:57.6",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 305.88,
-      "time_formatted": "5:05.9",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 312.32,
-      "time_formatted": "5:12.3",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 313.32,
-      "time_formatted": "5:13.3",
-      "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 315.4,
-      "time_formatted": "5:15.4",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "time": 287.448,
+      "time_formatted": "4:47.4",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }

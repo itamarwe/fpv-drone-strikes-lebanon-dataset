@@ -1,10 +1,10 @@
 {
-  "video_file": "2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.mp4",
-  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam.mp4",
-  "description": "Iron Dome platform and its crew, Jal al-Alam site (two dive drones)",
-  "date": "2026-05-07",
-  "town": "Border Israel opposite Alma al-Shaab",
-  "annotated_at": "2026-07-13T09:33:30Z",
+  "video_file": "2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261.mp4",
+  "description": "Humvee on the Naqoura-Iskandaroun road (dive drone)",
+  "date": "2026-05-12",
+  "town": "Naqoura",
+  "annotated_at": "2026-07-13T08:55:56Z",
   "segments": [
     {
       "time": 0,
@@ -15,7 +15,7 @@
       "enabled": true
     },
     {
-      "time": 8.092,
+      "time": 8.067,
       "time_formatted": "0:08.1",
       "type": "flight_start",
       "label": "Flight Start",
@@ -23,24 +23,24 @@
       "enabled": true
     },
     {
-      "time": 37.061,
-      "time_formatted": "0:37.1",
+      "time": 20.167,
+      "time_formatted": "0:20.2",
       "type": "pause_start",
       "label": "Pause Start",
       "comment": "",
       "enabled": true
     },
     {
-      "time": 42.528,
-      "time_formatted": "0:42.5",
+      "time": 25.5,
+      "time_formatted": "0:25.5",
       "type": "flight_start",
       "label": "Flight Start",
       "comment": "",
       "enabled": true
     },
     {
-      "time": 44.528,
-      "time_formatted": "0:44.5",
+      "time": 47.936,
+      "time_formatted": "0:47.9",
       "type": "replay_start",
       "label": "Replay Start",
       "comment": "",
