@@ -844,7 +844,9 @@ function enabledTime(time, direction = 1) {
     time >= item.start && time < item.end && item.enabled === false,
   );
   if (!interval) return time;
-  return direction < 0 ? interval.start : interval.end;
+  // Intervals are [start, end): forward lands on end (the next segment's
+  // first frame), while backward lands on the prior frame outside this segment.
+  return direction < 0 ? Math.max(0, interval.start - 1 / FPS) : interval.end;
 }
 
 function seekEnabled(time, direction = 1) {
