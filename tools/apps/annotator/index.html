@@ -822,6 +822,13 @@ function seek(t) {
   vid.currentTime = Math.max(0, Math.min(t, vid.duration || 0));
 }
 
+function focusFilmstripAt(time) {
+  if (!vid.duration || !fsIn.scrollWidth) return;
+  const x = (time / vid.duration) * fsIn.scrollWidth;
+  const target = Math.max(0, Math.min(x - fsCon.clientWidth / 2, fsIn.scrollWidth - fsCon.clientWidth));
+  fsCon.scrollTo({left: target, behavior: 'smooth'});
+}
+
 function playbackIntervals() {
   const markers = [...annotations].sort((a, b) => a.time - b.time);
   const duration = vid.duration || 0;
@@ -996,7 +1003,10 @@ function renderAnnotations() {
     item.appendChild(thumb);
     item.appendChild(info);
     item.appendChild(del);
-    item.addEventListener('click', () => seek(ann.time));
+    item.addEventListener('click', () => {
+      seek(ann.time);
+      focusFilmstripAt(ann.time);
+    });
     list.appendChild(item);
   });
 }
