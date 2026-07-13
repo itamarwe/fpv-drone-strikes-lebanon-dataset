@@ -16,6 +16,9 @@ An interactive map view is available in [index.html](index.html). It is backed b
 The checked-in [`data/catalog.json`](data/catalog.json) is the single source of
 truth for video identity and descriptive metadata. README rows,
 `tools/apps/annotator/catalog-videos.json`, and the public web manifest are generated from it.
+The scene browser reads the published `scenePath` entries in `data/videos.json`
+and loads each viewer bundle directly from CloudFront; local `scenes/` folders
+are only reconstruction workspaces, not a second runtime catalog.
 
 ## Repository layout
 
