@@ -58,25 +58,10 @@ function readAnnotations() {
 // reconstruction only; density variants (scene dirs suffixed "__3m"/"__5m"/...)
 // exist for the local scene-viewer tool and are excluded here.
 function buildSceneIndex() {
-  const scenesDir = path.join(repoRoot, "scenes");
   const index = new Map();
   for (const [videoId, scenes] of readSceneManifests(repoRoot)) {
     const scene = [...scenes].sort((a, b) => a.scene_id.localeCompare(b.scene_id))[0];
-    if (scene) index.set(videoId, scene.path);
-  }
-  if (!fs.existsSync(scenesDir)) return index;
-  for (const stem of fs.readdirSync(scenesDir, { withFileTypes: true })) {
-    if (!stem.isDirectory()) continue;
-    const base = path.join(scenesDir, stem.name);
-    for (const scene of fs.readdirSync(base, { withFileTypes: true }).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    )) {
-      if (!scene.isDirectory() || scene.name.includes("__")) continue; // skip variants
-      if (fs.existsSync(path.join(base, scene.name, "viewer", "scene_meta.json"))) {
-        index.set(stem.name, `${stem.name}/${scene.name}`);
-        break;
-      }
-    }
+    if (scene) index.set(videoId, { path: scene.path, quality: scene.quality ?? null });
   }
   return index;
 }
@@ -124,7 +109,8 @@ for (const raw of readCatalogVideos()) {
   const previousVideoFile = previousVideoFiles.get(videoFile);
   const existing = existingVideos.get(videoFile) ?? (previousVideoFile ? existingVideos.get(previousVideoFile) : undefined);
   const existingScenePath = existing?.scenePath?.replaceAll("barashit", "biranit") ?? null;
-  const scenePath = sceneIndex.get(slug) ?? existingScenePath;
+  const scene = sceneIndex.get(slug);
+  const scenePath = scene?.path ?? existingScenePath;
   videos.push({
     videoFile,
     slug,
@@ -136,6 +122,7 @@ for (const raw of readCatalogVideos()) {
     thumbWidths: thumb?.widths ?? existing?.thumbWidths ?? null,
     blur: thumb?.blurDataURL ?? existing?.blur ?? null,
     scenePath,
+    sceneQuality: scene?.quality ?? existing?.sceneQuality ?? null,
     segments: ann?.segments ?? null,
     annotationAuto: ann ? Boolean(ann.auto_generated) : null,
   });

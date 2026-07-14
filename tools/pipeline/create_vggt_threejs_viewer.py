@@ -348,6 +348,17 @@ def load_sample_fps(video_dir: Path) -> float | None:
     return value if value > 0 else None
 
 
+def load_quality(video_dir: Path) -> dict | None:
+    for path in [video_dir / "scene_quality.json", video_dir / "metadata.json"]:
+        if not path.exists():
+            continue
+        data = json.loads(path.read_text())
+        quality = data if path.name == "scene_quality.json" else data.get("quality")
+        if isinstance(quality, dict):
+            return quality
+    return None
+
+
 def main() -> None:
     args = parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)
@@ -388,6 +399,7 @@ def main() -> None:
         "scene_state_url": args.state_url or "",
         "default_scale_m_per_unit": args.default_scale_m_per_unit,
         "sample_fps": sample_fps,
+        "quality": load_quality(args.video_dir),
         "point_count": int(len(points)),
         "bbox_min": bbox_min.astype(float).tolist(),
         "bbox_max": bbox_max.astype(float).tolist(),

@@ -40,6 +40,10 @@ SCENE_VIEWER_INDEX_RE = re.compile(r"^/scenes/(.+)/viewer(?:/index\.html)?/?$")
 # Soft advisory only: above this many frames VGGT reconstruction gets slow/heavy.
 # This is NOT a hard cap -- frames are capped only when max_vggt_frames > 0.
 VGGT_FRAME_WARN_THRESHOLD = 125
+CENTRAL_CLEAN_REFERENCE_SIZE = (848, 478)
+# Preserve the horizontal centre of the previously validated clean crop while
+# narrowing the actual model input to the requested 260x280 region.
+CENTRAL_CLEAN_REFERENCE_BBOX = (320, 190, 260, 280)
 
 # Local copy of the VGGT-Omega sky-segmentation model, used to run skyseg on the
 # CLEAN frames client-side (before painting exclusion boxes), so the black boxes
@@ -120,15 +124,17 @@ def body_bool(body: dict[str, object], key: str, default: bool = False) -> bool:
 
 def crop_config(crop_preset: str) -> dict[str, object]:
     if crop_preset == "central_clean":
+        ref_w, ref_h = CENTRAL_CLEAN_REFERENCE_SIZE
+        x, y, width, height = CENTRAL_CLEAN_REFERENCE_BBOX
         return {
             "preset": crop_preset,
-            "reference_size_px": {"width": 848, "height": 478},
-            "reference_bbox_px": {"x": 120, "y": 190, "width": 660, "height": 280},
+            "reference_size_px": {"width": ref_w, "height": ref_h},
+            "reference_bbox_px": {"x": x, "y": y, "width": width, "height": height},
             "ffmpeg_crop_expr": (
-                "crop=trunc(iw*660/848/2)*2:"
-                "trunc(ih*280/478/2)*2:"
-                "trunc(iw*120/848/2)*2:"
-                "trunc(ih*190/478/2)*2"
+                f"crop=trunc(iw*{width}/{ref_w}/2)*2:"
+                f"trunc(ih*{height}/{ref_h}/2)*2:"
+                f"trunc(iw*{x}/{ref_w}/2)*2:"
+                f"trunc(ih*{y}/{ref_h}/2)*2"
             ),
         }
     return {"preset": crop_preset}
@@ -148,10 +154,14 @@ def reconstruction_config(
 ) -> dict[str, object]:
     sample_fps = float(body.get("sample_fps", 0) or 0)
     max_vggt_frames = int(body.get("max_vggt_frames", 0) or 0)
-    upload_video_fps = min(float(effective_sample_fps or sample_fps or 2.0), 2.0)
     vggt_space = str(body.get("vggt_space") or state.vggt_space)
     vggt_backend = str(body.get("vggt_backend") or state.vggt_backend)
-    vggt_upload_mode = str(body.get("vggt_upload_mode", "video"))
+    vggt_upload_mode = str(body.get("vggt_upload_mode", "images"))
+    upload_video_fps = (
+        min(float(effective_sample_fps or sample_fps or 2.0), 2.0)
+        if vggt_upload_mode == "video"
+        else None
+    )
     vggt_timeout = int(body.get("vggt_timeout", 900) or 900)
     conf_thres = float(body.get("vggt_conf_thres", 50.0) or 50.0)
     max_points_k = float(body.get("vggt_max_points_k", 1000.0) or 1000.0)
@@ -294,6 +304,10 @@ class ToolState:
     def save_job(self, job: Job) -> None:
         payload = {**job.to_json(), "request": job.request}
         path = self.job_path(job.id)
+        # A batch cleanup can remove generated scene data while this server is
+        # still alive. Recreate the runtime ledger instead of turning a newly
+        # accepted reconstruction into an opaque HTTP 500.
+        path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(payload, indent=2))
         tmp.replace(path)
@@ -444,6 +458,7 @@ def scene_summary(scene_dir: Path, scenes_root: Path, app_base: str = "") -> dic
         "sample_fps": manifest.get("sample_fps") or metadata.get("sample_fps") or "",
         "crop_preset": manifest.get("crop_preset") or metadata.get("crop_preset") or "",
         "target_frames": manifest.get("target_frames", metadata.get("target_frames", "")),
+        "quality": manifest.get("quality") or metadata.get("quality") or None,
         "scale_m_per_unit": state.get("scale_m_per_unit") or manifest.get("default_scale_m_per_unit") or "",
         "scale_saved": bool(state.get("saved")),
         "job_id": manifest.get("job_id") or "",
@@ -850,11 +865,13 @@ MODEL_INPUT_ASPECT = 720.0 / 368.0
 def ffmpeg_filter(crop_preset: str, width: int, sample_fps: float) -> str:
     parts = [f"fps={sample_fps:g}"]
     if crop_preset == "central_clean":
+        ref_w, ref_h = CENTRAL_CLEAN_REFERENCE_SIZE
+        x, y, crop_w, crop_h = CENTRAL_CLEAN_REFERENCE_BBOX
         parts.append(
-            "crop=trunc(iw*660/848/2)*2:"
-            "trunc(ih*280/478/2)*2:"
-            "trunc(iw*120/848/2)*2:"
-            "trunc(ih*190/478/2)*2"
+            f"crop=trunc(iw*{crop_w}/{ref_w}/2)*2:"
+            f"trunc(ih*{crop_h}/{ref_h}/2)*2:"
+            f"trunc(iw*{x}/{ref_w}/2)*2:"
+            f"trunc(ih*{y}/{ref_h}/2)*2"
         )
     elif crop_preset == "full_frame":
         # Central crop to the model's input aspect, keeping as much of the frame
@@ -1019,7 +1036,9 @@ def probe_source_fps(video_path: Path) -> float:
 def crop_rect_norm(crop_preset: str, iw: int, ih: int) -> tuple[float, float, float, float]:
     """Crop rectangle in normalized original-frame coords (x0,y0,x1,y1)."""
     if crop_preset == "central_clean":
-        return (120 / 848, 190 / 478, (120 + 660) / 848, (190 + 280) / 478)
+        ref_w, ref_h = CENTRAL_CLEAN_REFERENCE_SIZE
+        x, y, width, height = CENTRAL_CLEAN_REFERENCE_BBOX
+        return (x / ref_w, y / ref_h, (x + width) / ref_w, (y + height) / ref_h)
     if crop_preset == "full_frame":
         aspect = MODEL_INPUT_ASPECT
         src = iw / max(1, ih)
@@ -1140,6 +1159,7 @@ def extract_frames(
     exclusion_masks: list[dict[str, object]] | None = None,
     client_sky_seg: bool = False,
     drop_black_luma: float = 0.0,
+    encode_upload_video: bool = False,
 ) -> dict[str, object]:
     frames_dir = scene_dir / "frames"
     tmp_root = scene_dir / "_extract_tmp"
@@ -1356,30 +1376,35 @@ def extract_frames(
         writer = csv.DictWriter(handle, fieldnames=list(out_rows[0].keys()))
         writer.writeheader()
         writer.writerows(out_rows)
-    input_video = scene_dir / "vggt_input.mp4"
-    upload_video_fps = min(sample_fps, 2.0)
-    run_command(
-        [
-            "ffmpeg",
-            "-v",
-            "error",
-            "-y",
-            "-framerate",
-            f"{upload_video_fps:g}",
-            "-i",
-            str(frames_dir / "f_%06d.jpg"),
-            "-c:v",
-            "libx264",
-            "-pix_fmt",
-            "yuv420p",
-            "-movflags",
-            "+faststart",
-            str(input_video),
-        ],
-        job,
-        timeout=900,
-    )
-    job.log(f"[frames] wrote {len(out_rows)} frame(s); encoded VGGT upload video at {upload_video_fps:g} fps")
+    upload_video_fps = None
+    if encode_upload_video:
+        input_video = scene_dir / "vggt_input.mp4"
+        upload_video_fps = min(sample_fps, 2.0)
+        run_command(
+            [
+                "ffmpeg",
+                "-v",
+                "error",
+                "-y",
+                "-framerate",
+                f"{upload_video_fps:g}",
+                "-i",
+                str(frames_dir / "f_%06d.jpg"),
+                "-c:v",
+                "libx264",
+                "-pix_fmt",
+                "yuv420p",
+                "-movflags",
+                "+faststart",
+                str(input_video),
+            ],
+            job,
+            timeout=900,
+        )
+        job.log(f"[frames] wrote {len(out_rows)} frame(s); encoded VGGT upload video at {upload_video_fps:g} fps")
+    else:
+        (scene_dir / "vggt_input.mp4").unlink(missing_ok=True)
+        job.log(f"[frames] wrote {len(out_rows)} frame(s); direct image upload enabled")
     return {
         "frame_count": len(out_rows),
         "candidate_frames": len(candidates),
@@ -1423,6 +1448,40 @@ def maybe_render_camera_views(state: ToolState, scene_dir: Path, frame_count: in
         )
     except Exception as exc:
         job.log(f"[views] skipped camera-view renders: {exc}")
+
+
+def collect_vggt_quality(state: ToolState, scene_dir: Path, body: dict[str, object], job: Job) -> dict[str, object] | None:
+    """Read raw Omega confidence statistics while the RunPod upload still exists."""
+    target_path = scene_dir / "vggt_target_dir.txt"
+    if not target_path.exists():
+        job.log("[quality] no Omega target directory was recorded")
+        return None
+    command = [
+        state.python,
+        str(ROOT / "tools" / "pipeline" / "omega_pod.py"),
+        "confidence",
+        "--pod-id",
+        str(body.get("omega_pod_id") or os.environ.get("RUNPOD_POD_ID", "7i0jtqk99phk2j")),
+        "--target-dir",
+        target_path.read_text().strip(),
+        "--percentile",
+        str(float(body.get("vggt_conf_thres", 50.0) or 50.0)),
+    ]
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, timeout=150)
+        if result.returncode:
+            raise RuntimeError(result.stderr.strip() or result.stdout.strip())
+        quality = json.loads(result.stdout.strip().splitlines()[-1])
+        (scene_dir / "scene_quality.json").write_text(json.dumps(quality, indent=2))
+        job.log(
+            "[quality] raw Omega confidence "
+            f"median={quality['confidence']['median']} "
+            f"frame_p10={quality['frame_median']['p10']}"
+        )
+        return quality
+    except Exception as exc:
+        job.log(f"[quality] unavailable: {exc}")
+        return None
 
 
 def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> None:
@@ -1490,6 +1549,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
             adaptive=body.get("adaptive_fps") if isinstance(body.get("adaptive_fps"), dict) else None,
             exclusion_masks=body.get("exclusion_masks") if isinstance(body.get("exclusion_masks"), list) else None,
             client_sky_seg=body_bool(body, "client_sky_seg", False),
+            encode_upload_video=str(body.get("vggt_upload_mode", "images")) == "video",
         )
         frame_count = int(frame_info["frame_count"])
         manifest.update(
@@ -1540,7 +1600,7 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
                 "--upload-mode",
                 str(vggt_config["upload_mode"]),
                 "--video-sample-fps",
-                str(float(vggt_config["upload_video_fps"])),
+                str(float(vggt_config["upload_video_fps"] or 2.0)),
             ]
             if vggt_config["mask_sky"]:
                 vggt_cmd.append("--mask-sky")
@@ -1553,6 +1613,12 @@ def reconstruct_scene(state: ToolState, job: Job, body: dict[str, object]) -> No
                 job,
                 timeout=int(vggt_config["timeout_s"]) + 120,
             )
+
+            quality = collect_vggt_quality(state, scene_dir, body, job)
+            if quality is not None:
+                manifest["quality"] = quality
+                (scene_dir / "scene_manifest.json").write_text(json.dumps(manifest, indent=2))
+                (scene_dir / "metadata.json").write_text(json.dumps(manifest, indent=2))
 
         set_job_state(state, job, step="extract_vggt")
         update_scene_manifest(scene_dir, {"job_status": job.status, "job_step": job.step, "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
