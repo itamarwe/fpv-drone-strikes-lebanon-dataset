@@ -919,7 +919,6 @@ const canvas = document.getElementById("viewer");
       );
       drawTopView(scale);
       updateTelemetry(series);
-      updateCameraView();
     }
 
     function currentSceneBox() {
@@ -1006,6 +1005,9 @@ const canvas = document.getElementById("viewer");
       progress.value = String(frameIndex);
       frameValue.textContent = String(frame.frame);
       playbackTimeS = frameTime(frame);
+      // Keep the camera-frame image in lockstep with animation. Plot rendering
+      // can be comparatively expensive and should not delay this visual cue.
+      updateCameraView();
       drawPlots();
     }
 
