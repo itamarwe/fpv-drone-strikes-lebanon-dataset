@@ -48,10 +48,12 @@ SERVER_URL = os.environ.get("FPV_SERVER_URL", "http://127.0.0.1:8766")
 
 # Named reconstruction presets -> extra flags for run_vggt_batch_from_annotations.
 # "clean" is the winning config: tight clean-centre crop, no black masks, Omega's
-# own sky mask, sequence CLAHE, adaptive 125-frame keyframing, last 12s.
+# own sky mask, sequence CLAHE, adaptive 125-frame keyframing, and the 12-second
+# interval ending one second before impact: [-13s, -1s].
 PRESETS: dict[str, list[str]] = {
     "clean": [
         "--tail-seconds", "12",
+        "--exclude-tail-seconds", "1",
         "--crop-preset", "central_clean",
         "--width", "660",
         "--no-masks",
@@ -61,6 +63,7 @@ PRESETS: dict[str, list[str]] = {
     ],
     "full-frame-skyseg": [
         "--tail-seconds", "12",
+        "--exclude-tail-seconds", "1",
         "--crop-preset", "full_frame",
         "--width", "720",
         "--adaptive-fps",

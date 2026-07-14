@@ -18,6 +18,33 @@ SPEC.loader.exec_module(batch)
 
 
 class BatchRunnerTests(unittest.TestCase):
+    def test_tail_window_excludes_final_second(self) -> None:
+        selected = [{"segment_id": "seg01", "start_s": 10.0, "end_s": 30.0, "duration_s": 20.0}]
+        self.assertEqual(
+            batch.trim_to_tail_window(selected, tail_seconds=12, exclude_tail_seconds=1),
+            [{"segment_id": "seg01", "start_s": 17.0, "end_s": 29.0, "duration_s": 12.0}],
+        )
+
+    def test_tail_window_crosses_concatenated_segments(self) -> None:
+        selected = [
+            {"segment_id": "seg01", "start_s": 0.0, "end_s": 5.0, "duration_s": 5.0},
+            {"segment_id": "seg02", "start_s": 10.0, "end_s": 20.0, "duration_s": 10.0},
+        ]
+        self.assertEqual(
+            batch.trim_to_tail_window(selected, tail_seconds=12, exclude_tail_seconds=1),
+            [
+                {"segment_id": "seg01", "start_s": 2.0, "end_s": 5.0, "duration_s": 3.0},
+                {"segment_id": "seg02", "start_s": 10.0, "end_s": 19.0, "duration_s": 9.0},
+            ],
+        )
+
+    def test_tail_window_is_empty_when_sequence_is_inside_excluded_tail(self) -> None:
+        selected = [{"segment_id": "seg01", "start_s": 2.0, "end_s": 2.5, "duration_s": 0.5}]
+        self.assertEqual(
+            batch.trim_to_tail_window(selected, tail_seconds=12, exclude_tail_seconds=1),
+            [],
+        )
+
     def test_checkpoint_replaces_previous_result_for_same_scene(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "scenes" / ".batch.json"

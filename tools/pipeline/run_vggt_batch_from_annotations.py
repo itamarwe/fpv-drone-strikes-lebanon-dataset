@@ -69,33 +69,46 @@ def select_attack_pause_chain(intervals: list[dict[str, Any]]) -> list[dict[str,
     return [intervals[index] for index in selected_indexes]
 
 
-def trim_to_tail_seconds(selected: list[dict[str, Any]], tail_seconds: float) -> list[dict[str, Any]]:
-    """Keep only the last `tail_seconds` of the concatenated flight sequence.
+def trim_to_tail_window(
+    selected: list[dict[str, Any]],
+    tail_seconds: float,
+    exclude_tail_seconds: float = 0.0,
+) -> list[dict[str, Any]]:
+    """Clip a concatenated flight sequence to ``[-tail-exclude, -exclude]``.
 
-    Walks back from the final (attack) segment; the earliest included segment is
-    shortened (start_s moved forward) so the total is exactly tail_seconds. Segment
-    structure/ids are preserved for whatever survives the window.
+    Segment IDs and source-video timestamps are preserved, including when the
+    requested window crosses a pause-linked segment boundary.
     """
-    if tail_seconds <= 0:
+    if not selected or (tail_seconds <= 0 and exclude_tail_seconds <= 0):
         return selected
     total = sum(float(s["duration_s"]) for s in selected)
-    if total <= tail_seconds:
-        return selected
-    remaining = tail_seconds
+    window_end = max(0.0, total - max(0.0, exclude_tail_seconds))
+    window_start = 0.0 if tail_seconds <= 0 else max(0.0, window_end - tail_seconds)
+    if window_end <= window_start:
+        return []
+
     out: list[dict[str, Any]] = []
-    for seg in reversed(selected):
+    sequence_start = 0.0
+    for seg in selected:
         dur = float(seg["duration_s"])
-        if dur <= remaining:
-            out.insert(0, seg)
-            remaining -= dur
-        else:
+        sequence_end = sequence_start + dur
+        overlap_start = max(sequence_start, window_start)
+        overlap_end = min(sequence_end, window_end)
+        if overlap_end > overlap_start:
             trimmed = dict(seg)
-            trimmed["start_s"] = round(float(seg["end_s"]) - remaining, 3)
-            trimmed["duration_s"] = round(remaining, 3)
-            out.insert(0, trimmed)
-            remaining = 0.0
-            break
+            source_start = float(seg["start_s"]) + (overlap_start - sequence_start)
+            source_end = float(seg["start_s"]) + (overlap_end - sequence_start)
+            trimmed["start_s"] = round(source_start, 3)
+            trimmed["end_s"] = round(source_end, 3)
+            trimmed["duration_s"] = round(source_end - source_start, 3)
+            out.append(trimmed)
+        sequence_start = sequence_end
     return out
+
+
+def trim_to_tail_seconds(selected: list[dict[str, Any]], tail_seconds: float) -> list[dict[str, Any]]:
+    """Backward-compatible tail trim with no excluded final interval."""
+    return trim_to_tail_window(selected, tail_seconds)
 
 
 def request_json(request: urllib.request.Request, *, retries: int, timeout: int) -> dict[str, Any]:
@@ -279,7 +292,10 @@ def run_batch(args: argparse.Namespace) -> int:
         if not selected:
             print(f"[{batch_index}/{len(paths)}] skip {path.name}: no flight intervals", flush=True)
             continue
-        selected = trim_to_tail_seconds(selected, args.tail_seconds)
+        selected = trim_to_tail_window(selected, args.tail_seconds, args.exclude_tail_seconds)
+        if not selected:
+            print(f"[{batch_index}/{len(paths)}] skip {path.name}: tail window is empty", flush=True)
+            continue
 
         total_s = sum(float(row["duration_s"]) for row in selected)
         body = request_body(annotation, selected, args)
@@ -353,6 +369,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--fps", type=float, default=10.0)
     parser.add_argument("--tail-seconds", type=float, default=0.0, help="keep only the last N seconds of the flight sequence (0 = whole chain)")
+    parser.add_argument(
+        "--exclude-tail-seconds",
+        type=float,
+        default=0.0,
+        help="exclude the final N seconds before applying --tail-seconds",
+    )
     parser.add_argument("--no-masks", action="store_true", help="ignore the annotation's exclusion_masks (no black boxes, no mask_black_bg)")
     parser.add_argument("--client-sky-seg", action="store_true", help="run skyseg on CLEAN frames client-side, then paint sky (and boxes) black (sky_then_boxes)")
     parser.add_argument("--width", type=int, default=660)
@@ -400,6 +422,8 @@ def parse_args() -> argparse.Namespace:
     args = parser.parse_args()
     if args.omega_cleanup_every < 0:
         parser.error("--omega-cleanup-every must be zero or greater")
+    if args.tail_seconds < 0 or args.exclude_tail_seconds < 0:
+        parser.error("tail durations must be zero or greater")
     if not args.results_file.is_absolute():
         args.results_file = args.out_dir / args.results_file
     return args
