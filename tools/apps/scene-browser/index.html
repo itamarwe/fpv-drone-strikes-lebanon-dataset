@@ -77,13 +77,6 @@
       cursor: pointer;
       white-space: nowrap;
     }
-    .hdr-btns {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-left: auto;
-      flex-shrink: 0;
-    }
     .status {
       padding: 18px;
       color: #8fa0ad;
@@ -101,14 +94,11 @@
     <select id="sceneSelect" aria-label="Scene">
       <option value="">Loading scenes...</option>
     </select>
-    <div class="hdr-btns">
-      <button id="addFolderButton" type="button">Add Folder</button>
-    </div>
   </header>
   <div class="status" id="statusText"></div>
+  <script src="/tools/apps/shared/published-scenes.js"></script>
   <script>
     const sceneSelect = document.getElementById("sceneSelect");
-    const addFolderButton = document.getElementById("addFolderButton");
     const statusText = document.getElementById("statusText");
     let scenes = [];
 
@@ -129,13 +119,11 @@
     }
 
     async function loadScenes() {
-      const response = await fetch("/api/scenes", { cache: "no-store" });
-      const payload = await response.json();
-      scenes = (payload.scenes || []).filter((scene) => scene.exists && scene.viewer_url);
+      scenes = await window.loadPublishedScenes();
       sceneSelect.innerHTML = "";
       if (!scenes.length) {
-        sceneSelect.innerHTML = '<option value="">No saved scenes</option>';
-        statusText.textContent = "Run VGGT from the annotator or add an existing scene folder.";
+        sceneSelect.innerHTML = '<option value="">No published scenes</option>';
+        statusText.textContent = "No scenes are listed in the published catalog.";
         return;
       }
       const placeholder = document.createElement("option");
@@ -151,28 +139,6 @@
         sceneSelect.appendChild(option);
       }
       statusText.textContent = "Select a scene from the dropdown to open it.";
-    }
-
-    async function addFolder() {
-      const sourcePath = window.prompt("Scene folder path to copy into the repo");
-      if (!sourcePath) return;
-      statusText.textContent = "Adding scene folder...";
-      const response = await fetch("/api/scenes/import", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ source_path: sourcePath })
-      });
-      const payload = await response.json();
-      if (!response.ok) {
-        statusText.textContent = payload.error || "Could not add folder.";
-        return;
-      }
-      await loadScenes();
-      if (payload.scene?.scene_id) {
-        sceneSelect.value = payload.scene.scene_id;
-        statusText.textContent = payload.imported === false ? "Scene folder is already in the repo." : "Scene folder added.";
-        openSelected();
-      }
     }
 
     // Deep-link: /scenes/?scene=<scene_id> opens that scene's viewer directly.
@@ -191,7 +157,6 @@
     }
 
     sceneSelect.addEventListener("change", openSelected);
-    addFolderButton.addEventListener("click", addFolder);
     loadScenes().then(applySceneFromQuery).catch((error) => {
       sceneSelect.innerHTML = '<option value="">Could not load scenes</option>';
       statusText.textContent = error.message;

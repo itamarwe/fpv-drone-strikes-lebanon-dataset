@@ -240,10 +240,7 @@ const canvas = document.getElementById("viewer");
     async function loadSceneOptions() {
       if (!sceneSelectTop) return;
       try {
-        const response = await fetch(apiUrl("/api/scenes"), { cache: "no-store" });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const payload = await response.json();
-        const scenes = (payload.scenes || []).filter((scene) => scene.exists && scene.viewer_url);
+        const scenes = await window.loadPublishedScenes();
         sceneSelectTop.innerHTML = "";
         if (!scenes.length) {
           sceneSelectTop.innerHTML = '<option value="">No saved scenes</option>';

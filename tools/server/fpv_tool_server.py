@@ -32,7 +32,7 @@ SERVER_DIR = Path(__file__).resolve().parent
 if str(SERVER_DIR) not in sys.path:
     sys.path.insert(0, str(SERVER_DIR))
 
-from asset_urls import asset_root_from_env, scene_data_base, scene_viewer_page_url
+from asset_urls import DEFAULT_CLOUDFRONT_ROOT, asset_root_from_env, scene_data_base, scene_viewer_page_url
 DEFAULT_OUT_DIR = ROOT
 DEFAULT_VIDEO_CACHE = Path("/tmp/fpv-model-benchmark/videos")
 GENERIC_VIEWER_INDEX = ROOT / "tools" / "apps" / "scene-viewer" / "index.html"
@@ -777,9 +777,8 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
         thread.start()
         write_json(self, {"job_id": job.id, "scene_id": scene_id, "viewer_url": job.viewer_url}, status=202)
 
-    def serve_generic_scene_viewer(self, viewer_dir: Path) -> None:
-        rel_scene = viewer_dir.parent.relative_to(self.state.scenes_dir).as_posix()
-        scene_base = scene_data_base(rel_scene, self.state.asset_root)
+    def serve_generic_scene_viewer(self, rel_scene: str, asset_root: str = "") -> None:
+        scene_base = scene_data_base(rel_scene, asset_root)
         data = read_generic_viewer_html(scene_base, self.state.app_base, "")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -791,7 +790,19 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
     def serve_static(self, path: str) -> None:
         viewer_dir = scene_viewer_dir(self.state.scenes_dir, path)
         if viewer_dir is not None:
-            self.serve_generic_scene_viewer(viewer_dir)
+            rel_scene = viewer_dir.parent.relative_to(self.state.scenes_dir).as_posix()
+            self.serve_generic_scene_viewer(rel_scene, self.state.asset_root)
+            return
+        remote_viewer = SCENE_VIEWER_INDEX_RE.match(path)
+        if remote_viewer:
+            rel_scene = unquote(remote_viewer.group(1))
+            if any(part in {"", ".", ".."} for part in rel_scene.split("/")):
+                write_error(self, "invalid scene path", status=400)
+                return
+            # Published viewer data lives on CloudFront. The browser discovers
+            # valid scene paths from data/videos.json; this local shell then
+            # loads the selected bundle directly from that public source.
+            self.serve_generic_scene_viewer(rel_scene, self.state.asset_root or DEFAULT_CLOUDFRONT_ROOT)
             return
         aliases = {
             "/tools/annotator.html": "/tools/apps/annotator/index.html",
