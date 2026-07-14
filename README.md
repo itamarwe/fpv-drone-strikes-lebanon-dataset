@@ -70,6 +70,17 @@ npm run publish-web:fast   # skip scene uploads (annotation/list changes only)
 npm run dataset:verify
 ```
 
+Full publication deterministically gzip-compresses scene `.bin` point-cloud
+assets before upload. They keep their existing URLs and are stored with
+`Content-Encoding: gzip`, so browsers decode them transparently. Never upload
+gzip bytes without that metadata; the viewer expects decoded binary arrays.
+For a resumable migration of existing bucket objects, run:
+
+```bash
+python tools/publishing/gzip_scene_bins.py \
+  --invalidate-distribution E1FTYLW4OET6KU
+```
+
 Do not edit generated README rows or `tools/apps/annotator/catalog-videos.json` by hand.
 Annotation filenames use the same video stem with an `_annotations.json` suffix.
 

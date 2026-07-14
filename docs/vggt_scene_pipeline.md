@@ -87,6 +87,22 @@ The default server output root is the repo root, so generated 3D scenes land in
 `scenes/`. Heavy video downloads remain cached outside the repo under
 `/tmp/fpv-model-benchmark/videos`.
 
+## Scene Binary Publication
+
+`npm run publish-web` gzip-compresses `points_positions.bin` and
+`points_colors.bin` into `build/web/gzip-scenes/`, then uploads the compressed
+bytes under their original CloudFront keys with both:
+
+```text
+Content-Type: application/octet-stream
+Content-Encoding: gzip
+```
+
+The browser receives the same decoded bytes expected by the viewer. Do not
+rename these assets to `.gz`, and do not upload compressed bytes without the
+`Content-Encoding` metadata. The fast publishing command intentionally skips
+scene assets.
+
 ## Scene Browser
 
 The local server now exposes a scene dropdown:

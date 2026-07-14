@@ -38,7 +38,10 @@ aws s3 sync build/thumbnails/ "$BUCKET/thumbnails/" \
   --cache-control "public,max-age=31536000,immutable"
 
 if [ "$SKIP_SCENES" = "0" ]; then
-  echo "== 4/5 upload scene viewer data (incremental, base only) =="
+  echo "== 4/5 upload gzip-compressed scene viewer data (incremental, base only) =="
+  GZIP_SCENES_DIR="build/web/gzip-scenes"
+  rm -rf "$GZIP_SCENES_DIR"
+  mkdir -p "$GZIP_SCENES_DIR"
   for d in scenes/*/*/viewer; do
     [ -f "$d/scene_meta.json" ] || continue
     # Production ships base reconstructions only; skip density variants.
@@ -47,9 +50,18 @@ if [ "$SKIP_SCENES" = "0" ]; then
     aws s3 sync "$d/" "$BUCKET/$d/" \
       --exclude "*" --include "scene_meta.json" \
       --content-type application/json --cache-control "public,max-age=300"
-    aws s3 sync "$d/" "$BUCKET/$d/" \
+    gzip_dir="$GZIP_SCENES_DIR/${d#scenes/}"
+    mkdir -p "$gzip_dir"
+    for source in "$d"/*.bin; do
+      [ -f "$source" ] || continue
+      target="$gzip_dir/$(basename "$source")"
+      gzip -9 -n -c "$source" > "$target"
+      touch -r "$source" "$target"
+    done
+    aws s3 sync "$gzip_dir/" "$BUCKET/$d/" \
       --exclude "*" --include "*.bin" \
       --content-type application/octet-stream \
+      --content-encoding gzip \
       --cache-control "public,max-age=31536000"
     [ -d "$d/camera_view_assets" ] && aws s3 sync "$d/camera_view_assets/" \
       "$BUCKET/$d/camera_view_assets/" \
