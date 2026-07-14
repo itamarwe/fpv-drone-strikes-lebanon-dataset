@@ -54,6 +54,9 @@ header{position:relative;z-index:1000;display:flex;align-items:center;gap:10px;p
   border:0;border-radius:6px;background:transparent;color:var(--text);text-align:left;font-size:13px}
 .video-picker-option:hover,.video-picker-option.active{background:rgba(86,215,255,.10)}
 .hdr-btns{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.published-scene-link{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;
+  border:1px solid var(--accent);border-radius:6px;color:var(--accent);text-decoration:none;font-size:13px}
+.published-scene-link:hover{background:rgba(86,215,255,.1)}
 .icon-btn{display:inline-flex;align-items:center;gap:6px;position:relative}
 .icon-btn svg{width:15px;height:15px;flex-shrink:0}
 .hdr-status-dot{width:8px;height:8px;border-radius:50%;background:#8fa0ad;flex-shrink:0}
@@ -254,6 +257,7 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
     <div class="video-picker-menu" id="videoPickerMenu" hidden></div>
   </div>
   <div class="hdr-btns">
+    <a id="publishedSceneLink" class="published-scene-link" target="_blank" rel="noopener" hidden>View 3D Scene</a>
     <button id="btnCreateScene" disabled>Create 3D Scene</button>
     <button id="btnJobs" class="icon-btn" type="button" title="Reconstruction jobs">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
@@ -454,6 +458,7 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
 
 <video id="thumbVideo" style="position:absolute;opacity:0;pointer-events:none;top:-9999px" muted preload="auto"></video>
 
+<script src="/tools/apps/shared/published-scenes.js"></script>
 <script>
 // ─────────────────────────────────────────────
 // VIDEO DATA  (from geo/fpv_drone_map_records.csv)
@@ -500,6 +505,7 @@ let activeJobId = null;
 let activeJobSceneId = '';
 let jobPollTimer = null;
 let videoStatuses = {};
+const publishedScenesByVideo = new Map();
 let scenePreviewQueue = [];
 let scenePreviewIndex = -1;
 const CENTRAL_CLEAN_CROP = {
@@ -538,6 +544,7 @@ function init() {
   renderVideoPickerMenu();
   updateVideoPickerButton();
   loadVideoStatuses();
+  loadPublishedSceneLinks();
   // Deep-link: open the video named in the ?v= query param.
   const wantedVideo = new URLSearchParams(location.search).get('v');
   if (wantedVideo) {
@@ -580,6 +587,7 @@ function loadVideo(v) {
 
   renderAnnotations();
   renderReconstructionPanel();
+  updatePublishedSceneLink();
   setControlsEnabled(false);
   g('btnCreateScene').disabled = false;
   g('btnSaveRepo').disabled = true;
@@ -598,6 +606,43 @@ function videoFileFor(v) {
 function videoStatusFor(video) {
   const status = videoStatuses[videoFileFor(video)] || {};
   return status.has_scene ? 'scene' : (status.annotated ? 'annotated' : 'missing');
+}
+
+function updatePublishedSceneLink() {
+  const link = g('publishedSceneLink');
+  const scene = current && publishedScenesByVideo.get(videoFileFor(current));
+  if (!scene?.viewer_url) {
+    link.hidden = true;
+    link.removeAttribute('href');
+    return;
+  }
+  link.href = scene.viewer_url;
+  link.hidden = false;
+}
+
+function mergePublishedSceneStatuses() {
+  for (const [videoFile, scene] of publishedScenesByVideo) {
+    videoStatuses[videoFile] = {
+      ...(videoStatuses[videoFile] || {}),
+      has_scene: true,
+      latest_scene_id: scene.scene_id,
+      latest_scene_url: scene.viewer_url,
+    };
+  }
+}
+
+async function loadPublishedSceneLinks() {
+  try {
+    const scenes = await window.loadPublishedScenes();
+    for (const scene of scenes) {
+      if (scene.video_file) publishedScenesByVideo.set(scene.video_file, scene);
+    }
+    mergePublishedSceneStatuses();
+    applyVideoStatusOptions();
+    updatePublishedSceneLink();
+  } catch {
+    // Local annotation work remains usable when the public catalog is offline.
+  }
 }
 
 function updateVideoPickerButton() {
@@ -685,6 +730,7 @@ async function loadVideoStatuses() {
     if (!res.ok) return;
     const payload = await res.json();
     videoStatuses = payload.videos || {};
+    mergePublishedSceneStatuses();
     applyVideoStatusOptions();
   } catch {
     videoStatuses = {};
