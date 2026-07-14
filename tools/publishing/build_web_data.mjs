@@ -62,7 +62,7 @@ function buildSceneIndex() {
   const index = new Map();
   for (const [videoId, scenes] of readSceneManifests(repoRoot)) {
     const scene = [...scenes].sort((a, b) => a.scene_id.localeCompare(b.scene_id))[0];
-    if (scene) index.set(videoId, scene.path);
+    if (scene) index.set(videoId, { path: scene.path, quality: scene.quality ?? null });
   }
   if (!fs.existsSync(scenesDir)) return index;
   for (const stem of fs.readdirSync(scenesDir, { withFileTypes: true })) {
@@ -72,8 +72,10 @@ function buildSceneIndex() {
       a.name.localeCompare(b.name),
     )) {
       if (!scene.isDirectory() || scene.name.includes("__")) continue; // skip variants
-      if (fs.existsSync(path.join(base, scene.name, "viewer", "scene_meta.json"))) {
-        index.set(stem.name, `${stem.name}/${scene.name}`);
+      const metaPath = path.join(base, scene.name, "viewer", "scene_meta.json");
+      if (fs.existsSync(metaPath)) {
+        const meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
+        index.set(stem.name, { path: `${stem.name}/${scene.name}`, quality: meta.quality ?? null });
         break;
       }
     }
@@ -124,7 +126,8 @@ for (const raw of readCatalogVideos()) {
   const previousVideoFile = previousVideoFiles.get(videoFile);
   const existing = existingVideos.get(videoFile) ?? (previousVideoFile ? existingVideos.get(previousVideoFile) : undefined);
   const existingScenePath = existing?.scenePath?.replaceAll("barashit", "biranit") ?? null;
-  const scenePath = sceneIndex.get(slug) ?? existingScenePath;
+  const scene = sceneIndex.get(slug);
+  const scenePath = scene?.path ?? existingScenePath;
   videos.push({
     videoFile,
     slug,
@@ -136,6 +139,7 @@ for (const raw of readCatalogVideos()) {
     thumbWidths: thumb?.widths ?? existing?.thumbWidths ?? null,
     blur: thumb?.blurDataURL ?? existing?.blur ?? null,
     scenePath,
+    sceneQuality: scene?.quality ?? existing?.sceneQuality ?? null,
     segments: ann?.segments ?? null,
     annotationAuto: ann ? Boolean(ann.auto_generated) : null,
   });

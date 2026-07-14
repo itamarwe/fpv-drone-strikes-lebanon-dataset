@@ -47,15 +47,15 @@ SERVER_PYTHON = os.environ.get("FPV_SERVER_PYTHON", "/tmp/fpv-model-benchmark/ve
 SERVER_URL = os.environ.get("FPV_SERVER_URL", "http://127.0.0.1:8766")
 
 # Named reconstruction presets -> extra flags for run_vggt_batch_from_annotations.
-# "clean" is the winning config: tight clean-centre crop, no black masks, Omega's
-# own sky mask, sequence CLAHE, adaptive 125-frame keyframing, and the 12-second
+# "clean" is the current baseline: explicit 260x280 clean-centre crop, no black
+# masks, Omega's own sky mask, sequence CLAHE, adaptive 125-frame keyframing, and the 12-second
 # interval ending one second before impact: [-13s, -1s].
 PRESETS: dict[str, list[str]] = {
     "clean": [
         "--tail-seconds", "12",
         "--exclude-tail-seconds", "1",
         "--crop-preset", "central_clean",
-        "--width", "660",
+        "--width", "260",
         "--no-masks",
         "--adaptive-fps",
         "--clahe",
@@ -71,6 +71,24 @@ PRESETS: dict[str, list[str]] = {
         "--client-sky-seg",
     ],
 }
+
+
+def reconstruction_flags(args: argparse.Namespace) -> list[str]:
+    """Apply experiment overrides after the named preset defaults."""
+    flags = list(PRESETS[args.preset])
+    def set_value(name: str, value: object) -> None:
+        if name in flags:
+            flags[flags.index(name) + 1] = str(value)
+        else:
+            flags.extend([name, str(value)])
+
+    if args.tail_seconds is not None:
+        set_value("--tail-seconds", args.tail_seconds)
+    if args.exclude_tail_seconds is not None:
+        set_value("--exclude-tail-seconds", args.exclude_tail_seconds)
+    if args.frames is not None:
+        set_value("--adaptive-target", args.frames)
+    return flags
 
 
 def log(msg: str) -> None:
@@ -157,7 +175,8 @@ def run_batch(annotations: list[Path], preset_flags: list[str], args: argparse.N
         "--annotations", *[str(a) for a in annotations],
         "--vggt-space", space,
         "--vggt-backend", "omega",
-        "--vggt-upload-mode", "video",
+        "--vggt-upload-mode", "images",
+        "--omega-pod-id", args.pod_id,
         "--continue-on-error",
         "--poll-seconds", str(args.poll_seconds),
         "--vggt-timeout", str(args.vggt_timeout),
@@ -191,12 +210,22 @@ def main() -> int:
     parser.add_argument("--ready-timeout", type=int, default=600)
     parser.add_argument("--poll-seconds", type=int, default=30)
     parser.add_argument("--vggt-timeout", type=int, default=1800)
+    parser.add_argument("--frames", type=int, help="override the preset's adaptive VGGT frame count")
+    parser.add_argument("--tail-seconds", type=float, help="override how many seconds to keep before the excluded tail")
+    parser.add_argument("--exclude-tail-seconds", type=float, help="override seconds omitted from the end of the selected flight")
     parser.add_argument("--results-file", type=Path, default=None)
     parser.add_argument("--dry-run", action="store_true", help="resolve scenes and print the plan, then exit")
     args = parser.parse_args()
+    if args.frames is not None and args.frames < 1:
+        parser.error("--frames must be at least 1")
+    if args.tail_seconds is not None and args.tail_seconds <= 0:
+        parser.error("--tail-seconds must be greater than zero")
+    if args.exclude_tail_seconds is not None and args.exclude_tail_seconds < 0:
+        parser.error("--exclude-tail-seconds must be zero or greater")
 
     annotations = [resolve_annotation(s) for s in args.scenes]
-    log(f"preset={args.preset} scenes:")
+    preset_flags = reconstruction_flags(args)
+    log(f"preset={args.preset} flags={' '.join(preset_flags)} scenes:")
     for a in annotations:
         print(f"    {os.path.relpath(a, ROOT)}")
     if args.dry_run:
@@ -211,7 +240,7 @@ def main() -> int:
         log(f"skipping pod management; using {space}")
 
     try:
-        rc = run_batch(annotations, PRESETS[args.preset], args, space)
+        rc = run_batch(annotations, preset_flags, args, space)
     finally:
         if args.use_pod and args.stop_pod:
             log("stopping pod")

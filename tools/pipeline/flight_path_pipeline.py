@@ -590,6 +590,7 @@ def run_vggt(args: argparse.Namespace) -> None:
                     api_name="/update_gallery_on_upload",
                 )
         print(f"[vggt] target_dir={target_dir}; preview_frames={len(preview) if preview else 0}", flush=True)
+        (video_dir / "vggt_target_dir.txt").write_text(str(target_dir).strip() + "\n")
         t0 = time.time()
         if args.backend == "classic":
             job = client.submit(
@@ -1279,7 +1280,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--vggt-timeout", type=int, default=900)
     p.add_argument("--hf-token-env", default="HF_TOKEN")
     p.add_argument("--backend", choices=["omega", "classic"], default="omega")
-    p.add_argument("--upload-mode", choices=["auto", "images", "video"], default="auto")
+    p.add_argument("--upload-mode", choices=["auto", "images", "video"], default="images")
     p.add_argument("--video-sample-fps", type=float, default=10.0)
     p.add_argument("--mask-sky", action="store_true", help="Enable the Space sky-segmentation mask before reconstruction")
     p.add_argument("--mask-black-bg", action="store_true", help="Tell the Space to drop the pure-black background (painted exclusion masks)")

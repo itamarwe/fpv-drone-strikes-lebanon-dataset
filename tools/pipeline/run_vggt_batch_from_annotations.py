@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -170,7 +171,7 @@ def request_body(annotation: dict[str, Any], selected: list[dict[str, Any]], arg
         ],
         "segments": selected,
         "sample_fps": args.fps,
-        "target_frames": 0,
+        "target_frames": args.adaptive_target if args.adaptive_fps else 0,
         "default_scale_m_per_unit": args.scale,
         "crop_preset": args.crop_preset,
         "width": args.width,
@@ -186,6 +187,7 @@ def request_body(annotation: dict[str, Any], selected: list[dict[str, Any]], arg
         "vggt_conf_thres": args.vggt_conf_thres,
         "vggt_max_points_k": args.vggt_max_points_k,
         "vggt_mask_sky": args.vggt_mask_sky,
+        "omega_pod_id": args.omega_pod_id,
         "clahe": {"enabled": True, "clip_limit": args.clahe_clip} if args.clahe else None,
         "adaptive_fps": (
             {
@@ -231,6 +233,7 @@ def result_from_scene(out_dir: Path, path: Path, annotation: dict[str, Any], sce
         "viewer_url": manifest.get("viewer_url", f"/scenes/{slugify(annotation['video_file'])}/{scene_id}/viewer/index.html"),
         "segments": [row["segment_id"] for row in selected],
         "model_config": manifest.get("model_config", {}),
+        "quality": manifest.get("quality"),
     }
 
 
@@ -386,10 +389,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--vggt-timeout", type=int, default=1800)
     parser.add_argument("--vggt-space", default="")
     parser.add_argument("--vggt-backend", choices=["omega", "classic"], default="omega")
-    parser.add_argument("--vggt-upload-mode", choices=["auto", "images", "video"], default="video")
+    parser.add_argument("--vggt-upload-mode", choices=["auto", "images", "video"], default="images")
     parser.add_argument("--vggt-conf-thres", type=float, default=50.0)
     parser.add_argument("--vggt-max-points-k", type=float, default=1000.0)
     parser.add_argument("--vggt-mask-sky", action="store_true")
+    parser.add_argument("--omega-pod-id", default=os.environ.get("RUNPOD_POD_ID", "7i0jtqk99phk2j"))
     parser.add_argument("--clahe", action="store_true", help="sequence-uniform CLAHE contrast enhancement (for dark clips)")
     parser.add_argument("--clahe-clip", type=float, default=2.0, help="CLAHE contrast-limit (higher = stronger)")
     parser.add_argument("--adaptive-fps", action="store_true", help="motion-aware keyframing (more frames where motion is high, sharpest-in-window)")

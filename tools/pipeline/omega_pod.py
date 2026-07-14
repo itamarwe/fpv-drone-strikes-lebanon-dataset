@@ -27,6 +27,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import posixpath
+import shlex
 import subprocess
 import sys
 import time
@@ -168,6 +170,79 @@ def cleanup_demo_outputs(info: dict) -> None:
         log(f"workspace: {line}")
 
 
+def confidence_summary(info: dict, target_dir: str, percentile: float = 50.0) -> dict:
+    """Summarize Omega's raw depth confidence without copying predictions.npz."""
+    target_dir = target_dir.strip()
+    if not target_dir:
+        raise ValueError("empty Omega target directory")
+    remote_dir = target_dir if target_dir.startswith("/") else posixpath.join(OMEGA_DIR, target_dir)
+    remote_dir = posixpath.normpath(remote_dir)
+    omega_root = posixpath.normpath(OMEGA_DIR)
+    if remote_dir != omega_root and not remote_dir.startswith(omega_root + "/"):
+        raise ValueError(f"Omega target directory is outside {OMEGA_DIR}: {target_dir}")
+    predictions_path = posixpath.join(remote_dir, "predictions.npz")
+    script = r'''
+import json
+import sys
+import numpy as np
+
+path = sys.argv[1]
+percentile = float(sys.argv[2])
+with np.load(path) as predictions:
+    confidence = np.asarray(predictions["depth_conf"])
+confidence = np.squeeze(confidence)
+if confidence.ndim < 2:
+    raise SystemExit(f"unexpected depth_conf shape: {confidence.shape}")
+if confidence.ndim == 2:
+    confidence = confidence[None, ...]
+finite = np.isfinite(confidence)
+values = confidence[finite]
+if values.size == 0:
+    raise SystemExit("depth_conf contains no finite values")
+frame_medians = []
+for frame in confidence:
+    frame_values = frame[np.isfinite(frame)]
+    frame_medians.append(float(np.median(frame_values)) if frame_values.size else None)
+valid_frame_medians = np.asarray([value for value in frame_medians if value is not None])
+def rounded(value):
+    return round(float(value), 6)
+summary = {
+    "schema_version": 1,
+    "metric": "vggt_omega_depth_confidence",
+    "calibration": "uncalibrated_model_score",
+    "higher_is_better": True,
+    "frames": int(confidence.shape[0]),
+    "finite_fraction": rounded(finite.mean()),
+    "confidence": {
+        "mean": rounded(values.mean()),
+        "p10": rounded(np.percentile(values, 10)),
+        "p25": rounded(np.percentile(values, 25)),
+        "median": rounded(np.median(values)),
+        "p75": rounded(np.percentile(values, 75)),
+        "p90": rounded(np.percentile(values, 90)),
+    },
+    "frame_median": {
+        "minimum": rounded(valid_frame_medians.min()),
+        "p10": rounded(np.percentile(valid_frame_medians, 10)),
+        "median": rounded(np.median(valid_frame_medians)),
+    },
+    "visualization_filter": {
+        "percentile": percentile,
+        "confidence_threshold": rounded(np.percentile(values, percentile)),
+    },
+}
+print(json.dumps(summary, separators=(",", ":")))
+'''
+    command = (
+        f"{shlex.quote(OMEGA_PYTHON)} -c {shlex.quote(script)} "
+        f"{shlex.quote(predictions_path)} {float(percentile):g}"
+    )
+    result = ssh_run(info, command, timeout=120)
+    if result.returncode:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "confidence summary failed")
+    return json.loads(result.stdout.strip().splitlines()[-1])
+
+
 def wait_gradio(pod_id: str, timeout_s: int) -> bool:
     deadline = time.time() + timeout_s
     while time.time() < deadline:
@@ -218,10 +293,12 @@ def status(pod_id: str = POD_ID) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("command", choices=["up", "down", "status", "url", "cleanup"])
+    parser.add_argument("command", choices=["up", "down", "status", "url", "cleanup", "confidence"])
     parser.add_argument("--pod-id", default=POD_ID)
     parser.add_argument("--ready-timeout", type=int, default=600, help="seconds to wait for SSH / gradio")
     parser.add_argument("--no-clean-cache", action="store_true", help="do not clear stale demo uploads before a fresh launch")
+    parser.add_argument("--target-dir", help="Omega demo output directory for the confidence command")
+    parser.add_argument("--percentile", type=float, default=50.0, help="visualization confidence percentile to report")
     args = parser.parse_args()
 
     if args.command == "up":
@@ -237,6 +314,13 @@ def main() -> int:
         if not info:
             raise SystemExit("[omega-pod] SSH did not become reachable; cannot clean demo outputs")
         cleanup_demo_outputs(info)
+    elif args.command == "confidence":
+        if not args.target_dir:
+            parser.error("confidence requires --target-dir")
+        info = ssh_info(args.pod_id)
+        if not info:
+            raise SystemExit("[omega-pod] SSH is not reachable; cannot read confidence")
+        print(json.dumps(confidence_summary(info, args.target_dir, args.percentile), separators=(",", ":")))
     return 0
 
 

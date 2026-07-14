@@ -413,7 +413,7 @@ kbd{background:var(--surf2);border:1px solid var(--border);border-radius:3px;
             </select>
           </label>
           <label>Width
-            <input id="sceneWidth" type="number" min="0" max="1920" step="10" value="660">
+            <input id="sceneWidth" type="number" min="0" max="1920" step="10" value="260">
           </label>
         </div>
       </section>
@@ -503,9 +503,9 @@ let videoStatuses = {};
 let scenePreviewQueue = [];
 let scenePreviewIndex = -1;
 const CENTRAL_CLEAN_CROP = {
-  x: 120 / 848,
+  x: 320 / 848,
   y: 190 / 478,
-  w: 660 / 848,
+  w: 260 / 848,
   h: 280 / 478,
 };
 
@@ -1510,7 +1510,7 @@ function sceneRequestBody() {
     target_frames: 0,
     default_scale_m_per_unit: Number(g('sceneDefaultScale').value) || 117.6,
     crop_preset: g('sceneCropPreset').value,
-    width: Number(g('sceneWidth').value) || 660,
+    width: Number(g('sceneWidth').value) || 260,
     focal_px: 812,
     refresh_vggt: true,
     render_camera_views: true,

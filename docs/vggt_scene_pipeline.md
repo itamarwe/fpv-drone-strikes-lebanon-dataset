@@ -51,6 +51,7 @@ scenes/
         f_000001.jpg
         ...
       vggt_scene.glb
+      scene_quality.json
       point_cloud.npz
       relative_path.csv
       camera_views/
@@ -74,6 +75,13 @@ setting, focal length, and camera-view render settings. `scene_state.json`
 stores interactive corrections such as a manually measured scale. The viewer
 directory is self-contained enough to serve the point cloud and frame
 comparison assets.
+
+`scene_quality.json` contains raw VGGT-Omega depth-confidence percentiles and
+per-frame median statistics. These are uncalibrated model scores: they are
+useful for ranking reconstructions produced with comparable settings, but are
+not probabilities or absolute guarantees of geometric accuracy. The same
+summary is embedded as `quality` in `scene_manifest.json`, `metadata.json`, and
+the scene catalog response.
 
 The default server output root is the repo root, so generated 3D scenes land in
 `scenes/`. Heavy video downloads remain cached outside the repo under
@@ -137,27 +145,22 @@ when the segments likely share scene overlap; otherwise they should be
 reconstructed as separate scenes. The dialog can preview the selected intervals
 in the source video so transitions can be checked before running VGGT.
 
-Frame extraction uses FFmpeg. The default crop preset is `central_clean`,
-restored from the manually selected clean crop used in the first high-quality
-VGGT overlay:
+Frame extraction uses FFmpeg. The default crop preset is an explicit `260x280`
+region centered on the previously validated clean view:
 
 ```text
-crop=x=iw*(120/848), y=ih*(190/478), w=iw*(660/848), h=ih*(280/478)
+crop=x=iw*(320/848), y=ih*(190/478), w=iw*(260/848), h=ih*(280/478)
 ```
 
-On the common `848x478` source videos, that is exactly `x=120, y=190, w=660,
-h=280`. It removes the side blur/rotor regions and the top HUD/propeller band
-while preserving the flight-relevant lower central view. Extracted frames are
-then scaled to the requested width. When an FPS is explicitly selected, all
-frames emitted by FFmpeg's `fps` filter are sent forward; there is no additional
-target-frame cap.
+On the common `848x478` source videos, that is exactly `x=320, y=190, w=260,
+h=280`. Extracted frames are then scaled to the requested width. When an FPS is
+explicitly selected, all frames emitted by FFmpeg's `fps` filter are sent
+forward; there is no additional target-frame cap.
 
-The backend also encodes the extracted frame sequence as `vggt_input.mp4`.
-For public VGGT Space uploads this MP4 is a transport wrapper, not the timing
-source: high-FPS extracted frames are packed into a 2 fps MP4, then VGGT samples
-that upload video at 2 fps so every extracted frame is still used. Real timing
-for speed/height remains in `frames.csv` via `video_time_s`, `segment_time_s`,
-and `sequence_time_s`.
+The backend uploads the extracted JPEGs directly to VGGT. It does not create an
+intermediate MP4, avoiding a second lossy encode and an artificial transport
+FPS. Real timing for speed/height remains in `frames.csv` via `video_time_s`,
+`segment_time_s`, and `sequence_time_s`.
 
 Default UI parameters:
 
@@ -165,7 +168,7 @@ Default UI parameters:
 - estimated image count: selected flight duration multiplied by sample FPS; this
   is informational when FPS is explicitly selected, not a cap
 - crop: `central_clean`
-- width: `660`
+- width: `260`
 - focal length for reprojection diagnostics: `812 px`
 - default scale: `117.6 m/unit`
 
@@ -176,6 +179,17 @@ VGGT.
 Tool:
 
 - `tools/server/fpv_tool_server.py`
+
+For repeatable quality experiments, the orchestration command exposes the two
+main sampling dimensions independently:
+
+```bash
+python tools/pipeline/reconstruct_scenes.py --frames 80 \
+  --tail-seconds 8 --exclude-tail-seconds 1 --preset clean <scene>
+```
+
+Without these overrides, the clean preset uses 125 adaptively selected frames
+from `[-13s, -1s]`.
 
 ### 3. VGGT Reconstruction
 
