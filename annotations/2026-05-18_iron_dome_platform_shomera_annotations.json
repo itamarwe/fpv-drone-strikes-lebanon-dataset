@@ -4,128 +4,64 @@
   "description": "Iron Dome platform, Shomera settlement (dive drone)",
   "date": "2026-05-18",
   "town": "Near Shomera (Israel), approx",
-  "auto_generated": true,
-  "generator": "classify_and_extract_segments+segments_report_to_annotations",
+  "annotated_at": "2026-07-14T09:30:16Z",
   "segments": [
     {
       "time": 0,
       "time_formatted": "0:00.0",
       "type": "banner_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": ""
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 0.76,
-      "time_formatted": "0:00.8",
-      "type": "replay_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition; post_blur_black_replay_like"
+      "time": 8.073,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 8.04,
-      "time_formatted": "0:08.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 30.64,
+      "time": 30.625,
       "time_formatted": "0:30.6",
       "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": false
     },
     {
-      "time": 34.24,
-      "time_formatted": "0:34.2",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 36.96,
-      "time_formatted": "0:37.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 37.8,
-      "time_formatted": "0:37.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 38.76,
-      "time_formatted": "0:38.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 39.76,
-      "time_formatted": "0:39.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 40.84,
-      "time_formatted": "0:40.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_freeze_or_black_transition"
-    },
-    {
-      "time": 42.8,
-      "time_formatted": "0:42.8",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 43.2,
-      "time_formatted": "0:43.2",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
-    },
-    {
-      "time": 43.92,
-      "time_formatted": "0:43.9",
+      "time": 37.135,
+      "time_formatted": "0:37.1",
       "type": "flight_start",
-      "source": "auto",
-      "flight_like": true,
-      "comment": "cut:keep_blur_transition"
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 51.96,
-      "time_formatted": "0:52.0",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "time": 37.668,
+      "time_formatted": "0:37.7",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
     },
     {
-      "time": 53.24,
-      "time_formatted": "0:53.2",
-      "type": "pause_start",
-      "source": "auto",
-      "flight_like": false,
-      "comment": "cut:keep_blur_transition"
+      "time": 40.868,
+      "time_formatted": "0:40.9",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 43.968,
+      "time_formatted": "0:44.0",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
     }
-  ]
+  ],
+  "exclusion_masks": []
 }
