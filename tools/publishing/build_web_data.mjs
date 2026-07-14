@@ -58,27 +58,10 @@ function readAnnotations() {
 // reconstruction only; density variants (scene dirs suffixed "__3m"/"__5m"/...)
 // exist for the local scene-viewer tool and are excluded here.
 function buildSceneIndex() {
-  const scenesDir = path.join(repoRoot, "scenes");
   const index = new Map();
   for (const [videoId, scenes] of readSceneManifests(repoRoot)) {
     const scene = [...scenes].sort((a, b) => a.scene_id.localeCompare(b.scene_id))[0];
     if (scene) index.set(videoId, { path: scene.path, quality: scene.quality ?? null });
-  }
-  if (!fs.existsSync(scenesDir)) return index;
-  for (const stem of fs.readdirSync(scenesDir, { withFileTypes: true })) {
-    if (!stem.isDirectory()) continue;
-    const base = path.join(scenesDir, stem.name);
-    for (const scene of fs.readdirSync(base, { withFileTypes: true }).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    )) {
-      if (!scene.isDirectory() || scene.name.includes("__")) continue; // skip variants
-      const metaPath = path.join(base, scene.name, "viewer", "scene_meta.json");
-      if (fs.existsSync(metaPath)) {
-        const meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
-        index.set(stem.name, { path: `${stem.name}/${scene.name}`, quality: meta.quality ?? null });
-        break;
-      }
-    }
   }
   return index;
 }

@@ -42,6 +42,36 @@ function aws(args) {
   run("aws", args);
 }
 
+async function invalidate(distributionId, paths) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const result = spawnSync(
+      "aws",
+      ["cloudfront", "create-invalidation", "--distribution-id", distributionId, "--paths", ...paths],
+      { cwd: root, encoding: "utf8" },
+    );
+    if (result.status === 0) return JSON.parse(result.stdout).Invalidation.Id;
+
+    const message = result.stderr || "cloudfront invalidation failed";
+    if (!message.includes("TooManyInvalidationsInProgress") || attempt === 2) throw new Error(message);
+
+    const active = spawnSync(
+      "aws",
+      ["cloudfront", "list-invalidations", "--distribution-id", distributionId, "--output", "json"],
+      { cwd: root, encoding: "utf8" },
+    );
+    if (active.status !== 0) throw new Error(active.stderr || "could not list CloudFront invalidations");
+    const inProgress = JSON.parse(active.stdout).InvalidationList?.Items?.filter((item) => item.Status === "InProgress") ?? [];
+    if (!inProgress.length) {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      continue;
+    }
+    console.log(`CloudFront invalidation capacity is full; waiting for ${inProgress.length} in-progress invalidation(s)`);
+    for (const invalidation of inProgress) {
+      aws(["cloudfront", "wait", "invalidation-completed", "--distribution-id", distributionId, "--id", invalidation.Id]);
+    }
+  }
+}
+
 async function verifyUrl(url, attempts = 5) {
   for (let attempt = 0; attempt < attempts; attempt += 1) {
     const response = await fetch(`${url}${url.includes("?") ? "&" : "?"}verify=${Date.now()}`, {
@@ -52,6 +82,14 @@ async function verifyUrl(url, attempts = 5) {
     if (attempt === attempts - 1) throw new Error(`${url} returned HTTP ${response.status}`);
     await new Promise((resolve) => setTimeout(resolve, 1000 * 2 ** attempt));
   }
+}
+
+function sceneIds(opts) {
+  const value = opts.ids ?? opts.id;
+  if (!value || typeof value !== "string") throw new Error("--id or --ids is required");
+  const ids = [...new Set(value.split(",").map((id) => id.trim()).filter(Boolean))];
+  if (!ids.length) throw new Error("at least one scene ID is required");
+  return ids;
 }
 
 function loadState() {
@@ -144,6 +182,58 @@ function addScene(opts) {
   console.log(`registered scene ${sceneId}; run dataset:publish with this local scenes directory present`);
 }
 
+async function unpublishScenes(opts) {
+  const ids = sceneIds(opts);
+  const state = loadState();
+  const catalogIds = new Set(state.catalog.videos.map((video) => video.id));
+  const unknown = ids.filter((id) => !catalogIds.has(id));
+  if (unknown.length) throw new Error(`unknown catalog IDs: ${unknown.join(", ")}`);
+
+  const manifestUrl = `${CDN_BASE}/data/videos.json?unpublish=${Date.now()}`;
+  const response = await fetch(manifestUrl);
+  if (!response.ok) throw new Error(`could not fetch current web manifest: HTTP ${response.status}`);
+  const current = await response.json();
+  const selected = new Set(ids);
+  const videos = (current.videos ?? []).map((video) => (
+    selected.has(video.slug) ? { ...video, scenePath: null, sceneQuality: null } : video
+  ));
+  const removedReferences = videos.filter((video) => selected.has(video.slug) && video.scenePath === null).length;
+  if (removedReferences !== ids.length) throw new Error("current web manifest is missing one or more requested videos");
+
+  const localManifests = ids.filter((id) => fs.existsSync(path.join(root, "scene-manifests", id)));
+  console.log(`will unpublish ${ids.length} scene(s); remove ${localManifests.length} tracked scene-manifest director${localManifests.length === 1 ? "y" : "ies"}`);
+  if (!opts.execute) {
+    console.log("dry run only; rerun with --execute to update CloudFront and delete scene assets");
+    return;
+  }
+
+  for (const id of localManifests) fs.rmSync(path.join(root, "scene-manifests", id), { recursive: true });
+  fs.mkdirSync(path.join(root, "build", "web"), { recursive: true });
+  writeJson(path.join(root, "build", "web", "current-videos.json"), { ...current, videos });
+  run("node", ["tools/publishing/build_web_data.mjs"]);
+
+  const published = readJson(path.join(root, "build", "web", "videos.json"));
+  const publishedById = new Map(published.videos.map((video) => [video.slug, video]));
+  for (const id of ids) {
+    const video = publishedById.get(id);
+    if (!video || video.scenePath !== null) throw new Error(`${id}: generated manifest still references a scene`);
+  }
+
+  aws(["s3", "cp", "build/web/videos.json", `${bucket}/data/videos.json`, "--content-type", "application/json", "--cache-control", "public,max-age=300"]);
+  const distributionId = opts["distribution-id"] ?? "E1FTYLW4OET6KU";
+  const manifestInvalidation = await invalidate(distributionId, ["/data/videos.json"]);
+  aws(["cloudfront", "wait", "invalidation-completed", "--distribution-id", distributionId, "--id", manifestInvalidation]);
+  await verifyUrl(`${CDN_BASE}/data/videos.json`);
+
+  for (const id of ids) aws(["s3", "rm", `${bucket}/scenes/${id}/`, "--recursive"]);
+  const scenePaths = ids.map((id) => `/scenes/${id}/*`);
+  for (let offset = 0; offset < scenePaths.length; offset += 15) {
+    const sceneInvalidation = await invalidate(distributionId, scenePaths.slice(offset, offset + 15));
+    aws(["cloudfront", "wait", "invalidation-completed", "--distribution-id", distributionId, "--id", sceneInvalidation]);
+  }
+  console.log(`unpublished ${ids.length} scene(s); videos and annotations were not changed`);
+}
+
 function replaceStrings(value, from, to) {
   if (typeof value === "string") return value.split(from).join(to);
   if (Array.isArray(value)) return value.map((item) => replaceStrings(item, from, to));
@@ -221,6 +311,7 @@ function help() {
   npm run dataset:add -- --video FILE --thumbnail FILE --metadata JSON [--no-upload]
   npm run dataset:annotate -- --id ID --annotation JSON
   npm run dataset:add-scene -- --id ID --scene DIR
+  npm run dataset:unpublish-scenes -- --ids ID,ID [--execute]
   npm run dataset:rename -- --from ID --to ID --reason TEXT [--review-after DATE] --execute
   npm run dataset:publish
   npm run dataset:verify`);
@@ -230,6 +321,7 @@ const opts = options(rawArgs);
 if (command === "add") await add(opts);
 else if (command === "annotate") annotate(opts);
 else if (command === "add-scene") addScene(opts);
+else if (command === "unpublish-scenes") await unpublishScenes(opts);
 else if (command === "rename") await rename(opts);
 else if (command === "publish") run("bash", ["tools/publishing/publish_web.sh", ...(opts["skip-scenes"] ? ["--skip-scenes"] : [])]);
 else if (command === "verify") {

@@ -10,6 +10,7 @@
     "dataset:add": "node tools/catalog/dataset.mjs add",
     "dataset:annotate": "node tools/catalog/dataset.mjs annotate",
     "dataset:add-scene": "node tools/catalog/dataset.mjs add-scene",
+    "dataset:unpublish-scenes": "node tools/catalog/dataset.mjs unpublish-scenes",
     "dataset:rename": "node tools/catalog/dataset.mjs rename",
     "dataset:publish": "node tools/catalog/dataset.mjs publish",
     "dataset:verify": "node tools/catalog/dataset.mjs verify",
