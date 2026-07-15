@@ -92,6 +92,15 @@ function sceneIds(opts) {
   return ids;
 }
 
+function sceneCuration() {
+  const file = path.join(root, "data", "scene-curation.json");
+  const value = readJson(file);
+  if (value.schema_version !== 1 || !Array.isArray(value.starred_scene_ids)) {
+    throw new Error("data/scene-curation.json must contain schema_version 1 and starred_scene_ids");
+  }
+  return { file, value };
+}
+
 function loadState() {
   return {
     catalog: readJson(path.join(root, "data/catalog.json")),
@@ -180,6 +189,29 @@ function addScene(opts) {
     viewer_key: `scenes/${id}/${sceneId}/viewer/scene_meta.json`,
   });
   console.log(`registered scene ${sceneId}; run dataset:publish with this local scenes directory present`);
+}
+
+async function setSceneStarred(opts, starred) {
+  const ids = sceneIds(opts);
+  const state = loadState();
+  const catalogIds = new Set(state.catalog.videos.map((video) => video.id));
+  const unknown = ids.filter((id) => !catalogIds.has(id));
+  if (unknown.length) throw new Error(`unknown catalog IDs: ${unknown.join(", ")}`);
+
+  const response = await fetch(`${CDN_BASE}/data/videos.json?starred-scenes=${Date.now()}`);
+  if (!response.ok) throw new Error(`could not fetch current web manifest: HTTP ${response.status}`);
+  const published = new Map((await response.json()).videos?.map((video) => [video.slug, video]));
+  const withoutScene = ids.filter((id) => !published.get(id)?.scenePath);
+  if (withoutScene.length) throw new Error(`cannot star videos without a published scene: ${withoutScene.join(", ")}`);
+
+  const { file, value } = sceneCuration();
+  const curated = new Set(value.starred_scene_ids);
+  for (const id of ids) {
+    if (starred) curated.add(id);
+    else curated.delete(id);
+  }
+  writeJson(file, { ...value, starred_scene_ids: [...curated].sort() });
+  console.log(`${starred ? "starred" : "unstarred"} ${ids.length} scene(s); run dataset:publish to update CloudFront`);
 }
 
 async function unpublishScenes(opts) {
@@ -311,6 +343,8 @@ function help() {
   npm run dataset:add -- --video FILE --thumbnail FILE --metadata JSON [--no-upload]
   npm run dataset:annotate -- --id ID --annotation JSON
   npm run dataset:add-scene -- --id ID --scene DIR
+  npm run dataset:star-scenes -- --ids ID,ID
+  npm run dataset:unstar-scenes -- --ids ID,ID
   npm run dataset:unpublish-scenes -- --ids ID,ID [--execute]
   npm run dataset:rename -- --from ID --to ID --reason TEXT [--review-after DATE] --execute
   npm run dataset:publish
@@ -321,6 +355,8 @@ const opts = options(rawArgs);
 if (command === "add") await add(opts);
 else if (command === "annotate") annotate(opts);
 else if (command === "add-scene") addScene(opts);
+else if (command === "star-scenes") await setSceneStarred(opts, true);
+else if (command === "unstar-scenes") await setSceneStarred(opts, false);
 else if (command === "unpublish-scenes") await unpublishScenes(opts);
 else if (command === "rename") await rename(opts);
 else if (command === "publish") run("bash", ["tools/publishing/publish_web.sh", ...(opts["skip-scenes"] ? ["--skip-scenes"] : [])]);
