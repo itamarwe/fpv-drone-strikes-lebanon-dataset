@@ -13,11 +13,12 @@
       <a href="/annotate/" target="_top">Annotate</a>
       <a class="active" href="/scenes/" target="_top">Scenes</a>
     </nav>
-    <label class="scene-picker" for="sceneSelectTop">
+    <div class="scene-picker">
+      <input id="sceneSearchTop" type="search" placeholder="Search scenes" aria-label="Search scenes" autocomplete="off" />
       <select id="sceneSelectTop">
         <option value="">Loading scenes...</option>
       </select>
-    </label>
+    </div>
     <div class="hdr-btns">
       <button id="saveSceneButton" type="button">Save</button>
       <span id="saveStateText"></span>
