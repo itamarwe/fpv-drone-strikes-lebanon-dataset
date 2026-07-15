@@ -234,6 +234,32 @@ async function unpublishScenes(opts) {
   console.log(`unpublished ${ids.length} scene(s); videos and annotations were not changed`);
 }
 
+async function verifyUnpublishedScenes(opts) {
+  const ids = sceneIds(opts);
+  const state = loadState();
+  const catalogIds = new Set(state.catalog.videos.map((video) => video.id));
+  const unknown = ids.filter((id) => !catalogIds.has(id));
+  if (unknown.length) throw new Error(`unknown catalog IDs: ${unknown.join(", ")}`);
+
+  const response = await fetch(`${CDN_BASE}/data/videos.json?verify-unpublished=${Date.now()}`);
+  if (!response.ok) throw new Error(`could not fetch current web manifest: HTTP ${response.status}`);
+  const publishedById = new Map((await response.json()).videos?.map((video) => [video.slug, video]));
+
+  for (const id of ids) {
+    if (fs.existsSync(path.join(root, "scene-manifests", id))) {
+      throw new Error(`${id}: tracked scene manifest is still present`);
+    }
+    const video = publishedById.get(id);
+    if (!video) throw new Error(`${id}: missing from the published video catalog`);
+    if (video.scenePath !== null || video.sceneQuality !== null) {
+      throw new Error(`${id}: published video catalog still references a scene`);
+    }
+    await verifyUrl(video.videoUrl);
+    await verifyUrl(`${CDN_BASE}/annotations/${id}_annotations.json`);
+  }
+  console.log(`verified ${ids.length} scene(s) are unpublished; videos and annotations remain public`);
+}
+
 function replaceStrings(value, from, to) {
   if (typeof value === "string") return value.split(from).join(to);
   if (Array.isArray(value)) return value.map((item) => replaceStrings(item, from, to));
@@ -312,6 +338,7 @@ function help() {
   npm run dataset:annotate -- --id ID --annotation JSON
   npm run dataset:add-scene -- --id ID --scene DIR
   npm run dataset:unpublish-scenes -- --ids ID,ID [--execute]
+  npm run dataset:verify-unpublished-scenes -- --ids ID,ID
   npm run dataset:rename -- --from ID --to ID --reason TEXT [--review-after DATE] --execute
   npm run dataset:publish
   npm run dataset:verify`);
@@ -322,6 +349,7 @@ if (command === "add") await add(opts);
 else if (command === "annotate") annotate(opts);
 else if (command === "add-scene") addScene(opts);
 else if (command === "unpublish-scenes") await unpublishScenes(opts);
+else if (command === "verify-unpublished-scenes") await verifyUnpublishedScenes(opts);
 else if (command === "rename") await rename(opts);
 else if (command === "publish") run("bash", ["tools/publishing/publish_web.sh", ...(opts["skip-scenes"] ? ["--skip-scenes"] : [])]);
 else if (command === "verify") {

@@ -11,6 +11,7 @@
     "dataset:annotate": "node tools/catalog/dataset.mjs annotate",
     "dataset:add-scene": "node tools/catalog/dataset.mjs add-scene",
     "dataset:unpublish-scenes": "node tools/catalog/dataset.mjs unpublish-scenes",
+    "dataset:verify-unpublished-scenes": "node tools/catalog/dataset.mjs verify-unpublished-scenes",
     "dataset:rename": "node tools/catalog/dataset.mjs rename",
     "dataset:publish": "node tools/catalog/dataset.mjs publish",
     "dataset:verify": "node tools/catalog/dataset.mjs verify",
