@@ -31,6 +31,15 @@ function readCatalogVideos() {
   return sortedRecords(readJson(path.join(repoRoot, "data/catalog.json"))).map(publicVideo);
 }
 
+function readStarredSceneIds() {
+  const file = path.join(repoRoot, "data", "scene-curation.json");
+  const curation = readJson(file);
+  if (curation.schema_version !== 1 || !Array.isArray(curation.starred_scene_ids)) {
+    throw new Error("data/scene-curation.json must contain schema_version 1 and starred_scene_ids");
+  }
+  return new Set(curation.starred_scene_ids);
+}
+
 // Prefer a manual annotation (no auto_generated flag) over an auto one.
 function readAnnotations() {
   const dir = path.join(repoRoot, "annotations");
@@ -92,6 +101,7 @@ function readPreviousVideoFiles() {
 
 const annotations = readAnnotations();
 const sceneIndex = buildSceneIndex();
+const starredSceneIds = readStarredSceneIds();
 const thumbs = readThumbManifest();
 const existingVideos = readExistingVideos();
 const previousVideoFiles = readPreviousVideoFiles();
@@ -122,6 +132,7 @@ for (const raw of readCatalogVideos()) {
     thumbWidths: thumb?.widths ?? existing?.thumbWidths ?? null,
     blur: thumb?.blurDataURL ?? existing?.blur ?? null,
     scenePath,
+    sceneStarred: Boolean(scenePath && starredSceneIds.has(slug)),
     sceneQuality: scene?.quality ?? existing?.sceneQuality ?? null,
     segments: ann?.segments ?? null,
     annotationAuto: ann ? Boolean(ann.auto_generated) : null,
