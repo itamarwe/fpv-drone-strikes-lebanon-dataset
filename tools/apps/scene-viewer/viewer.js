@@ -77,6 +77,7 @@ const canvas = document.getElementById("viewer");
     const title = document.getElementById("title");
     const metaEl = document.getElementById("meta");
     const sceneSelectTop = document.getElementById("sceneSelectTop");
+    const sceneSearchTop = document.getElementById("sceneSearchTop");
     const saveSceneButton = document.getElementById("saveSceneButton");
     const saveStateText = document.getElementById("saveStateText");
     const progress = document.getElementById("pathProgress");
@@ -237,28 +238,49 @@ const canvas = document.getElementById("viewer");
       return `${prefix}${scene.description || scene.scene_id}`;
     }
 
+    function sceneSearchText(scene) {
+      return `${sceneOptionLabel(scene)} ${scene.video_file || ""} ${scene.scene_id || ""}`.toLowerCase();
+    }
+
+    let publishedScenes = [];
+
+    function renderSceneOptions() {
+      if (!sceneSelectTop) return;
+      const query = sceneSearchTop?.value.trim().toLowerCase() || "";
+      const scenes = publishedScenes.filter((scene) => !query || sceneSearchText(scene).includes(query));
+      sceneSelectTop.innerHTML = "";
+      if (!scenes.length) {
+        sceneSelectTop.innerHTML = '<option value="">No scenes match this search</option>';
+        sceneSelectTop.disabled = true;
+        return;
+      }
+      for (const scene of scenes) {
+        const option = document.createElement("option");
+        option.value = scene.viewer_url;
+        option.dataset.sceneId = scene.scene_id;
+        option.textContent = sceneOptionLabel(scene);
+        if (meta?.scene_id && scene.scene_id === meta.scene_id) option.selected = true;
+        sceneSelectTop.appendChild(option);
+      }
+      sceneSelectTop.disabled = false;
+    }
+
     async function loadSceneOptions() {
       if (!sceneSelectTop) return;
       try {
-        const scenes = await window.loadPublishedScenes();
-        sceneSelectTop.innerHTML = "";
-        if (!scenes.length) {
+        publishedScenes = await window.loadPublishedScenes();
+        if (!publishedScenes.length) {
           sceneSelectTop.innerHTML = '<option value="">No saved scenes</option>';
           sceneSelectTop.disabled = true;
+          if (sceneSearchTop) sceneSearchTop.disabled = true;
           return;
         }
-        for (const scene of scenes) {
-          const option = document.createElement("option");
-          option.value = scene.viewer_url;
-          option.dataset.sceneId = scene.scene_id;
-          option.textContent = sceneOptionLabel(scene);
-          if (meta?.scene_id && scene.scene_id === meta.scene_id) option.selected = true;
-          sceneSelectTop.appendChild(option);
-        }
-        sceneSelectTop.disabled = false;
+        if (sceneSearchTop) sceneSearchTop.disabled = false;
+        renderSceneOptions();
       } catch {
         sceneSelectTop.innerHTML = '<option value="">Scenes unavailable</option>';
         sceneSelectTop.disabled = true;
+        if (sceneSearchTop) sceneSearchTop.disabled = true;
       }
     }
 
@@ -1099,6 +1121,7 @@ const canvas = document.getElementById("viewer");
     sceneSelectTop.addEventListener("change", () => {
       if (sceneSelectTop.value) window.location.href = sceneSelectTop.value;
     });
+    sceneSearchTop?.addEventListener("input", renderSceneOptions);
     saveSceneButton.addEventListener("click", () => saveCurrentScene("save_button"));
     playButton.addEventListener("click", () => setPlaying(!isPlaying));
     repeatButton.addEventListener("click", () => {

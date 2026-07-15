@@ -65,12 +65,14 @@
       font-weight: 800;
     }
     .scene-picker {
-      display: block;
+      display: grid;
+      grid-template-columns: minmax(150px, 0.7fr) minmax(180px, 1.3fr);
+      gap: 6px;
       flex: 1;
       min-width: 0;
       max-width: 520px;
     }
-    #sceneSelectTop {
+    #sceneSelectTop, #sceneSearchTop {
       min-width: 0;
       width: 100%;
       min-height: 32px;
@@ -83,6 +85,7 @@
       text-transform: none;
       letter-spacing: 0;
     }
+    #sceneSearchTop:focus { outline: none; border-color: #36e4ff; }
     #saveStateText {
       min-width: 62px;
       color: #8fa0ad;

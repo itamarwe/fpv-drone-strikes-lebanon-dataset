@@ -55,7 +55,7 @@
       border-color: #36e4ff;
       font-weight: 800;
     }
-    select, button {
+    input, select, button {
       min-height: 32px;
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 8px;
@@ -63,15 +63,23 @@
       background: rgba(255, 255, 255, 0.08);
       font: 13px ui-sans-serif, system-ui, sans-serif;
     }
-    select {
+    .scene-picker {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.7fr) minmax(180px, 1.3fr);
+      flex: 1;
+      gap: 6px;
+      min-width: 0;
+      max-width: 520px;
+    }
+    input, select {
       flex: 1;
       width: 100%;
-      max-width: 520px;
       min-width: 0;
       padding: 0 8px;
       text-transform: none;
       letter-spacing: 0;
     }
+    input:focus { outline: none; border-color: #36e4ff; }
     button {
       padding: 0 12px;
       cursor: pointer;
@@ -91,14 +99,18 @@
       <a href="/annotate/">Annotate</a>
       <a class="active" href="/scenes/">Scenes</a>
     </nav>
-    <select id="sceneSelect" aria-label="Scene">
-      <option value="">Loading scenes...</option>
-    </select>
+    <div class="scene-picker">
+      <input id="sceneSearch" type="search" placeholder="Search scenes" aria-label="Search scenes" autocomplete="off" />
+      <select id="sceneSelect" aria-label="Scene">
+        <option value="">Loading scenes...</option>
+      </select>
+    </div>
   </header>
   <div class="status" id="statusText"></div>
   <script src="/tools/apps/shared/published-scenes.js"></script>
   <script>
     const sceneSelect = document.getElementById("sceneSelect");
+    const sceneSearch = document.getElementById("sceneSearch");
     const statusText = document.getElementById("statusText");
     let scenes = [];
 
@@ -111,6 +123,34 @@
       return `${prefix}${scene.description || scene.scene_id}`;
     }
 
+    function sceneSearchText(scene) {
+      return `${formatScene(scene)} ${scene.video_file || ""} ${scene.scene_id || ""}`.toLowerCase();
+    }
+
+    function renderSceneOptions() {
+      const query = sceneSearch.value.trim().toLowerCase();
+      const matches = scenes.filter((scene) => !query || sceneSearchText(scene).includes(query));
+      sceneSelect.innerHTML = "";
+      if (!matches.length) {
+        sceneSelect.innerHTML = '<option value="">No scenes match this search</option>';
+        sceneSelect.disabled = true;
+        return;
+      }
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Select a scene...";
+      placeholder.selected = true;
+      placeholder.disabled = true;
+      sceneSelect.appendChild(placeholder);
+      for (const scene of matches) {
+        const option = document.createElement("option");
+        option.value = scene.scene_id;
+        option.textContent = formatScene(scene);
+        sceneSelect.appendChild(option);
+      }
+      sceneSelect.disabled = false;
+    }
+
     function openSelected() {
       if (!sceneSelect.value) return;
       const scene = scenes.find((item) => item.scene_id === sceneSelect.value);
@@ -120,24 +160,14 @@
 
     async function loadScenes() {
       scenes = await window.loadPublishedScenes();
-      sceneSelect.innerHTML = "";
       if (!scenes.length) {
         sceneSelect.innerHTML = '<option value="">No published scenes</option>';
+        sceneSelect.disabled = true;
+        sceneSearch.disabled = true;
         statusText.textContent = "No scenes are listed in the published catalog.";
         return;
       }
-      const placeholder = document.createElement("option");
-      placeholder.value = "";
-      placeholder.textContent = "Select a scene...";
-      placeholder.selected = true;
-      placeholder.disabled = true;
-      sceneSelect.appendChild(placeholder);
-      for (const scene of scenes) {
-        const option = document.createElement("option");
-        option.value = scene.scene_id;
-        option.textContent = formatScene(scene);
-        sceneSelect.appendChild(option);
-      }
+      renderSceneOptions();
       statusText.textContent = "Select a scene from the dropdown to open it.";
     }
 
@@ -157,8 +187,11 @@
     }
 
     sceneSelect.addEventListener("change", openSelected);
+    sceneSearch.addEventListener("input", renderSceneOptions);
     loadScenes().then(applySceneFromQuery).catch((error) => {
       sceneSelect.innerHTML = '<option value="">Could not load scenes</option>';
+      sceneSelect.disabled = true;
+      sceneSearch.disabled = true;
       statusText.textContent = error.message;
     });
   </script>
