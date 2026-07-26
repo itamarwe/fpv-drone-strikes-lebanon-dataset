@@ -7,6 +7,18 @@
       "created_at": "2026-07-12",
       "review_after": "2026-10-15",
       "reason": "Correct place-name spelling"
+    },
+    {
+      "from": "2026-05-17_buggy_iskandarounah_naqoura",
+      "to": "2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443",
+      "created_at": "2026-07-26",
+      "reason": "Duplicate of the official upload of the same footage"
+    },
+    {
+      "from": "2026-05-26_humvee_vehicle_in_wadi_near_dibel",
+      "to": "2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068",
+      "created_at": "2026-07-26",
+      "reason": "Duplicate filed under the wrong town; on-screen labels read Zawtar al-Sharqiyah"
     }
   ]
 }

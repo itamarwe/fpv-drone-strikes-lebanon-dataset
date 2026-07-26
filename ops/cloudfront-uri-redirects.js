@@ -10,7 +10,7 @@ function handler(event) {
   var request = event.request;
   var oldUri = request.uri;
   var newUri = oldUri;
-  var redirects = {"2026-05-26_anti_drone_platform_barashit":"2026-05-26_anti_drone_platform_biranit"};
+  var redirects = {"2026-05-26_anti_drone_platform_barashit":"2026-05-26_anti_drone_platform_biranit","2026-05-17_buggy_iskandarounah_naqoura":"2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443","2026-05-26_humvee_vehicle_in_wadi_near_dibel":"2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068"};
   if (newUri.indexOf("/annotations/") === 0) {
     newUri = newUri.replace(/^\/annotations\/(\d{4})_(\d{2})_(\d{2})_/, "/annotations/$1-$2-$3_");
   }

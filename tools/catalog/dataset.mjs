@@ -10,6 +10,7 @@ import {
   readJson,
   validateCatalog,
   validateRedirects,
+  validateRemoved,
   writeJson,
 } from "./catalog_lib.mjs";
 
@@ -105,6 +106,7 @@ function loadState() {
   return {
     catalog: readJson(path.join(root, "data/catalog.json")),
     redirects: readJson(path.join(root, "data/redirects.json")),
+    removed: readJson(path.join(root, "data/removed.json")),
   };
 }
 
@@ -112,6 +114,7 @@ function validateState(state) {
   const errors = [
     ...validateCatalog(state.catalog),
     ...validateRedirects(state.redirects, state.catalog),
+    ...validateRemoved(state.removed, state.catalog, state.redirects),
   ];
   if (errors.length) throw new Error(errors.join("\n"));
 }
@@ -120,6 +123,7 @@ function saveState(state) {
   validateState(state);
   writeJson(path.join(root, "data/catalog.json"), state.catalog);
   writeJson(path.join(root, "data/redirects.json"), state.redirects);
+  writeJson(path.join(root, "data/removed.json"), state.removed);
   run("node", ["tools/catalog/generate_views.mjs"]);
   run("node", ["tools/catalog/generate_redirect_function.mjs"]);
 }
@@ -338,6 +342,55 @@ async function rename(opts) {
   console.log(`renamed ${from} to ${to}; old objects remain until post-publish cleanup`);
 }
 
+// Withdraw an ID that has no successor. Use rename for IDs that were superseded:
+// a redirect keeps the old URL working, a tombstone deliberately kills it with a
+// 410 so search engines drop it instead of re-crawling a 404 for months.
+function remove(opts) {
+  const id = required(opts, "id");
+  const reason = required(opts, "reason");
+  const state = loadState();
+  const index = state.catalog.videos.findIndex((item) => item.id === id);
+  if (index === -1) throw new Error(`unknown catalog id ${id}`);
+  if (state.removed.removed.some((item) => item.id === id)) {
+    throw new Error(`${id} is already tombstoned`);
+  }
+  if (state.redirects.redirects.some((item) => item.to === id)) {
+    throw new Error(`${id} is the target of a redirect; repoint or drop that redirect first`);
+  }
+
+  const annotation = path.join(root, "annotations", `${id}_annotations.json`);
+  const sceneDir = path.join(root, "scene-manifests", id);
+  const hasAnnotation = fs.existsSync(annotation);
+  const hasScenes = fs.existsSync(sceneDir);
+  console.log(`will remove catalog record ${id}`);
+  console.log(`  annotation:      ${hasAnnotation ? "delete" : "none"}`);
+  console.log(`  scene manifests: ${hasScenes ? "delete" : "none"}`);
+  console.log(`  tombstone:       ${id} (${reason})`);
+  if (!opts.execute) {
+    console.log("dry run only; rerun with --execute to update the catalog");
+    return;
+  }
+
+  state.catalog.videos.splice(index, 1);
+  if (hasAnnotation) fs.rmSync(annotation);
+  if (hasScenes) fs.rmSync(sceneDir, { recursive: true });
+  state.removed.removed.push({
+    id,
+    removed_at: new Date().toISOString().slice(0, 10),
+    reason,
+  });
+  state.removed.removed.sort((a, b) => a.id.localeCompare(b.id));
+  saveState(state);
+
+  // Public objects are left in place on purpose: deleting them is irreversible
+  // and the manifest is the commit point that hides the record from readers.
+  console.log(`removed ${id}; run dataset:publish, then clean up public objects by hand:`);
+  console.log(`  aws s3 rm ${bucket}/videos/${id}.mp4`);
+  console.log(`  aws s3 rm ${bucket}/thumbnails/${id}.jpg`);
+  console.log(`  aws s3 rm ${bucket}/thumbnails/${id}/ --recursive`);
+  if (hasScenes) console.log(`  aws s3 rm ${bucket}/scenes/${id}/ --recursive`);
+}
+
 function help() {
   console.log(`Usage:
   npm run dataset:add -- --video FILE --thumbnail FILE --metadata JSON [--no-upload]
@@ -347,6 +400,7 @@ function help() {
   npm run dataset:unstar-scenes -- --ids ID,ID
   npm run dataset:unpublish-scenes -- --ids ID,ID [--execute]
   npm run dataset:rename -- --from ID --to ID --reason TEXT [--review-after DATE] --execute
+  npm run dataset:remove -- --id ID --reason TEXT [--execute]
   npm run dataset:publish
   npm run dataset:verify`);
 }
@@ -359,6 +413,7 @@ else if (command === "star-scenes") await setSceneStarred(opts, true);
 else if (command === "unstar-scenes") await setSceneStarred(opts, false);
 else if (command === "unpublish-scenes") await unpublishScenes(opts);
 else if (command === "rename") await rename(opts);
+else if (command === "remove") remove(opts);
 else if (command === "publish") run("bash", ["tools/publishing/publish_web.sh", ...(opts["skip-scenes"] ? ["--skip-scenes"] : [])]);
 else if (command === "verify") {
   run("npm", ["run", "catalog:check"]);

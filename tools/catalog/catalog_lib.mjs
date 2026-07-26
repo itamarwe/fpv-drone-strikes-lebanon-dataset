@@ -107,6 +107,30 @@ export function validateRedirects(payload, catalog) {
   return errors;
 }
 
+// Tombstones are the "no successor" half of URL stability: redirects.json covers
+// IDs that were superseded, removed.json covers IDs that were withdrawn. An ID
+// belongs to exactly one of the two, and never to a live catalog record.
+export function validateRemoved(payload, catalog, redirects) {
+  const errors = [];
+  if (payload.schema_version !== 1) errors.push("removed.schema_version must be 1");
+  const currentIds = new Set(catalog.videos.map((record) => record.id));
+  const redirectFroms = new Set((redirects?.redirects ?? []).map((item) => item.from));
+  const seen = new Set();
+  for (const [index, entry] of (payload.removed ?? []).entries()) {
+    const at = `removed[${index}]`;
+    if (!ID_PATTERN.test(entry.id ?? "")) errors.push(`${at}.id is not canonical`);
+    if (seen.has(entry.id)) errors.push(`${at}.id duplicates ${entry.id}`);
+    seen.add(entry.id);
+    if (currentIds.has(entry.id)) errors.push(`${at}.id is still a live catalog record`);
+    if (redirectFroms.has(entry.id)) errors.push(`${at}.id is also a redirect source`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.removed_at ?? "")) {
+      errors.push(`${at}.removed_at must be YYYY-MM-DD`);
+    }
+    if (!entry.reason?.trim()) errors.push(`${at}.reason is required`);
+  }
+  return errors;
+}
+
 export function readSceneManifests(root) {
   const sceneRoot = path.join(root, "scene-manifests");
   const byVideo = new Map();

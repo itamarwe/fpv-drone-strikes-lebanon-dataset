@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FPV dataset tombstones",
+  "description": "IDs that were withdrawn from the catalog with no successor. The web viewer serves HTTP 410 for these so search engines drop them instead of re-crawling a 404 for months. IDs that were superseded belong in redirects.json instead.",
+  "type": "object",
+  "required": ["schema_version", "removed"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "removed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "removed_at", "reason"],
+        "properties": {
+          "id": { "type": "string" },
+          "removed_at": { "type": "string", "format": "date" },
+          "reason": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

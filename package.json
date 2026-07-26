@@ -14,6 +14,7 @@
     "dataset:unstar-scenes": "node tools/catalog/dataset.mjs unstar-scenes",
     "dataset:unpublish-scenes": "node tools/catalog/dataset.mjs unpublish-scenes",
     "dataset:rename": "node tools/catalog/dataset.mjs rename",
+    "dataset:remove": "node tools/catalog/dataset.mjs remove",
     "dataset:publish": "node tools/catalog/dataset.mjs publish",
     "dataset:verify": "node tools/catalog/dataset.mjs verify",
     "check-public": "node tools/catalog/check_public_assets.mjs",
