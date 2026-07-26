@@ -50,6 +50,11 @@ header{position:relative;z-index:1000;display:flex;align-items:center;gap:10px;p
   max-height:min(620px,calc(100vh - 76px));overflow:auto;background:#101216;
   border:1px solid rgba(255,255,255,.16);border-radius:8px;box-shadow:0 18px 60px rgba(0,0,0,.48);
   padding:4px}
+.video-picker-search{width:100%;min-height:32px;margin-bottom:4px;padding:0 9px;
+  border:1px solid rgba(255,255,255,.14);border-radius:6px;background:rgba(255,255,255,.07);
+  color:var(--text);font:inherit;font-size:13px;outline:none}
+.video-picker-search:focus{border-color:var(--accent)}
+.video-picker-empty{padding:9px;color:var(--muted);font-size:13px}
 .video-picker-option{width:100%;display:flex;align-items:center;gap:8px;padding:7px 8px;
   border:0;border-radius:6px;background:transparent;color:var(--text);text-align:left;font-size:13px}
 .video-picker-option:hover,.video-picker-option.active{background:rgba(86,215,255,.10)}
@@ -670,11 +675,20 @@ function selectVideoByIndex(index) {
   if (video) loadVideo(video);
 }
 
-function renderVideoPickerMenu() {
-  const menu = g('videoPickerMenu');
+function videoPickerLabel(video) {
+  return `${video.date} - ${video.description} (${video.town})`;
+}
+
+function videoPickerSearchText(video) {
+  return `${videoPickerLabel(video)} ${videoFileFor(video)}`.toLowerCase();
+}
+
+function renderVideoPickerOptions(menu, query = '') {
   const selected = g('videoSelect').value;
-  menu.innerHTML = '';
-  VIDEOS.forEach((video, index) => {
+  const normalizedQuery = query.trim().toLowerCase();
+  const matches = VIDEOS.filter(video => !normalizedQuery || videoPickerSearchText(video).includes(normalizedQuery));
+  for (const video of matches) {
+    const index = VIDEOS.indexOf(video);
     const statusName = videoStatusFor(video);
     const row = document.createElement('button');
     row.type = 'button';
@@ -684,16 +698,42 @@ function renderVideoPickerMenu() {
     dot.className = `status-dot ${statusName}`;
     const text = document.createElement('span');
     text.className = 'video-picker-label';
-    text.textContent = `${video.date} - ${video.description} (${video.town})`;
+    text.textContent = videoPickerLabel(video);
     row.append(dot, text);
     row.addEventListener('click', () => selectVideoByIndex(index));
     menu.appendChild(row);
+  }
+  if (!matches.length) {
+    const empty = document.createElement('div');
+    empty.className = 'video-picker-empty';
+    empty.textContent = 'No videos match this search.';
+    menu.appendChild(empty);
+  }
+}
+
+function renderVideoPickerMenu() {
+  const menu = g('videoPickerMenu');
+  menu.innerHTML = '';
+  const search = document.createElement('input');
+  search.type = 'search';
+  search.className = 'video-picker-search';
+  search.placeholder = 'Search videos';
+  search.autocomplete = 'off';
+  search.setAttribute('aria-label', 'Search videos');
+  const options = document.createElement('div');
+  search.addEventListener('input', () => {
+    options.innerHTML = '';
+    renderVideoPickerOptions(options, search.value);
   });
+  menu.append(search, options);
+  renderVideoPickerOptions(options);
+  return search;
 }
 
 function openVideoPicker() {
-  renderVideoPickerMenu();
+  const search = renderVideoPickerMenu();
   g('videoPickerMenu').hidden = false;
+  requestAnimationFrame(() => search.focus());
 }
 
 function closeVideoPicker() {
