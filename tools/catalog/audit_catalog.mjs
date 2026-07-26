@@ -10,14 +10,17 @@ import {
   sortedRecords,
   validateCatalog,
   validateRedirects,
+  validateRemoved,
 } from "./catalog_lib.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const catalog = readJson(path.join(root, "data/catalog.json"));
 const redirects = readJson(path.join(root, "data/redirects.json"));
+const removed = readJson(path.join(root, "data/removed.json"));
 const errors = [
   ...validateCatalog(catalog),
   ...validateRedirects(redirects, catalog),
+  ...validateRemoved(removed, catalog, redirects),
 ];
 const records = sortedRecords(catalog);
 const byId = new Map(records.map((record) => [record.id, record]));

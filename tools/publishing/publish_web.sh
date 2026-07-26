@@ -7,6 +7,8 @@
 #   scenes/<stem>/<id>/viewer/...     3D scene data (meta + point bins + frames)
 #   annotations/<name>.json           published copy of the annotations
 #   data/videos.json                  the app manifest (list + annotations + scene index)
+#   data/redirects.json               superseded IDs -> their successor (301)
+#   data/removed.json                 withdrawn IDs with no successor (410)
 #
 # Requires AWS credentials with write access to the bucket. Run from anywhere:
 #   npm run publish-web                  # full publish (thumbnails, scenes, data)
@@ -71,11 +73,13 @@ else
   echo "== 4/5 (skipped scenes) =="
 fi
 
-echo "== 5/5 upload annotations + redirects + data manifest =="
+echo "== 5/5 upload annotations + redirects + tombstones + data manifest =="
 aws s3 sync annotations/ "$BUCKET/annotations/" \
   --exclude "*" --include "*.json" \
   --content-type application/json --cache-control "public,max-age=300"
 aws s3 cp data/redirects.json "$BUCKET/data/redirects.json" \
+  --content-type application/json --cache-control "public,max-age=300"
+aws s3 cp data/removed.json "$BUCKET/data/removed.json" \
   --content-type application/json --cache-control "public,max-age=300"
 
 if [ "${FPV_DEPLOY_REDIRECTS:-0}" = "1" ]; then
