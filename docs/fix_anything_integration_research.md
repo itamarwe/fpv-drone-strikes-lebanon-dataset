@@ -1,14 +1,14 @@
 # FixAnything Integration Research
 
-Date: 2026-08-26
+Date: 2026-08-26 (updated same day: code and checkpoints are released)
 
 Question: could FixAnything (<https://fix-anything.github.io/>) be integrated
 into the repo's 3D scene reconstruction workflow?
 
-Short answer: not as a reconstruction backend, and not yet in practice (no
-public code found as of this writing), but it is a genuinely good fit as a
-future *rendering refinement* stage on top of the existing VGGT scenes — with a
-hard caveat that its output is generative and must never feed the measurement
+Short answer: yes, as a *rendering refinement* stage on top of the existing
+VGGT scenes — not as a reconstruction backend. Inference code and checkpoints
+are public (Apache 2.0), so a zero-shot experiment is runnable now on a rented
+GPU. Hard caveat: the output is generative and must never feed the measurement
 path.
 
 ## What FixAnything Is
@@ -28,10 +28,38 @@ path.
 - The sparse point cloud case is called out directly: even a COLMAP-sparse
   cloud rendered along a path gives the video model enough camera control.
 
-Note: direct fetches of the project page and arXiv were blocked by the session
-network policy, so the above is compiled from search summaries of the abstract
-and project page. Re-verify details (base video model, GPU needs, exact data
-recipe) against the paper before building anything.
+## What the Released Code Provides
+
+Repository: <https://github.com/kvuong2711/fix-anything> (inspected from a
+local clone at `/home/user/kvuong2711/fix-anything`). Checkpoints:
+<https://huggingface.co/kvuong2711/fix-anything>. Code and weights are
+Apache 2.0 (the Wan2.1 license). Facts that matter for integration:
+
+- **Inference only.** No training/finetuning code is released, so own-domain
+  LoRA finetuning on our paired renders/frames is not currently actionable —
+  zero-shot is what we can test.
+- **Base model.** Wan2.1-I2V-14B-480P (~60 GB download) plus a
+  `fixanything_lora.safetensors` LoRA from HF.
+  `scripts/download_models.py --model_dir checkpoints` fetches both.
+- **Entrypoint.** `scripts/run_inference.py --input <video-or-frame-folder>
+  --output_dir <dir>`; writes `generated.mp4`, resized `input.mp4`, and
+  `side_by_side.mp4`. The whole API is two functions (`load_pipeline()`,
+  `fix_video()`), easy to wrap from `tools/pipeline/`.
+- **Fixed input contract.** Exactly 61 frames, resized/cropped to 832×480
+  (extra frames are dropped; the last frame is internally repeated 4×).
+  Longer flight segments must be chunked into 61-frame windows.
+- **`--clean_frame_indices`** marks input frames the model keeps as-is
+  (default: first and last). For our loop this is the anchor mechanism: when
+  rendering the point cloud along the recovered camera path, real video frames
+  can be injected at their poses and pinned as clean anchors.
+- **Runtime characteristics.** bf16, 10 diffusion steps, tiled VAE, and
+  DiffSynth VRAM offloading to CPU are enabled by default, so a single large
+  GPU (e.g. RunPod A6000/A100 class) should suffice; FlashAttention-2 is
+  optional but recommended. Deps are pinned (torch 2.6/cu126, a fixed
+  DiffSynth-Studio commit, transformers<5).
+- **Bonus path.** `scripts/run_mapanything.py` reconstructs a few photos with
+  MapAnything and renders a 61-frame path for refinement — a possible
+  quick-look path for videos too short or damaged for VGGT.
 
 ## Why It Maps Well onto This Repo
 
@@ -61,9 +89,6 @@ Plausible uses, in increasing ambition:
 
 ## Blockers and Caveats
 
-- **No public code or checkpoints found yet.** The paper is two days old;
-  searches surface no GitHub repo. Nothing to integrate until CMU releases it.
-  Worth watching the project page.
 - **Generative provenance hazard.** This dataset documents real strikes and
   the viewer offers measurements (scale, AGL, speed). A video diffusion model
   hallucinates plausible detail — vehicles, damage, terrain that were never
@@ -73,18 +98,35 @@ Plausible uses, in increasing ambition:
   in scene metadata (e.g. a `generative_refinement` block in
   `scene_manifest.json.model_config`).
 - **Domain gap.** FPV combat footage (heavy compression, motion blur, smoke,
-  low light) is far from typical training footage; own-domain LoRA finetuning
-  on the repo's paired renders/frames would likely be required — feasible, per
-  the point above, but real work.
-- **Hardware.** Video diffusion finetuning + inference needs a serious GPU;
-  the existing RunPod flow (`runpod_amb3r_setup.sh`) is the natural home, same
-  as the AMB3R experiment.
+  low light) is far from typical training footage. The released LoRA was
+  trained on DL3DV-style scenes; since no finetuning code is released, the
+  zero-shot experiment below is also the test of whether the domain gap is
+  fatal. Our paired renders/frames remain the right finetuning data if
+  training code appears later.
+- **Resolution mismatch.** Output is fixed at 832×480; our source frames and
+  point-cloud renders should be prepared at (or cropped to) that aspect so the
+  crop-and-resize does not silently cut off scene content.
+- **Hardware.** ~60 GB of weights plus a large-VRAM GPU; the existing RunPod
+  flow (`runpod_amb3r_setup.sh`) is the natural home, same as the AMB3R
+  experiment. VRAM offloading is built in, so a single-GPU pod works.
 
 ## Suggested Next Step
 
-Do nothing in-repo until code drops. When it does: reuse
-`prepare_amb3r_experiment.py`-style tooling to export one scene's paired
-renders/frames, run the released checkpoint zero-shot on a rendered flythrough
-of a good scene (e.g. the Sholef attack overlap), and compare a VGGT re-run on
-refined vs. raw renders with `compare_reconstructions.py` before considering
-any finetuning.
+A zero-shot RunPod experiment, before any deeper integration:
+
+1. Pick one good scene (e.g. the Sholef attack overlap) and export a 61-frame
+   window: the point-cloud renders along the recovered camera path
+   (`camera_views/f_*_vggt_render.jpg` order per `frames.csv`), reusing
+   `prepare_amb3r_experiment.py`-style tooling.
+2. On a RunPod GPU: install per the repo README, run
+   `scripts/download_models.py`, then `scripts/run_inference.py --input
+   <frames-folder> --output_dir <out>`; try both the default clean anchors
+   (real first/last frames swapped in at indices 0 and 60) and
+   `--clean_frame_indices ""`.
+3. Judge the refined video visually against the real frames, then re-run VGGT
+   on `generated.mp4` frames and compare against the original reconstruction
+   with `compare_reconstructions.py` (density, pose agreement with
+   `relative_path.csv`).
+4. Only if (3) shows a real win, design the pipeline stage: a
+   `tools/pipeline/` wrapper, 61-frame windowing for longer segments, and a
+   `generative_refinement` provenance block in scene metadata.
