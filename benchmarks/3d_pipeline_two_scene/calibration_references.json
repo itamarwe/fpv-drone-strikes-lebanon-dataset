@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-09-08",
+  "provenance": "Saved published scene calibration metadata; user confirmed these are measurements of elements inside the two selected scenes.",
+  "references": [
+    {
+      "scene_key": "scene_a",
+      "scene_id": "scene_a_seg03_seg04",
+      "real_length_m": 3.0,
+      "measured_vggt_units": 0.019527748975898915,
+      "scale_m_per_vggt_unit": 153.62753811013192,
+      "source": "measured",
+      "measured_at": "2026-07-02T16:35:25Z",
+      "metadata_path": "work/bundle/scenes/scene_a/source/scene_meta.json",
+      "metadata_field": "calibration",
+      "element_label": null,
+      "endpoint_coordinates": null
+    },
+    {
+      "scene_key": "scene_b",
+      "scene_id": "scene_b_seg04_seg05",
+      "real_length_m": 7.0,
+      "measured_vggt_units": 0.06831557840906922,
+      "scale_m_per_vggt_unit": 102.4656478509844,
+      "source": "measured",
+      "measured_at": "2026-07-04T11:04:33Z",
+      "metadata_path": "work/bundle/scenes/scene_b/source/scene_meta.json",
+      "metadata_field": "calibration",
+      "element_label": null,
+      "endpoint_coordinates": null
+    }
+  ],
+  "usage": {
+    "existing_vggt": "Compare predicted m/VGGT-unit to the stored scale for the identical original reconstruction, or multiply the saved measured distance by the predicted scale and compare to the real length.",
+    "new_geometry_calibration": "Identify the same measured element in the new geometry and compute real_length_m divided by its reconstructed length. Do not copy the original VGGT scale coefficient.",
+    "automatic_scale_validation": "Keep the known length out of automatic scale fitting; evaluate its prediction against the measured length.",
+    "distortion": "After anchor calibration, use separate geometric consistency and shape evidence. The calibrated anchor itself is not an independent distortion check."
+  }
+}

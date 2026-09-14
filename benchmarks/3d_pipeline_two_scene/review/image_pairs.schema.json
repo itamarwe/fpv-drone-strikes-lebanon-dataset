@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Explicit reconstruction image pairs",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "method_run_id",
+    "records"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "dataset_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "method_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "frame_id",
+          "view_role",
+          "reference",
+          "render",
+          "pixel_mapping",
+          "camera"
+        ],
+        "properties": {
+          "frame_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scene": {
+            "enum": [
+              "scene_a",
+              "scene_b"
+            ]
+          },
+          "segment_id": {
+            "type": "string"
+          },
+          "view_role": {
+            "enum": [
+              "input",
+              "evaluation",
+              "showcase",
+              "exploratory"
+            ]
+          },
+          "reference": {
+            "type": "string",
+            "minLength": 1
+          },
+          "render": {
+            "type": "string",
+            "minLength": 1
+          },
+          "valid_mask": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pixel_mapping": {
+            "type": "object",
+            "required": [
+              "type",
+              "size"
+            ],
+            "properties": {
+              "type": {
+                "const": "identity"
+              },
+              "size": {
+                "type": "array",
+                "prefixItems": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "minItems": 2,
+                "maxItems": 2
+              }
+            },
+            "additionalProperties": false
+          },
+          "camera": {
+            "type": "object",
+            "required": [
+              "camera_id",
+              "target_frame_id",
+              "artifact",
+              "record_id",
+              "pose_source",
+              "photometric_fit_target_rgb"
+            ],
+            "properties": {
+              "camera_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "target_frame_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "artifact": {
+                "type": "string",
+                "minLength": 1
+              },
+              "artifact_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "record_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "pose_source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "intrinsics_source": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "photometric_fit_target_rgb": {
+                "type": "boolean"
+              }
+            }
+          },
+          "crops": {
+            "type": "array"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

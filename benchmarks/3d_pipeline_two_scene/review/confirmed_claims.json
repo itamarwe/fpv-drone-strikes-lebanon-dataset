@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "claims": [
+    {
+      "status": "confirmed",
+      "scene": "scene_b",
+      "title": "QuerySplat preserves the coarse Scene B composition on native input views",
+      "statement": "The feed-forward run completed on all 16 common input views. With explicit camera/frame correspondence, identity pixels, full-frame coverage and no ROI mask, it scores 18.55 dB mean PSNR and 0.692 mean SSIM. The enclosure, horizon and central object remain spatially recognizable, although fine detail is blurred. This is an in-sample reconstruction diagnostic, not held-out evidence.",
+      "evidence_artifacts": [
+        "../results/scene_b/common16/querysplat/attempt-20260908T114051Z/feed_forward/input_view_metrics.json",
+        "../results/scene_b/common16/querysplat/attempt-20260908T114051Z/feed_forward/input_render_contact_sheet.jpg",
+        "../results/scene_b/common16/querysplat/attempt-20260908T114051Z/feed_forward/image_pairs.input_views.json",
+        "../results/scene_b/common16/querysplat/attempt-20260908T114051Z/feed_forward/predicted_input_cameras.json"
+      ]
+    },
+    {
+      "status": "confirmed",
+      "scene": "scene_a",
+      "title": "QuerySplat TTO improves mean Scene A input-view fidelity",
+      "statement": "On the same 16 explicitly paired common input views, TTO raises mean full-frame PSNR from 14.17 to 16.21 dB (+2.04 dB) and mean SSIM from 0.372 to 0.476 (+0.104). No ROI mask or resize is used. This is the intended benefit on photometrically fitted input RGB, not evidence of held-out generalization; late views remain blurred or collapsed.",
+      "evidence_artifacts": [
+        "../results/scene_a/common16/querysplat/attempt-20260908T113425Z/feed_forward/input_view_metrics.json",
+        "../results/scene_a/common16/querysplat/attempt-20260908T115156Z/tto/input_view_metrics.json",
+        "../results/scene_a/common16/querysplat/attempt-20260908T113425Z/feed_forward/input_render_contact_sheet.jpg",
+        "../results/scene_a/common16/querysplat/attempt-20260908T115156Z/tto/input_render_contact_sheet.jpg"
+      ]
+    },
+    {
+      "status": "confirmed",
+      "scene": "cross-scene",
+      "title": "GLOMAP recovers coherent sparse paths for most common16 cameras",
+      "statement": "GLOMAP registers 13/16 Scene A and 15/16 Scene B cameras with median sparse-point reprojection errors of 0.522 and 0.661 pixels. After free Sim(3) alignment, path-shape RMSE is 4.19% and 4.52% of the corresponding published-path RMS radius. This is agreement with the VGGT product baseline, not independent trajectory truth, and the MoGe metric scale is rejected.",
+      "evidence_artifacts": [
+        "../results/GLOMAP_COMMON16_FINDINGS.md",
+        "../results/scene_a/common16/moge3_glomap/attempt-20260908T112215Z/trajectory.json",
+        "../results/scene_b/common16/moge3_glomap/attempt-20260908T112215Z/trajectory.json"
+      ]
+    },
+    {
+      "status": "confirmed",
+      "scene": "scene_b",
+      "title": "Scal3R delivers complete dense coverage and a stable Scene B path shape",
+      "statement": "The common16 Scal3R pilot exports all 16 cameras and 261,072 RGB points for Scene B. Its path has 5.95% Sim(3) RMSE relative to the published path's RMS radius, while the export ordering, crop, intrinsics and pose-direction contracts validate. This is a coverage and relative-shape result; it is not an appearance score or independent ground truth, and the attempted MoGe metric scale is rejected.",
+      "evidence_artifacts": [
+        "../results/SCAL3R_COMMON16_FINDINGS.md",
+        "../results/scene_b/common16/scal3r_zju/attempt-20260908T113051Z/points/whole.ply",
+        "../results/scene_b/common16/scal3r_zju/attempt-20260908T113051Z/runtime/runtime.json"
+      ]
+    }
+  ]
+}

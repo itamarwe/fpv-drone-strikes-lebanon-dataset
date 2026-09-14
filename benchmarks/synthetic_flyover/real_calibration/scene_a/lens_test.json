@@ -1,0 +1,380 @@
+{
+  "colmap_model": "OPENCV_FISHEYE",
+  "colmap_params": [
+    558.1676929507117,
+    553.3835934581829,
+    330.0,
+    140.0,
+    0.12345403484822146,
+    -1.8030785220653458,
+    4.789412416485516,
+    -4.388097049477508
+  ],
+  "colmap_image_size": [
+    660,
+    280
+  ],
+  "registered_reference_frames": 79,
+  "runs": {
+    "original": {
+      "frames": 125,
+      "vggt_input_size": [
+        720,
+        368
+      ],
+      "vggt_fx_px_median": 991.7749633789062,
+      "vggt_fx_px_spread": 216.423583984375,
+      "reference_fx_px_at_vggt_size": 608.9102104916856,
+      "fx_ratio_vggt_over_reference": 1.6287704595691757,
+      "sim3_vs_colmap_path": {
+        "matched": 79,
+        "rmse_fraction_of_path_length": 0.011541984627047553,
+        "error_units_colmap": {
+          "median": 0.10723641429053356,
+          "p90": 0.21708347219881086,
+          "max": 0.3042854940459178
+        }
+      },
+      "local_scale_relative": {
+        "range": [
+          0.9216577737773731,
+          1.1007506669662848
+        ],
+        "std": 0.06104098080987062,
+        "windows": [
+          {
+            "frames": [
+              0,
+              28
+            ],
+            "relative_to_global": 0.9233101149389965
+          },
+          {
+            "frames": [
+              16,
+              44
+            ],
+            "relative_to_global": 0.9860772161450176
+          },
+          {
+            "frames": [
+              29,
+              57
+            ],
+            "relative_to_global": 0.9216577737773731
+          },
+          {
+            "frames": [
+              45,
+              73
+            ],
+            "relative_to_global": 1.0159667782966209
+          },
+          {
+            "frames": [
+              61,
+              90
+            ],
+            "relative_to_global": 1.1007506669662848
+          },
+          {
+            "frames": [
+              74,
+              106
+            ],
+            "relative_to_global": 1.0079949578939988
+          }
+        ]
+      },
+      "depth_conf_median": 4.573790073394775
+    },
+    "pinhole_glomap": {
+      "frames": 125,
+      "vggt_input_size": [
+        720,
+        368
+      ],
+      "vggt_fx_px_median": 660.154296875,
+      "vggt_fx_px_spread": 93.8345947265625,
+      "reference_fx_px_at_vggt_size": 608.9102104916856,
+      "fx_ratio_vggt_over_reference": 1.0841570489381933,
+      "sim3_vs_colmap_path": {
+        "matched": 79,
+        "rmse_fraction_of_path_length": 0.007502067543974314,
+        "error_units_colmap": {
+          "median": 0.058241547102224796,
+          "p90": 0.1474460721988659,
+          "max": 0.22375173465219722
+        }
+      },
+      "local_scale_relative": {
+        "range": [
+          0.9395675510413579,
+          1.0503713381521456
+        ],
+        "std": 0.0361207802706348,
+        "windows": [
+          {
+            "frames": [
+              0,
+              28
+            ],
+            "relative_to_global": 1.0146534574195163
+          },
+          {
+            "frames": [
+              16,
+              44
+            ],
+            "relative_to_global": 1.0239444890111358
+          },
+          {
+            "frames": [
+              29,
+              57
+            ],
+            "relative_to_global": 0.9755570971233111
+          },
+          {
+            "frames": [
+              45,
+              73
+            ],
+            "relative_to_global": 1.0183714341261685
+          },
+          {
+            "frames": [
+              61,
+              90
+            ],
+            "relative_to_global": 1.0503713381521456
+          },
+          {
+            "frames": [
+              74,
+              106
+            ],
+            "relative_to_global": 0.9395675510413579
+          }
+        ]
+      },
+      "depth_conf_median": 4.604316711425781
+    },
+    "pinhole_colmap_pp": {
+      "frames": 125,
+      "vggt_input_size": [
+        720,
+        368
+      ],
+      "vggt_fx_px_median": 631.0672607421875,
+      "vggt_fx_px_spread": 128.07769775390625,
+      "reference_fx_px_at_vggt_size": 649.9985083498138,
+      "fx_ratio_vggt_over_reference": 0.9708749368430274,
+      "sim3_vs_colmap_path": {
+        "matched": 79,
+        "rmse_fraction_of_path_length": 0.007838924788338924,
+        "error_units_colmap": {
+          "median": 0.06673262119097381,
+          "p90": 0.15767388037604654,
+          "max": 0.27504588635431826
+        }
+      },
+      "local_scale_relative": {
+        "range": [
+          0.9338137888549377,
+          1.0632542474038924
+        ],
+        "std": 0.03942773244577709,
+        "windows": [
+          {
+            "frames": [
+              0,
+              28
+            ],
+            "relative_to_global": 1.0005979124126907
+          },
+          {
+            "frames": [
+              16,
+              44
+            ],
+            "relative_to_global": 1.0145442759719043
+          },
+          {
+            "frames": [
+              29,
+              57
+            ],
+            "relative_to_global": 0.9830913260621635
+          },
+          {
+            "frames": [
+              45,
+              73
+            ],
+            "relative_to_global": 1.0223544430301
+          },
+          {
+            "frames": [
+              61,
+              90
+            ],
+            "relative_to_global": 1.0632542474038924
+          },
+          {
+            "frames": [
+              74,
+              106
+            ],
+            "relative_to_global": 0.9338137888549377
+          }
+        ]
+      },
+      "depth_conf_median": 4.327044486999512
+    },
+    "pinhole_fisheye4_pp": {
+      "frames": 125,
+      "vggt_input_size": [
+        720,
+        368
+      ],
+      "vggt_fx_px_median": 572.3052368164062,
+      "vggt_fx_px_spread": 136.79730224609375,
+      "reference_fx_px_at_vggt_size": 496.88460759297743,
+      "fx_ratio_vggt_over_reference": 1.151787010647771,
+      "sim3_vs_colmap_path": {
+        "matched": 79,
+        "rmse_fraction_of_path_length": 0.011883930564417841,
+        "error_units_colmap": {
+          "median": 0.11347423319730264,
+          "p90": 0.21310953804657565,
+          "max": 0.31340178581709266
+        }
+      },
+      "local_scale_relative": {
+        "range": [
+          0.909555356541063,
+          1.0609818368201518
+        ],
+        "std": 0.04859079227033105,
+        "windows": [
+          {
+            "frames": [
+              0,
+              28
+            ],
+            "relative_to_global": 1.0218144691327697
+          },
+          {
+            "frames": [
+              16,
+              44
+            ],
+            "relative_to_global": 1.0329464029881652
+          },
+          {
+            "frames": [
+              29,
+              57
+            ],
+            "relative_to_global": 0.9855115327916883
+          },
+          {
+            "frames": [
+              45,
+              73
+            ],
+            "relative_to_global": 1.0271296558572145
+          },
+          {
+            "frames": [
+              61,
+              90
+            ],
+            "relative_to_global": 1.0609818368201518
+          },
+          {
+            "frames": [
+              74,
+              106
+            ],
+            "relative_to_global": 0.909555356541063
+          }
+        ]
+      },
+      "depth_conf_median": 3.1654133796691895
+    },
+    "pinhole_fisheye1_pp": {
+      "frames": 125,
+      "vggt_input_size": [
+        720,
+        368
+      ],
+      "vggt_fx_px_median": 575.5261840820312,
+      "vggt_fx_px_spread": 122.90447998046875,
+      "reference_fx_px_at_vggt_size": 495.06171304529687,
+      "fx_ratio_vggt_over_reference": 1.162534223343125,
+      "sim3_vs_colmap_path": {
+        "matched": 79,
+        "rmse_fraction_of_path_length": 0.011672493097764709,
+        "error_units_colmap": {
+          "median": 0.10596493239911568,
+          "p90": 0.20986955970241752,
+          "max": 0.30568024583527204
+        }
+      },
+      "local_scale_relative": {
+        "range": [
+          0.9065112028337241,
+          1.0648062571865207
+        ],
+        "std": 0.04911291928647129,
+        "windows": [
+          {
+            "frames": [
+              0,
+              28
+            ],
+            "relative_to_global": 1.0083656726201107
+          },
+          {
+            "frames": [
+              16,
+              44
+            ],
+            "relative_to_global": 1.0245011396001522
+          },
+          {
+            "frames": [
+              29,
+              57
+            ],
+            "relative_to_global": 1.00959347283245
+          },
+          {
+            "frames": [
+              45,
+              73
+            ],
+            "relative_to_global": 1.0338960131670714
+          },
+          {
+            "frames": [
+              61,
+              90
+            ],
+            "relative_to_global": 1.0648062571865207
+          },
+          {
+            "frames": [
+              74,
+              106
+            ],
+            "relative_to_global": 0.9065112028337241
+          }
+        ]
+      },
+      "depth_conf_median": 3.141380786895752
+    }
+  }
+}

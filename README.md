@@ -33,6 +33,8 @@ truth for video identity and descriptive metadata. README rows,
 | `tools/publishing/` | Web manifest, thumbnail, calibration, and publishing tooling |
 | `tools/media/` | Source-media replacement and download maintenance |
 | `scenes/` (gitignored) | Local reconstruction outputs; their public home is S3 |
+| `docs/undistort_pinhole_pipeline.md` | Lens self-calibration + undistortion phase before VGGT-Omega, and the starred-scene batch driver |
+| `benchmarks/` | 3D pipeline benchmarks (two-scene, synthetic Blender flyover, starred re-run) |
 
 The local tools run with:
 

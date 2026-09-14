@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Two-scene reconstruction comparison</title>
+  <style>
+    :root { color-scheme: dark; --bg: #0c0d0f; --panel: #15181c; --line: #262b32; --text: #e8ebef; --muted: #8b95a1; --accent: #36e4ff; --warn: #f3ba62; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    header { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+    header h1 { font-size: 16px; margin: 0; }
+    header label { color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+    select { background: #0f1216; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; font: inherit; }
+    button { background: #0f1216; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; font: inherit; cursor: pointer; }
+    button.active { border-color: var(--accent); color: var(--accent); }
+    .banner { padding: 6px 16px; background: #2a2114; color: var(--warn); border-bottom: 1px solid #4a3a1e; font-size: 13px; }
+    .panes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; height: calc(100vh - 118px); min-height: 480px; }
+    .pane { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
+    .pane .bar { display: flex; gap: 10px; align-items: center; padding: 6px 10px; border-bottom: 1px solid var(--line); font-size: 13px; }
+    .pane .bar .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pane iframe { flex: 1; border: 0; width: 100%; background: var(--bg); }
+    .pane a { color: var(--accent); text-decoration: none; }
+    .stats { padding: 6px 10px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+    .stats b { color: var(--text); font-weight: 600; }
+    table { border-collapse: collapse; margin: 12px 16px 24px; font-size: 13px; width: calc(100% - 32px); }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tr.active td { background: #142229; }
+    .note { padding: 0 16px 16px; color: var(--muted); font-size: 12px; max-width: 1100px; }
+    @media (max-width: 900px) { .panes { grid-template-columns: 1fr; height: auto; } .pane iframe { height: 60vh; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Two-scene reconstruction comparison</h1>
+    <label>Scene <select id="sceneSelect"></select></label>
+    <label>Left <select id="leftSelect"></select></label>
+    <label>Right <select id="rightSelect"></select></label>
+    <button id="swapButton" type="button" title="Swap panes">Swap</button>
+    <button id="reloadButton" type="button" title="Reload both viewers">Reload</button>
+  </header>
+  <div class="banner">All candidates are Sim(3)-aligned to the published VGGT camera path for visual comparison. The metre-per-unit scale shown in each viewer is inherited from that alignment, not an independent calibration. Held-out PSNR values are proxy-camera scores on 14 correlated frames.</div>
+  <section class="panes">
+    <div class="pane">
+      <div class="bar"><span class="name" id="leftName"></span><a id="leftOpen" href="#" target="_blank">open</a></div>
+      <iframe id="leftFrame" title="Left reconstruction" allow="fullscreen"></iframe>
+      <div class="stats" id="leftStats"></div>
+    </div>
+    <div class="pane">
+      <div class="bar"><span class="name" id="rightName"></span><a id="rightOpen" href="#" target="_blank">open</a></div>
+      <iframe id="rightFrame" title="Right reconstruction" allow="fullscreen"></iframe>
+      <div class="stats" id="rightStats"></div>
+    </div>
+  </section>
+  <table id="matrix">
+    <thead><tr><th>Reconstruction</th><th>Profile</th><th class="num">Views</th><th class="num">Points</th><th class="num">Cameras</th><th class="num">Path Sim(3) RMSE</th><th class="num">Held-out PSNR / SSIM / LPIPS</th><th>Attempt</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <p class="note">
+    Each pane is the standard scene viewer: drag to orbit, scroll to zoom, use the path slider to step cameras and the camera panel to see the source frame for that pose. Path Sim(3) RMSE is the aligned camera-path error as a fraction of the published path's RMS radius (agreement with the current product, not pose truth). Surflo meshes are not shown because the pinned Surflo CLI does not export cameras, so they cannot be placed in the shared frame; see <code>results/SURFLO_COMMON16_FINDINGS.md</code>. Click a table row to load it into the right pane.
+  </p>
+  <script>
+    const INDEX_URL = new URLSearchParams(location.search).get("index") || "/scenes/benchmark_3d_two_scene/index.json";
+    const sceneSelect = document.getElementById("sceneSelect");
+    const leftSelect = document.getElementById("leftSelect");
+    const rightSelect = document.getElementById("rightSelect");
+    const tbody = document.querySelector("#matrix tbody");
+    let entries = [];
+
+    const fmt = (v, d = 2) => (v === null || v === undefined || Number.isNaN(Number(v))) ? "n/a" : Number(v).toFixed(d);
+    const pct = (v) => (v === null || v === undefined) ? "n/a" : `${(Number(v) * 100).toFixed(1)}%`;
+    const heldout = (e) => e.heldout_full_frame ? `${fmt(e.heldout_full_frame.mean_psnr_db)} / ${fmt(e.heldout_full_frame.mean_ssim, 3)} / ${fmt(e.heldout_full_frame.mean_lpips, 3)}` : "n/a";
+    const label = (e) => `${e.method.replaceAll("_", " ")} · ${e.profile} · ${e.input_views} views`;
+
+    function sceneEntries() { return entries.filter((e) => e.scene === sceneSelect.value); }
+
+    function fillSelect(select, list, preferred) {
+      select.innerHTML = "";
+      for (const e of list) {
+        const option = document.createElement("option");
+        option.value = e.key; option.textContent = label(e);
+        select.appendChild(option);
+      }
+      const match = list.find((e) => e.key === preferred) || list.find(preferred) || list[0];
+      if (match) select.value = match.key;
+    }
+
+    function setPane(side, entry) {
+      if (!entry) return;
+      document.getElementById(`${side}Name`).textContent = entry.title;
+      document.getElementById(`${side}Open`).href = entry.viewer_url;
+      const frame = document.getElementById(`${side}Frame`);
+      if (frame.dataset.key !== entry.key) { frame.src = entry.viewer_url; frame.dataset.key = entry.key; }
+      const a = entry.alignment || {};
+      document.getElementById(`${side}Stats`).innerHTML = [
+        `<span><b>${entry.point_count.toLocaleString()}</b> points</span>`,
+        `<span><b>${entry.cameras}</b> cameras</span>`,
+        `<span>path RMSE <b>${pct(entry.sim3_rmse_fraction_published_path_rms_radius)}</b></span>`,
+        `<span>held-out PSNR/SSIM/LPIPS <b>${heldout(entry)}</b></span>`,
+        a.matched_cameras !== undefined ? `<span>aligned on <b>${a.matched_cameras}/${a.expected_cameras}</b> cameras, scale <b>${fmt(a.scale_prediction_to_published, 3)}</b></span>` : `<span>${a.note || ""}</span>`,
+      ].join("");
+      for (const row of tbody.querySelectorAll("tr")) row.classList.toggle("active", row.dataset.key === leftSelect.value || row.dataset.key === rightSelect.value);
+    }
+
+    function renderTable() {
+      tbody.innerHTML = "";
+      for (const e of sceneEntries()) {
+        const tr = document.createElement("tr");
+        tr.dataset.key = e.key;
+        tr.innerHTML = `<td>${e.title}</td><td>${e.profile}</td><td class="num">${e.input_views}</td><td class="num">${e.point_count.toLocaleString()}</td><td class="num">${e.cameras}</td><td class="num">${pct(e.sim3_rmse_fraction_published_path_rms_radius)}</td><td class="num">${e.lens_test ? `fx ratio ${fmt(e.lens_test.fx_ratio,2)} · drift std ${fmt(e.lens_test.local_scale_std,3)}${e.lens_test.wall_m_per_unit ? ` · wall ${fmt(e.lens_test.wall_m_per_unit,1)} m/u, wall/path ${fmt(e.lens_test.wall_over_path,4)}` : ""}` : heldout(e)}</td><td>${e.attempt || "published"}</td>`;
+        tr.addEventListener("click", () => { rightSelect.value = e.key; update(); });
+        tbody.appendChild(tr);
+      }
+    }
+
+    function update() {
+      const list = sceneEntries();
+      setPane("left", list.find((e) => e.key === leftSelect.value));
+      setPane("right", list.find((e) => e.key === rightSelect.value));
+      const params = new URLSearchParams({ scene: sceneSelect.value, left: leftSelect.value, right: rightSelect.value });
+      if (INDEX_URL !== "/scenes/benchmark_3d_two_scene/index.json") params.set("index", INDEX_URL);
+      history.replaceState(null, "", `?${params}`);
+    }
+
+    function selectScene(preferredLeft, preferredRight) {
+      const list = sceneEntries();
+      fillSelect(leftSelect, list, preferredLeft || ((e) => e.method === "published_vggt"));
+      fillSelect(rightSelect, list, preferredRight || ((e) => e.method === "vggt_omega_querysplat_ff" && e.profile === "dense_train"));
+      renderTable();
+      update();
+    }
+
+    async function main() {
+      const payload = await (await fetch(INDEX_URL, { cache: "no-store" })).json();
+      entries = payload.entries;
+      const params = new URLSearchParams(location.search);
+      for (const scene of [...new Set(entries.map((e) => e.scene))]) {
+        const option = document.createElement("option");
+        option.value = scene; option.textContent = scene.replace("_", " ");
+        sceneSelect.appendChild(option);
+      }
+      if (params.get("scene")) sceneSelect.value = params.get("scene");
+      selectScene(params.get("left"), params.get("right"));
+      sceneSelect.addEventListener("change", () => selectScene());
+      leftSelect.addEventListener("change", update);
+      rightSelect.addEventListener("change", update);
+      document.getElementById("swapButton").addEventListener("click", () => { const l = leftSelect.value; leftSelect.value = rightSelect.value; rightSelect.value = l; update(); });
+      document.getElementById("reloadButton").addEventListener("click", () => { for (const id of ["leftFrame", "rightFrame"]) { const f = document.getElementById(id); f.dataset.key = ""; } update(); });
+    }
+    main().catch((error) => { document.querySelector(".banner").textContent = `Failed to load ${INDEX_URL}: ${error}. Run tools/pipeline/build_benchmark_scene_viewers.py and serve with tools/local_scene_viewer_server.py.`; });
+  </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+{
+  "colmap_model": "OPENCV_FISHEYE",
+  "colmap_params": [
+    479.6366080816971,
+    483.2022396781132,
+    330.0,
+    141.0,
+    -0.19512846658271688,
+    0.27703932059446007,
+    -0.25130137019387433,
+    0.05844616877856269
+  ],
+  "colmap_image_size": [
+    660,
+    282
+  ],
+  "registered_reference_frames": 101,
+  "runs": {
+    "original": {
+      "frames": 149,
+      "vggt_input_size": [
+        720,
+        368
+      ],
+      "vggt_fx_px_median": 766.6783447265625,
+      "vggt_fx_px_spread": 120.3211669921875,
+      "reference_fx_px_at_vggt_size": 523.2399360891241,
+      "fx_ratio_vggt_over_reference": 1.4652519653927434,
+      "sim3_vs_colmap_path": {
+        "matched": 101,
+        "rmse_fraction_of_path_length": 0.012487956100103864,
+        "error_units_colmap": {
+          "median": 0.15197184913396997,
+          "p90": 0.241758251453587,
+          "max": 0.33108474362661994
+        }
+      },
+      "local_scale_relative": {
+        "range": [
+          0.8199679306228054,
+          1.118436639031612
+        ],
+        "std": 0.0827569305261079,
+        "windows": [
+          {
+            "frames": [
+              0,
+              28
+            ],
+            "relative_to_global": 1.040057043142069
+          },
+          {
+            "frames": [
+              13,
+              41
+            ],
+            "relative_to_global": 1.0155995928849593
+          },
+          {
+            "frames": [
+              29,
+              57
+            ],
+            "relative_to_global": 0.9672674807212016
+          },
+          {
+            "frames": [
+              42,
+              70
+            ],
+            "relative_to_global": 0.8199679306228054
+          },
+          {
+            "frames": [
+              58,
+              83
+            ],
+            "relative_to_global": 1.0293364203950441
+          },
+          {
+            "frames": [
+              71,
+              100
+            ],
+            "relative_to_global": 1.0958259748265824
+          },
+          {
+            "frames": [
+              84,
+              118
+            ],
+            "relative_to_global": 1.118436639031612
+          },
+          {
+            "frames": [
+              101,
+              132
+            ],
+            "relative_to_global": 1.0314288118402473
+          },
+          {
+            "frames": [
+              119,
+              147
+            ],
+            "relative_to_global": 0.9567674114519932
+          }
+        ]
+      },
+      "depth_conf_median": 2.6037473678588867
+    }
+  }
+}

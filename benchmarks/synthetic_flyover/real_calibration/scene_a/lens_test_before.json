@@ -1,0 +1,92 @@
+{
+  "colmap_model": "OPENCV_FISHEYE",
+  "colmap_params": [
+    558.1676929507117,
+    553.3835934581829,
+    330.0,
+    140.0,
+    0.12345403484822146,
+    -1.8030785220653458,
+    4.789412416485516,
+    -4.388097049477508
+  ],
+  "colmap_image_size": [
+    660,
+    280
+  ],
+  "registered_reference_frames": 79,
+  "runs": {
+    "original": {
+      "frames": 125,
+      "vggt_input_size": [
+        720,
+        368
+      ],
+      "vggt_fx_px_median": 991.7749633789062,
+      "vggt_fx_px_spread": 216.423583984375,
+      "reference_fx_px_at_vggt_size": 608.9102104916856,
+      "fx_ratio_vggt_over_reference": 1.6287704595691757,
+      "sim3_vs_colmap_path": {
+        "matched": 79,
+        "rmse_fraction_of_path_length": 0.011541984627047553,
+        "error_units_colmap": {
+          "median": 0.10723641429053356,
+          "p90": 0.21708347219881086,
+          "max": 0.3042854940459178
+        }
+      },
+      "local_scale_relative": {
+        "range": [
+          0.9216577737773731,
+          1.1007506669662848
+        ],
+        "std": 0.06104098080987062,
+        "windows": [
+          {
+            "frames": [
+              0,
+              28
+            ],
+            "relative_to_global": 0.9233101149389965
+          },
+          {
+            "frames": [
+              16,
+              44
+            ],
+            "relative_to_global": 0.9860772161450176
+          },
+          {
+            "frames": [
+              29,
+              57
+            ],
+            "relative_to_global": 0.9216577737773731
+          },
+          {
+            "frames": [
+              45,
+              73
+            ],
+            "relative_to_global": 1.0159667782966209
+          },
+          {
+            "frames": [
+              61,
+              90
+            ],
+            "relative_to_global": 1.1007506669662848
+          },
+          {
+            "frames": [
+              74,
+              106
+            ],
+            "relative_to_global": 1.0079949578939988
+          }
+        ]
+      },
+      "depth_conf_median": 4.573790073394775
+    }
+  }
+}

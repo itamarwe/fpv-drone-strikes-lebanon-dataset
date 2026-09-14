@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "fpv_3d_pipeline_two_scene_2026_09",
+  "description": "Two-scene benchmark for metric reconstruction and final scene representation.",
+  "objectives": [
+    "metric_scale",
+    "reduced_metric_distortion",
+    "improved_reconstruction_appearance_and_surfaces"
+  ],
+  "input_protocol": {
+    "source": "published_cleaned_viewer_frames",
+    "profiles": {
+      "common16": {
+        "count": 16,
+        "selection": "segment_stratified_uniform",
+        "purpose": "controlled cross-method comparison"
+      },
+      "full": {
+        "selection": "all_published_frames_in_path_order",
+        "purpose": "in-sample native long-sequence diagnostic; not heldout evaluation"
+      },
+      "dense_train": {
+        "selection": "all frames minus heldout, same-segment one-frame buffers, content-near holdouts and exact training duplicates",
+        "purpose": "dense reconstruction with evaluation images excluded"
+      },
+      "heldout": {
+        "selection": "temporal_midpoints_not_in_common16_screened_for_content_near_duplicates",
+        "purpose": "visual and depth consistency evaluation only"
+      }
+    }
+  },
+  "scenes": [
+    {
+      "key": "scene_a",
+      "page_url": null,
+      "video_id": "scene_a",
+      "scene_id": "scene_a_seg03_seg04",
+      "canonical_manifest": "scene-manifests/scene_a/scene_a_seg03_seg04.json",
+      "viewer_key": "scenes/scene_a/scene_a_seg03_seg04/viewer/scene_meta.json",
+      "expected_frame_count": 125,
+      "reference": {
+        "scale_m_per_vggt_unit": 153.62753811013192,
+        "known_length_m": 3.0,
+        "measured_vggt_units": 0.019527748975898915,
+        "source": "published_manual_measurement",
+        "warning": "Reference agreement is not independent surveyed ground truth."
+      }
+    },
+    {
+      "key": "scene_b",
+      "page_url": null,
+      "video_id": "scene_b",
+      "scene_id": "scene_b_seg04_seg05",
+      "canonical_manifest": "scene-manifests/scene_b/scene_b_seg04_seg05.json",
+      "viewer_key": "scenes/scene_b/scene_b_seg04_seg05/viewer/scene_meta.json",
+      "expected_frame_count": 149,
+      "reference": {
+        "scale_m_per_vggt_unit": 102.4656478509844,
+        "known_length_m": 7.0,
+        "measured_vggt_units": 0.06831557840906922,
+        "source": "published_manual_measurement",
+        "warning": "Reference agreement is not independent surveyed ground truth."
+      }
+    }
+  ],
+  "methods": [
+    {
+      "id": "scal3r_zju",
+      "stage": "metric_reconstruction",
+      "status": "ready",
+      "profiles": [
+        "common16",
+        "full"
+      ],
+      "repository": "https://github.com/zju3dv/Scal3R.git",
+      "revision": "dc557e7be5ad821ed44b8ad37700311136061406",
+      "checkpoints": [
+        {
+          "repo_id": "xbillowy/Scal3R",
+          "filename": "scal3r.pt",
+          "bytes": 5065047660,
+          "sha256": "7e5ff2b1c4a3d7ffb17a9c8c05478aa52118f9ae67f984fe0b221c1176bed21f"
+        },
+        {
+          "url": "https://github.com/serizba/salad/releases/download/v1.0.0/dino_salad.ckpt",
+          "filename": "dino_salad.ckpt",
+          "bytes": 352040378,
+          "sha256": null
+        }
+      ]
+    },
+    {
+      "id": "ssmb_lightglue",
+      "stage": "metric_reconstruction",
+      "status": "blocked_upstream_release",
+      "profiles": [
+        "common16",
+        "full"
+      ],
+      "paper": "https://arxiv.org/abs/2608.27181",
+      "gap": "SSMB code and pretrained weights are not publicly available. LightGlue alone must be labeled as a diagnostic fallback, not SSMB + LightGlue.",
+      "lightglue_repository": "https://github.com/cvg/LightGlue.git",
+      "lightglue_revision": "eb42fee2d71449efb0aa5c10549752b5d75384d8"
+    },
+    {
+      "id": "moge3_glomap",
+      "stage": "metric_reconstruction",
+      "status": "ready_with_documented_integration_gap",
+      "profiles": [
+        "common16",
+        "full"
+      ],
+      "repositories": [
+        {
+          "url": "https://github.com/microsoft/MoGe.git",
+          "revision": "74fbce054ebed49800de42d0ad0e83495065719a"
+        },
+        {
+          "url": "https://github.com/colmap/glomap.git",
+          "revision": "99806d0869f802fad218516a2e027793e7ca687d"
+        }
+      ],
+      "checkpoints": [
+        {
+          "repo_id": "Ruicheng/moge-3-vitl",
+          "filename": "model.pt",
+          "bytes": 1481333394,
+          "sha256": "9b41b7b9f65ad80aab7ad686f5e9cc0d1fd33f1964022618dfbcd52fc1fb7925"
+        }
+      ],
+      "integration": "Use GLOMAP for camera/SfM geometry, fit a robust global metric scale from MoGe-3 depths at GLOMAP track observations, and report per-frame scale dispersion as a distortion diagnostic.",
+      "gap": "Standalone GLOMAP has no documented native dense-depth-prior bundle-adjustment interface; the first controlled test applies MoGe-3 as metric scale evidence after reconstruction."
+    },
+    {
+      "id": "surflo",
+      "stage": "visualization",
+      "status": "ready",
+      "profiles": [
+        "common16"
+      ],
+      "repository": "https://github.com/Anttwo/Surflo.git",
+      "revision": "bf14c6375a92911c45795710cd00bf2af17e9a13",
+      "checkpoints": [
+        {
+          "repo_id": "AntoineGuedon/Surflo-v0",
+          "filename": "surflo_v0.pt",
+          "bytes": 5542438742,
+          "sha256": "55fddb5dcbb5d375ba8036ec959acd215ee8ffd89e173cdabe1199e034052662"
+        }
+      ],
+      "modes": [
+        "plain",
+        "guided_default"
+      ]
+    },
+    {
+      "id": "querysplat",
+      "stage": "visualization",
+      "status": "ready",
+      "profiles": [
+        "common16"
+      ],
+      "repository": "https://github.com/inspatio/querysplat.git",
+      "revision": "3465a1d2c789d8ebe71f4f9c0bae3f2c2fd726ae",
+      "checkpoints": [
+        {
+          "repo_id": "inspatio/querysplat",
+          "filename": "querysplat_vggto_1B_512_8192.safetensors",
+          "bytes": 4471762864,
+          "sha256": "ef817f4a7e2d6d73f0089767d848c242192f6aea439e2d9752e0929a36ff2f61"
+        },
+        {
+          "repo_id": "facebook/VGGT-Omega",
+          "filename": "vggt_omega_1b_512.pt",
+          "bytes": 4576706117,
+          "sha256": "c02da418b18bb01d0392598d3f6147366bcde1bb70fd08a5e3bf7925b0667934"
+        }
+      ],
+      "modes": [
+        "feed_forward",
+        "tto"
+      ]
+    }
+  ],
+  "evaluation": {
+    "metric_reconstruction": [
+      "registered_frame_fraction",
+      "sim3_aligned_trajectory_rmse_vs_published_vggt",
+      "trajectory_step_scale_coefficient_of_variation",
+      "camera_path_jump_outliers",
+      "moge3_global_scale_m_per_unit",
+      "moge3_per_frame_log_scale_mad",
+      "reference_scale_relative_error",
+      "point_cloud_extent_and_density"
+    ],
+    "visualization": [
+      "heldout_psnr",
+      "heldout_ssim",
+      "heldout_lpips",
+      "floaters_holes_edge_quality_manual_review",
+      "asset_bytes",
+      "browser_load_time",
+      "browser_frame_rate"
+    ]
+  },
+  "runpod": {
+    "recommended_gpu": "NVIDIA A100-SXM4-80GB",
+    "minimum_volume_gb": 150,
+    "container_disk_gb": 40,
+    "image": "runpod/pytorch:1.0.3-cu1281-torch291-ubuntu2404",
+    "note": "Execution stopped on 2026-09-08. Pod 4sf4shthsamb3f was stopped and deleted. See EXECUTION_STATUS.md."
+  }
+}
