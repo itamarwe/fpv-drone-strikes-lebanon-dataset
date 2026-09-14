@@ -220,7 +220,7 @@ def stage_push(args, state, scenes, ssh) -> None:
             continue
         log(f"push: {vid} ({n_local} frames)")
         push_dir(ssh, img, f"{REMOTE_ROOT}/{vid}/images")
-    for name in ("starred_calibrate_remote.sh", "benchmark_remote_job.py"):
+    for name in ("starred_calibrate_remote.sh", "starred_transplant_matches.py", "benchmark_remote_job.py"):
         subprocess.run([*direct.scp_base(ssh), str(ROOT / "tools/pipeline" / name), f"root@{ssh['ip']}:{REMOTE_ROOT}/{name}"], check=True, capture_output=True)
     log("push: done")
 
@@ -240,7 +240,14 @@ def stage_calib_launch(args, state, scenes, ssh) -> None:
         if '"status": "running"' in st or '"status": "succeeded"' in st:
             continue
         ids = " ".join(shlex.quote(s["video_id"]) for s in chunk)
-        script = (f"cd {REMOTE_ROOT} && (CALIB_THREADS={args.calib_threads} setsid nohup python3 benchmark_remote_job.py --status {REMOTE_ROOT}/calib_{tag}.status.json -- "
+        # GLOMAP/Ceres spawn one thread per core with no option to cap it; pin each chunk to its own core range
+        # so k concurrent jobs do not oversubscribe the pod (3 x 128 threads made GLOMAP take 20-30 min per scene).
+        ncpu = int(ssh_run(ssh, "nproc", check=False).stdout.strip() or "0")
+        pin = ""
+        if ncpu >= 8:
+            per = max(4, (ncpu - 8) // k); lo = j * per; hi = min(ncpu - 9, lo + per - 1)  # leave 8 cores for the GPU job
+            pin = f"taskset -c {lo}-{hi} "
+        script = (f"cd {REMOTE_ROOT} && (CALIB_THREADS={args.calib_threads} setsid nohup {pin}python3 benchmark_remote_job.py --status {REMOTE_ROOT}/calib_{tag}.status.json -- "
                   f"bash {REMOTE_ROOT}/starred_calibrate_remote.sh {ids} > {REMOTE_ROOT}/calib_{tag}.log 2>&1 &) ; sleep 1; echo launched")
         ssh_run(ssh, script)
         launched += 1
