@@ -27,6 +27,7 @@ import os
 import shlex
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -38,6 +39,8 @@ SPEC = ROOT / "benchmarks" / "starred_undistort" / "starred_scenes.json"
 STATE = ROOT / "benchmarks" / "starred_undistort" / "batch_status.json"
 LOG = ROOT / "benchmarks" / "starred_undistort" / "batch_log.txt"
 SCENES = ROOT / "scenes" / "starred_undistort"
+REPORTS = ROOT / "reports" / "starred_undistort"
+STATUS_HTML = REPORTS / "status.html"
 REMOTE_ROOT = "/workspace/starred"
 POD_IMAGE = "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404"
 GPU_ID = "NVIDIA A100-SXM4-80GB"
@@ -84,6 +87,79 @@ def push_dir(ssh: dict, local_dir: Path, remote_dir: str) -> None:
     tar.wait()
     if proc.returncode != 0 or tar.returncode != 0:
         raise RuntimeError(f"push {local_dir} failed: {proc.stderr[-1000:]}")
+
+
+# ---------------------------------------------------------------- status page (regenerated deterministically from state + files)
+
+def write_status_html(state: dict, scenes: list[dict]) -> None:
+    REPORTS.mkdir(parents=True, exist_ok=True)
+    pod = state.get("pod", {})
+    counts = {"done": 0, "failed": 0, "running": 0, "pending": 0}
+    rows = []
+    for s in scenes:
+        vid = s["video_id"]; rec = state["scenes"].get(vid, {}); st = rec.get("status", "pending"); counts[st] = counts.get(st, 0) + 1
+        m_path = SCENES / vid / "metrics.json"; m = json.loads(m_path.read_text()) if m_path.exists() else {}
+        b, a = m.get("before_vs_reference", {}), m.get("after_vs_reference", {})
+        path_txt = f"{100 * b['rmse_fraction_of_path_length']:.2f}% &rarr; {100 * a['rmse_fraction_of_path_length']:.2f}%" if "rmse_fraction_of_path_length" in a and "rmse_fraction_of_path_length" in b else ""
+        drift_txt = f"{b['local_scale_std']:.3f} &rarr; {a['local_scale_std']:.3f}" if "local_scale_std" in a and "local_scale_std" in b else ""
+        fx_txt = f"{m['after_focal']['fx_ratio_vggt_over_reference']:.2f}x" if "after_focal" in m else ""
+        cal = rec.get("calibration", {}); cal_txt = f"{cal.get('registered')}/{cal.get('images')}" if cal.get("registered") is not None else ""
+        before_img, after_img = REPORTS / vid / "before.jpg", REPORTS / vid / "after.jpg"
+        imgs = "".join(f'<a href="{vid}/{n}.jpg"><img src="{vid}/{n}.jpg" alt="{n}"></a>' for n in ("before", "after") if (REPORTS / vid / f"{n}.jpg").exists())
+        links = []
+        if (REPORTS / vid / "transition.mp4").exists(): links.append(f'<a href="{vid}/transition.mp4">video</a>')
+        if (SCENES / vid / "overlay" / "index.html").exists(): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/overlay/index.html">overlay viewer</a>')
+        err = f'<div class="err">{rec.get("error", "")}</div>' if st == "failed" else ""
+        el = f"{rec.get('elapsed_s', 0) // 60} min" if rec.get("elapsed_s") else ""
+        rows.append(f'<tr class="{st}"><td><b>{s["title"]}</b><br><small>{vid} &middot; {s["published_frames"]} frames</small>{err}</td>'
+                    f'<td class="st">{st}</td><td>{cal_txt}</td><td>{el}</td><td>{path_txt}</td><td>{drift_txt}</td><td>{fx_txt}</td>'
+                    f'<td class="imgs">{imgs}<div>{" &middot; ".join(links)}</div></td></tr>')
+    html = f"""<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="60"><title>Starred undistort re-run</title>
+<style>body{{font:14px system-ui;background:#0c0d0f;color:#e8ebef;margin:20px}}table{{border-collapse:collapse;width:100%}}td,th{{padding:8px 10px;border-bottom:1px solid #2a3037;vertical-align:top;text-align:left}}
+th{{color:#8b95a1;font-weight:600}}a{{color:#36e4ff}}img{{width:300px;border-radius:6px;margin:2px 6px 2px 0;border:1px solid #2a3037}}.imgs{{white-space:nowrap}}
+.st{{font-weight:700;text-transform:uppercase}}tr.done .st{{color:#36e4ff}}tr.failed .st{{color:#ff4d6d}}tr.running .st{{color:#ffd60a}}tr.pending .st{{color:#8b95a1}}.err{{color:#ff4d6d;font-size:12px;margin-top:4px}}
+.sum{{color:#8b95a1;margin-bottom:14px}}small{{color:#8b95a1}}</style>
+<h1>Starred scenes: undistort-to-pinhole re-run</h1>
+<div class="sum">updated {now_utc().strftime('%Y-%m-%d %H:%M:%S')} UTC &middot; pod {pod.get('id', '-')} (stop after {pod.get('stop_after', '-')}) &middot;
+<b>{counts.get('done', 0)} done</b>, {counts.get('running', 0)} running, {counts.get('failed', 0)} failed, {counts.get('pending', 0)} pending &middot; page refreshes every minute</div>
+<table><tr><th>Scene</th><th>Status</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Before / after</th></tr>
+{''.join(rows)}</table>
+<p class="sum">Path disagreement: Sim(3) residual of the VGGT camera path against the GLOMAP self-calibration path, fraction of its length. Local scale std: 20-frame window scale over global. Focal ratio: VGGT's focal estimate over the calibrated pinhole focal (1.0 = consistent). Before = published product, after = undistorted re-run.</p>
+"""
+    tmp = STATUS_HTML.with_suffix(".tmp"); tmp.write_text(html); tmp.replace(STATUS_HTML)
+
+
+class StatusPager:
+    """Rewrites status.html every `interval` seconds in the background while scenes run."""
+    def __init__(self, state, scenes, interval=60):
+        self.state, self.scenes, self.interval = state, scenes, interval
+        self.stop = threading.Event(); self.thread = threading.Thread(target=self.run, daemon=True)
+    def run(self):
+        while not self.stop.is_set():
+            try: write_status_html(self.state, self.scenes)
+            except Exception as exc: log(f"status page error: {exc}")
+            self.stop.wait(self.interval)
+    def __enter__(self): self.thread.start(); return self
+    def __exit__(self, *a): self.stop.set(); self.thread.join(timeout=5); write_status_html(self.state, self.scenes)
+
+
+class PostQueue:
+    """Runs starred_postprocess.py for finished scenes in the background, one process at a time."""
+    def __init__(self): self.proc = None; self.pending = []; self.launched = set()
+    def add(self, vid): self.pending.append(vid); self.pump()
+    def pump(self):
+        if self.proc is not None and self.proc.poll() is None: return
+        if self.proc is not None: log(f"post: background job finished (rc={self.proc.returncode})"); self.proc = None
+        if not self.pending: return
+        ids, self.pending = self.pending, []
+        log(f"post: background job for {len(ids)} scene(s): {' '.join(ids)}")
+        self.proc = subprocess.Popen([sys.executable, str(ROOT / "tools/pipeline/starred_postprocess.py"), "--only", *ids], stdout=(REPORTS / "postprocess.log").open("a"), stderr=subprocess.STDOUT)
+        self.launched.update(ids)
+    def wait(self):
+        while self.proc is not None or self.pending:
+            self.pump()
+            if self.proc is not None: self.proc.wait()
+            self.pump()
 
 
 # ---------------------------------------------------------------- stages
@@ -286,6 +362,7 @@ def main() -> int:
     scenes = [s for s in spec["scenes"] if not args.only or s["video_id"] in args.only]
     state = load_state()
     log(f"batch start: {len(scenes)} scenes, stages {sorted(stages)}")
+    write_status_html(state, scenes)
 
     ssh = None
     if stages & {"pod", "setup", "push", "calib", "scenes"}:
@@ -303,26 +380,39 @@ def main() -> int:
         elif state.get("pod", {}).get("stop_after"):
             deadline = dt.datetime.fromisoformat(state["pod"]["stop_after"].replace("Z", "+00:00")) - dt.timedelta(minutes=20)
         done = 0
-        for s in scenes:
-            if args.max_scenes and done >= args.max_scenes:
-                break
-            if deadline and now_utc() + dt.timedelta(minutes=args.est_scene_min) > deadline:
-                log(f"deadline guard: not starting {s['video_id']} (deadline {deadline.isoformat()})")
-                break
-            before = state["scenes"].get(s["video_id"], {}).get("status")
-            run_scene(args, state, s, ssh)
-            if before != "done" and state["scenes"][s["video_id"]].get("status") == "done":
-                done += 1
-        n_done = sum(1 for s in scenes if state["scenes"].get(s["video_id"], {}).get("status") == "done")
-        n_fail = sum(1 for s in scenes if state["scenes"].get(s["video_id"], {}).get("status") == "failed")
-        log(f"scenes: {n_done} done, {n_fail} failed, {len(scenes) - n_done - n_fail} pending")
+        REPORTS.mkdir(parents=True, exist_ok=True)
+        post_q = PostQueue()
+        with StatusPager(state, scenes):
+            for s in scenes:
+                if args.max_scenes and done >= args.max_scenes:
+                    break
+                if deadline and now_utc() + dt.timedelta(minutes=args.est_scene_min) > deadline:
+                    log(f"deadline guard: not starting {s['video_id']} (deadline {deadline.isoformat()})")
+                    break
+                before = state["scenes"].get(s["video_id"], {}).get("status")
+                run_scene(args, state, s, ssh)
+                write_status_html(state, scenes)
+                if state["scenes"][s["video_id"]].get("status") == "done":
+                    if before != "done":
+                        done += 1
+                    if not args.skip_post and not (SCENES / s["video_id"] / "metrics.json").exists():
+                        post_q.add(s["video_id"])
+                post_q.pump()
+            n_done = sum(1 for s in scenes if state["scenes"].get(s["video_id"], {}).get("status") == "done")
+            n_fail = sum(1 for s in scenes if state["scenes"].get(s["video_id"], {}).get("status") == "failed")
+            log(f"scenes: {n_done} done, {n_fail} failed, {len(scenes) - n_done - n_fail} pending")
+            if not args.skip_post:
+                post_q.wait()
     if "pod-down" in stages:
         stage_pod_down(args, state)
     if "post" in stages and not args.skip_post:
-        done_ids = [s["video_id"] for s in scenes if state["scenes"].get(s["video_id"], {}).get("status") == "done"]
-        if done_ids:
-            log(f"post: {len(done_ids)} scenes")
-            subprocess.run([sys.executable, str(ROOT / "tools/pipeline/starred_postprocess.py"), "--only", *done_ids], text=True)
+        todo = [s["video_id"] for s in scenes if state["scenes"].get(s["video_id"], {}).get("status") == "done" and not (REPORTS / s["video_id"] / "transition.mp4").exists()]
+        if todo:
+            log(f"post: {len(todo)} scene(s) still to post-process")
+            subprocess.run([sys.executable, str(ROOT / "tools/pipeline/starred_postprocess.py"), "--only", *todo], text=True)
+        else:
+            subprocess.run([sys.executable, str(ROOT / "tools/pipeline/starred_postprocess.py"), "--only", "__none__"], text=True, capture_output=True)  # refresh the index only
+    write_status_html(state, scenes)
     log("batch end")
     return 0
 
