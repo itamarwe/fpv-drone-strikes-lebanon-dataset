@@ -1,0 +1,4 @@
+numpy>=1.26
+Pillow>=10
+scikit-image>=0.23
+

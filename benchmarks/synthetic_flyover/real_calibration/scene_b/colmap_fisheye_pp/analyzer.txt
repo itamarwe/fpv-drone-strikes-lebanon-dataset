@@ -1,0 +1,22 @@
+E20260913 01:02:16.676346 0x1f2e65e80 reconstruction.cc:986] rigs, cameras, frames, images, points3D files do not exist at "benchmarks/synthetic_flyover/real_calibration/scene_b/colmap_fisheye_pp/refined"
+libc++abi: terminating due to uncaught exception of type std::invalid_argument: [reconstruction.cc:986] rigs, cameras, frames, images, points3D files do not exist at "benchmarks/synthetic_flyover/real_calibration/scene_b/colmap_fisheye_pp/refined"
+*** Aborted at 1789250536 (unix time) try "date -d @1789250536" if you are using GNU date ***
+PC: @                0x0 (unknown)
+*** SIGABRT (@0x186caa5e8) received by PID 50600 (TID 0x1f2e65e80) stack trace: ***
+    @        0x186bf73b8 (unknown)
+    @        0x1040aa9fc (unknown)
+    @        0x186cef744 (unknown)
+    @        0x186ce58d8 (unknown)
+    @        0x186bec644 (unknown)
+    @        0x186c9c72c (unknown)
+    @        0x186c89570 (unknown)
+    @        0x1868a48a4 (unknown)
+    @        0x186c9975c (unknown)
+    @        0x186c9bbe4 (unknown)
+    @        0x186c8809c (unknown)
+    @        0x103a7546c (unknown)
+    @        0x103aae4c8 (unknown)
+    @        0x1029d8c94 (unknown)
+    @        0x1029bd4a0 (unknown)
+    @        0x1029bc2d0 (unknown)
+    @        0x186927e00 (unknown)

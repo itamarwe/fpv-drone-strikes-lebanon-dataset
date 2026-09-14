@@ -1,0 +1,106 @@
+{
+  "colmap_ba_radial_cropcenter": {
+    "path_length_units": 14.587190301072685,
+    "per_frame": {
+      "30": {
+        "floor_points": 63,
+        "face_points": 29,
+        "wall_units": 0.8388482709965706,
+        "slope": 0.669846761818911,
+        "intercept": 0.16900150917765955,
+        "median_face_h": 0.37924816079239143,
+        "median_frac": 0.4069553290789599
+      },
+      "45": "not registered / not in dense profile",
+      "60": {
+        "floor_points": 295,
+        "face_points": 130,
+        "wall_units": 1.455161353394442,
+        "slope": 1.556595927385894,
+        "intercept": -0.10143457399145198,
+        "median_face_h": 0.3871996339662773,
+        "median_frac": 0.3720867090462966
+      }
+    },
+    "wall_units_median": 1.1470048121955063,
+    "wall_over_path": 0.07863096240755563
+  },
+  "colmap_ba_fisheye_pp": {
+    "path_length_units": 15.685514427070517,
+    "per_frame": {
+      "30": {
+        "floor_points": 71,
+        "face_points": 43,
+        "wall_units": 0.5639602432990998,
+        "slope": 0.36771306268550347,
+        "intercept": 0.19624718061359628,
+        "median_face_h": 0.2723352845513991,
+        "median_frac": 0.3876185331540691
+      },
+      "45": "not registered / not in dense profile",
+      "60": {
+        "floor_points": 305,
+        "face_points": 103,
+        "wall_units": 1.2608646309030302,
+        "slope": 1.1171932916099012,
+        "intercept": 0.14367133929312895,
+        "median_face_h": 0.49557004295285645,
+        "median_frac": 0.33535871603932615
+      }
+    },
+    "wall_units_median": 0.912412437101065,
+    "wall_over_path": 0.0581691114654421
+  },
+  "colmap_ba_radialfisheye_pp": {
+    "path_length_units": 15.427438238436483,
+    "per_frame": {
+      "30": {
+        "floor_points": 71,
+        "face_points": 43,
+        "wall_units": 0.6368098175632009,
+        "slope": 0.39754373094106993,
+        "intercept": 0.23926608662213095,
+        "median_face_h": 0.328146259033262,
+        "median_frac": 0.3876185331540691
+      },
+      "45": "not registered / not in dense profile",
+      "60": {
+        "floor_points": 302,
+        "face_points": 103,
+        "wall_units": 1.5577672084769665,
+        "slope": 1.470682733705677,
+        "intercept": 0.08708447477128965,
+        "median_face_h": 0.5223109064170823,
+        "median_frac": 0.33535871603932615
+      }
+    },
+    "wall_units_median": 1.0972885130200836,
+    "wall_over_path": 0.07112577578085899
+  },
+  "colmap_ba_pp": {
+    "path_length_units": 13.849727517808907,
+    "per_frame": {
+      "30": {
+        "floor_points": 129,
+        "face_points": 110,
+        "wall_units": 0.8263234859397323,
+        "slope": 0.7947153505219492,
+        "intercept": 0.03160813541778302,
+        "median_face_h": 0.32918907664201275,
+        "median_frac": 0.47329944547903213
+      },
+      "45": "not registered / not in dense profile",
+      "60": {
+        "floor_points": 381,
+        "face_points": 223,
+        "wall_units": 1.3425568936950223,
+        "slope": 1.3233220739475562,
+        "intercept": 0.01923481974746619,
+        "median_face_h": 0.5259429354180278,
+        "median_frac": 0.4676864481417932
+      }
+    },
+    "wall_units_median": 1.0844401898173772,
+    "wall_over_path": 0.07830047114088934
+  }
+}

@@ -1,0 +1,50 @@
+[
+ {
+  "label": "vggt_omega_direct_full",
+  "profile": "full",
+  "method": "VGGT-Omega direct (demo pipeline)",
+  "status": "scored",
+  "frames": "120/120",
+  "scale": 239.7116566603256,
+  "path_rmse_pct": 1.9919983857261003,
+  "cam_med_m": 5.600899309050819,
+  "orient_med": 3.122933448022658,
+  "local_range": [
+   0.7757360521631118,
+   1.1811299943210982
+  ],
+  "surf_med": 2.1369769964023613,
+  "surf_p90": 6.651703159665925,
+  "within3": 0.6703655,
+  "points": 2000000,
+  "depth_full": 1.383440188848599,
+  "depth_central": 1.0783904583787984,
+  "depth_relerr": 0.4223903592326417,
+  "claimed": null,
+  "extra": ""
+ },
+ {
+  "label": "vggt_omega_direct_pinhole",
+  "profile": "pinhole",
+  "method": "VGGT-Omega direct (demo pipeline)",
+  "status": "scored",
+  "frames": "120/120",
+  "scale": 204.07921393763203,
+  "path_rmse_pct": 0.2234562556298892,
+  "cam_med_m": 0.5175781212126118,
+  "orient_med": 1.7056856532686995,
+  "local_range": [
+   0.971269791206667,
+   1.0114300853965572
+  ],
+  "surf_med": 1.1966913532043486,
+  "surf_p90": 4.18361811195648,
+  "within3": 0.8453345,
+  "points": 2000000,
+  "depth_full": 0.9971741180298836,
+  "depth_central": 0.996556022986693,
+  "depth_relerr": 0.02174300892374023,
+  "claimed": null,
+  "extra": ""
+ }
+]

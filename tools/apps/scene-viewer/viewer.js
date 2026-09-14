@@ -1061,6 +1061,9 @@ const canvas = document.getElementById("viewer");
 
     async function main() {
       meta = await (await fetch(sceneAsset("scene_meta.json"))).json();
+      if (!meta.path?.[0]?.overlay_image) {
+        cameraViewMode = meta.path?.[0]?.render_image ? "render" : "actual";
+      }
       defaultScaleMPerUnit = Number(meta.default_scale_m_per_unit) > 0
         ? Number(meta.default_scale_m_per_unit)
         : 117.6;

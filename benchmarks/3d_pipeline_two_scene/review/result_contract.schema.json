@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Two-scene reconstruction run manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "scene",
+    "profile",
+    "method",
+    "mode",
+    "status",
+    "source",
+    "inputs",
+    "preprocessing",
+    "coordinate_system",
+    "cameras",
+    "artifacts",
+    "compute",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scene": {
+      "enum": [
+        "scene_a",
+        "scene_b"
+      ]
+    },
+    "profile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "method": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "partial",
+        "failed",
+        "oom",
+        "not_run"
+      ]
+    },
+    "failure_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repository",
+        "revision"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 7
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "required": [
+        "frames_manifest",
+        "frame_ids",
+        "input_count"
+      ],
+      "properties": {
+        "frames_manifest": {
+          "type": "string"
+        },
+        "frames_manifest_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "frame_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "input_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "preprocessing": {
+      "type": "object"
+    },
+    "coordinate_system": {
+      "type": "object",
+      "required": [
+        "convention",
+        "units",
+        "metric_scale_status"
+      ],
+      "properties": {
+        "convention": {
+          "type": "string"
+        },
+        "units": {
+          "type": "string"
+        },
+        "metric_scale_status": {
+          "enum": [
+            "unscaled",
+            "anchor_calibrated",
+            "automatic_predicted",
+            "not_applicable"
+          ]
+        }
+      }
+    },
+    "cameras": {
+      "type": "object",
+      "required": [
+        "status",
+        "artifact",
+        "convention",
+        "frame_mapping"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "available",
+            "not_exported",
+            "unavailable"
+          ]
+        },
+        "artifact": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "convention": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "frame_mapping": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "path",
+          "bytes"
+        ],
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "compute": {
+      "type": "object",
+      "required": [
+        "runtime_seconds",
+        "peak_gpu_memory_bytes",
+        "cost_usd"
+      ],
+      "properties": {
+        "runtime_seconds": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "peak_gpu_memory_bytes": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "cost_usd": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}
