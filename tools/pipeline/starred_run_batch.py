@@ -161,18 +161,22 @@ def wait_calib(ssh, vid: str, timeout_s: int) -> dict:
     t0 = time.time()
     last = ""
     while time.time() - t0 < timeout_s:
-        out = ssh_run(ssh, f"cat {REMOTE_ROOT}/{vid}/calib/status.json 2>/dev/null; echo; tail -c 300 {REMOTE_ROOT}/calib_all.status.json 2>/dev/null", check=False).stdout
+        out = ssh_run(ssh, f"cat {REMOTE_ROOT}/{vid}/calib/status.json 2>/dev/null || echo '{{}}'", check=False).stdout
         try:
-            st = json.loads(out.strip().split("\n")[0])
+            st = json.loads(out.strip() or "{}")
         except Exception:
             st = {}
-        if st.get("status") == "succeeded":
+        if st.get("status") in ("succeeded", "failed"):
             return st
-        if st.get("status") == "failed":
-            return st
-        if '"status": "failed"' in out or '"status": "succeeded"' in out.split("\n")[-1] and not st:
-            # global job finished without producing this scene
-            return {"status": "failed", "note": "calibration job ended before this scene"}
+        if not st:
+            # scene not started yet: has the global calibration job already ended?
+            glob = ssh_run(ssh, f"cat {REMOTE_ROOT}/calib_all.status.json 2>/dev/null || echo '{{}}'", check=False).stdout
+            try:
+                gst = json.loads(glob.strip() or "{}").get("status")
+            except Exception:
+                gst = None
+            if gst in ("succeeded", "failed"):
+                return {"status": "failed", "note": f"calibration job ended ({gst}) before this scene"}
         msg = st.get("note", "pending")
         if msg != last:
             log(f"calib: {vid} {msg}")

@@ -38,7 +38,7 @@ write_status() {  # dir status registered images note
   python3 - "$1" "$2" "$3" "$4" "$5" <<'PY'
 import json, sys, datetime
 d, st, reg, n, note = sys.argv[1:]
-json.dump({"status": st, "registered": int(reg), "images": int(n), "note": note, "utc": datetime.datetime.now(datetime.timezone.utc).isoformat()}, open(f"{d}/status.json", "w"), indent=1)
+json.dump({"status": st, "registered": int(reg), "images": int(n), "note": note, "utc": datetime.datetime.now(datetime.timezone.utc).isoformat()}, open(f"{d}/status.json", "w"))
 PY
 }
 
