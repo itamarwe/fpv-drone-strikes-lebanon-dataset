@@ -41,6 +41,7 @@ LOG = ROOT / "benchmarks" / "starred_undistort" / "batch_log.txt"
 SCENES = ROOT / "scenes" / "starred_undistort"
 REPORTS = ROOT / "reports" / "starred_undistort"
 STATUS_HTML = REPORTS / "status.html"
+_STATUS_LOCK = threading.Lock()
 REMOTE_ROOT = "/workspace/starred"
 POD_IMAGE = "runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404"
 GPU_ID = "NVIDIA A100-SXM4-80GB"
@@ -81,8 +82,9 @@ def scp_from(ssh: dict, remote: str, local: Path) -> None:
 
 
 def push_dir(ssh: dict, local_dir: Path, remote_dir: str) -> None:
-    remote = f"mkdir -p {shlex.quote(remote_dir)} && tar -C {shlex.quote(remote_dir)} -xf - && find {shlex.quote(remote_dir)} -name '._*' -delete"
-    tar = subprocess.Popen(["tar", "-C", str(local_dir), "-cf", "-", "."], stdout=subprocess.PIPE, env={**os.environ, "COPYFILE_DISABLE": "1"})
+    # network volumes refuse chown: extract with --no-same-owner; strip macOS xattrs on the sending side
+    remote = f"mkdir -p {shlex.quote(remote_dir)} && tar --no-same-owner --no-same-permissions --warning=no-unknown-keyword -C {shlex.quote(remote_dir)} -xf - && find {shlex.quote(remote_dir)} -name '._*' -delete"
+    tar = subprocess.Popen(["tar", "--no-xattrs", "--no-mac-metadata", "-C", str(local_dir), "-cf", "-", "."], stdout=subprocess.PIPE, env={**os.environ, "COPYFILE_DISABLE": "1"})
     proc = subprocess.run([*direct.ssh_base(ssh), remote], stdin=tar.stdout, text=True, capture_output=True)
     tar.wait()
     if proc.returncode != 0 or tar.returncode != 0:
@@ -107,7 +109,8 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
         before_img, after_img = REPORTS / vid / "before.jpg", REPORTS / vid / "after.jpg"
         imgs = "".join(f'<a href="{vid}/{n}.jpg"><img src="{vid}/{n}.jpg" alt="{n}"></a>' for n in ("before", "after") if (REPORTS / vid / f"{n}.jpg").exists())
         links = []
-        if (REPORTS / vid / "transition.mp4").exists(): links.append(f'<a href="{vid}/transition.mp4">video</a>')
+        if (REPORTS / vid / "transition.mp4").exists(): links.append(f'<a href="{vid}/transition.mp4">transition video</a>')
+        if (REPORTS / vid / "overlay.mp4").exists(): links.append(f'<a href="{vid}/overlay.mp4">reprojection overlay video</a>')
         if (SCENES / vid / "overlay" / "index.html").exists(): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/overlay/index.html">overlay viewer</a>')
         err = f'<div class="err">{rec.get("error", "")}</div>' if st == "failed" else ""
         el = f"{rec.get('elapsed_s', 0) // 60} min" if rec.get("elapsed_s") else ""
@@ -126,7 +129,8 @@ th{{color:#8b95a1;font-weight:600}}a{{color:#36e4ff}}img{{width:300px;border-rad
 {''.join(rows)}</table>
 <p class="sum">Path disagreement: Sim(3) residual of the VGGT camera path against the GLOMAP self-calibration path, fraction of its length. Local scale std: 20-frame window scale over global. Focal ratio: VGGT's focal estimate over the calibrated pinhole focal (1.0 = consistent). Before = published product, after = undistorted re-run.</p>
 """
-    tmp = STATUS_HTML.with_suffix(".tmp"); tmp.write_text(html); tmp.replace(STATUS_HTML)
+    with _STATUS_LOCK:  # the refresh thread and the main loop both write this page
+        tmp = STATUS_HTML.with_name(f"status.{threading.get_ident()}.tmp"); tmp.write_text(html); tmp.replace(STATUS_HTML)
 
 
 class StatusPager:
@@ -222,26 +226,41 @@ def stage_push(args, state, scenes, ssh) -> None:
 
 
 def stage_calib_launch(args, state, scenes, ssh) -> None:
-    st = ssh_run(ssh, f"cat {REMOTE_ROOT}/calib_all.status.json 2>/dev/null || echo NONE", check=False).stdout
-    if "running" in st or "succeeded" in st:
-        log("calib: job already running/finished on the pod")
-        return
-    ids = " ".join(shlex.quote(s["video_id"]) for s in scenes)
-    script = (f"cd {REMOTE_ROOT} && (setsid nohup python3 benchmark_remote_job.py --status {REMOTE_ROOT}/calib_all.status.json -- "
-              f"bash {REMOTE_ROOT}/starred_calibrate_remote.sh {ids} > {REMOTE_ROOT}/calib_all.log 2>&1 &) ; sleep 1; echo launched")
-    ssh_run(ssh, script)
-    log("calib: background job launched on the pod")
+    """Launch --calib-jobs background calibration jobs on the pod, each over a contiguous chunk of scenes in run order.
+
+    Calibration (CPU: SIFT matching + GLOMAP) takes ~10 min per scene on 8 threads, longer than the GPU inference,
+    so several chunks run side by side on the pod's cores; the scene loop only waits for its own scene's status."""
+    k = max(1, args.calib_jobs)
+    n = len(scenes); size = -(-n // k)
+    chunks = [scenes[i:i + size] for i in range(0, n, size)]
+    launched = 0
+    for j, chunk in enumerate(chunks):
+        tag = "all" if j == 0 else f"chunk{j}"
+        st = ssh_run(ssh, f"cat {REMOTE_ROOT}/calib_{tag}.status.json 2>/dev/null || echo NONE", check=False).stdout
+        if '"status": "running"' in st or '"status": "succeeded"' in st:
+            continue
+        ids = " ".join(shlex.quote(s["video_id"]) for s in chunk)
+        script = (f"cd {REMOTE_ROOT} && (CALIB_THREADS={args.calib_threads} setsid nohup python3 benchmark_remote_job.py --status {REMOTE_ROOT}/calib_{tag}.status.json -- "
+                  f"bash {REMOTE_ROOT}/starred_calibrate_remote.sh {ids} > {REMOTE_ROOT}/calib_{tag}.log 2>&1 &) ; sleep 1; echo launched")
+        ssh_run(ssh, script)
+        launched += 1
+    log(f"calib: {launched} background job(s) launched on the pod ({k} chunks of up to {size} scenes, {args.calib_threads} threads each)")
 
 
 def wait_calib(ssh, vid: str, timeout_s: int) -> dict:
     t0 = time.time()
     last = ""
     while time.time() - t0 < timeout_s:
-        out = ssh_run(ssh, f"cat {REMOTE_ROOT}/{vid}/calib/status.json 2>/dev/null || echo '{{}}'", check=False).stdout
+        proc = ssh_run(ssh, f"cat {REMOTE_ROOT}/{vid}/calib/status.json 2>/dev/null || echo '{{}}'", check=False)
+        if proc.returncode != 0:
+            log(f"calib: {vid} ssh poll failed rc={proc.returncode}: {(proc.stderr or '')[-200:]}")
+        out = proc.stdout
         try:
             st = json.loads(out.strip() or "{}")
         except Exception:
             st = {}
+        if int(time.time() - t0) // 300 != int(time.time() - t0 - 30) // 300:
+            log(f"calib: {vid} still waiting ({int(time.time() - t0) // 60} min), last status {st or 'none'}")
         if st.get("status") in ("succeeded", "failed"):
             return st
         if not st:
@@ -251,8 +270,10 @@ def wait_calib(ssh, vid: str, timeout_s: int) -> dict:
                 gst = json.loads(glob.strip() or "{}").get("status")
             except Exception:
                 gst = None
-            if gst in ("succeeded", "failed"):
-                return {"status": "failed", "note": f"calibration job ended ({gst}) before this scene"}
+            if gst in ("succeeded", "failed") and not any(
+                    '"status": "running"' in ssh_run(ssh, f"cat {REMOTE_ROOT}/calib_chunk{j}.status.json 2>/dev/null || echo NONE", check=False).stdout for j in range(1, 8)):
+                tail = ssh_run(ssh, f"tail -3 {REMOTE_ROOT}/calib_all.log 2>/dev/null", check=False).stdout.strip().replace("\n", " | ")
+                return {"status": "failed", "note": f"calibration job ended ({gst}) before this scene: {tail[-300:]}"}
         msg = st.get("note", "pending")
         if msg != last:
             log(f"calib: {vid} {msg}")
@@ -323,6 +344,26 @@ def run_scene(args, state, s, ssh) -> None:
     save_state(state)
 
 
+def stage_harvest(args, state, scenes, ssh) -> None:
+    """Fetch every finished calibration from the pod so nothing is lost when the pod is deleted (resume on a new pod)."""
+    got = 0
+    for s in scenes:
+        vid = s["video_id"]; local = SCENES / vid / "calib" / "glomap_fisheye"
+        if (local / "cameras.txt").exists():
+            continue
+        st = ssh_run(ssh, f"cat {REMOTE_ROOT}/{vid}/calib/status.json 2>/dev/null", check=False).stdout
+        if '"succeeded"' not in st:
+            continue
+        try:
+            for name in ("cameras.txt", "images.txt", "analyzer.txt"):
+                scp_from(ssh, f"{REMOTE_ROOT}/{vid}/calib/glomap_fisheye/{name}", local / name)
+            scp_from(ssh, f"{REMOTE_ROOT}/{vid}/calib/status.json", SCENES / vid / "calib" / "status.json")
+            got += 1
+        except Exception as exc:
+            log(f"harvest: {vid} failed: {exc}")
+    log(f"harvest: fetched {got} calibration(s) not yet used by a scene")
+
+
 def stage_pod_down(args, state) -> None:
     pod_id = state.get("pod", {}).get("id")
     if not pod_id or args.keep_pod:
@@ -348,6 +389,8 @@ def main() -> int:
     ap.add_argument("--deadline-utc", default="", help="do not start a new scene after this ISO time (default: pod stop_after - 20 min)")
     ap.add_argument("--est-scene-min", type=float, default=9.0, help="estimated minutes per scene for the deadline guard")
     ap.add_argument("--calib-timeout-s", type=int, default=3600)
+    ap.add_argument("--calib-jobs", type=int, default=3, help="parallel calibration jobs on the pod (contiguous chunks in run order)")
+    ap.add_argument("--calib-threads", type=int, default=32, help="SIFT/matching threads per calibration job")
     ap.add_argument("--wait-ssh-s", type=int, default=900)
     ap.add_argument("--max-points-k", type=float, default=3000.0)
     ap.add_argument("--artifact-max-points", type=int, default=3_000_000)
@@ -391,7 +434,10 @@ def main() -> int:
                     break
                 before = state["scenes"].get(s["video_id"], {}).get("status")
                 run_scene(args, state, s, ssh)
-                write_status_html(state, scenes)
+                try:
+                    write_status_html(state, scenes)
+                except Exception as exc:
+                    log(f"status page error: {exc}")
                 if state["scenes"][s["video_id"]].get("status") == "done":
                     if before != "done":
                         done += 1
@@ -404,6 +450,11 @@ def main() -> int:
             if not args.skip_post:
                 post_q.wait()
     if "pod-down" in stages:
+        if ssh is not None:
+            try:
+                stage_harvest(args, state, scenes, ssh)
+            except Exception as exc:
+                log(f"harvest: {exc}")
         stage_pod_down(args, state)
     if "post" in stages and not args.skip_post:
         todo = [s["video_id"] for s in scenes if state["scenes"].get(s["video_id"], {}).get("status") == "done" and not (REPORTS / s["video_id"] / "transition.mp4").exists()]
