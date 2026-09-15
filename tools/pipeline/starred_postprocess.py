@@ -30,6 +30,7 @@ from evaluate_3d_trajectory import umeyama  # noqa: E402
 from fit_moge3_colmap_scale import qvec_to_rotation, read_images  # noqa: E402
 from build_recon_overlay_viewer import HTML as OVERLAY_HTML, COLOURS  # noqa: E402
 from starred_overlay_video import make as make_overlay_video  # noqa: E402
+from starred_camera_overlays import published_viewer, pinhole_overlays  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC = ROOT / "benchmarks" / "starred_undistort" / "starred_scenes.json"
@@ -252,6 +253,10 @@ def process(scene: dict, rng, skip_video: bool) -> dict | None:
                 make_overlay_video(scene, json.loads(SPEC.read_text())["cdn_base"], 10.0, 4.0)
             except Exception as exc:
                 print(f"{vid}: overlay video failed: {exc}", flush=True)
+        try:  # camera-view mode of the standard viewer: real frames with the model drawn over them, both versions
+            published_viewer(scene, json.loads(SPEC.read_text())["cdn_base"], False); pinhole_overlays(scene, False)
+        except Exception as exc:
+            print(f"{vid}: camera-view overlays failed: {exc}", flush=True)
     return metrics
 
 
@@ -269,7 +274,7 @@ def write_index(rows: list[dict]) -> None:
         vid = m["video_id"]
         viewer = f"http://127.0.0.1:8766/scenes/starred_undistort/{vid}/overlay/index.html"
         md.append(f"| {m['title']} | {m['frames_published']} | {m.get('reference_registered', 'n/a')} | {pd} | {ls} | {fr} | [overlay]({viewer}) | [transition]({vid}/transition.mp4) · [reprojection]({vid}/overlay.mp4) |")
-        html.append(f"<tr><td>{m['title']}</td><td>{m['frames_published']}</td><td>{m.get('reference_registered', 'n/a')}</td><td>{pd}</td><td>{ls}</td><td>{fr}</td><td><a href='{viewer}'>overlay</a></td><td><a href='{vid}/transition.mp4'>transition</a> · <a href='{vid}/overlay.mp4'>reprojection</a> · <a href='{vid}/before.jpg'>before</a> · <a href='{vid}/after.jpg'>after</a></td></tr>")
+        html.append(f"<tr><td>{m['title']}</td><td>{m['frames_published']}</td><td>{m.get('reference_registered', 'n/a')}</td><td>{pd}</td><td>{ls}</td><td>{fr}</td><td><a href='{viewer}'>overlay</a></td><td><a href='http://127.0.0.1:8766/scenes/starred_undistort/{vid}/published/viewer/'>camera view published</a> · <a href='http://127.0.0.1:8766/scenes/starred_undistort/{vid}/pinhole/viewer/'>camera view undistorted</a> · <a href='{vid}/transition.mp4'>transition</a> · <a href='{vid}/overlay.mp4'>reprojection</a> · <a href='{vid}/before.jpg'>before</a> · <a href='{vid}/after.jpg'>after</a></td></tr>")
     md += ["", "Path disagreement: Sim(3) residual of the VGGT camera centres against the GLOMAP self-calibration path, as a fraction of its length. ",
            "Local scale: 20-frame window scale over the global scale. Focal ratio: VGGT's estimated focal over the calibrated pinhole focal (1.0 = consistent)."]
     (REPORTS / "SUMMARY.md").write_text("\n".join(md) + "\n")

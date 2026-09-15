@@ -111,7 +111,9 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
         links = []
         if (REPORTS / vid / "transition.mp4").exists(): links.append(f'<a href="{vid}/transition.mp4">transition video</a>')
         if (REPORTS / vid / "overlay.mp4").exists(): links.append(f'<a href="{vid}/overlay.mp4">reprojection overlay video</a>')
-        if (SCENES / vid / "overlay" / "index.html").exists(): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/overlay/index.html">overlay viewer</a>')
+        if (SCENES / vid / "overlay" / "index.html").exists(): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/overlay/index.html">3D overlay viewer</a>')
+        if (SCENES / vid / "published" / "viewer" / "scene_meta.json").exists(): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/published/viewer/">camera view: published</a>')
+        if any((SCENES / vid / "pinhole" / "viewer" / "camera_view_assets").glob("*_overlay.jpg")): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/pinhole/viewer/">camera view: undistorted</a>')
         err = f'<div class="err">{rec.get("error", "")}</div>' if st == "failed" else ""
         el = f"{rec.get('elapsed_s', 0) // 60} min" if rec.get("elapsed_s") else ""
         rows.append(f'<tr class="{st}"><td><b>{s["title"]}</b><br><small>{vid} &middot; {s["published_frames"]} frames</small>{err}</td>'
@@ -169,7 +171,7 @@ class PostQueue:
 # ---------------------------------------------------------------- stages
 
 def stage_pod(args, state) -> dict:
-    pod_id = args.pod_id or state.get("pod", {}).get("id")
+    pod_id = args.pod_id or ("" if args.create_pod else state.get("pod", {}).get("id"))
     if not pod_id and args.create_pod:
         stop = (now_utc() + dt.timedelta(hours=args.hours)).strftime("%Y-%m-%dT%H:%M:%SZ")
         term = (now_utc() + dt.timedelta(hours=args.hours + 0.5)).strftime("%Y-%m-%dT%H:%M:%SZ")
