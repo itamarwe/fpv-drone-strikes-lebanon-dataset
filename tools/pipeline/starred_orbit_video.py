@@ -73,8 +73,10 @@ def make(scene: dict, cycles: int, sweep_deg: float, hold_s: float, fade_s: floa
     # alpha schedule: cycles x (hold before, fade to after, hold after, fade to before)
     ease = lambda x: 0.5 - 0.5 * np.cos(np.pi * x)
     alphas = []
-    for _ in range(cycles):
-        alphas += [0.0] * hold + [ease((k + 1) / fade) for k in range(fade)] + [1.0] * hold + [1 - ease((k + 1) / fade) for k in range(fade)]
+    for c in range(cycles):
+        alphas += [0.0] * hold + [ease((k + 1) / fade) for k in range(fade)] + [1.0] * hold
+        if c < cycles - 1:  # end the clip on AFTER: no fade back before the cut to the next scene
+            alphas += [1 - ease((k + 1) / fade) for k in range(fade)]
     total = len(alphas); path_b = np.array([c["position"] for c in b["cams"]]); cloud_ctr = np.median(b["P"], axis=0)
     for i, alpha in enumerate(alphas):
         theta = np.radians(sweep_deg) * i / max(1, total - 1)
