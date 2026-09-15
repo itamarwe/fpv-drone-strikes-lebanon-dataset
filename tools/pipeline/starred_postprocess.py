@@ -184,10 +184,12 @@ def write_overlay(vid: str, before: dict, after: dict, meta_pub: dict, out: Path
     out.mkdir(parents=True, exist_ok=True)
     layers = []
     for i, (label, run, img_url) in enumerate((("published product (raw frames)", before, "../published/images/{name}"), ("undistorted to pinhole", after, "../pinhole/frames/{name}"))):
+        cva = "../published/viewer/camera_view_assets/" if i == 0 else "../pinhole/viewer/camera_view_assets/"
+        image_urls = {"actual": cva + "{stem}.jpg", "render": cva + "{stem}_vggt_render.jpg", "overlay": cva + "{stem}_overlay.jpg"}
         run["P"].astype("<f4").tofile(out / f"layer{i}_points.bin"); run["C"].astype(np.uint8).tofile(out / f"layer{i}_colors.bin")
         cams = [{"frame": c["frame"], "position": c["position"].tolist(), "right": c["right"].tolist(), "down": c["down"].tolist(), "forward": c["forward"].tolist()} for c in run["cams"]]
         layers.append({"key": f"layer{i}", "label": label, "colour": COLOURS[i % len(COLOURS)], "points": int(len(run["P"])), "cameras": cams,
-                       "alignment": {"reference": i == 0, **({} if i == 0 else align)}, "frame_image_url": img_url,
+                       "alignment": {"reference": i == 0, **({} if i == 0 else align)}, "frame_image_url": img_url, "image_urls": image_urls,
                        "frame_names": [f"f_{c['frame']:06d}.jpg" for c in run["cams"]]})
     meta = {"title": title, "scale_m_per_unit": meta_pub.get("default_scale_m_per_unit"), "layers": layers,
             "ground_grid": meta_pub.get("ground_grid"), "scene_alignment_quaternion": meta_pub.get("scene_alignment_quaternion"),
