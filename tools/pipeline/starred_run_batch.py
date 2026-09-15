@@ -230,9 +230,13 @@ def stage_calib_launch(args, state, scenes, ssh) -> None:
 
     Calibration (CPU: SIFT matching + GLOMAP) takes ~10 min per scene on 8 threads, longer than the GPU inference,
     so several chunks run side by side on the pod's cores; the scene loop only waits for its own scene's status."""
-    k = max(1, args.calib_jobs)
-    n = len(scenes); size = -(-n // k)
-    chunks = [scenes[i:i + size] for i in range(0, n, size)]
+    todo = [s for s in scenes if not (SCENES / s["video_id"] / "calib" / "glomap_fisheye" / "cameras.txt").exists()]
+    if not todo:
+        log("calib: every scene already has a local calibration; nothing to launch")
+        return
+    k = max(1, min(args.calib_jobs, len(todo)))
+    n = len(todo); size = -(-n // k)
+    chunks = [todo[i:i + size] for i in range(0, n, size)]
     launched = 0
     for j, chunk in enumerate(chunks):
         tag = "all" if j == 0 else f"chunk{j}"

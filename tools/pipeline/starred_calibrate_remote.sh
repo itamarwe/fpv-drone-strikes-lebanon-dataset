@@ -58,17 +58,25 @@ calibrate_one() {
   [ -d "$img" ] || { log "$vid: no images dir"; return; }
   mkdir -p "$final"
   if [ -s "$final/glomap_fisheye/cameras.txt" ] && [ -s "$final/status.json" ] && grep -q '"succeeded"' "$final/status.json"; then log "$vid: already calibrated"; return; fi
-  rm -rf "$cd"; mkdir -p "$out"
   local n; n=$(find "$img" -maxdepth 1 -name '*.jpg' | wc -l)
-  write_status "$final" running 0 "$n" "features"
   local t0; t0=$(date +%s)
-  if ! $COLMAP feature_extractor --database_path "$cd/db.db" --image_path "$img" --ImageReader.single_camera 1 \
-        --ImageReader.camera_model OPENCV_FISHEYE --SiftExtraction.use_gpu 0 --SiftExtraction.max_num_features 16384 \
-        --SiftExtraction.num_threads "$THREADS" > "$cd/log.txt" 2>&1; then
-    write_status "$final" failed 0 "$n" "feature_extractor failed"; return; fi
-  # COLMAP >= 3.10 fisheye pairs need a focal prior on the camera row. Images with (almost) no keypoints
-  # (blank impact frames at the end of strike videos) make COLMAP 3.11's FLANN matcher segfault: drop them.
-  python3 - "$cd/db.db" <<'PY'
+  local resume=0
+  if [ "${CALIB_RESUME:-0}" = "1" ] && [ -s "$cd/db_py.db" ]; then
+    # CALIB_RESUME=1: keep an existing pycolmap database (matching is the expensive part), redo transplant + GLOMAP
+    resume=1; log "$vid: resuming from existing pycolmap matches"
+    rm -rf "$cd/db.db" "$cd/db.db-wal" "$cd/db.db-shm" "$cd/glomap_sparse"; mkdir -p "$out"
+  else
+    rm -rf "$cd"; mkdir -p "$out"
+  fi
+  local flann_ok=0
+  if [ "$resume" = "0" ]; then
+    write_status "$final" running 0 "$n" "features"
+    if ! $COLMAP feature_extractor --database_path "$cd/db.db" --image_path "$img" --ImageReader.single_camera 1 \
+          --ImageReader.camera_model OPENCV_FISHEYE --SiftExtraction.use_gpu 0 --SiftExtraction.max_num_features 16384 \
+          --SiftExtraction.num_threads "$THREADS" > "$cd/log.txt" 2>&1; then
+      cp "$cd/log.txt" "$final/log.txt" 2>/dev/null; write_status "$final" failed 0 "$n" "feature_extractor failed"; return; fi
+    # COLMAP >= 3.10 fisheye pairs need a focal prior on the camera row; drop images with (almost) no keypoints.
+    python3 - "$cd/db.db" <<'PY'
 import sqlite3, sys
 c = sqlite3.connect(sys.argv[1]); c.execute("UPDATE cameras SET prior_focal_length=1")
 weak = [r[0] for r in c.execute("SELECT i.image_id FROM images i LEFT JOIN keypoints k ON k.image_id = i.image_id WHERE k.rows IS NULL OR k.rows < 64")]
@@ -77,15 +85,20 @@ for iid in weak:
         c.execute(f"DELETE FROM {tbl} WHERE image_id = ?", (iid,))
 c.commit(); print(f"[calib] dropped {len(weak)} images with < 64 keypoints", flush=True); c.close()
 PY
-  write_status "$final" running 0 "$n" "matching"
-  if ! $COLMAP exhaustive_matcher --database_path "$cd/db.db" --SiftMatching.use_gpu 0 --SiftMatching.num_threads "$THREADS" >> "$cd/log.txt" 2>&1; then
+    write_status "$final" running 0 "$n" "matching"
+    if $COLMAP exhaustive_matcher --database_path "$cd/db.db" --SiftMatching.use_gpu 0 --SiftMatching.num_threads "$THREADS" >> "$cd/log.txt" 2>&1; then
+      flann_ok=1
+    fi
+  fi
+  if [ "$flann_ok" = "0" ]; then
     # COLMAP 3.11's FLANN matcher segfaults deterministically on about half of these videos (block [1/3,2/3]).
     # Fallback: pycolmap (faiss matcher, no FLANN) computes features + matches in its own database, then the
     # keypoints/descriptors/matches/geometries are transplanted into a COLMAP 3.11 database that GLOMAP 1.1 can read.
-    log "$vid: FLANN matcher failed, falling back to pycolmap matching + transplant"
-    write_status "$final" running 0 "$n" "matching (pycolmap fallback)"
-    rm -f "$cd/db.db" "$cd/db.db-wal" "$cd/db.db-shm" "$cd/db_py.db"*
-    if ! "$PYCOLMAP_PY" - "$cd/db_py.db" "$img" "$THREADS" >> "$cd/log.txt" 2>&1 <<'PY'
+    if [ "$resume" = "0" ]; then
+      log "$vid: FLANN matcher failed, falling back to pycolmap matching + transplant"
+      write_status "$final" running 0 "$n" "matching (pycolmap fallback)"
+      rm -f "$cd/db.db" "$cd/db.db-wal" "$cd/db.db-shm" "$cd/db_py.db"*
+      if ! "$PYCOLMAP_PY" - "$cd/db_py.db" "$img" "$THREADS" >> "$cd/log.txt" 2>&1 <<'PY'
 import sqlite3, sys
 import pycolmap
 db, img, threads = sys.argv[1], sys.argv[2], int(sys.argv[3])
@@ -97,7 +110,9 @@ mo = pycolmap.FeatureMatchingOptions(); mo.use_gpu = False; mo.num_threads = thr
 pycolmap.match_exhaustive(db, matching_options=mo)
 print("[calib] pycolmap features + matches done", flush=True)
 PY
-    then cp "$cd/log.txt" "$final/log.txt" 2>/dev/null; write_status "$final" failed 0 "$n" "pycolmap fallback failed"; return; fi
+      then cp "$cd/log.txt" "$final/log.txt" 2>/dev/null; write_status "$final" failed 0 "$n" "pycolmap fallback failed"; return; fi
+    fi
+    write_status "$final" running 0 "$n" "transplanting matches"
     # a fresh 3.11 schema with the same images (tiny feature set, replaced by the transplant)
     $COLMAP feature_extractor --database_path "$cd/db.db" --image_path "$img" --ImageReader.single_camera 1 \
         --ImageReader.camera_model OPENCV_FISHEYE --SiftExtraction.use_gpu 0 --SiftExtraction.max_num_features 256 \
@@ -106,13 +121,13 @@ PY
 import sqlite3, sys
 c = sqlite3.connect(sys.argv[1]); c.execute("UPDATE cameras SET prior_focal_length=1"); c.commit(); c.close()
 PY
-    if ! python3 "$ROOT/starred_transplant_matches.py" "$cd/db_py.db" "$cd/db.db" >> "$cd/log.txt" 2>&1; then
+    if ! "$PYCOLMAP_PY" "$ROOT/starred_transplant_matches.py" "$cd/db_py.db" "$cd/db.db" >> "$cd/log.txt" 2>&1; then
       cp "$cd/log.txt" "$final/log.txt" 2>/dev/null; write_status "$final" failed 0 "$n" "match transplant failed"; return; fi
   fi
   write_status "$final" running 0 "$n" "glomap"
   rm -rf "$cd/glomap_sparse"; mkdir -p "$cd/glomap_sparse"
   if ! $GLOMAP mapper --database_path "$cd/db.db" --image_path "$img" --output_path "$cd/glomap_sparse" >> "$cd/log.txt" 2>&1; then
-    write_status "$final" failed 0 "$n" "glomap mapper failed"; return; fi
+    cp "$cd/log.txt" "$final/log.txt" 2>/dev/null; write_status "$final" failed 0 "$n" "glomap mapper failed"; return; fi
   local model; model=$(ls -d "$cd"/glomap_sparse/*/ 2>/dev/null | head -1)
   [ -n "$model" ] || { write_status "$final" failed 0 "$n" "glomap produced no model"; return; }
   $COLMAP model_converter --input_path "$model" --output_path "$out" --output_type TXT >> "$cd/log.txt" 2>&1
@@ -121,7 +136,7 @@ PY
   local dt=$(( $(date +%s) - t0 ))
   mkdir -p "$final/glomap_fisheye"; cp "$out"/cameras.txt "$out"/images.txt "$out"/analyzer.txt "$final/glomap_fisheye/"; cp "$cd/log.txt" "$final/log.txt" 2>/dev/null || true
   log "$vid: registered $reg / $n images in ${dt}s; $(grep -E 'Mean reprojection|Registered' "$out/analyzer.txt" | tr '\n' ' ')"
-  write_status "$final" succeeded "$reg" "$n" "glomap OPENCV_FISHEYE, ${dt}s"
+  write_status "$final" succeeded "$reg" "$n" "glomap OPENCV_FISHEYE$([ "$flann_ok" = "0" ] && echo " via pycolmap transplant"), ${dt}s"
 }
 
 ensure_tools
