@@ -143,6 +143,7 @@ HTML = r"""<!doctype html>
   <div class="row"><span class="muted">point</span><input type="range" id="psize" min="0.001" max="0.02" step="0.001" value="0.004" style="width:120px" /><label class="t"><input type="checkbox" id="showPaths" checked /> paths</label></div>
   <div class="row"><input type="range" id="frame" min="0" max="1" value="0" /></div>
   <div class="row"><button id="play">▶</button><button id="fit">Fit</button><button id="follow">Follow camera</button><span id="frameText" class="muted"></span></div>
+  <div class="row" id="imgmodes"><span class="muted">frame</span><button data-m="actual">actual</button><button data-m="render">render</button><button data-m="overlay" class="on">overlay</button><span id="imgLayer" class="muted"></span></div>
   <img id="frameimg" alt="" />
 </div>
 <div class="foot">Drag to orbit · scroll to zoom · right-drag to pan. Runs are Sim(3)-aligned to the reference run on camera centres.</div>
@@ -214,7 +215,7 @@ function applyVisibility() {
   const inputs = [...list.querySelectorAll("input[name=lay]")];
   layers.forEach((L, i) => { const on = solo ? i === active : inputs[i].checked; L.pts.visible = on; L.pathG.visible = on && $("showPaths").checked; });
 }
-list.addEventListener("change", e => { const i = Number(e.target.dataset.i); if (solo) active = i; applyVisibility(); });
+list.addEventListener("change", e => { const i = Number(e.target.dataset.i); active = i; applyVisibility(); setFrame(Number($("frame").value)); });
 function setMode(s) { solo = s; $("modeSolo").classList.toggle("on", s); $("modeOverlay").classList.toggle("on", !s); list.querySelectorAll("input[name=lay]").forEach((el, i) => { el.type = s ? "radio" : "checkbox"; el.checked = s ? i === active : true; }); applyVisibility(); }
 $("modeSolo").onclick = () => setMode(true); $("modeOverlay").onclick = () => setMode(false);
 $("tint").onchange = e => { for (const L of layers) { const attr = L.pts.geometry.getAttribute("color"); if (e.target.checked) { for (let i = 0; i < attr.count; i++) attr.setXYZ(i, L.tintc.r, L.tintc.g, L.tintc.b); } else { attr.array.set(L.rgb); } attr.needsUpdate = true; } };
@@ -224,10 +225,14 @@ const nframes = layers[0].cameras.length; $("frame").max = String(nframes - 1);
 function setFrame(i) {
   for (const L of layers) { if (L.cur) L.cur.removeFromParent(); const c = L.cameras[Math.min(i, L.cameras.length - 1)]; L.cur = frustum(c, L.tintc, extent * 0.03); L.pathG.add(L.cur); }
   const ref = layers[0].cameras[i]; $("frameText").textContent = `frame ${i + 1}/${nframes}`;
-  const name = layers[active].frame_names[i] || layers[0].frame_names[i]; $("frameimg").src = base + layers[active].frame_image_url.replace("{name}", name);
+  const L = layers[active]; const name = L.frame_names[i] || layers[0].frame_names[i]; const stem = name.replace(/\.[^.]+$/, "");
+  const tpl = (L.image_urls && L.image_urls[imgMode]) || L.frame_image_url;
+  $("frameimg").src = base + tpl.replace("{name}", name).replace("{stem}", stem); $("imgLayer").textContent = L.label;
   if (following) { root.updateMatrixWorld(true); const c = v3(ref.position), fw = v3(ref.forward), up = v3(ref.down).multiplyScalar(-1);
     camera.position.copy(c.clone().sub(fw.clone().multiplyScalar(extent * 0.12)).add(up.clone().multiplyScalar(extent * 0.05)).applyMatrix4(root.matrixWorld)); controls.target.copy(c.clone().add(fw.clone().multiplyScalar(extent * 0.1)).applyMatrix4(root.matrixWorld)); }
 }
+let imgMode = "overlay";
+document.querySelectorAll("#imgmodes button").forEach(b => { b.onclick = () => { imgMode = b.dataset.m; document.querySelectorAll("#imgmodes button").forEach(x => x.classList.toggle("on", x === b)); setFrame(Number($("frame").value)); }; });
 $("frame").oninput = e => setFrame(Number(e.target.value));
 let playing = false, acc = 0; $("play").onclick = () => { playing = !playing; $("play").textContent = playing ? "❚❚" : "▶"; };
 $("follow").onclick = () => { following = !following; $("follow").classList.toggle("on", following); setFrame(Number($("frame").value)); };
