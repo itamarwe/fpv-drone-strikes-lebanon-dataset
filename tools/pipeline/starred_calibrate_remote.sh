@@ -139,7 +139,8 @@ PY
   write_status "$final" succeeded "$reg" "$n" "glomap OPENCV_FISHEYE$([ "$flann_ok" = "0" ] && echo " via pycolmap transplant"), ${dt}s"
 }
 
-ensure_tools
+# several chunks start together on a fresh pod: only one may install miniforge / the conda env at a time
+mkdir -p "$ROOT"; exec 9>"$ROOT/.tools.lock"; flock 9; ensure_tools; flock -u 9
 if [ "$#" -gt 0 ]; then LIST=("$@"); else mapfile -t LIST < <(ls "$ROOT" | while read -r d; do [ -d "$ROOT/$d/images" ] && echo "$d"; done); fi
 for vid in "${LIST[@]}"; do calibrate_one "$vid"; done
 log "all done"
