@@ -40,6 +40,7 @@ REPORTS = ROOT / "reports" / BATCH
 BG = (10, 11, 13); WHITE = (255, 255, 255); RED = (255, 77, 109); CYAN = (54, 228, 255); ORANGE = (255, 176, 0)
 GATE = __import__("os").environ.get("FPV_UNDISTORT_GATE", "0") == "1"  # only build media for scenes that improved
 GATE_MAX_FX_RATIO = 1.45
+GROUND_WARN_DEG = 10.0  # ground normals of the two runs further apart than this get a "check ground" flag (not a rejection)
 TAGS = {"before": ("BEFORE  raw frames", RED), "after": ("AFTER  undistorted to pinhole", CYAN)}
 
 
@@ -237,6 +238,16 @@ def process(scene: dict, rng, skip_video: bool) -> dict | None:
         metrics["after_focal"] = focal_ratio(base / "pinhole")
     except Exception as exc:
         metrics["after_focal_error"] = str(exc)
+    # ground agreement: each run fits its own ground plane; map the new run's normal into the published frame through
+    # the camera-path alignment and measure the angle between the two. A large angle means the two reconstructions
+    # disagree about which way is down, and one of the fits (not necessarily the new one) should be inspected.
+    gn, gp = after_raw["meta"].get("ground_grid"), before["meta"].get("ground_grid")
+    if gn and gp:
+        n_new = R @ np.asarray(gn["normal"], float); n_new /= np.linalg.norm(n_new)
+        n_pub = np.asarray(gp["normal"], float) / np.linalg.norm(gp["normal"])
+        metrics["ground"] = {"angle_to_published_deg": float(np.degrees(np.arccos(np.clip(abs(n_new @ n_pub), -1, 1)))),
+                             "inliers_new": gn.get("inlier_count"), "inliers_published": gp.get("inlier_count"),
+                             "warn": bool(np.degrees(np.arccos(np.clip(abs(n_new @ n_pub), -1, 1))) > GROUND_WARN_DEG)}
     # improvement gate: the expensive media is only produced when the lens correction demonstrably helped
     bvr0, avr0 = metrics.get("before_vs_reference", {}), metrics.get("after_vs_reference", {})
     fx0 = metrics.get("after_focal", {}).get("fx_ratio_vggt_over_reference")

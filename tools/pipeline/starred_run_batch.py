@@ -110,6 +110,8 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
         if not cal_txt and m.get("reference_registered"): cal_txt = f"{m['reference_registered']}/{m.get('frames_published', '')}"
         lens = m.get("calibration", {})
         lens_txt = f"f = {lens['fx_px']:.0f} px, HFOV {lens['hfov_deg']:.0f}&deg;<br><small>{lens['model']} k = {', '.join(f'{x:.3f}' for x in lens.get('distortion_params', [])[:4])}</small>" if lens else ""
+        gr = m.get("ground", {})
+        ground_txt = (f'<span class="{"no" if gr.get("warn") else ""}">{gr["angle_to_published_deg"]:.1f}&deg;</span>' + ("<br><small>check ground</small>" if gr.get("warn") else "")) if gr else ""
         if "improved" in m:
             verdict = '<span class="ok">IMPROVED</span>' if m["improved"] else '<span class="no">not improved</span><br><small>' + "; ".join(m.get("gate_reasons", [])) + "</small>"
         else:
@@ -125,7 +127,7 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
         err = f'<div class="err">{rec.get("error", "")}</div>' if st == "failed" else ""
         el = f"{rec.get('elapsed_s', 0) // 60} min" if rec.get("elapsed_s") else ""
         rows.append(f'<tr class="{st}"><td><b>{s["title"]}</b><br><small>{vid} &middot; {s["published_frames"]} frames</small>{err}</td>'
-                    f'<td class="st">{st}</td><td>{verdict}</td><td>{lens_txt}</td><td>{cal_txt}</td><td>{el}</td><td>{path_txt}</td><td>{drift_txt}</td><td>{fx_txt}</td>'
+                    f'<td class="st">{st}</td><td>{verdict}</td><td>{lens_txt}</td><td>{cal_txt}</td><td>{el}</td><td>{path_txt}</td><td>{drift_txt}</td><td>{fx_txt}</td><td>{ground_txt}</td>'
                     f'<td class="imgs">{imgs}<div>{" &middot; ".join(links)}</div></td></tr>')
     html = f"""<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="60"><title>Starred undistort re-run</title>
 <style>body{{font:14px system-ui;background:#0c0d0f;color:#e8ebef;margin:20px}}table{{border-collapse:collapse;width:100%}}td,th{{padding:8px 10px;border-bottom:1px solid #2a3037;vertical-align:top;text-align:left}}
@@ -135,9 +137,9 @@ th{{color:#8b95a1;font-weight:600}}a{{color:#36e4ff}}img{{width:300px;border-rad
 <meta name="viewport" content="width=device-width, initial-scale=1"><h1>{BATCH}: undistort-to-pinhole re-run</h1>
 <div class="sum">updated {now_utc().strftime('%Y-%m-%d %H:%M:%S')} UTC &middot; pod {pod.get('id', '-')} (stop after {pod.get('stop_after', '-')}) &middot;
 <b>{counts.get('done', 0)} done</b>, {counts.get('running', 0)} running, {counts.get('failed', 0)} failed, {counts.get('pending', 0)} pending &middot; page refreshes every minute</div>
-<table><tr><th>Scene</th><th>Status</th><th>Result</th><th>Calibrated lens</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Before / after</th></tr>
+<table><tr><th>Scene</th><th>Status</th><th>Result</th><th>Calibrated lens</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Ground vs published</th><th>Before / after</th></tr>
 {''.join(rows)}</table>
-<p class="sum">Path disagreement: Sim(3) residual of the VGGT camera path against the GLOMAP self-calibration path, fraction of its length. Local scale std: 20-frame window scale over global. Focal ratio: VGGT's focal estimate over the calibrated pinhole focal (1.0 = consistent). Before = published product, after = undistorted re-run.</p>
+<p class="sum">Path disagreement: Sim(3) residual of the VGGT camera path against the GLOMAP self-calibration path, fraction of its length. Local scale std: 20-frame window scale over global. Focal ratio: VGGT's focal estimate over the calibrated pinhole focal (1.0 = consistent). Ground vs published: angle between the ground plane fitted on the new run and the published scene's ground, compared through the camera-path alignment; above 10&deg; one of the two fits needs a look (a warning, not a rejection). Before = published product, after = undistorted re-run.</p>
 """
     with _STATUS_LOCK:  # the refresh thread and the main loop both write this page
         tmp = STATUS_HTML.with_name(f"status.{threading.get_ident()}.tmp"); tmp.write_text(html); tmp.replace(STATUS_HTML)
