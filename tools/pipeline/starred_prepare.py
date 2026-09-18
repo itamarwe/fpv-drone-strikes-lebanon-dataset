@@ -20,6 +20,7 @@ import csv
 import gzip
 import json
 import shutil
+import time
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -36,9 +37,17 @@ def download(url: str, dest: Path, refresh: bool) -> None:
         return
     dest.parent.mkdir(parents=True, exist_ok=True)
     req = urllib.request.Request(url, headers={"User-Agent": "fpv-starred-undistort/1"})
-    with urllib.request.urlopen(req, timeout=120) as r, open(dest.with_suffix(dest.suffix + ".part"), "wb") as f:
-        shutil.copyfileobj(r, f)
-    dest.with_suffix(dest.suffix + ".part").replace(dest)
+    last = None
+    for attempt in range(6):  # CloudFront answers bursts with transient 403/5xx: back off and retry
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r, open(dest.with_suffix(dest.suffix + ".part"), "wb") as f:
+                shutil.copyfileobj(r, f)
+            dest.with_suffix(dest.suffix + ".part").replace(dest)
+            return
+        except Exception as exc:
+            last = exc
+            time.sleep(1.5 * (attempt + 1))
+    raise RuntimeError(f"download failed after retries: {url}: {last}")
 
 
 def expand_gzip(path: Path) -> None:
@@ -95,14 +104,22 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--refresh", action="store_true")
     ap.add_argument("--only", nargs="*", default=None, help="video ids to stage (default all)")
-    ap.add_argument("--workers", type=int, default=6)
+    ap.add_argument("--workers", type=int, default=3)
     args = ap.parse_args()
     spec = json.loads(SPEC.read_text())
     scenes = [s for s in spec["scenes"] if not args.only or s["video_id"] in args.only]
+    def safe(s):
+        try:
+            return stage(s, spec["cdn_base"], args.refresh)
+        except Exception as exc:  # one unreachable scene must not stop the batch
+            return {"video_id": s["video_id"], "error": str(exc)[:300]}
     with ThreadPoolExecutor(args.workers) as ex:
-        results = list(ex.map(lambda s: stage(s, spec["cdn_base"], args.refresh), scenes))
+        results = list(ex.map(safe, scenes))
     for r in results:
-        print(f"{r['frames']:4d} frames {r['image_size'][0]}x{r['image_size'][1]} scale {r['scale']}  {r['video_id']}")
+        if "error" in r:
+            print(f"FAILED {r['video_id']}: {r['error']}")
+        else:
+            print(f"{r['frames']:4d} frames {r['image_size'][0]}x{r['image_size'][1]} scale {r['scale']}  {r['video_id']}")
     (OUT / "staged.json").write_text(json.dumps(results, indent=2))
     print("staged", len(results), "scenes under", OUT)
     return 0

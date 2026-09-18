@@ -410,8 +410,10 @@ def main() -> int:
     ap.add_argument("--deadline-utc", default="", help="do not start a new scene after this ISO time (default: pod stop_after - 20 min)")
     ap.add_argument("--est-scene-min", type=float, default=9.0, help="estimated minutes per scene for the deadline guard")
     ap.add_argument("--calib-timeout-s", type=int, default=3600)
-    ap.add_argument("--calib-jobs", type=int, default=3, help="parallel calibration jobs on the pod (contiguous chunks in run order)")
-    ap.add_argument("--calib-threads", type=int, default=32, help="SIFT/matching threads per calibration job")
+    # GLOMAP takes 10-15 min per scene and only keeps ~10 cores busy, while VGGT-Omega needs 3-4 min: calibration is the
+    # critical path, so run as many chunks as the pod's cores allow (6 x 24 threads fits a 128+ core pod).
+    ap.add_argument("--calib-jobs", type=int, default=6, help="parallel calibration jobs on the pod (contiguous chunks in run order)")
+    ap.add_argument("--calib-threads", type=int, default=24, help="SIFT/matching threads per calibration job")
     ap.add_argument("--wait-ssh-s", type=int, default=900)
     ap.add_argument("--max-points-k", type=float, default=3000.0)
     ap.add_argument("--artifact-max-points", type=int, default=3_000_000)
