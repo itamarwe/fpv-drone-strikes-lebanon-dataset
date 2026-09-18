@@ -32,14 +32,15 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+BATCH = __import__("os").environ.get("FPV_UNDISTORT_BATCH", "starred_undistort")  # batch name: benchmarks/<BATCH>, scenes/<BATCH>, reports/<BATCH>
 sys.path.insert(0, str(ROOT / "tools"))
 import run_vggt_omega_direct_on_runpod as direct  # noqa: E402
 
-SPEC = ROOT / "benchmarks" / "starred_undistort" / "starred_scenes.json"
-STATE = ROOT / "benchmarks" / "starred_undistort" / "batch_status.json"
-LOG = ROOT / "benchmarks" / "starred_undistort" / "batch_log.txt"
-SCENES = ROOT / "scenes" / "starred_undistort"
-REPORTS = ROOT / "reports" / "starred_undistort"
+SPEC = ROOT / "benchmarks" / BATCH / "starred_scenes.json"
+STATE = ROOT / "benchmarks" / BATCH / "batch_status.json"
+LOG = ROOT / "benchmarks" / BATCH / "batch_log.txt"
+SCENES = ROOT / "scenes" / BATCH
+REPORTS = ROOT / "reports" / BATCH
 STATUS_HTML = REPORTS / "status.html"
 _STATUS_LOCK = threading.Lock()
 REMOTE_ROOT = "/workspace/starred"
@@ -106,30 +107,49 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
         drift_txt = f"{b['local_scale_std']:.3f} &rarr; {a['local_scale_std']:.3f}" if "local_scale_std" in a and "local_scale_std" in b else ""
         fx_txt = f"{m['after_focal']['fx_ratio_vggt_over_reference']:.2f}x" if "after_focal" in m else ""
         cal = rec.get("calibration", {}); cal_txt = f"{cal.get('registered')}/{cal.get('images')}" if cal.get("registered") is not None else ""
+        if not cal_txt and m.get("reference_registered"): cal_txt = f"{m['reference_registered']}/{m.get('frames_published', '')}"
+        lens = m.get("calibration", {})
+        lens_txt = f"f = {lens['fx_px']:.0f} px, HFOV {lens['hfov_deg']:.0f}&deg;<br><small>{lens['model']} k = {', '.join(f'{x:.3f}' for x in lens.get('distortion_params', [])[:4])}</small>" if lens else ""
+        gr = m.get("ground", {})
+        ground_txt = (f'<span class="{"no" if gr.get("warn") else ""}">{gr["angle_to_published_deg"]:.1f}&deg;</span>' + ("<br><small>check ground</small>" if gr.get("warn") else "")) if gr else ""
+        if "improved" in m:
+            verdict = '<span class="ok">IMPROVED</span>' if m["improved"] else '<span class="no">not improved</span><br><small>' + "; ".join(m.get("gate_reasons", [])) + "</small>"
+        else:
+            verdict = ""
         before_img, after_img = REPORTS / vid / "before.jpg", REPORTS / vid / "after.jpg"
         imgs = "".join(f'<a href="{vid}/{n}.jpg"><img src="{vid}/{n}.jpg" alt="{n}"></a>' for n in ("before", "after") if (REPORTS / vid / f"{n}.jpg").exists())
         links = []
         if (REPORTS / vid / "transition.mp4").exists(): links.append(f'<a href="{vid}/transition.mp4">transition video</a>')
         if (REPORTS / vid / "overlay.mp4").exists(): links.append(f'<a href="{vid}/overlay.mp4">reprojection overlay video</a>')
-        if (SCENES / vid / "overlay" / "index.html").exists(): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/overlay/index.html">3D overlay viewer</a>')
-        if (SCENES / vid / "published" / "viewer" / "scene_meta.json").exists(): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/published/viewer/">camera view: published</a>')
-        if any((SCENES / vid / "pinhole" / "viewer" / "camera_view_assets").glob("*_overlay.jpg")): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/pinhole/viewer/">camera view: undistorted</a>')
+        if (SCENES / vid / "overlay" / "index.html").exists(): links.append(f'<a href="/scenes/{BATCH}/{vid}/overlay/index.html">3D overlay viewer</a>')
+        if (SCENES / vid / "published" / "viewer" / "scene_meta.json").exists(): links.append(f'<a href="/scenes/{BATCH}/{vid}/published/viewer/">3D model: published + camera view</a>')
+        # the lens-corrected 3D model is linked for every finished scene, improved or not; the label says whether the
+        # per-frame camera overlays are already rendered inside it
+        if (SCENES / vid / "pinhole" / "viewer" / "scene_meta.json").exists():
+            has_cam = any((SCENES / vid / "pinhole" / "viewer" / "camera_view_assets").glob("*_overlay.jpg"))
+            links.append(f'<a href="/scenes/{BATCH}/{vid}/pinhole/viewer/">3D model: lens-corrected{" + camera view" if has_cam else ""}</a>')
         err = f'<div class="err">{rec.get("error", "")}</div>' if st == "failed" else ""
         el = f"{rec.get('elapsed_s', 0) // 60} min" if rec.get("elapsed_s") else ""
         rows.append(f'<tr class="{st}"><td><b>{s["title"]}</b><br><small>{vid} &middot; {s["published_frames"]} frames</small>{err}</td>'
-                    f'<td class="st">{st}</td><td>{cal_txt}</td><td>{el}</td><td>{path_txt}</td><td>{drift_txt}</td><td>{fx_txt}</td>'
+                    f'<td class="st">{st}</td><td>{verdict}</td><td>{lens_txt}</td><td>{cal_txt}</td><td>{el}</td><td>{path_txt}</td><td>{drift_txt}</td><td>{fx_txt}</td><td>{ground_txt}</td>'
                     f'<td class="imgs">{imgs}<div>{" &middot; ".join(links)}</div></td></tr>')
+    if not pod.get("id"):
+        pod_txt = "no pod yet"
+    elif pod.get("down_utc"):
+        pod_txt = f"pod {pod['id']} deleted at {pod['down_utc'][:19].replace('T', ' ')} UTC" + (" &middot; <b>waiting for the next session</b>" if counts.get("pending", 0) or counts.get("running", 0) else " &middot; <b>batch complete</b>")
+    else:
+        pod_txt = f"pod {pod['id']} {pod.get('phase', 'running')} (cloud stop {pod.get('stop_after', '-')})"
     html = f"""<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="60"><title>Starred undistort re-run</title>
 <style>body{{font:14px system-ui;background:#0c0d0f;color:#e8ebef;margin:20px}}table{{border-collapse:collapse;width:100%}}td,th{{padding:8px 10px;border-bottom:1px solid #2a3037;vertical-align:top;text-align:left}}
 th{{color:#8b95a1;font-weight:600}}a{{color:#36e4ff}}img{{width:300px;border-radius:6px;margin:2px 6px 2px 0;border:1px solid #2a3037}}.imgs{{white-space:nowrap}}
 .st{{font-weight:700;text-transform:uppercase}}tr.done .st{{color:#36e4ff}}tr.failed .st{{color:#ff4d6d}}tr.running .st{{color:#ffd60a}}tr.pending .st{{color:#8b95a1}}.err{{color:#ff4d6d;font-size:12px;margin-top:4px}}
-.sum{{color:#8b95a1;margin-bottom:14px}}small{{color:#8b95a1}}</style>
-<h1>Starred scenes: undistort-to-pinhole re-run</h1>
-<div class="sum">updated {now_utc().strftime('%Y-%m-%d %H:%M:%S')} UTC &middot; pod {pod.get('id', '-')} (stop after {pod.get('stop_after', '-')}) &middot;
+.ok{{color:#36e4ff;font-weight:700}}.no{{color:#ffb000;font-weight:700}}.sum{{color:#8b95a1;margin-bottom:14px}}@media(max-width:900px){{img{{width:46vw}}td,th{{padding:6px 5px;font-size:12px}}}}small{{color:#8b95a1}}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1"><h1>{BATCH}: undistort-to-pinhole re-run</h1>
+<div class="sum">updated {now_utc().strftime('%Y-%m-%d %H:%M:%S')} UTC &middot; {pod_txt} &middot;
 <b>{counts.get('done', 0)} done</b>, {counts.get('running', 0)} running, {counts.get('failed', 0)} failed, {counts.get('pending', 0)} pending &middot; page refreshes every minute</div>
-<table><tr><th>Scene</th><th>Status</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Before / after</th></tr>
+<table><tr><th>Scene</th><th>Status</th><th>Result</th><th>Calibrated lens</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Ground vs published</th><th>Before / after</th></tr>
 {''.join(rows)}</table>
-<p class="sum">Path disagreement: Sim(3) residual of the VGGT camera path against the GLOMAP self-calibration path, fraction of its length. Local scale std: 20-frame window scale over global. Focal ratio: VGGT's focal estimate over the calibrated pinhole focal (1.0 = consistent). Before = published product, after = undistorted re-run.</p>
+<p class="sum">Path disagreement: Sim(3) residual of the VGGT camera path against the GLOMAP self-calibration path, fraction of its length. Local scale std: 20-frame window scale over global. Focal ratio: VGGT's focal estimate over the calibrated pinhole focal (1.0 = consistent). Ground vs published: angle between the ground plane fitted on the new run and the published scene's ground, compared through the camera-path alignment; above 10&deg; one of the two fits needs a look (a warning, not a rejection). Before = published product, after = undistorted re-run.</p>
 """
     with _STATUS_LOCK:  # the refresh thread and the main loop both write this page
         tmp = STATUS_HTML.with_name(f"status.{threading.get_ident()}.tmp"); tmp.write_text(html); tmp.replace(STATUS_HTML)
@@ -186,7 +206,7 @@ def stage_pod(args, state) -> dict:
         pod = json.loads(out.stdout)
         pod_id = pod["id"]
         state["pod"] = {"id": pod_id, "name": name, "created_utc": now_utc().isoformat(), "stop_after": stop, "terminate_after": term,
-                        "cost_per_hr": pod.get("costPerHr")}
+                        "cost_per_hr": pod.get("costPerHr"), "phase": "starting"}
         save_state(state)
         log(f"pod {pod_id} created, costPerHr={pod.get('costPerHr')}")
     if not pod_id:
@@ -402,8 +422,10 @@ def main() -> int:
     ap.add_argument("--deadline-utc", default="", help="do not start a new scene after this ISO time (default: pod stop_after - 20 min)")
     ap.add_argument("--est-scene-min", type=float, default=9.0, help="estimated minutes per scene for the deadline guard")
     ap.add_argument("--calib-timeout-s", type=int, default=3600)
-    ap.add_argument("--calib-jobs", type=int, default=3, help="parallel calibration jobs on the pod (contiguous chunks in run order)")
-    ap.add_argument("--calib-threads", type=int, default=32, help="SIFT/matching threads per calibration job")
+    # GLOMAP takes 10-15 min per scene and only keeps ~10 cores busy, while VGGT-Omega needs 3-4 min: calibration is the
+    # critical path, so run as many chunks as the pod's cores allow (6 x 24 threads fits a 128+ core pod).
+    ap.add_argument("--calib-jobs", type=int, default=6, help="parallel calibration jobs on the pod (contiguous chunks in run order)")
+    ap.add_argument("--calib-threads", type=int, default=24, help="SIFT/matching threads per calibration job")
     ap.add_argument("--wait-ssh-s", type=int, default=900)
     ap.add_argument("--max-points-k", type=float, default=3000.0)
     ap.add_argument("--artifact-max-points", type=int, default=3_000_000)
@@ -423,6 +445,12 @@ def main() -> int:
     ssh = None
     if stages & {"pod", "setup", "push", "calib", "scenes"}:
         ssh = stage_pod(args, state)
+    def phase(name):
+        state.setdefault("pod", {})["phase"] = name; save_state(state)
+        try: write_status_html(state, scenes)
+        except Exception as exc: log(f"status page error: {exc}")
+    if ssh is not None:
+        phase("installing VGGT-Omega" if "setup" in stages else "connected")
     if "setup" in stages:
         stage_setup(args, state, ssh)
     if "push" in stages:
@@ -430,6 +458,7 @@ def main() -> int:
     if "calib" in stages:
         stage_calib_launch(args, state, scenes, ssh)
     if "scenes" in stages:
+        phase("running scenes")
         deadline = None
         if args.deadline_utc:
             deadline = dt.datetime.fromisoformat(args.deadline_utc.replace("Z", "+00:00"))
@@ -438,14 +467,38 @@ def main() -> int:
         done = 0
         REPORTS.mkdir(parents=True, exist_ok=True)
         post_q = PostQueue()
+        def calib_states() -> dict:
+            out = ssh_run(ssh, f"cd {REMOTE_ROOT} 2>/dev/null && grep -H -o '\"status\": \"[a-z]*\"' */calib/status.json 2>/dev/null", check=False).stdout
+            return {line.split("/", 1)[0]: line.rsplit('"', 2)[-2] for line in out.splitlines() if "/calib/status.json" in line}
+
+        def is_open(s) -> bool:
+            st = state["scenes"].get(s["video_id"], {}).get("status")
+            return st != "done" and not (st == "failed" and not args.retry_failed)
+
+        retried = set()
         with StatusPager(state, scenes):
-            for s in scenes:
-                if args.max_scenes and done >= args.max_scenes:
+            # Take scenes in order of calibration readiness, not list order: several calibration jobs work on different
+            # parts of the list, and waiting for the head of the list leaves the GPU idle while later scenes are ready.
+            while True:
+                pending = [s for s in scenes if is_open(s) and s["video_id"] not in retried]
+                if not pending or (args.max_scenes and done >= args.max_scenes):
                     break
                 if deadline and now_utc() + dt.timedelta(minutes=args.est_scene_min) > deadline:
-                    log(f"deadline guard: not starting {s['video_id']} (deadline {deadline.isoformat()})")
+                    log(f"deadline guard: {len(pending)} scene(s) not started (deadline {deadline.isoformat()})")
                     break
+                remote = calib_states()
+                ready = [s for s in pending if (SCENES / s["video_id"] / "calib" / "glomap_fisheye" / "cameras.txt").exists()
+                         or remote.get(s["video_id"]) in ("succeeded", "failed")]
+                if not ready:
+                    jobs = ssh_run(ssh, f"cat {REMOTE_ROOT}/calib_*.status.json 2>/dev/null | grep -c '\"status\": \"running\"'", check=False).stdout.strip()
+                    if jobs in ("", "0"):  # no calibration job alive any more: let run_scene record the failures
+                        ready = pending[:1]
+                    else:
+                        time.sleep(30)
+                        continue
+                s = ready[0]
                 before = state["scenes"].get(s["video_id"], {}).get("status")
+                retried.add(s["video_id"])
                 run_scene(args, state, s, ssh)
                 try:
                     write_status_html(state, scenes)
