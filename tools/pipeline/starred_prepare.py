@@ -26,8 +26,9 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = ROOT / "benchmarks" / "starred_undistort" / "starred_scenes.json"
-OUT = ROOT / "scenes" / "starred_undistort"
+BATCH = __import__("os").environ.get("FPV_UNDISTORT_BATCH", "starred_undistort")  # batch name: benchmarks/<BATCH>, scenes/<BATCH>, reports/<BATCH>
+SPEC = ROOT / "benchmarks" / BATCH / "starred_scenes.json"
+OUT = ROOT / "scenes" / BATCH
 
 
 def download(url: str, dest: Path, refresh: bool) -> None:

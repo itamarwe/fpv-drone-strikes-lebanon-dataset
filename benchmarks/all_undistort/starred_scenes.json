@@ -1,0 +1,780 @@
+{
+  "schema_version": 1,
+  "source": "https://d2fioemadmrru3.cloudfront.net/data/videos.json (all published 3D scenes minus the starred batch)",
+  "captured_utc": "2026-09-18",
+  "cdn_base": "https://d2fioemadmrru3.cloudfront.net/",
+  "scenes": [
+    {
+      "video_id": "2026-06-17_force_position_kfar_tebnit_mmirleb_17590",
+      "scene_id": "2026-06-17_force_position_kfar_tebnit_mmirleb_17590_seg02_seg03",
+      "scene_path": "2026-06-17_force_position_kfar_tebnit_mmirleb_17590/2026-06-17_force_position_kfar_tebnit_mmirleb_17590_seg02_seg03",
+      "title": "Infiltrating Israeli army force position, outskirts of Kfar Tebnit (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-12_merkava_tank_yahmor_al_shqif",
+      "scene_id": "2026-06-12_merkava_tank_yahmor_al_shqif_seg02",
+      "scene_path": "2026-06-12_merkava_tank_yahmor_al_shqif/2026-06-12_merkava_tank_yahmor_al_shqif_seg02",
+      "title": "Merkava tank, eastern outskirts of Yohmor al-Shaqif (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595",
+      "scene_id": "2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595_seg03",
+      "scene_path": "2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595/2026-06-12_merkava_tank_beaufort_castle_mmirleb_17595_seg03",
+      "title": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "published_frames": 115,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone",
+      "scene_id": "2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone_seg02_seg03",
+      "scene_path": "2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone/2026-06-12_d9_armored_bulldozer_tayr_harfa_ababil_drone_seg02_seg03",
+      "title": "D9 bulldozer, Tayr Harfa (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-11_merkava_tank_tayr_harfa_ababil_drone",
+      "scene_id": "2026-06-11_merkava_tank_tayr_harfa_ababil_drone_seg03",
+      "scene_path": "2026-06-11_merkava_tank_tayr_harfa_ababil_drone/2026-06-11_merkava_tank_tayr_harfa_ababil_drone_seg03",
+      "title": "Merkava tank, Tayr Harfa (Ababil dive drone)",
+      "published_frames": 34,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-11_israeli_soldiers_adaissah_mmirleb_17602",
+      "scene_id": "2026-06-11_israeli_soldiers_adaissah_mmirleb_17602_seg01_seg02",
+      "scene_path": "2026-06-11_israeli_soldiers_adaissah_mmirleb_17602/2026-06-11_israeli_soldiers_adaissah_mmirleb_17602_seg01_seg02",
+      "title": "Israeli army soldiers, Adaisseh (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598",
+      "scene_id": "2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598_seg03_seg04",
+      "scene_path": "2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598/2026-06-11_d9_engineering_vehicle_beaufort_castle_mmirleb_17598_seg03_seg04",
+      "title": "D9 engineering vehicle, vicinity of Beaufort Castle (Ababil dive drone)",
+      "published_frames": 122,
+      "published_scale_m_per_unit": 72.38535294516481,
+      "published_calibration": {
+        "scale_m_per_vggt_unit": 72.38535294516481,
+        "real_length_m": 3.72,
+        "measured_vggt_units": 0.05139161237243768,
+        "source": "measured",
+        "measured_at": "2026-07-03T21:06:50Z"
+      },
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-10_merkava_tank_beaufort_castle",
+      "scene_id": "2026-06-10_merkava_tank_beaufort_castle_seg01_seg02",
+      "scene_path": "2026-06-10_merkava_tank_beaufort_castle/2026-06-10_merkava_tank_beaufort_castle_seg01_seg02",
+      "title": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-05_soldiers_khiam_mmirleb_17315",
+      "scene_id": "2026-06-05_soldiers_khiam_mmirleb_17315_seg01_seg02_seg03",
+      "scene_path": "2026-06-05_soldiers_khiam_mmirleb_17315/2026-06-05_soldiers_khiam_mmirleb_17315_seg01_seg02_seg03",
+      "title": "Israeli army soldiers, city of Khiam (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 95.27817171859127,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447",
+      "scene_id": "2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447_seg01",
+      "scene_path": "2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447/2026-06-05_merkava_tank_beaufort_castle_mmirleb_17447_seg01",
+      "title": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 104.64262832868971,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-05_humvee_near_khiam",
+      "scene_id": "2026-06-05_humvee_near_khiam_seg01_seg02",
+      "scene_path": "2026-06-05_humvee_near_khiam/2026-06-05_humvee_near_khiam_seg01_seg02",
+      "title": "Humvee carrying Israeli army soldiers, city of Khiam (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-04_merkava_tank_beaufort_castle",
+      "scene_id": "2026-06-04_merkava_tank_beaufort_castle_seg02_seg03",
+      "scene_path": "2026-06-04_merkava_tank_beaufort_castle/2026-06-04_merkava_tank_beaufort_castle_seg02_seg03",
+      "title": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521",
+      "scene_id": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521_seg03_seg04",
+      "scene_path": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17521_seg03_seg04",
+      "title": "Troop carrier, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492",
+      "scene_id": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492_seg03_seg04",
+      "scene_path": "2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492/2026-06-03_personnel_carrier_zawtar_al_sharqiyah_mmirleb_17492_seg03_seg04",
+      "title": "Troop carrier, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-03_merkava_tank_zawtar_al_sharqiyah",
+      "scene_id": "2026-06-03_merkava_tank_zawtar_al_sharqiyah_seg03_seg04",
+      "scene_path": "2026-06-03_merkava_tank_zawtar_al_sharqiyah/2026-06-03_merkava_tank_zawtar_al_sharqiyah_seg03_seg04",
+      "title": "Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "published_frames": 64,
+      "published_scale_m_per_unit": 100.77388573087934,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah",
+      "scene_id": "2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah_seg03_seg04",
+      "scene_path": "2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah/2026-06-02_targeting_israeli_soldiers_eastern_outskirts_zawtar_al_sharqiyah_seg03_seg04",
+      "title": "Israeli army soldiers, eastern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "published_frames": 63,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-31_soldiers_gathering_near_border_site",
+      "scene_id": "2026-05-31_soldiers_gathering_near_border_site_seg01_seg02",
+      "scene_path": "2026-05-31_soldiers_gathering_near_border_site/2026-05-31_soldiers_gathering_near_border_site_seg01_seg02",
+      "title": "Israeli army soldier gathering, vicinity of Beaufort Castle (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-31_namer_vehicle_and_apc_in_dibel",
+      "scene_id": "2026-05-31_namer_vehicle_and_apc_in_dibel_seg03_seg04",
+      "scene_path": "2026-05-31_namer_vehicle_and_apc_in_dibel/2026-05-31_namer_vehicle_and_apc_in_dibel_seg03_seg04",
+      "title": "\"Namera\" vehicle and troop carrier, Dibel (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-31_humvee_vehicle_at_al_assi",
+      "scene_id": "2026-05-31_humvee_vehicle_at_al_assi_seg01",
+      "scene_path": "2026-05-31_humvee_vehicle_at_al_assi/2026-05-31_humvee_vehicle_at_al_assi_seg01",
+      "title": "Soldiers' position and \"Humvee\" vehicle, vicinity of Beaufort Castle (two Ababil dive drones)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-30_merkava_tank_in_border_area",
+      "scene_id": "2026-05-30_merkava_tank_in_border_area_seg02_seg03",
+      "scene_path": "2026-05-30_merkava_tank_in_border_area/2026-05-30_merkava_tank_in_border_area_seg02_seg03",
+      "title": "Merkava tank, vicinity of Beaufort Castle (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-29_namer_apc_in_ainata",
+      "scene_id": "2026-05-29_namer_apc_in_ainata_seg03_seg04",
+      "scene_path": "2026-05-29_namer_apc_in_ainata/2026-05-29_namer_apc_in_ainata_seg03_seg04",
+      "title": "Troop carrier, Ainata (Ababil dive drone)",
+      "published_frames": 110,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-27_merkava_tank_on_military_route",
+      "scene_id": "2026-05-27_merkava_tank_on_military_route_seg01",
+      "scene_path": "2026-05-27_merkava_tank_on_military_route/2026-05-27_merkava_tank_on_military_route_seg01",
+      "title": "Merkava tank, southern outskirts of Zawtar al-Sharqiyah (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-27_iron_technical_platform_at_jal_al_alam",
+      "scene_id": "2026-05-27_iron_technical_platform_at_jal_al_alam_seg04_seg05",
+      "scene_path": "2026-05-27_iron_technical_platform_at_jal_al_alam/2026-05-27_iron_technical_platform_at_jal_al_alam_seg04_seg05",
+      "title": "Iron Dome platform, Jal al-Alam site (Ababil dive drone)",
+      "published_frames": 90,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068",
+      "scene_id": "2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068_seg01_seg02",
+      "scene_path": "2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068/2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068_seg01_seg02",
+      "title": "Military Hummer at the riverbed, Zawtar al-Sharqiyah (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 76.626865,
+      "published_calibration": {
+        "scale_m_per_vggt_unit": 76.626865,
+        "real_length_m": 4.57,
+        "measured_vggt_units": 0.05928245,
+        "source": "measured",
+        "measured_at": "2026-07-11T12:50:31Z"
+      },
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143",
+      "scene_id": "2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143_seg01_seg02",
+      "scene_path": "2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143/2026-05-26_d9_bulldozer_zawtar_al_sharqiyah_mmirleb_17143_seg01_seg02",
+      "title": "D9 bulldozer, Zawtar al-Sharqiyah (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-26_communications_equipment_at_al_assi",
+      "scene_id": "2026-05-26_communications_equipment_at_al_assi_seg01_seg02",
+      "scene_path": "2026-05-26_communications_equipment_at_al_assi/2026-05-26_communications_equipment_at_al_assi_seg01_seg02",
+      "title": "Communications equipment, al-Assi site on the southern Lebanese border (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan",
+      "scene_id": "2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan_seg01_seg02",
+      "scene_path": "2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan/2026-05-21_engineering_vehicle_khallet_al_raj_deir_siryan_seg01_seg02",
+      "title": "Engineering vehicle, Khallet al-Raj at the outskirts of Deir Siryan (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-20_namer_apc_hadatha",
+      "scene_id": "2026-05-20_namer_apc_hadatha_seg03",
+      "scene_path": "2026-05-20_namer_apc_hadatha/2026-05-20_namer_apc_hadatha_seg03",
+      "title": "\"Namera\" vehicle, Hadatha (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-20_armored_brigade_401_hq_debel",
+      "scene_id": "2026-05-20_armored_brigade_401_hq_debel_seg13",
+      "scene_path": "2026-05-20_armored_brigade_401_hq_debel/2026-05-20_armored_brigade_401_hq_debel_seg13",
+      "title": "Newly established HQ of the 401st Armored Brigade, Dibel (swarm of Ababil dive drones)",
+      "published_frames": 90,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16395",
+      "scene_id": "2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16395_seg01_seg02",
+      "scene_path": "2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16395/2026-05-19_iron_dome_platform_jal_al_alam_mmirleb_16395_seg01_seg02",
+      "title": "Iron Dome platform, Jal al-Alam site (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-19_engineering_vehicle_khiam_mmirleb_16767",
+      "scene_id": "2026-05-19_engineering_vehicle_khiam_mmirleb_16767_seg03_seg04",
+      "scene_path": "2026-05-19_engineering_vehicle_khiam_mmirleb_16767/2026-05-19_engineering_vehicle_khiam_mmirleb_16767_seg03_seg04",
+      "title": "Engineering vehicle, city of Khiam (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-19_communications_vehicle_taybeh_mmirleb_16552",
+      "scene_id": "2026-05-19_communications_vehicle_taybeh_mmirleb_16552_seg01",
+      "scene_path": "2026-05-19_communications_vehicle_taybeh_mmirleb_16552/2026-05-19_communications_vehicle_taybeh_mmirleb_16552_seg01",
+      "title": "Communications vehicle, Taybeh (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16558",
+      "scene_id": "2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16558_seg01_seg02",
+      "scene_path": "2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16558/2026-05-18_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16558_seg01_seg02",
+      "title": "Engineering vehicle, Khallet al-Raj (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443",
+      "scene_id": "2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443_seg01_seg02",
+      "scene_path": "2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443/2026-05-17_military_vehicle_bayyadah_iskandarounah_mmirleb_16443_seg01_seg02",
+      "title": "\"Buggy\" vehicle, Iskandarounah in al-Bayyada (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-16_namer_vehicle_taybeh_mmirleb_16531",
+      "scene_id": "2026-05-16_namer_vehicle_taybeh_mmirleb_16531_seg01_seg02",
+      "scene_path": "2026-05-16_namer_vehicle_taybeh_mmirleb_16531/2026-05-16_namer_vehicle_taybeh_mmirleb_16531_seg01_seg02",
+      "title": "\"Namera\" vehicle, Taybeh (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-16_merkava_tank_bayyadah_mmirleb_16351",
+      "scene_id": "2026-05-16_merkava_tank_bayyadah_mmirleb_16351_seg02_seg03",
+      "scene_path": "2026-05-16_merkava_tank_bayyadah_mmirleb_16351/2026-05-16_merkava_tank_bayyadah_mmirleb_16351_seg02_seg03",
+      "title": "Merkava tank, al-Bayyada (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-16_hummer_iskandarounah_naqoura",
+      "scene_id": "2026-05-16_hummer_iskandarounah_naqoura_seg02_seg03",
+      "scene_path": "2026-05-16_hummer_iskandarounah_naqoura/2026-05-16_hummer_iskandarounah_naqoura_seg02_seg03",
+      "title": "Military Hummer, Iskandarounah in al-Bayyada (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16319",
+      "scene_id": "2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16319_seg02_seg03",
+      "scene_path": "2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16319/2026-05-16_engineering_vehicle_deir_siryan_khallet_al_raj_mmirleb_16319_seg02_seg03",
+      "title": "Engineering vehicle, Khallet Raj in Deir Siryan (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16301",
+      "scene_id": "2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16301_seg02_seg03",
+      "scene_path": "2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16301/2026-05-15_personnel_carrier_deir_siryan_khallet_al_raj_mmirleb_16301_seg02_seg03",
+      "title": "Troop carrier, Khallet Raj area in Deir Siryan (dive drone)",
+      "published_frames": 102,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-15_engineering_vehicle_khiam",
+      "scene_id": "2026-05-15_engineering_vehicle_khiam_seg01",
+      "scene_path": "2026-05-15_engineering_vehicle_khiam/2026-05-15_engineering_vehicle_khiam_seg01",
+      "title": "Engineering vehicle, city of Khiam (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-14_strike_on_military_tanker_near_bint_jbeil",
+      "scene_id": "2026-05-14_strike_on_military_tanker_near_bint_jbeil_seg01_seg02_seg03",
+      "scene_path": "2026-05-14_strike_on_military_tanker_near_bint_jbeil/2026-05-14_strike_on_military_tanker_near_bint_jbeil_seg01_seg02_seg03",
+      "title": "Military tanker, city of Bint Jbeil (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-14_namer_vehicle_rashaf_mmirleb_16312",
+      "scene_id": "2026-05-14_namer_vehicle_rashaf_mmirleb_16312_seg01",
+      "scene_path": "2026-05-14_namer_vehicle_rashaf_mmirleb_16312/2026-05-14_namer_vehicle_rashaf_mmirleb_16312_seg01",
+      "title": "\"Namera\" vehicle, Rashaf (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-14_merkava_tank_bint_jbeil_mmirleb_16493",
+      "scene_id": "2026-05-14_merkava_tank_bint_jbeil_mmirleb_16493_seg03_seg04",
+      "scene_path": "2026-05-14_merkava_tank_bint_jbeil_mmirleb_16493/2026-05-14_merkava_tank_bint_jbeil_mmirleb_16493_seg03_seg04",
+      "title": "Merkava tank, city of Bint Jbeil (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-14_merkava_tank_aytaroun",
+      "scene_id": "2026-05-14_merkava_tank_aytaroun_seg01_seg02",
+      "scene_path": "2026-05-14_merkava_tank_aytaroun/2026-05-14_merkava_tank_aytaroun_seg01_seg02",
+      "title": "Merkava tank, Taybeh (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-14_humvee_tayr_harfa_mmirleb_16337",
+      "scene_id": "2026-05-14_humvee_tayr_harfa_mmirleb_16337_seg02_seg03_seg04",
+      "scene_path": "2026-05-14_humvee_tayr_harfa_mmirleb_16337/2026-05-14_humvee_tayr_harfa_mmirleb_16337_seg02_seg03_seg04",
+      "title": "Military Hummer, Tayr Harfa (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-13_strike_on_merkava_tank_near_aita_al_shaab",
+      "scene_id": "2026-05-13_strike_on_merkava_tank_near_aita_al_shaab_seg01",
+      "scene_path": "2026-05-13_strike_on_merkava_tank_near_aita_al_shaab/2026-05-13_strike_on_merkava_tank_near_aita_al_shaab_seg01",
+      "title": "Merkava tank, Aynata (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-12_strike_on_namer_apc_near_houla",
+      "scene_id": "2026-05-12_strike_on_namer_apc_near_houla_seg01_seg02",
+      "scene_path": "2026-05-12_strike_on_namer_apc_near_houla/2026-05-12_strike_on_namer_apc_near_houla_seg01_seg02",
+      "title": "\"Namera\" vehicle, Houla (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-12_strike_on_humvee",
+      "scene_id": "2026-05-12_strike_on_humvee_seg01_seg02",
+      "scene_path": "2026-05-12_strike_on_humvee/2026-05-12_strike_on_humvee_seg01_seg02",
+      "title": "Humvee on the Naqoura-Iskandaroun road (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa",
+      "scene_id": "2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa_seg01",
+      "scene_path": "2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa/2026-05-12_strike_on_engineering_vehicle_near_tayr_harfa_seg01",
+      "title": "Engineering vehicle, Tayr Harfa (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16106",
+      "scene_id": "2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16106_seg01_seg02",
+      "scene_path": "2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16106/2026-05-12_merkava_tank_manara_khirbet_al_manara_mmirleb_16106_seg01_seg02",
+      "title": "Merkava tank, vicinity of Khirbet al-Manara site (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-10_strike_on_bulldozer_near_ramiya",
+      "scene_id": "2026-05-10_strike_on_bulldozer_near_ramiya_seg02_seg03_seg04",
+      "scene_path": "2026-05-10_strike_on_bulldozer_near_ramiya/2026-05-10_strike_on_bulldozer_near_ramiya_seg02_seg03_seg04",
+      "title": "Bulldozer, city of Bint Jbeil (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16056",
+      "scene_id": "2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16056_seg04_seg05",
+      "scene_path": "2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16056/2026-05-10_soldiers_position_house_tayr_harfa_mmirleb_16056_seg04_seg05",
+      "title": "House where Israeli soldiers were positioned, Tayr Harfa (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-10_headquarters_bayyadah_mmirleb_16035",
+      "scene_id": "2026-05-10_headquarters_bayyadah_mmirleb_16035_seg03_seg04",
+      "scene_path": "2026-05-10_headquarters_bayyadah_mmirleb_16035/2026-05-10_headquarters_bayyadah_mmirleb_16035_seg03_seg04",
+      "title": "Newly established Israeli army HQ, al-Bayyada (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065",
+      "scene_id": "2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065_seg01_seg02",
+      "scene_path": "2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065/2026-05-09_tent_deir_siryan_khallet_al_raj_mmirleb_16065_seg01_seg02",
+      "title": "Newly set-up army tent, Khallet al-Raj in Deir Siryan (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16249",
+      "scene_id": "2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16249_seg01",
+      "scene_path": "2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16249/2026-05-09_target_deir_siryan_khallet_al_raj_mmirleb_16249_seg01",
+      "title": "Bulldozer, Khallet Raj area in Deir Siryan (dive drone)",
+      "published_frames": 39,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-09_strike_on_soldiers_near_shlomi",
+      "scene_id": "2026-05-09_strike_on_soldiers_near_shlomi_seg03_seg04",
+      "scene_path": "2026-05-09_strike_on_soldiers_near_shlomi/2026-05-09_strike_on_soldiers_near_shlomi_seg03_seg04",
+      "title": "Soldier gathering at a helicopter landing pad, Shlomi settlement (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-09_strike_on_soldiers_near_deir_mimas",
+      "scene_id": "2026-05-09_strike_on_soldiers_near_deir_mimas_seg01_seg02",
+      "scene_path": "2026-05-09_strike_on_soldiers_near_deir_mimas/2026-05-09_strike_on_soldiers_near_deir_mimas_seg01_seg02",
+      "title": "Israeli army soldiers, vicinity of Deir Siryan (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-09_strike_on_soldiers",
+      "scene_id": "2026-05-09_strike_on_soldiers_seg02",
+      "scene_path": "2026-05-09_strike_on_soldiers/2026-05-09_strike_on_soldiers_seg02",
+      "title": "Soldier gathering, Jal al-Alam site on the Lebanese border (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-09_strike_on_israeli_military_vehicle",
+      "scene_id": "2026-05-09_strike_on_israeli_military_vehicle_seg01_seg02_seg03",
+      "scene_path": "2026-05-09_strike_on_israeli_military_vehicle/2026-05-09_strike_on_israeli_military_vehicle_seg01_seg02_seg03",
+      "title": "Military vehicle, Khallet al-Raj in Deir Siryan (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-09_soldiers_deir_siryan_mmirleb_16168",
+      "scene_id": "2026-05-09_soldiers_deir_siryan_mmirleb_16168_seg01",
+      "scene_path": "2026-05-09_soldiers_deir_siryan_mmirleb_16168/2026-05-09_soldiers_deir_siryan_mmirleb_16168_seg01",
+      "title": "Israeli army soldiers, vicinity of Deir Siryan (dive drone)",
+      "published_frames": 7,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-09_humvee_bayyadah_mmirleb_16093",
+      "scene_id": "2026-05-09_humvee_bayyadah_mmirleb_16093_seg03_seg04",
+      "scene_path": "2026-05-09_humvee_bayyadah_mmirleb_16093/2026-05-09_humvee_bayyadah_mmirleb_16093_seg03_seg04",
+      "title": "Communications Humvee, al-Bayyada (dive drone)",
+      "published_frames": 40,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-08_strike_on_merkava_tank_near_namr_al_jamal",
+      "scene_id": "2026-05-08_strike_on_merkava_tank_near_namr_al_jamal_seg01_seg02",
+      "scene_path": "2026-05-08_strike_on_merkava_tank_near_namr_al_jamal/2026-05-08_strike_on_merkava_tank_near_namr_al_jamal_seg01_seg02",
+      "title": "Merkava tank, newly established Namr al-Jamal site opposite Alma al-Shaab (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-08_strike_on_humvee_in_naqoura",
+      "scene_id": "2026-05-08_strike_on_humvee_in_naqoura_seg03_seg04",
+      "scene_path": "2026-05-08_strike_on_humvee_in_naqoura/2026-05-08_strike_on_humvee_in_naqoura_seg03_seg04",
+      "title": "Humvee, al-Bayyada (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-08_merkava_tank_bayyadah_mmirleb_16051",
+      "scene_id": "2026-05-08_merkava_tank_bayyadah_mmirleb_16051_seg02_seg03",
+      "scene_path": "2026-05-08_merkava_tank_bayyadah_mmirleb_16051/2026-05-08_merkava_tank_bayyadah_mmirleb_16051_seg02_seg03",
+      "title": "Merkava tank, al-Bayyada (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-08_humvee_bayyadah_mmirleb_16048",
+      "scene_id": "2026-05-08_humvee_bayyadah_mmirleb_16048_seg03_seg04",
+      "scene_path": "2026-05-08_humvee_bayyadah_mmirleb_16048/2026-05-08_humvee_bayyadah_mmirleb_16048_seg03_seg04",
+      "title": "Humvee, al-Bayyada (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam",
+      "scene_id": "2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam_seg01_seg02",
+      "scene_path": "2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam/2026-05-07_strike_on_iron_dome_launcher_at_jal_al_alam_seg01_seg02",
+      "title": "Iron Dome platform and its crew, Jal al-Alam site (two dive drones)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-06_strike_on_soldier_group",
+      "scene_id": "2026-05-06_strike_on_soldier_group_seg04_seg05",
+      "scene_path": "2026-05-06_strike_on_soldier_group/2026-05-06_strike_on_soldier_group_seg04_seg05",
+      "title": "Israeli army soldier gathering, al-Bayyada (dive drone)",
+      "published_frames": 59,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-06_strike_on_namer_apc_near_qouzah",
+      "scene_id": "2026-05-06_strike_on_namer_apc_near_qouzah_seg01_seg02",
+      "scene_path": "2026-05-06_strike_on_namer_apc_near_qouzah/2026-05-06_strike_on_namer_apc_near_qouzah_seg01_seg02",
+      "title": "\"Namera\" troop carrier, Qouzah (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-06_strike_on_namer_apc_in_bint_jbeil",
+      "scene_id": "2026-05-06_strike_on_namer_apc_in_bint_jbeil_seg01",
+      "scene_path": "2026-05-06_strike_on_namer_apc_in_bint_jbeil/2026-05-06_strike_on_namer_apc_in_bint_jbeil_seg01",
+      "title": "\"Namera\" vehicle, city of Bint Jbeil (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-06_strike_on_enemy_position",
+      "scene_id": "2026-05-06_strike_on_enemy_position_seg01_seg02",
+      "scene_path": "2026-05-06_strike_on_enemy_position/2026-05-06_strike_on_enemy_position_seg01_seg02",
+      "title": "Israeli army positioning point, Taybeh (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347",
+      "scene_id": "2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347_seg02_seg03",
+      "scene_path": "2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347/2026-05-06_d9_engineering_vehicle_houla_mmirleb_16347_seg02_seg03",
+      "title": "D9 bulldozer, Houla (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-04_strike_on_troop_transport_vehicle",
+      "scene_id": "2026-05-04_strike_on_troop_transport_vehicle_seg03",
+      "scene_path": "2026-05-04_strike_on_troop_transport_vehicle/2026-05-04_strike_on_troop_transport_vehicle_seg03",
+      "title": "Troop transport vehicle, vicinity of al-Abbad site on the southern Lebanese border (dive drone)",
+      "published_frames": 121,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528",
+      "scene_id": "2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528_seg01",
+      "scene_path": "2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528/2026-05-04_hemtt_logistics_vehicle_manara_mmirleb_16528_seg01",
+      "title": "HEMTT logistics vehicle, Manara site (Ababil dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-03_company_commander_tank_bayyadah_mmirleb_16007",
+      "scene_id": "2026-05-03_company_commander_tank_bayyadah_mmirleb_16007_seg01_seg02",
+      "scene_path": "2026-05-03_company_commander_tank_bayyadah_mmirleb_16007/2026-05-03_company_commander_tank_bayyadah_mmirleb_16007_seg01_seg02",
+      "title": "Armored-company commander's tank, al-Bayyada (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-05-01_merkava_tank_rashaf_mmirleb_15950",
+      "scene_id": "2026-05-01_merkava_tank_rashaf_mmirleb_15950_seg02_seg03",
+      "scene_path": "2026-05-01_merkava_tank_rashaf_mmirleb_15950/2026-05-01_merkava_tank_rashaf_mmirleb_15950_seg02_seg03",
+      "title": "Merkava tank, Rashaf (dive drone)",
+      "published_frames": 125,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    },
+    {
+      "video_id": "2026-04-30_strike_on_humvee_in_naqoura",
+      "scene_id": "2026-04-30_strike_on_humvee_in_naqoura_seg02",
+      "scene_path": "2026-04-30_strike_on_humvee_in_naqoura/2026-04-30_strike_on_humvee_in_naqoura_seg02",
+      "title": "Hummer vehicle, al-Bayyada (dive drone)",
+      "published_frames": 58,
+      "published_scale_m_per_unit": 117.6,
+      "published_calibration": null,
+      "starred": false
+    }
+  ]
+}

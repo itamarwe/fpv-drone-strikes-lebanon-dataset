@@ -32,14 +32,15 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+BATCH = __import__("os").environ.get("FPV_UNDISTORT_BATCH", "starred_undistort")  # batch name: benchmarks/<BATCH>, scenes/<BATCH>, reports/<BATCH>
 sys.path.insert(0, str(ROOT / "tools"))
 import run_vggt_omega_direct_on_runpod as direct  # noqa: E402
 
-SPEC = ROOT / "benchmarks" / "starred_undistort" / "starred_scenes.json"
-STATE = ROOT / "benchmarks" / "starred_undistort" / "batch_status.json"
-LOG = ROOT / "benchmarks" / "starred_undistort" / "batch_log.txt"
-SCENES = ROOT / "scenes" / "starred_undistort"
-REPORTS = ROOT / "reports" / "starred_undistort"
+SPEC = ROOT / "benchmarks" / BATCH / "starred_scenes.json"
+STATE = ROOT / "benchmarks" / BATCH / "batch_status.json"
+LOG = ROOT / "benchmarks" / BATCH / "batch_log.txt"
+SCENES = ROOT / "scenes" / BATCH
+REPORTS = ROOT / "reports" / BATCH
 STATUS_HTML = REPORTS / "status.html"
 _STATUS_LOCK = threading.Lock()
 REMOTE_ROOT = "/workspace/starred"
@@ -106,28 +107,35 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
         drift_txt = f"{b['local_scale_std']:.3f} &rarr; {a['local_scale_std']:.3f}" if "local_scale_std" in a and "local_scale_std" in b else ""
         fx_txt = f"{m['after_focal']['fx_ratio_vggt_over_reference']:.2f}x" if "after_focal" in m else ""
         cal = rec.get("calibration", {}); cal_txt = f"{cal.get('registered')}/{cal.get('images')}" if cal.get("registered") is not None else ""
+        if not cal_txt and m.get("reference_registered"): cal_txt = f"{m['reference_registered']}/{m.get('frames_published', '')}"
+        lens = m.get("calibration", {})
+        lens_txt = f"f = {lens['fx_px']:.0f} px, HFOV {lens['hfov_deg']:.0f}&deg;<br><small>{lens['model']} k = {', '.join(f'{x:.3f}' for x in lens.get('distortion_params', [])[:4])}</small>" if lens else ""
+        if "improved" in m:
+            verdict = '<span class="ok">IMPROVED</span>' if m["improved"] else '<span class="no">not improved</span><br><small>' + "; ".join(m.get("gate_reasons", [])) + "</small>"
+        else:
+            verdict = ""
         before_img, after_img = REPORTS / vid / "before.jpg", REPORTS / vid / "after.jpg"
         imgs = "".join(f'<a href="{vid}/{n}.jpg"><img src="{vid}/{n}.jpg" alt="{n}"></a>' for n in ("before", "after") if (REPORTS / vid / f"{n}.jpg").exists())
         links = []
         if (REPORTS / vid / "transition.mp4").exists(): links.append(f'<a href="{vid}/transition.mp4">transition video</a>')
         if (REPORTS / vid / "overlay.mp4").exists(): links.append(f'<a href="{vid}/overlay.mp4">reprojection overlay video</a>')
-        if (SCENES / vid / "overlay" / "index.html").exists(): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/overlay/index.html">3D overlay viewer</a>')
-        if (SCENES / vid / "published" / "viewer" / "scene_meta.json").exists(): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/published/viewer/">camera view: published</a>')
-        if any((SCENES / vid / "pinhole" / "viewer" / "camera_view_assets").glob("*_overlay.jpg")): links.append(f'<a href="http://127.0.0.1:8766/scenes/starred_undistort/{vid}/pinhole/viewer/">camera view: undistorted</a>')
+        if (SCENES / vid / "overlay" / "index.html").exists(): links.append(f'<a href="/scenes/{BATCH}/{vid}/overlay/index.html">3D overlay viewer</a>')
+        if (SCENES / vid / "published" / "viewer" / "scene_meta.json").exists(): links.append(f'<a href="/scenes/{BATCH}/{vid}/published/viewer/">camera view: published</a>')
+        if any((SCENES / vid / "pinhole" / "viewer" / "camera_view_assets").glob("*_overlay.jpg")): links.append(f'<a href="/scenes/{BATCH}/{vid}/pinhole/viewer/">camera view: undistorted</a>')
         err = f'<div class="err">{rec.get("error", "")}</div>' if st == "failed" else ""
         el = f"{rec.get('elapsed_s', 0) // 60} min" if rec.get("elapsed_s") else ""
         rows.append(f'<tr class="{st}"><td><b>{s["title"]}</b><br><small>{vid} &middot; {s["published_frames"]} frames</small>{err}</td>'
-                    f'<td class="st">{st}</td><td>{cal_txt}</td><td>{el}</td><td>{path_txt}</td><td>{drift_txt}</td><td>{fx_txt}</td>'
+                    f'<td class="st">{st}</td><td>{verdict}</td><td>{lens_txt}</td><td>{cal_txt}</td><td>{el}</td><td>{path_txt}</td><td>{drift_txt}</td><td>{fx_txt}</td>'
                     f'<td class="imgs">{imgs}<div>{" &middot; ".join(links)}</div></td></tr>')
     html = f"""<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="60"><title>Starred undistort re-run</title>
 <style>body{{font:14px system-ui;background:#0c0d0f;color:#e8ebef;margin:20px}}table{{border-collapse:collapse;width:100%}}td,th{{padding:8px 10px;border-bottom:1px solid #2a3037;vertical-align:top;text-align:left}}
 th{{color:#8b95a1;font-weight:600}}a{{color:#36e4ff}}img{{width:300px;border-radius:6px;margin:2px 6px 2px 0;border:1px solid #2a3037}}.imgs{{white-space:nowrap}}
 .st{{font-weight:700;text-transform:uppercase}}tr.done .st{{color:#36e4ff}}tr.failed .st{{color:#ff4d6d}}tr.running .st{{color:#ffd60a}}tr.pending .st{{color:#8b95a1}}.err{{color:#ff4d6d;font-size:12px;margin-top:4px}}
-.sum{{color:#8b95a1;margin-bottom:14px}}small{{color:#8b95a1}}</style>
-<h1>Starred scenes: undistort-to-pinhole re-run</h1>
+.ok{{color:#36e4ff;font-weight:700}}.no{{color:#ffb000;font-weight:700}}.sum{{color:#8b95a1;margin-bottom:14px}}@media(max-width:900px){{img{{width:46vw}}td,th{{padding:6px 5px;font-size:12px}}}}small{{color:#8b95a1}}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1"><h1>{BATCH}: undistort-to-pinhole re-run</h1>
 <div class="sum">updated {now_utc().strftime('%Y-%m-%d %H:%M:%S')} UTC &middot; pod {pod.get('id', '-')} (stop after {pod.get('stop_after', '-')}) &middot;
 <b>{counts.get('done', 0)} done</b>, {counts.get('running', 0)} running, {counts.get('failed', 0)} failed, {counts.get('pending', 0)} pending &middot; page refreshes every minute</div>
-<table><tr><th>Scene</th><th>Status</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Before / after</th></tr>
+<table><tr><th>Scene</th><th>Status</th><th>Result</th><th>Calibrated lens</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Before / after</th></tr>
 {''.join(rows)}</table>
 <p class="sum">Path disagreement: Sim(3) residual of the VGGT camera path against the GLOMAP self-calibration path, fraction of its length. Local scale std: 20-frame window scale over global. Focal ratio: VGGT's focal estimate over the calibrated pinhole focal (1.0 = consistent). Before = published product, after = undistorted re-run.</p>
 """

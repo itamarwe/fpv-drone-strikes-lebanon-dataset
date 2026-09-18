@@ -26,9 +26,10 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = ROOT / "benchmarks" / "starred_undistort" / "starred_scenes.json"
-SEL = ROOT / "benchmarks" / "starred_undistort" / "publish_selection.json"
-SRC = ROOT / "scenes" / "starred_undistort"
+BATCH = __import__("os").environ.get("FPV_UNDISTORT_BATCH", "starred_undistort")  # batch name: benchmarks/<BATCH>, scenes/<BATCH>, reports/<BATCH>
+SPEC = ROOT / "benchmarks" / BATCH / "starred_scenes.json"
+SEL = ROOT / "benchmarks" / BATCH / "publish_selection.json"
+SRC = ROOT / "scenes" / BATCH
 BUCKET = os.environ.get("FPV_BUCKET", "s3://fpv-drone-strikes-lebanon-dataset")
 TAG = "lenscorr1"
 
@@ -115,7 +116,7 @@ def main() -> int:
         record["scenes"].append({"video_id": vid, "scene_id": spec[vid]["scene_id"], "viewer": out.relative_to(ROOT).as_posix(),
                                  "default_scale_m_per_unit": meta["default_scale_m_per_unit"], "pipeline": meta["pipeline"]})
         print(f"{'published' if args.publish else 'staged'} {vid} -> {out.relative_to(ROOT)}  scale {meta['default_scale_m_per_unit']:.1f} m/unit", flush=True)
-    (ROOT / "benchmarks" / "starred_undistort" / "published_replacements.json").write_text(json.dumps(record, indent=2) + "\n")
+    (ROOT / "benchmarks" / BATCH / "published_replacements.json").write_text(json.dumps(record, indent=2) + "\n")
     return 0
 
 
