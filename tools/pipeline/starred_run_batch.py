@@ -129,13 +129,19 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
         rows.append(f'<tr class="{st}"><td><b>{s["title"]}</b><br><small>{vid} &middot; {s["published_frames"]} frames</small>{err}</td>'
                     f'<td class="st">{st}</td><td>{verdict}</td><td>{lens_txt}</td><td>{cal_txt}</td><td>{el}</td><td>{path_txt}</td><td>{drift_txt}</td><td>{fx_txt}</td><td>{ground_txt}</td>'
                     f'<td class="imgs">{imgs}<div>{" &middot; ".join(links)}</div></td></tr>')
+    if not pod.get("id"):
+        pod_txt = "no pod yet"
+    elif pod.get("down_utc"):
+        pod_txt = f"pod {pod['id']} deleted at {pod['down_utc'][:19].replace('T', ' ')} UTC" + (" &middot; <b>waiting for the next session</b>" if counts.get("pending", 0) or counts.get("running", 0) else " &middot; <b>batch complete</b>")
+    else:
+        pod_txt = f"pod {pod['id']} {pod.get('phase', 'running')} (cloud stop {pod.get('stop_after', '-')})"
     html = f"""<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="60"><title>Starred undistort re-run</title>
 <style>body{{font:14px system-ui;background:#0c0d0f;color:#e8ebef;margin:20px}}table{{border-collapse:collapse;width:100%}}td,th{{padding:8px 10px;border-bottom:1px solid #2a3037;vertical-align:top;text-align:left}}
 th{{color:#8b95a1;font-weight:600}}a{{color:#36e4ff}}img{{width:300px;border-radius:6px;margin:2px 6px 2px 0;border:1px solid #2a3037}}.imgs{{white-space:nowrap}}
 .st{{font-weight:700;text-transform:uppercase}}tr.done .st{{color:#36e4ff}}tr.failed .st{{color:#ff4d6d}}tr.running .st{{color:#ffd60a}}tr.pending .st{{color:#8b95a1}}.err{{color:#ff4d6d;font-size:12px;margin-top:4px}}
 .ok{{color:#36e4ff;font-weight:700}}.no{{color:#ffb000;font-weight:700}}.sum{{color:#8b95a1;margin-bottom:14px}}@media(max-width:900px){{img{{width:46vw}}td,th{{padding:6px 5px;font-size:12px}}}}small{{color:#8b95a1}}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1"><h1>{BATCH}: undistort-to-pinhole re-run</h1>
-<div class="sum">updated {now_utc().strftime('%Y-%m-%d %H:%M:%S')} UTC &middot; pod {pod.get('id', '-')} (stop after {pod.get('stop_after', '-')}) &middot;
+<div class="sum">updated {now_utc().strftime('%Y-%m-%d %H:%M:%S')} UTC &middot; {pod_txt} &middot;
 <b>{counts.get('done', 0)} done</b>, {counts.get('running', 0)} running, {counts.get('failed', 0)} failed, {counts.get('pending', 0)} pending &middot; page refreshes every minute</div>
 <table><tr><th>Scene</th><th>Status</th><th>Result</th><th>Calibrated lens</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Ground vs published</th><th>Before / after</th></tr>
 {''.join(rows)}</table>
@@ -196,7 +202,7 @@ def stage_pod(args, state) -> dict:
         pod = json.loads(out.stdout)
         pod_id = pod["id"]
         state["pod"] = {"id": pod_id, "name": name, "created_utc": now_utc().isoformat(), "stop_after": stop, "terminate_after": term,
-                        "cost_per_hr": pod.get("costPerHr")}
+                        "cost_per_hr": pod.get("costPerHr"), "phase": "starting"}
         save_state(state)
         log(f"pod {pod_id} created, costPerHr={pod.get('costPerHr')}")
     if not pod_id:
@@ -435,6 +441,12 @@ def main() -> int:
     ssh = None
     if stages & {"pod", "setup", "push", "calib", "scenes"}:
         ssh = stage_pod(args, state)
+    def phase(name):
+        state.setdefault("pod", {})["phase"] = name; save_state(state)
+        try: write_status_html(state, scenes)
+        except Exception as exc: log(f"status page error: {exc}")
+    if ssh is not None:
+        phase("installing VGGT-Omega" if "setup" in stages else "connected")
     if "setup" in stages:
         stage_setup(args, state, ssh)
     if "push" in stages:
@@ -442,6 +454,7 @@ def main() -> int:
     if "calib" in stages:
         stage_calib_launch(args, state, scenes, ssh)
     if "scenes" in stages:
+        phase("running scenes")
         deadline = None
         if args.deadline_utc:
             deadline = dt.datetime.fromisoformat(args.deadline_utc.replace("Z", "+00:00"))
