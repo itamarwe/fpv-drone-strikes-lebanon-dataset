@@ -148,7 +148,13 @@ p = hf_hub_download(repo_id="facebook/vggt-omega", repo_type="space", filename="
 shutil.copy2(p, "skyseg.onnx")
 print("[direct] skyseg_size=" + str(Path("skyseg.onnx").stat().st_size), flush=True)
 PY
-PYTHONUNBUFFERED=1 python - <<'PY'
+# The demo's CPU stages (sky segmentation, export) size their thread pools to every core. On a big pod that is
+# also running lens calibration this oversubscribes and turns a 3 min scene into 15-25 min: give inference its own
+# block of cores (the top quarter) and size the pools to it.
+NCPU="$(nproc)"; PIN=""
+if [ "$NCPU" -ge 64 ]; then LO=$((NCPU * 3 / 4)); PIN="taskset -c $LO-$((NCPU - 1))"; export OMP_NUM_THREADS=$((NCPU - LO)) MKL_NUM_THREADS=$((NCPU - LO)) OPENBLAS_NUM_THREADS=$((NCPU - LO)); fi
+echo "[direct] cpu pin: ${{PIN:-none}}"
+PYTHONUNBUFFERED=1 $PIN python - <<'PY'
 import json, time
 from pathlib import Path
 from app import gradio_demo, update_visualization
