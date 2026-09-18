@@ -448,14 +448,38 @@ def main() -> int:
         done = 0
         REPORTS.mkdir(parents=True, exist_ok=True)
         post_q = PostQueue()
+        def calib_states() -> dict:
+            out = ssh_run(ssh, f"cd {REMOTE_ROOT} 2>/dev/null && grep -H -o '\"status\": \"[a-z]*\"' */calib/status.json 2>/dev/null", check=False).stdout
+            return {line.split("/", 1)[0]: line.rsplit('"', 2)[-2] for line in out.splitlines() if "/calib/status.json" in line}
+
+        def is_open(s) -> bool:
+            st = state["scenes"].get(s["video_id"], {}).get("status")
+            return st != "done" and not (st == "failed" and not args.retry_failed)
+
+        retried = set()
         with StatusPager(state, scenes):
-            for s in scenes:
-                if args.max_scenes and done >= args.max_scenes:
+            # Take scenes in order of calibration readiness, not list order: several calibration jobs work on different
+            # parts of the list, and waiting for the head of the list leaves the GPU idle while later scenes are ready.
+            while True:
+                pending = [s for s in scenes if is_open(s) and s["video_id"] not in retried]
+                if not pending or (args.max_scenes and done >= args.max_scenes):
                     break
                 if deadline and now_utc() + dt.timedelta(minutes=args.est_scene_min) > deadline:
-                    log(f"deadline guard: not starting {s['video_id']} (deadline {deadline.isoformat()})")
+                    log(f"deadline guard: {len(pending)} scene(s) not started (deadline {deadline.isoformat()})")
                     break
+                remote = calib_states()
+                ready = [s for s in pending if (SCENES / s["video_id"] / "calib" / "glomap_fisheye" / "cameras.txt").exists()
+                         or remote.get(s["video_id"]) in ("succeeded", "failed")]
+                if not ready:
+                    jobs = ssh_run(ssh, f"cat {REMOTE_ROOT}/calib_*.status.json 2>/dev/null | grep -c '\"status\": \"running\"'", check=False).stdout.strip()
+                    if jobs in ("", "0"):  # no calibration job alive any more: let run_scene record the failures
+                        ready = pending[:1]
+                    else:
+                        time.sleep(30)
+                        continue
+                s = ready[0]
                 before = state["scenes"].get(s["video_id"], {}).get("status")
+                retried.add(s["video_id"])
                 run_scene(args, state, s, ssh)
                 try:
                     write_status_html(state, scenes)
