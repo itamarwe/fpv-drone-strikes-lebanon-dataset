@@ -122,8 +122,12 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
         if (REPORTS / vid / "transition.mp4").exists(): links.append(f'<a href="{vid}/transition.mp4">transition video</a>')
         if (REPORTS / vid / "overlay.mp4").exists(): links.append(f'<a href="{vid}/overlay.mp4">reprojection overlay video</a>')
         if (SCENES / vid / "overlay" / "index.html").exists(): links.append(f'<a href="/scenes/{BATCH}/{vid}/overlay/index.html">3D overlay viewer</a>')
-        if (SCENES / vid / "published" / "viewer" / "scene_meta.json").exists(): links.append(f'<a href="/scenes/{BATCH}/{vid}/published/viewer/">camera view: published</a>')
-        if any((SCENES / vid / "pinhole" / "viewer" / "camera_view_assets").glob("*_overlay.jpg")): links.append(f'<a href="/scenes/{BATCH}/{vid}/pinhole/viewer/">camera view: undistorted</a>')
+        if (SCENES / vid / "published" / "viewer" / "scene_meta.json").exists(): links.append(f'<a href="/scenes/{BATCH}/{vid}/published/viewer/">3D model: published + camera view</a>')
+        # the lens-corrected 3D model is linked for every finished scene, improved or not; the label says whether the
+        # per-frame camera overlays are already rendered inside it
+        if (SCENES / vid / "pinhole" / "viewer" / "scene_meta.json").exists():
+            has_cam = any((SCENES / vid / "pinhole" / "viewer" / "camera_view_assets").glob("*_overlay.jpg"))
+            links.append(f'<a href="/scenes/{BATCH}/{vid}/pinhole/viewer/">3D model: lens-corrected{" + camera view" if has_cam else ""}</a>')
         err = f'<div class="err">{rec.get("error", "")}</div>' if st == "failed" else ""
         el = f"{rec.get('elapsed_s', 0) // 60} min" if rec.get("elapsed_s") else ""
         rows.append(f'<tr class="{st}"><td><b>{s["title"]}</b><br><small>{vid} &middot; {s["published_frames"]} frames</small>{err}</td>'

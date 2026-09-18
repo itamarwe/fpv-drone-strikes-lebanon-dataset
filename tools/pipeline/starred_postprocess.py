@@ -40,6 +40,7 @@ REPORTS = ROOT / "reports" / BATCH
 BG = (10, 11, 13); WHITE = (255, 255, 255); RED = (255, 77, 109); CYAN = (54, 228, 255); ORANGE = (255, 176, 0)
 GATE = __import__("os").environ.get("FPV_UNDISTORT_GATE", "0") == "1"  # only build media for scenes that improved
 GATE_MAX_FX_RATIO = 1.45
+STILLS_ONLY = __import__("os").environ.get("FPV_UNDISTORT_STILLS_ONLY", "0") == "1"  # before/after stills only: no videos, no camera overlays
 GROUND_WARN_DEG = 10.0  # ground normals of the two runs further apart than this get a "check ground" flag (not a rejection)
 TAGS = {"before": ("BEFORE  raw frames", RED), "after": ("AFTER  undistorted to pinhole", CYAN)}
 
@@ -148,7 +149,7 @@ def compose(state_im, W, H, header, footer, title, sub, tag, tag_col, lines, alp
     return cv
 
 
-def make_video(vid: str, before: dict, after: dict, grid, ref_path, title, lines, out_dir: Path, cycles=3, hold_s=1.8, fade_s=1.2, fps=30, size=(1600, 1000)) -> None:
+def make_video(vid: str, before: dict, after: dict, grid, ref_path, title, lines, out_dir: Path, cycles=3, hold_s=1.8, fade_s=1.2, fps=30, size=(1600, 1000), stills_only=False) -> None:
     W, H = size; header, footer = 100, 150
     view = shared_view(np.array([c["position"] for c in before["cams"]]))
     b_im = render_panel(before["P"], before["C"], before["cams"], grid, ref_path, view, W, H)
@@ -157,6 +158,8 @@ def make_video(vid: str, before: dict, after: dict, grid, ref_path, title, lines
     out_dir.mkdir(parents=True, exist_ok=True)
     compose(b_im, W, H, header, footer, title, sub, *TAGS["before"], lines).save(out_dir / "before.jpg", quality=93)
     compose(a_im, W, H, header, footer, title, sub, *TAGS["after"], lines).save(out_dir / "after.jpg", quality=93)
+    if stills_only:
+        return
     frames_dir = out_dir / "frames"; frames_dir.mkdir(exist_ok=True)
     for f in frames_dir.glob("*.png"):
         f.unlink()
@@ -269,8 +272,9 @@ def process(scene: dict, rng, skip_video: bool) -> dict | None:
         pass
     metrics["improved"] = not reasons; metrics["gate_reasons"] = reasons
     (base / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
-    if GATE and reasons:
-        skip_video = True  # no transition / reprojection videos or camera-view overlays for scenes that did not improve
+    # scenes the gate rejects still get their before/after stills (seconds); only the videos and the per-frame
+    # camera overlays are skipped for them (starred_media_sweep.py renders those on request)
+    stills_only = STILLS_ONLY or bool(GATE and reasons)
     # everything below lives in the published viewer frame rotated by its alignment quaternion (grounded like the viewer)
     Rq = quat_to_R(before["meta"]["scene_alignment_quaternion"])
     rot = lambda run: sim3_apply(1.0, Rq, np.zeros(3), run)
@@ -285,7 +289,9 @@ def process(scene: dict, rng, skip_video: bool) -> dict | None:
         if "after_focal" in metrics:
             lines.append(f"VGGT focal estimate vs calibrated lens (after):  {metrics['after_focal']['fx_ratio_vggt_over_reference']:.2f}x")
         ref_rot = (ref_path @ Rq.T) if ref_path is not None else None
-        make_video(vid, rot(before), rot(after), grid, ref_rot, scene["title"], lines, REPORTS / vid)
+        make_video(vid, rot(before), rot(after), grid, ref_rot, scene["title"], lines, REPORTS / vid, stills_only=stills_only)
+        if stills_only:
+            return metrics
         if not (REPORTS / vid / "overlay.mp4").exists():
             try:
                 make_overlay_video(scene, json.loads(SPEC.read_text())["cdn_base"], 10.0, 4.0)
