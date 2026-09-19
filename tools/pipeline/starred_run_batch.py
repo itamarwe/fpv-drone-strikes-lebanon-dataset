@@ -94,10 +94,53 @@ def push_dir(ssh: dict, local_dir: Path, remote_dir: str) -> None:
 
 # ---------------------------------------------------------------- status page (regenerated deterministically from state + files)
 
+STATUS_JS = """<script>
+(function () {
+  // Review picks. Source of truth is the viewer server (/api/selection/<batch>, stored in benchmarks/<batch>/review_selection.json),
+  // so ticks survive reloads and are shared between phone and desktop; localStorage is the fallback when the page is opened as a file.
+  const wrap = () => document.getElementById("tblwrap");
+  const batch = wrap().dataset.batch, api = "/api/selection/" + batch, lsKey = "fpv-picks-" + batch;
+  let picks = new Set();
+  const paint = () => {
+    document.querySelectorAll("input.sel").forEach(cb => { cb.checked = picks.has(cb.dataset.vid); cb.closest("tr").classList.toggle("picked", cb.checked); });
+    const c = document.getElementById("selcount"); if (c) c.textContent = picks.size;
+  };
+  const load = async () => {
+    try { const r = await fetch(api, { cache: "no-store" }); if (r.ok) { picks = new Set((await r.json()).selected || []); localStorage.setItem(lsKey, JSON.stringify([...picks])); return; } } catch (e) {}
+    try { picks = new Set(JSON.parse(localStorage.getItem(lsKey) || "[]")); } catch (e) {}
+  };
+  const save = async (vid, on) => {
+    if (on) picks.add(vid); else picks.delete(vid);
+    localStorage.setItem(lsKey, JSON.stringify([...picks])); paint();
+    try { const r = await fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ toggle: vid, on }) });
+          if (r.ok) picks = new Set((await r.json()).selected || []); } catch (e) {}
+    paint();
+  };
+  document.addEventListener("change", e => { if (e.target.classList && e.target.classList.contains("sel")) save(e.target.dataset.vid, e.target.checked); });
+  // Live refresh swaps the table and header in place (scroll position and ticks are kept) while the batch is running.
+  const refresh = async () => {
+    if (wrap().dataset.live !== "1") return;
+    try {
+      const html = await (await fetch(location.pathname, { cache: "no-store" })).text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const nw = doc.getElementById("tblwrap"), ns = doc.querySelector(".sum");
+      if (nw && ns) { wrap().replaceWith(nw); document.querySelector(".sum").replaceWith(ns); paint(); }
+    } catch (e) {}
+  };
+  load().then(paint); setInterval(refresh, 60000);
+})();
+</script>"""
+
+
 def write_status_html(state: dict, scenes: list[dict]) -> None:
     REPORTS.mkdir(parents=True, exist_ok=True)
     pod = state.get("pod", {})
     counts = {"done": 0, "failed": 0, "running": 0, "pending": 0}
+    sel_path = ROOT / "benchmarks" / BATCH / "review_selection.json"
+    try:
+        selected = set(json.loads(sel_path.read_text()).get("selected", []))
+    except Exception:
+        selected = set()
     rows = []
     for s in scenes:
         vid = s["video_id"]; rec = state["scenes"].get(vid, {}); st = rec.get("status", "pending"); counts[st] = counts.get(st, 0) + 1
@@ -130,7 +173,8 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
             links.append(f'<a href="/scenes/{BATCH}/{vid}/pinhole/viewer/">3D model: lens-corrected{" + camera view" if has_cam else ""}</a>')
         err = f'<div class="err">{rec.get("error", "")}</div>' if st == "failed" else ""
         el = f"{rec.get('elapsed_s', 0) // 60} min" if rec.get("elapsed_s") else ""
-        rows.append(f'<tr class="{st}"><td><b>{s["title"]}</b><br><small>{vid} &middot; {s["published_frames"]} frames</small>{err}</td>'
+        chk = f'<label class="pick"><input type="checkbox" class="sel" data-vid="{vid}"{" checked" if vid in selected else ""}> publish</label>'
+        rows.append(f'<tr class="{st}" data-vid="{vid}"><td>{chk}<b>{s["title"]}</b><br><small>{vid} &middot; {s["published_frames"]} frames</small>{err}</td>'
                     f'<td class="st">{st}</td><td>{verdict}</td><td>{lens_txt}</td><td>{cal_txt}</td><td>{el}</td><td>{path_txt}</td><td>{drift_txt}</td><td>{fx_txt}</td><td>{ground_txt}</td>'
                     f'<td class="imgs">{imgs}<div>{" &middot; ".join(links)}</div></td></tr>')
     if not pod.get("id"):
@@ -139,16 +183,18 @@ def write_status_html(state: dict, scenes: list[dict]) -> None:
         pod_txt = f"pod {pod['id']} deleted at {pod['down_utc'][:19].replace('T', ' ')} UTC" + (" &middot; <b>waiting for the next session</b>" if counts.get("pending", 0) or counts.get("running", 0) else " &middot; <b>batch complete</b>")
     else:
         pod_txt = f"pod {pod['id']} {pod.get('phase', 'running')} (cloud stop {pod.get('stop_after', '-')})"
-    html = f"""<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="60"><title>Starred undistort re-run</title>
+    live = 1 if (counts.get("running", 0) or counts.get("pending", 0)) else 0
+    html = f"""<!doctype html><meta charset="utf-8"><title>{BATCH} re-run</title>
 <style>body{{font:14px system-ui;background:#0c0d0f;color:#e8ebef;margin:20px}}table{{border-collapse:collapse;width:100%}}td,th{{padding:8px 10px;border-bottom:1px solid #2a3037;vertical-align:top;text-align:left}}
 th{{color:#8b95a1;font-weight:600}}a{{color:#36e4ff}}img{{width:300px;border-radius:6px;margin:2px 6px 2px 0;border:1px solid #2a3037}}.imgs{{white-space:nowrap}}
 .st{{font-weight:700;text-transform:uppercase}}tr.done .st{{color:#36e4ff}}tr.failed .st{{color:#ff4d6d}}tr.running .st{{color:#ffd60a}}tr.pending .st{{color:#8b95a1}}.err{{color:#ff4d6d;font-size:12px;margin-top:4px}}
-.ok{{color:#36e4ff;font-weight:700}}.no{{color:#ffb000;font-weight:700}}.sum{{color:#8b95a1;margin-bottom:14px}}@media(max-width:900px){{img{{width:46vw}}td,th{{padding:6px 5px;font-size:12px}}}}small{{color:#8b95a1}}</style>
+.pick{{display:inline-block;margin:0 10px 4px 0;padding:3px 8px;border:1px solid #2a3037;border-radius:6px;color:#8b95a1;cursor:pointer;user-select:none}}.pick input{{transform:scale(1.4);margin-right:6px;vertical-align:middle}}tr.picked td:first-child{{box-shadow:inset 4px 0 0 #36e4ff}}.ok{{color:#36e4ff;font-weight:700}}.no{{color:#ffb000;font-weight:700}}.sum{{color:#8b95a1;margin-bottom:14px}}@media(max-width:900px){{img{{width:46vw}}td,th{{padding:6px 5px;font-size:12px}}}}small{{color:#8b95a1}}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1"><h1>{BATCH}: undistort-to-pinhole re-run</h1>
 <div class="sum">updated {now_utc().strftime('%Y-%m-%d %H:%M:%S')} UTC &middot; {pod_txt} &middot;
-<b>{counts.get('done', 0)} done</b>, {counts.get('running', 0)} running, {counts.get('failed', 0)} failed, {counts.get('pending', 0)} pending &middot; page refreshes every minute</div>
-<table><tr><th>Scene</th><th>Status</th><th>Result</th><th>Calibrated lens</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Ground vs published</th><th>Before / after</th></tr>
-{''.join(rows)}</table>
+<b>{counts.get('done', 0)} done</b>, {counts.get('running', 0)} running, {counts.get('failed', 0)} failed, {counts.get('pending', 0)} pending &middot; <span id="selinfo"><b id="selcount">{len(selected)}</b> picked for publishing</span> &middot; <a href="/benchmarks/{BATCH}/review_selection.json">selection file</a> &middot; <span id="live">{"table refreshes every minute" if counts.get("running", 0) or counts.get("pending", 0) else "batch complete"}</span></div>
+<div id="tblwrap" data-batch="{BATCH}" data-live="{live}"><table><tr><th>Scene</th><th>Status</th><th>Result</th><th>Calibrated lens</th><th>SfM reg.</th><th>Time</th><th>Path disagreement vs SfM</th><th>Local scale std</th><th>Focal ratio (after)</th><th>Ground vs published</th><th>Before / after</th></tr>
+{''.join(rows)}</table></div>
+{STATUS_JS}
 <p class="sum">Path disagreement: Sim(3) residual of the VGGT camera path against the GLOMAP self-calibration path, fraction of its length. Local scale std: 20-frame window scale over global. Focal ratio: VGGT's focal estimate over the calibrated pinhole focal (1.0 = consistent). Ground vs published: angle between the ground plane fitted on the new run and the published scene's ground, compared through the camera-path alignment; above 10&deg; one of the two fits needs a look (a warning, not a rejection). Before = published product, after = undistorted re-run.</p>
 """
     with _STATUS_LOCK:  # the refresh thread and the main loop both write this page
