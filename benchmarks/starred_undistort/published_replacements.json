@@ -1,7 +1,7 @@
 {
   "tag": "lenscorr1",
-  "utc": "2026-09-15T10:48:56+00:00",
-  "published": false,
+  "utc": "2026-09-15T10:55:58+00:00",
+  "published": true,
   "scenes": [
     {
       "video_id": "2026-05-02_strike_on_namer_apc_in_bint_jbeil",
@@ -11,7 +11,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:57+00:00",
+        "replaced_published_product_utc": "2026-09-15T10:55:58+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.02465356467552449,
           "lens_corrected": 0.013498625386240906
@@ -32,7 +32,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:57+00:00",
+        "replaced_published_product_utc": "2026-09-15T10:56:27+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.040407006942187434,
           "lens_corrected": 0.008632045131805046
@@ -53,7 +53,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:57+00:00",
+        "replaced_published_product_utc": "2026-09-15T10:56:53+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.009669821385910389,
           "lens_corrected": 0.0024300254176822223
@@ -74,7 +74,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:57+00:00",
+        "replaced_published_product_utc": "2026-09-15T10:57:26+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.04569694840379947,
           "lens_corrected": 0.0128128083514585
@@ -95,7 +95,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:57+00:00",
+        "replaced_published_product_utc": "2026-09-15T10:58:00+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.012434159325050612,
           "lens_corrected": 0.006586704799389062
@@ -116,7 +116,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:58+00:00",
+        "replaced_published_product_utc": "2026-09-15T10:58:29+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.016156490737660366,
           "lens_corrected": 0.012433530804448834
@@ -137,7 +137,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:58+00:00",
+        "replaced_published_product_utc": "2026-09-15T10:58:54+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.038329335001595265,
           "lens_corrected": 0.02191428188430164
@@ -158,7 +158,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:58+00:00",
+        "replaced_published_product_utc": "2026-09-15T10:59:22+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.021589908192527096,
           "lens_corrected": 0.00945269168546601
@@ -179,7 +179,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:58+00:00",
+        "replaced_published_product_utc": "2026-09-15T10:59:46+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.010693719722755424,
           "lens_corrected": 0.004149610522145721
@@ -200,7 +200,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:58+00:00",
+        "replaced_published_product_utc": "2026-09-15T11:00:16+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.028421117335522172,
           "lens_corrected": 0.005550132183879861
@@ -221,7 +221,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:58+00:00",
+        "replaced_published_product_utc": "2026-09-15T11:00:41+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.019317482763437043,
           "lens_corrected": 0.007154391601015684
@@ -242,7 +242,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:59+00:00",
+        "replaced_published_product_utc": "2026-09-15T11:01:07+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.028621892610830178,
           "lens_corrected": 0.012624559217628685
@@ -263,7 +263,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:59+00:00",
+        "replaced_published_product_utc": "2026-09-15T11:01:36+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.09349279412662301,
           "lens_corrected": 0.0935838181793619
@@ -284,7 +284,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:59+00:00",
+        "replaced_published_product_utc": "2026-09-15T11:02:02+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.051510776767414494,
           "lens_corrected": 0.006614499913659624
@@ -305,7 +305,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:59+00:00",
+        "replaced_published_product_utc": "2026-09-15T11:02:31+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.029089847662157126,
           "lens_corrected": 0.009002836324063651
@@ -326,7 +326,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:48:59+00:00",
+        "replaced_published_product_utc": "2026-09-15T11:03:04+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.010620272704466112,
           "lens_corrected": 0.007422050845498292
@@ -347,7 +347,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:49:00+00:00",
+        "replaced_published_product_utc": "2026-09-15T11:03:34+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.007084588661032515,
           "lens_corrected": 0.006162027264417949
@@ -368,7 +368,7 @@
       "pipeline": {
         "tag": "lenscorr1",
         "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
-        "replaced_published_product_utc": "2026-09-15T10:49:00+00:00",
+        "replaced_published_product_utc": "2026-09-15T11:04:02+00:00",
         "path_disagreement_vs_sfm": {
           "published": 0.010758166898404859,
           "lens_corrected": 0.007355238423777641

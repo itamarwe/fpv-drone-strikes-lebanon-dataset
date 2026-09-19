@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BATCH = __import__("os").environ.get("FPV_UNDISTORT_BATCH", "starred_undistort")  # batch name: benchmarks/<BATCH>, scenes/<BATCH>, reports/<BATCH>
 SPEC = ROOT / "benchmarks" / BATCH / "starred_scenes.json"
 SEL = ROOT / "benchmarks" / BATCH / "publish_selection.json"
+REVIEW = ROOT / "benchmarks" / BATCH / "review_selection.json"  # ticks from the status page (takes precedence when present)
 SRC = ROOT / "scenes" / BATCH
 BUCKET = os.environ.get("FPV_BUCKET", "s3://fpv-drone-strikes-lebanon-dataset")
 TAG = "lenscorr1"
@@ -68,6 +69,8 @@ def stage(scene: dict) -> tuple[Path, dict]:
     s = metrics["after_to_before_alignment"]["scale_to_reference"]
     pub_scale = pub_meta.get("default_scale_m_per_unit") or 117.6
     meta["default_scale_m_per_unit"] = float(pub_scale) * float(s)
+    if meta.get("ground_grid") and meta["default_scale_m_per_unit"] > 0:  # grid steps were sized with the published scale: re-size to the new run's units
+        g = meta["ground_grid"]; g["minor_step_units"] = 2.0 / meta["default_scale_m_per_unit"]; g["major_step_units"] = 8.0 / meta["default_scale_m_per_unit"]; g["minor_step_m"] = 2.0; g["major_step_m"] = 8.0
     if pub_meta.get("calibration"):
         cal = dict(pub_meta["calibration"]); cal["scale_m_per_vggt_unit"] = float(pub_scale) * float(s)
         cal["note"] = "manual calibration of the published product transferred through the camera-path Sim(3) to the lens-corrected run"
@@ -105,7 +108,10 @@ def main() -> int:
     ap.add_argument("--only", nargs="*", default=None)
     args = ap.parse_args()
     spec = {s["video_id"]: s for s in json.loads(SPEC.read_text())["scenes"]}
-    selected = json.loads(SEL.read_text())["selected"]
+    if REVIEW.exists():
+        selected = json.loads(REVIEW.read_text())["selected"]; print(f"using {len(selected)} scene(s) ticked on the status page ({REVIEW.name})")
+    else:
+        selected = json.loads(SEL.read_text())["selected"]
     record = {"tag": TAG, "utc": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), "published": args.publish, "scenes": []}
     for vid in selected:
         if args.only and vid not in args.only:
