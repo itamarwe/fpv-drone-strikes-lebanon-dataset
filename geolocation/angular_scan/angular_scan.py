@@ -318,8 +318,8 @@ class Verifier:
         # per-detection coverage, via detection size classes (factor 1.25 bins)
         cls = np.round(np.log(det_w) / math.log(1.25)).astype(int)
         q = np.zeros(n)
-        k = max(3, int(LOCAL_WIN_PX / self.SCALE) | 1)
-        vs = self.valid_small.astype(np.float32); vb = cv2.blur(vs, (k, k))
+        win = max(3, int(LOCAL_WIN_PX / self.SCALE) | 1)
+        vs = self.valid_small.astype(np.float32); vb = cv2.blur(vs, (win, win))
         di = np.clip((self.sc.uv / self.SCALE).astype(int), 0, [self.rw - 1, self.rh - 1])
         for c in np.unique(cls):
             wc = 1.25 ** c
@@ -327,7 +327,7 @@ class Verifier:
             m = np.zeros((self.rh, self.rw), np.uint8)
             for (u, v), rr in zip(uv[sel], rad[sel]):
                 cv2.circle(m, (int(u / self.SCALE), int(v / self.SCALE)), max(1, int(rr / self.SCALE)), 1, -1)
-            local = cv2.blur(m.astype(np.float32) * vs, (k, k)) / np.maximum(vb, 1e-6)   # coverage near each point
+            local = cv2.blur(m.astype(np.float32) * vs, (win, win)) / np.maximum(vb, 1e-6)   # coverage near each point
             idx = np.where(cls == c)[0]
             q[idx] = local[di[idx, 1], di[idx, 0]]
         q = np.clip(q, 1e-6, 1 - 1e-9)
@@ -340,6 +340,10 @@ class Verifier:
         p0 = np.array(p0, float)
         rad = np.array([radius[0], radius[1], radius[2] if radius[2] is not None else max(1.0, .25 * p0[2]),
                         *radius[3:]], float)
+        if self.sc.extra.get("focal_fixed"):
+            rad[6] = 0.0
+        if self.sc.extra.get("handheld"):          # hand-held camera: height above terrain is known
+            rad[2] = 0.0
         lo, hi = p0 - rad, p0 + rad; lo[2] = max(lo[2], 1.0)
 
         def obj(x):

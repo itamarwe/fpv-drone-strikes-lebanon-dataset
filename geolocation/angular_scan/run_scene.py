@@ -18,6 +18,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("scene"); ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--verify", type=int, default=12); ap.add_argument("--check-reference", action="store_true")
+    ap.add_argument("--reverify", action="store_true", help="reuse results/<scene>/scan_raw.json")
     args = ap.parse_args()
     out = HERE / "results" / args.scene; out.mkdir(parents=True, exist_ok=True)
     A.log(f"building scene {args.scene}")
@@ -33,9 +34,13 @@ def main():
               f"coverage {q:.0%}")
         return
     t0 = time.perf_counter()
-    raw = A.scan(sc, workers=args.workers)
-    scan_min = (time.perf_counter() - t0) / 60
-    A.save(out / "scan_raw.json", raw[:5000])
+    if args.reverify:
+        raw = json.loads((out / "scan_raw.json").read_text()); scan_min = float("nan")
+        A.log(f"reusing {len(raw)} saved scan peaks")
+    else:
+        raw = A.scan(sc, workers=args.workers)
+        scan_min = (time.perf_counter() - t0) / 60
+        A.save(out / "scan_raw.json", raw[:5000])
     variants = [("blind", None)] + ([("heading_prior", sc.extra["heading_range"])] if sc.extra.get("heading_range") else [])
     for tag, hr in variants:
         run_variant(sc, truth, V, raw, hr, args, out / tag, scan_min)

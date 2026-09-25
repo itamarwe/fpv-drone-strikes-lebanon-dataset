@@ -35,7 +35,7 @@ def sainte_maxime():
                dem_x=dem.x, dem_y=dem.y, dem_z=dem.z, box=box, heights=[2.0],
                pitches=[-10.0, 0.0], rolls=[-3.0, 0.0, 3.0], focals=geometric(1300, 3500, 1.10),
                step_m=25.0, r_min=60.0, r_max=5000.0, bin_deg=0.2, tol_px=12.0, map_sigma_m=6.0, valid=valid,
-               extra=dict(pitch_window=7.0, size_gate=True, crs=2154,
+               extra=dict(pitch_window=7.0, size_gate=True, handheld=True, crs=2154,
                           heading_range=(-20.0, 35.0)))   # the original run's prior; scan keeps both
     pin = Transformer.from_crs(4326, 2154, always_xy=True).transform(6.6452751, 43.3170973)
     truth = dict(kind="camera_position", xy=list(pin), source="user-supplied pin (Sainte-Maxime report)",
@@ -116,7 +116,7 @@ def bint_jbeil():
                dem_x=dem.x, dem_y=dem.y, dem_z=dem.z, box=box, heights=geometric(30, 300, 1.3),
                pitches=[-3.0, -11.0, -19.0, -27.0], rolls=[-12.0, -8.0, -4.0, 0.0, 4.0, 8.0, 12.0], focals=[F],
                step_m=40.0, r_min=40.0, r_max=5000.0, bin_deg=0.2, tol_px=10.0, map_sigma_m=15.0, valid=valid,
-               extra=dict(pitch_window=4.0, size_gate=False, min_building_px=1.0, crs=32636, lens="SIMPLE_RADIAL_FISHEYE f 468.43 k1 -0.0714",
+               extra=dict(pitch_window=4.0, size_gate=False, min_building_px=1.0, focal_fixed=True, crs=32636, lens="SIMPLE_RADIAL_FISHEYE f 468.43 k1 -0.0714",
                           box_offset_m=off))
     truth = dict(kind="camera_position", xy=cam_truth, camera_xy=cam_truth, agl_m=90.0, heading=157.6, depression=4.58,
                  source="SQPnP on the analyst's 6 correspondences (reports/real_scene/skyline_approach/result.json)")
