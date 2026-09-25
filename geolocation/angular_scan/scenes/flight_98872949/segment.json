@@ -1,0 +1,16 @@
+{
+  "video": "/Users/itamarwe/Documents/code/fpv-drone-strikes-lebanon-dataset/data/vidit_geo_lego/events/98872949-d1b5-4951-a173-dd357a1b133c/media/source_738a53a5-a31b-40e4-a02f-54663c34aeb0.mp4",
+  "event_id": "98872949",
+  "segment_s": [
+    8,
+    40
+  ],
+  "fps": 5,
+  "frames": 161,
+  "truth": {
+    "kind": "strike_point",
+    "lat": 33.1239,
+    "lon": 35.4268,
+    "source": "geo_lego event coordinate (manifest)"
+  }
+}

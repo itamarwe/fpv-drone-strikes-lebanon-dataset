@@ -1,0 +1,189 @@
+[    0.1 s] building scene sainte_maxime
+[    0.5 s] 69 detections, 2159 map buildings, camera box 2.5 x 3.5 km
+[    0.5 s] scan: 14000 positions x 1 heights, 11 focals x 2 pitches x 3 rolls x 1800 headings; 69 detections, 2159 map buildings
+[  338.2 s]   700/14000 positions; best z so far 5.19
+[  663.4 s]   1400/14000 positions; best z so far 5.21
+[  964.5 s]   2100/14000 positions; best z so far 5.48
+[ 1252.6 s]   2800/14000 positions; best z so far 5.48
+[ 1535.1 s]   3500/14000 positions; best z so far 5.48
+[ 1775.8 s]   4200/14000 positions; best z so far 5.81
+[ 1995.6 s]   4900/14000 positions; best z so far 5.81
+[ 2179.1 s]   5600/14000 positions; best z so far 5.81
+[ 2369.4 s]   6300/14000 positions; best z so far 5.81
+[ 2555.1 s]   7000/14000 positions; best z so far 5.81
+[ 2737.8 s]   7700/14000 positions; best z so far 5.81
+[ 2901.4 s]   8400/14000 positions; best z so far 5.81
+[ 3071.5 s]   9100/14000 positions; best z so far 5.81
+[ 3255.8 s]   9800/14000 positions; best z so far 5.81
+[ 3445.0 s]   10500/14000 positions; best z so far 5.81
+[ 3627.7 s]   11200/14000 positions; best z so far 5.81
+[ 3849.6 s]   11900/14000 positions; best z so far 5.81
+[ 4078.0 s]   12600/14000 positions; best z so far 5.81
+[ 4341.7 s]   13300/14000 positions; best z so far 5.81
+[ 4606.9 s]   14000/14000 positions; best z so far 5.81
+[ 4607.1 s] [blind] verifying top 40 of 40 distinct peaks (heading range None)
+[ 4625.0 s]   peak 1: z 5.81 -> S 6.9 (18 matches, chance 5.1) heading 324 pitch -3.7 roll 5.0 f 1344
+[ 4642.5 s]   peak 2: z 5.80 -> S 6.9 (17 matches, chance 4.2) heading 249 pitch -3.7 roll 2.8 f 1302
+[ 4660.4 s]   peak 3: z 5.59 -> S 4.8 (7 matches, chance 1.0) heading 326 pitch -3.0 roll -0.8 f 1231
+[ 4672.2 s]   peak 4: z 5.48 -> S 4.3 (6 matches, chance 0.7) heading 337 pitch -1.4 roll 2.3 f 1571
+[ 4688.8 s]   peak 5: z 5.44 -> S 5.6 (14 matches, chance 3.7) heading 181 pitch -3.3 roll 3.0 f 1583
+[ 4705.9 s]   peak 6: z 5.40 -> S 5.9 (10 matches, chance 1.6) heading 202 pitch -4.2 roll 5.0 f 1268
+[ 4721.9 s]   peak 7: z 5.39 -> S 5.8 (12 matches, chance 2.6) heading 171 pitch -5.0 roll 3.0 f 1733
+[ 4739.0 s]   peak 8: z 5.38 -> S 5.9 (11 matches, chance 2.2) heading 274 pitch -0.6 roll 2.6 f 1425
+[ 4756.5 s]   peak 9: z 5.34 -> S 5.4 (17 matches, chance 5.4) heading 299 pitch -0.1 roll 3.9 f 1772
+[ 4771.5 s]   peak 10: z 5.28 -> S 6.3 (12 matches, chance 2.5) heading 284 pitch 1.7 roll 3.0 f 3057
+[ 4789.4 s]   peak 11: z 5.28 -> S 8.0 (21 matches, chance 6.0) heading 197 pitch -4.2 roll 2.9 f 1454
+[ 4806.4 s]   peak 12: z 5.27 -> S 9.0 (15 matches, chance 2.8) heading 337 pitch 2.6 roll 2.9 f 1300
+[ 4823.1 s]   peak 13: z 5.27 -> S 7.7 (15 matches, chance 3.2) heading 333 pitch -3.0 roll 3.8 f 1728
+[ 4841.1 s]   peak 14: z 5.26 -> S 5.4 (17 matches, chance 5.4) heading 219 pitch -2.0 roll -3.4 f 1321
+[ 4857.4 s]   peak 15: z 5.25 -> S 5.9 (15 matches, chance 3.9) heading 304 pitch -0.0 roll 3.1 f 1275
+[ 4874.7 s]   peak 16: z 5.24 -> S 7.9 (23 matches, chance 6.9) heading 250 pitch 1.3 roll -0.0 f 1430
+[ 4893.0 s]   peak 17: z 5.24 -> S 5.6 (8 matches, chance 1.3) heading 231 pitch -5.4 roll 1.1 f 1239
+[ 4906.7 s]   peak 18: z 5.21 -> S 4.7 (12 matches, chance 3.1) heading 68 pitch 4.1 roll 5.0 f 1443
+[ 4921.0 s]   peak 19: z 5.20 -> S 5.7 (12 matches, chance 2.7) heading 209 pitch -5.3 roll 5.0 f 1730
+[ 4939.4 s]   peak 20: z 5.19 -> S 3.9 (11 matches, chance 3.1) heading 38 pitch -1.1 roll 3.0 f 1376
+[ 4955.6 s]   peak 21: z 5.19 -> S 5.2 (10 matches, chance 2.1) heading 6 pitch 1.5 roll 3.1 f 1430
+[ 4972.2 s]   peak 22: z 5.17 -> S 7.2 (18 matches, chance 5.1) heading 264 pitch -0.9 roll -0.3 f 3134
+[ 4989.3 s]   peak 23: z 5.15 -> S 6.6 (11 matches, chance 1.8) heading 344 pitch 0.1 roll -0.1 f 2093
+[ 5007.7 s]   peak 24: z 5.15 -> S 8.0 (25 matches, chance 8.5) heading 247 pitch -2.1 roll 5.0 f 1227
+[ 5024.0 s]   peak 25: z 5.15 -> S 2.4 (7 matches, chance 2.2) heading 128 pitch -2.0 roll 0.3 f 1799
+[ 5036.6 s]   peak 26: z 5.13 -> S 4.8 (7 matches, chance 0.9) heading 186 pitch -1.5 roll 2.9 f 1430
+[ 5055.8 s]   peak 27: z 5.12 -> S 4.2 (15 matches, chance 5.3) heading 15 pitch -6.1 roll 3.8 f 1431
+[ 5071.2 s]   peak 28: z 5.10 -> S 6.4 (19 matches, chance 6.0) heading 280 pitch -0.0 roll -0.3 f 1435
+[ 5088.5 s]   peak 29: z 5.09 -> S 5.1 (6 matches, chance 0.7) heading 136 pitch -3.4 roll 3.1 f 3067
+[ 5107.9 s]   peak 30: z 5.08 -> S 5.9 (18 matches, chance 6.4) heading 294 pitch 0.1 roll 2.6 f 1580
+[ 5121.4 s]   peak 31: z 5.07 -> S 3.5 (4 matches, chance 0.4) heading 180 pitch 0.7 roll -5.0 f 1484
+[ 5137.9 s]   peak 32: z 5.06 -> S 6.0 (7 matches, chance 0.7) heading 1 pitch -1.1 roll 3.3 f 1738
+[ 5154.6 s]   peak 33: z 5.06 -> S 6.6 (19 matches, chance 6.0) heading 197 pitch -5.0 roll 3.0 f 1430
+[ 5173.2 s]   peak 34: z 5.05 -> S 7.0 (15 matches, chance 3.6) heading 344 pitch -0.2 roll 2.9 f 1732
+[ 5190.9 s]   peak 35: z 5.04 -> S 6.2 (9 matches, chance 1.2) heading 345 pitch 0.8 roll 0.0 f 3062
+[ 5205.8 s]   peak 36: z 5.04 -> S 7.6 (10 matches, chance 1.5) heading 207 pitch -5.3 roll -1.0 f 1279
+[ 5223.0 s]   peak 37: z 5.02 -> S 4.5 (9 matches, chance 1.8) heading 51 pitch -1.5 roll -1.0 f 2535
+[ 5241.5 s]   peak 38: z 5.02 -> S 7.6 (19 matches, chance 5.1) heading 330 pitch -2.4 roll 3.4 f 1354
+[ 5256.8 s]   peak 39: z 5.02 -> S 3.6 (8 matches, chance 1.8) heading 19 pitch 0.5 roll 4.4 f 1815
+[ 5272.9 s]   peak 40: z 5.01 -> S 5.6 (16 matches, chance 4.6) heading 166 pitch -6.3 roll 5.0 f 1268
+[ 5272.9 s] final scan      S  matches (chance) heading  pitch  roll  focal height  error m
+    1   12    9.0        15 ( 2.8)     337    2.6   2.9   1300      2      693
+    2   11    8.0        21 ( 6.0)     197   -4.2   2.9   1454      2     1974
+    3   24    8.0        25 ( 8.5)     247   -2.1   5.0   1227      2     1300
+    4   16    7.9        23 ( 6.9)     250    1.3  -0.0   1430      2     1490
+    5   13    7.7        15 ( 3.2)     333   -3.0   3.8   1728      2      607
+    6   38    7.6        19 ( 5.1)     330   -2.4   3.4   1354      2      497
+    7   36    7.6        10 ( 1.5)     207   -5.3  -1.0   1279      2     1405
+    8   22    7.2        18 ( 5.1)     264   -0.9  -0.3   3134      2     1124
+    9   34    7.0        15 ( 3.6)     344   -0.2   2.9   1732      2      746
+   10    2    6.9        17 ( 4.2)     249   -3.7   2.8   1302      2     1103
+   11    1    6.9        18 ( 5.1)     324   -3.7   5.0   1344      2      439
+   12   23    6.6        11 ( 1.8)     344    0.1  -0.1   2093      2      806
+   13   33    6.6        19 ( 6.0)     197   -5.0   3.0   1430      2     2079
+   14   28    6.4        19 ( 6.0)     280   -0.0  -0.3   1435      2      897
+   15   10    6.3        12 ( 2.5)     284    1.7   3.0   3057      2     1629
+   16   35    6.2         9 ( 1.2)     345    0.8   0.0   3062      2     1541
+   17   32    6.0         7 ( 0.7)       1   -1.1   3.3   1738      2     1753
+   18   30    5.9        18 ( 6.4)     294    0.1   2.6   1580      2      787
+   19   15    5.9        15 ( 3.9)     304   -0.0   3.1   1275      2      625
+   20    6    5.9        10 ( 1.6)     202   -4.2   5.0   1268      2     1656
+   21    8    5.9        11 ( 2.2)     274   -0.6   2.6   1425      2      971
+   22    7    5.8        12 ( 2.6)     171   -5.0   3.0   1733      2     1302
+   23   19    5.7        12 ( 2.7)     209   -5.3   5.0   1730      2     1707
+   24   17    5.6         8 ( 1.3)     231   -5.4   1.1   1239      2     1569
+   25    5    5.6        14 ( 3.7)     181   -3.3   3.0   1583      2     1356
+   26   40    5.6        16 ( 4.6)     166   -6.3   5.0   1268      2     1087
+   27   14    5.4        17 ( 5.4)     219   -2.0  -3.4   1321      2     1655
+   28    9    5.4        17 ( 5.4)     299   -0.1   3.9   1772      2      434
+   29   21    5.2        10 ( 2.1)       6    1.5   3.1   1430      2     1013
+   30   29    5.1         6 ( 0.7)     136   -3.4   3.1   3067      2     1511
+   31   26    4.8         7 ( 0.9)     186   -1.5   2.9   1430      2     1760
+   32    3    4.8         7 ( 1.0)     326   -3.0  -0.8   1231      2      298
+   33   18    4.7        12 ( 3.1)      68    4.1   5.0   1443      2     1798
+   34   37    4.5         9 ( 1.8)      51   -1.5  -1.0   2535      2     1887
+   35    4    4.3         6 ( 0.7)     337   -1.4   2.3   1571      2      929
+   36   27    4.2        15 ( 5.3)      15   -6.1   3.8   1431      2     1190
+   37   20    3.9        11 ( 3.1)      38   -1.1   3.0   1376      2     1710
+   38   39    3.6         8 ( 1.8)      19    0.5   4.4   1815      2     1536
+   39   31    3.5         4 ( 0.4)     180    0.7  -5.0   1484      2     1557
+   40   25    2.4         7 ( 2.2)     128   -2.0   0.3   1799      2     1936
+[ 5272.9 s] rank of first result within 50 m: None; S margin best - second: 1.0
+[ 5272.9 s] [heading_prior] verifying top 40 of 40 distinct peaks (heading range (-20.0, 35.0))
+[ 5288.9 s]   peak 1: z 5.47 -> S 8.8 (13 matches, chance 1.8) heading 340 pitch 0.4 roll 3.7 f 3055
+[ 5305.1 s]   peak 2: z 5.19 -> S 5.2 (10 matches, chance 2.1) heading 6 pitch 1.5 roll 3.1 f 1430
+[ 5324.2 s]   peak 3: z 5.12 -> S 4.2 (15 matches, chance 5.3) heading 15 pitch -6.1 roll 3.8 f 1431
+[ 5340.7 s]   peak 4: z 5.06 -> S 6.0 (7 matches, chance 0.7) heading 1 pitch -1.1 roll 3.3 f 1738
+[ 5359.3 s]   peak 5: z 5.05 -> S 7.0 (15 matches, chance 3.6) heading 344 pitch -0.2 roll 2.9 f 1732
+[ 5377.0 s]   peak 6: z 5.04 -> S 6.2 (9 matches, chance 1.2) heading 345 pitch 0.8 roll 0.0 f 3062
+[ 5392.3 s]   peak 7: z 5.02 -> S 3.6 (8 matches, chance 1.8) heading 19 pitch 0.5 roll 4.4 f 1815
+[ 5406.4 s]   peak 8: z 5.00 -> S 5.5 (5 matches, chance 0.3) heading 358 pitch -6.8 roll 1.1 f 1573
+[ 5423.1 s]   peak 9: z 4.99 -> S 4.0 (7 matches, chance 1.5) heading 13 pitch 5.2 roll -2.0 f 1802
+[ 5438.1 s]   peak 10: z 4.99 -> S 6.4 (13 matches, chance 2.9) heading 344 pitch -0.4 roll 3.4 f 2676
+[ 5451.5 s]   peak 11: z 4.98 -> S 3.8 (5 matches, chance 0.6) heading 15 pitch -4.4 roll 1.1 f 1245
+[ 5466.9 s]   peak 12: z 4.98 -> S 4.6 (14 matches, chance 4.5) heading 359 pitch -5.9 roll -0.2 f 1395
+[ 5480.1 s]   peak 13: z 4.97 -> S 2.9 (8 matches, chance 2.3) heading 12 pitch -3.3 roll -0.9 f 2300
+[ 5498.3 s]   peak 14: z 4.95 -> S 6.3 (20 matches, chance 6.5) heading 360 pitch 0.3 roll 5.0 f 2549
+[ 5506.7 s]   peak 15: z 4.94 -> S 3.0 (4 matches, chance 0.5) heading 355 pitch -1.4 roll -3.5 f 3294
+[ 5520.9 s]   peak 16: z 4.93 -> S 6.6 (12 matches, chance 2.3) heading 348 pitch 0.9 roll 4.3 f 2523
+[ 5538.8 s]   peak 17: z 4.92 -> S 6.7 (13 matches, chance 2.8) heading 340 pitch 2.7 roll 3.0 f 1298
+[ 5553.9 s]   peak 18: z 4.91 -> S 3.9 (6 matches, chance 0.9) heading 19 pitch -4.6 roll 2.0 f 2233
+[ 5568.9 s]   peak 19: z 4.91 -> S 2.0 (4 matches, chance 0.9) heading 14 pitch -2.6 roll -3.6 f 2010
+[ 5587.5 s]   peak 20: z 4.88 -> S 6.9 (12 matches, chance 2.2) heading 340 pitch -0.8 roll 3.0 f 1809
+[ 5605.8 s]   peak 21: z 4.88 -> S 8.7 (15 matches, chance 2.6) heading 356 pitch -0.4 roll 2.9 f 2534
+[ 5625.8 s]   peak 22: z 4.87 -> S 7.5 (14 matches, chance 3.0) heading 354 pitch 0.5 roll 3.0 f 2303
+[ 5640.4 s]   peak 23: z 4.87 -> S 6.4 (11 matches, chance 1.9) heading 343 pitch -3.6 roll 3.0 f 1430
+[ 5658.8 s]   peak 24: z 4.85 -> S 7.5 (10 matches, chance 1.6) heading 5 pitch -0.4 roll 3.0 f 1897
+[ 5677.0 s]   peak 25: z 4.82 -> S 5.5 (8 matches, chance 1.1) heading 343 pitch 0.3 roll 2.7 f 2933
+[ 5691.6 s]   peak 26: z 4.82 -> S 4.0 (7 matches, chance 1.4) heading 4 pitch 4.3 roll 3.6 f 1423
+[ 5707.2 s]   peak 27: z 4.81 -> S 5.9 (12 matches, chance 2.5) heading 344 pitch 0.5 roll 2.8 f 3561
+[ 5723.3 s]   peak 28: z 4.81 -> S 5.9 (14 matches, chance 3.3) heading 28 pitch 2.7 roll 2.2 f 2780
+[ 5741.0 s]   peak 29: z 4.77 -> S 3.6 (8 matches, chance 2.1) heading 20 pitch -2.9 roll -3.7 f 2299
+[ 5755.5 s]   peak 30: z 4.77 -> S 4.0 (6 matches, chance 0.8) heading 10 pitch -7.1 roll -3.1 f 1298
+[ 5770.9 s]   peak 31: z 4.77 -> S 6.0 (8 matches, chance 1.1) heading 13 pitch -3.7 roll 3.3 f 1874
+[ 5790.1 s]   peak 32: z 4.76 -> S 7.4 (22 matches, chance 7.3) heading 17 pitch 2.8 roll 4.6 f 1825
+[ 5804.8 s]   peak 33: z 4.75 -> S 2.7 (6 matches, chance 1.5) heading 11 pitch 4.8 roll -2.8 f 3359
+[ 5824.3 s]   peak 34: z 4.75 -> S 4.7 (13 matches, chance 3.8) heading 343 pitch -2.4 roll 5.0 f 2243
+[ 5840.4 s]   peak 35: z 4.75 -> S 2.3 (6 matches, chance 1.8) heading 29 pitch 3.2 roll 2.9 f 1311
+[ 5852.6 s]   peak 36: z 4.75 -> S 3.1 (6 matches, chance 1.3) heading 8 pitch -0.7 roll -4.2 f 3561
+[ 5869.3 s]   peak 37: z 4.74 -> S 3.9 (8 matches, chance 1.6) heading 9 pitch -1.1 roll -0.3 f 1456
+[ 5884.2 s]   peak 38: z 4.73 -> S 3.8 (5 matches, chance 0.6) heading 340 pitch -1.1 roll 1.7 f 2040
+[ 5903.2 s]   peak 39: z 4.70 -> S 8.7 (13 matches, chance 2.2) heading 352 pitch 0.5 roll 2.0 f 2998
+[ 5912.9 s]   peak 40: z 4.68 -> S 4.5 (8 matches, chance 1.5) heading 19 pitch 1.0 roll -3.0 f 1730
+[ 5912.9 s] final scan      S  matches (chance) heading  pitch  roll  focal height  error m
+    1    1    8.8        13 ( 1.8)     340    0.4   3.7   3055      2      923
+    2   21    8.7        15 ( 2.6)     356   -0.4   2.9   2534      2      334
+    3   39    8.7        13 ( 2.2)     352    0.5   2.0   2998      2     1587
+    4   22    7.5        14 ( 3.0)     354    0.5   3.0   2303      2     1174
+    5   24    7.5        10 ( 1.6)       5   -0.4   3.0   1897      2      587
+    6   32    7.4        22 ( 7.3)      17    2.8   4.6   1825      2      755
+    7    5    7.0        15 ( 3.6)     344   -0.2   2.9   1732      2      746
+    8   20    6.9        12 ( 2.2)     340   -0.8   3.0   1809      2      698
+    9   17    6.7        13 ( 2.8)     340    2.7   3.0   1298      2      733
+   10   16    6.6        12 ( 2.3)     348    0.9   4.3   2523      2      927
+   11   10    6.4        13 ( 2.9)     344   -0.4   3.4   2676      2      740
+   12   23    6.4        11 ( 1.9)     343   -3.6   3.0   1430      2      262
+   13   14    6.3        20 ( 6.5)     360    0.3   5.0   2549      2      400
+   14    6    6.2         9 ( 1.2)     345    0.8   0.0   3062      2     1541
+   15    4    6.0         7 ( 0.7)       1   -1.1   3.3   1738      2     1753
+   16   31    6.0         8 ( 1.1)      13   -3.7   3.3   1874      2      950
+   17   27    5.9        12 ( 2.5)     344    0.5   2.8   3561      2      976
+   18   28    5.9        14 ( 3.3)      28    2.7   2.2   2780      2     1138
+   19    8    5.5         5 ( 0.3)     358   -6.8   1.1   1573      2     1977
+   20   25    5.5         8 ( 1.1)     343    0.3   2.7   2933      2     1378
+   21    2    5.2        10 ( 2.1)       6    1.5   3.1   1430      2     1013
+   22   34    4.7        13 ( 3.8)     343   -2.4   5.0   2243      2      516
+   23   12    4.6        14 ( 4.5)     359   -5.9  -0.2   1395      2     1073
+   24   40    4.5         8 ( 1.5)      19    1.0  -3.0   1730      2     1004
+   25    3    4.2        15 ( 5.3)      15   -6.1   3.8   1431      2     1190
+   26   30    4.0         6 ( 0.8)      10   -7.1  -3.1   1298      2     1764
+   27   26    4.0         7 ( 1.4)       4    4.3   3.6   1423      2     1227
+   28    9    4.0         7 ( 1.5)      13    5.2  -2.0   1802      2     1038
+   29   18    3.9         6 ( 0.9)      19   -4.6   2.0   2233      2     1497
+   30   37    3.9         8 ( 1.6)       9   -1.1  -0.3   1456      2     1121
+   31   11    3.8         5 ( 0.6)      15   -4.4   1.1   1245      2     1784
+   32   38    3.8         5 ( 0.6)     340   -1.1   1.7   2040      2     1138
+   33    7    3.6         8 ( 1.8)      19    0.5   4.4   1815      2     1536
+   34   29    3.6         8 ( 2.1)      20   -2.9  -3.7   2299      2     1134
+   35   36    3.1         6 ( 1.3)       8   -0.7  -4.2   3561      2     1542
+   36   15    3.0         4 ( 0.5)     355   -1.4  -3.5   3294      2     1363
+   37   13    2.9         8 ( 2.3)      12   -3.3  -0.9   2300      2     1382
+   38   33    2.7         6 ( 1.5)      11    4.8  -2.8   3359      2     1576
+   39   35    2.3         6 ( 1.8)      29    3.2   2.9   1311      2     1284
+   40   19    2.0         4 ( 0.9)      14   -2.6  -3.6   2010      2     1653
+[ 5912.9 s] rank of first result within 50 m: None; S margin best - second: 0.1
