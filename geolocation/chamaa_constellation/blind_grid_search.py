@@ -7,7 +7,7 @@ chance-corrected z score. The truth is read only at the end, to report the error
 Grid spacing follows the measured tolerance of the 2D search (tilt ~+-6 deg, roll ~+-6 deg,
 focal ~+-20%): tilt -15..-75 in 6 deg steps, roll -6/0/+6, focal 450-2900 px in x1.44 steps.
 """
-import json, math, time
+import json, math, sys, time
 import numpy as np
 import chamaa_constellation as cc
 import feasibility_bev_search as fb
@@ -32,9 +32,13 @@ def peaks(best, arg, box, n=3, sep_m=150):
     return out
 
 
+AREA = sys.argv[1] if len(sys.argv) > 1 else "2x2km"
+SUFFIX = "" if AREA == "2x2km" else f"_{AREA}"
+
+
 def main():
     areas = {a["name"]: a for a in json.loads((cc.DATA / "search_areas.json").read_text())["areas"]}
-    box = areas["2x2km"]["bounds_utm"]
+    box = areas[AREA]["bounds_utm"]
     pad_m = 2500.0; big = (box[0] - pad_m, box[1] - pad_m, box[2] + pad_m, box[3] + pad_m)
     extra = cc.Problem(dict(name="big", bounds_utm=list(big)))
     W_m = float(np.median([2 * max(np.linalg.norm(a), np.linalg.norm(b)) for a, b in extra.axes]))
@@ -75,8 +79,8 @@ def main():
     for i, d in enumerate(distinct[:8], 1):
         print(f"{i:>4}{d['z']:>8.2f}{d['error_m']:>9.0f}{d['heading']:>9.0f}{d['height']:>8.0f}{d['pitch']:>7.0f}{d['roll']:>6.0f}{d['focal']:>7.0f}")
     print(f"rank of the first place within 50 m of the truth: {rank}")
-    (cc.RESULTS / "blind_grid_search.json").write_text(json.dumps(dict(
-        box="2x2km", combos=len(combos), minutes=elapsed / 60, rank_of_correct=rank,
+    (cc.RESULTS / f"blind_grid_search{SUFFIX}.json").write_text(json.dumps(dict(
+        box=AREA, combos=len(combos), minutes=elapsed / 60, rank_of_correct=rank,
         top=distinct[:20], grid=dict(pitch=PITCHES.tolist(), roll=list(ROLLS), focal=FOCALS.tolist())),
         indent=2, default=float))
 

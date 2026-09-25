@@ -3,11 +3,11 @@
 **Test date:** 25 September 2026
 **Method under test:** the Sainte-Maxime building-constellation camera search
 ([write-up](../../../docs/constellation_geolocation_method.md))
-**Update — a fully blind search now finds the photo (rank 1, 5 m error).** The original
+**Update — a fully blind search now finds the photo (rank 1 in both boxes: 5 m and 8 m error).** The original
 Sainte-Maxime method, reproduced as written, failed (below). A redesigned search — a grid over
 camera tilt/roll/focal, an exhaustive heading × height × position scan in bird's-eye view, then
-full 3D refinement scored by chance-corrected significance — ranks the true location first in the
-2 × 2 km box with a wide margin. See [Blind decomposed search](#blind-decomposed-search-the-one-that-works).
+full 3D refinement scored by chance-corrected significance — ranks the true location first in both the
+2 × 2 km box (5 m) and the 4 × 4 km box (8 m), with a wide margin after verification. See [Blind decomposed search](#blind-decomposed-search-the-one-that-works).
 
 **Verdict on the original method: it did not succeed.** In both search areas every candidate was
 at least 300 m from the truth, and none was within the 50 m "correct" threshold.
@@ -61,8 +61,24 @@ margin is decisive: S 17.8 vs 4.4, i.e. the winner's match count has a chance pr
 10⁻¹⁸, against about 10⁻⁴ for the runner-up. The refined winner's S equals that of the refined true
 pose (17.8), so the search reached the same basin.
 
-**Caveats.** This is one photo in one 2 × 2 km box. The 4 × 4 km box has not been run yet (about 4×
-the scan cost, and more chance peaks). The grid stage's small margin shows the coarse z-score is
+**4 × 4 km box (859 OSM buildings, 100.8 min grid on a CPU shared with another job, top 12 verified):**
+
+| final rank | grid rank | S | houses matched (chance) | crossings | heading | height m | focal px | error m |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **1** | 1 | **18.0** | 31 (7.3) | 4 | 227 | 366 | 1988 | **8** |
+| 2 | 5 | 8.1 | 12 (7.9) | 5 | 347 | 130 | 784 | 2977 |
+| 3 | 3 | 5.8 | 5 (1.9) | 3 | 11 | 174 | 1122 | 2462 |
+| 4 | 12 | 5.1 | 10 (7.0) | 4 | 90 | 142 | 817 | 2642 |
+| 5 | 4 | 4.8 | 2 (1.4) | 3 | 226 | 185 | 1104 | 1313 |
+
+**Rank of the correct location: 1 in both boxes.** The grid stage alone ranks it first in the 4 × 4 km
+box too (z 11.66 vs 11.13, 2 m error). The runner-up after verification scores S 8.1, higher than in
+the 2 × 2 km box (4.4), as expected from four times as many chance configurations, but the gap is still
+about 10 orders of magnitude of chance probability. The winner's height and focal (366 m, 1988 px) are both
+about 1.3× the truth's (274 m, 1594 px): their ratio, which fixes the scale on the ground, is nearly the
+same, so this is the known height/zoom ambiguity, not a location error.
+
+**Caveats.** This is one photo. The grid stage's small margin shows the coarse z-score is
 only a proposal generator; the 3D verification is what decides. Low, steep, wide-angle poses at
 the grid's edges (pitch −75°, focal 450) produce most of the false peaks.
 

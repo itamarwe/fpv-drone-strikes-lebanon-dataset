@@ -2,15 +2,18 @@
 """Final stage: refine the grid search's top candidates in the full 3D model and judge them
 with the exact chance-corrected significance S (significance.py). Blind until the last
 column (error), which reads the truth."""
-import json, math
+import json, math, sys
 import numpy as np
 import chamaa_constellation as cc
 from fair_compare import refine
 from significance import Sig
 
+AREA = sys.argv[1] if len(sys.argv) > 1 else "2x2km"
+SUFFIX = "" if AREA == "2x2km" else f"_{AREA}"
+N_TOP = int(sys.argv[2]) if len(sys.argv) > 2 else 8
 areas = {a["name"]: a for a in json.loads((cc.DATA / "search_areas.json").read_text())["areas"]}
-pr = Sig(areas["2x2km"])
-top = json.loads((cc.RESULTS / "blind_grid_search.json").read_text())["top"][:8]
+pr = Sig(areas[AREA])
+top = json.loads((cc.RESULTS / f"blind_grid_search{SUFFIX}.json").read_text())["top"][:N_TOP]
 rows = []
 for i, d in enumerate(top, 1):
     p = np.array([d["e"] - pr.origin[0], d["n"] - pr.origin[1], d["heading"], d["pitch"], d["roll"],
@@ -28,4 +31,4 @@ for k, r in enumerate(rows, 1):
     print(f"{k:>5}{r['grid_rank']:>6}{r['S']:>7.1f}{r['houses']:>9} ({r['houses_expected']:4.1f}){r['crossings']:>7}"
           f"{q[2] % 360:>9.0f}{math.exp(q[6]):>8.0f}{math.exp(q[5]):>7.0f}{r['error_m']:>9.0f}")
 print(f"margin S(best) - S(second): {rows[0]['S'] - rows[1]['S']:.1f}")
-(cc.RESULTS / "blind_grid_verified.json").write_text(json.dumps(rows, indent=2, default=float))
+(cc.RESULTS / f"blind_grid_verified{SUFFIX}.json").write_text(json.dumps(rows, indent=2, default=float))
