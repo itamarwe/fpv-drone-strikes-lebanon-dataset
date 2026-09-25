@@ -158,6 +158,47 @@ merely supplies one such location, and removing it moves the winner elsewhere.
 The missing heading prior is **not** the cause. It makes the search space about
 6.5× larger than Sainte-Maxime's, but the true pose already loses on cost.
 
+## Is the camera assumed to be at ground level?
+
+*Added 25 Sep 2026 on request.* **The original script does; this port does not.** Sainte-Maxime
+fixes the camera at terrain + 2 m (`original_sainte_maxime/joint_building_constellation.py`,
+line 65), because it was a phone photo taken on the ground. The Chamaa port searches the camera
+height, 40–1,200 m above the viewed ground, with pitch −80° to −12° (`chamaa_constellation.py`,
+`LOG_HEIGHT`, `BOUNDS_ANGLES`). Every hypothesis it produced was airborne (119–540 m), the true
+pose is 274 m, and the parametrisation reproduces the true camera to within 2 m.
+
+One ground-level assumption did survive, in the scoring: each SAM detection is treated as the
+building's **roof centre**. From a ground-level view of distant houses that is close enough; from
+274 m at −31° a mask covers roof and facade. Three checks at the true pose (diagnostics that use
+the truth):
+
+| Check | Result |
+|---|---|
+| Replace "roof centre" with the centre of the building's projected 3D silhouette | median offset 17.1 → 15.1 px. **Height is not the main problem.** |
+| Direction of the offsets | a consistent ~9 px sideways shift in every part of the image (left, right, near, far); removing it leaves 10.9 px scatter per building |
+| Same test on roads | best shift only 4 px, overlap 0.53 → 0.55: **the pose is right**; the offset is specific to building positions |
+
+So the camera geometry is correct, and so is the height handling. The real mismatch is that OSM
+building footprints sit a few metres off relative to the roads and imagery (≈ 3 m at this range),
+with ~11 px of per-building scatter on top. The method's tolerance, 16% of a building's width
+(5–8 px here), was set for survey-grade IGN roofs.
+
+**Does a realistic tolerance fix it?** Training cost with the original σ combined with a
+map-accuracy term of σ<sub>m</sub> metres projected to pixels:
+
+| Pose | Error | σ<sub>m</sub> = 0 (original) | 2 m | 3 m | 4 m | 6 m |
+|---|---:|---:|---:|---:|---:|---:|
+| True pose | 0 m | 4.68 | 4.21 | 3.92 | 3.70 | 3.42 |
+| Blind winner 2 × 2 km | 482 m | **4.21** | **3.92** | **3.70** | **3.49** | **3.19** |
+| Blind winner 4 × 4 km | 455 m | 4.43 | 4.27 | 4.24 | 4.17 | 4.01 |
+| Blind winner, village | 421 m | 4.50 | 4.27 | 4.17 | 4.04 | 3.85 |
+| Blind winner, village minus complex | 517 m | 4.92 | 4.81 | 4.75 | 4.65 | 4.25 |
+
+It helps: from 2 m on, the true pose beats three of the four wrong winners. But the strongest
+wrong candidate still wins at every tolerance. With a realistic tolerance, houses alone are still
+not distinctive enough here, while roads separate the truth from every winner 3–5×. The next step is
+a bimodal search (houses with a metre-based tolerance, plus road-line agreement and crossings).
+
 ## Sanity overlay: do SAM and OSM agree on this photo?
 
 *Added 25 Sep 2026 on request.* Before trusting any score built on SAM and OSM, check that
