@@ -144,17 +144,48 @@ Three mechanisms, all visible in the figures:
    so every correct pair pays 2–3σ. At Sainte-Maxime the houses were small and
    distant from a ground-level camera, and this offset was negligible. The facade
    correction removes only part of it (4.73 → 4.47).
-3. **Unmatched clutter on both sides.** About 8 detections have no map
-   counterpart (a blue-roofed shed, a stone yard, trees), and about 5 OSM
-   buildings are not visible (one is now a cleared lot). Each unmatched detection
-   costs the maximum 9, which flattens the difference between right and wrong poses.
+3. **Unmatched clutter — smaller than first estimated.** The
+   [sanity overlay](#sanity-overlay-do-sam-and-osm-agree-on-this-photo) counts only 5 of 51
+   kept detections with no OSM building (a blue-roofed shed, a stone yard) and 2 of 47 OSM
+   buildings with no mask (one is now a cleared lot); my first estimate of ~8 and ~5 was
+   too high. Each unmatched detection still costs the maximum 9, but this is a minor factor.
 
-Of the three, the second and third are the root cause: they make the true pose fit
+Of the three, the second — the height/centroid offset — is the root cause, with the third a
+minor contributor: they make the true pose fit
 poorly (4.73), so some wrong location always scores as well or better. The compound
 merely supplies one such location, and removing it moves the winner elsewhere.
 
 The missing heading prior is **not** the cause. It makes the search space about
 6.5× larger than Sainte-Maxime's, but the true pose already loses on cost.
+
+## Sanity overlay: do SAM and OSM agree on this photo?
+
+*Added 25 Sep 2026 on request.* Before trusting any score built on SAM and OSM, check that
+the two sources actually describe the same scene. `sanity_overlay.py` draws both on the photo
+at the true pose (camera recovered from the LoFTR alignment; a diagnostic that uses the truth).
+
+![SAM and OSM together at the true pose](figures/sanity_overlay_both.jpg)
+
+*Cyan: SAM building masks the method kept (grey: rejected by its filter). Blue tint: SAM road
+mask. Green circles: detected crossings. Yellow: OSM footprints projected at ground level; thin
+orange: the same at roof height (DEM + 7 m or `building:levels` × 3 m). Blue lines: OSM roads.
+Magenta squares: OSM crossings.* Separate panels: [SAM only / OSM only / both](figures/sanity_overlay_panels.jpg).
+
+| | Overlaps the other source |
+|---|---:|
+| OSM buildings projecting into the photo | **45 of 47 (96%)** overlap a SAM building mask |
+| SAM building masks kept by the method | **46 of 51 (90%)** overlap a projected OSM building |
+
+(Overlap is any shared pixel with the building's full projected silhouette, ground to roof.
+That answers "same building?", not "same point?".)
+
+**The sources fit.** Nearly every house appears in both, and the OSM roads land on the photo's
+roads. The overlay also shows the house score's real problem directly: each OSM footprint at
+ground level sits in the lower part of its SAM mask, and at roof height near the top, while the
+SAM centroid falls between them — the 10–20 px offset that a 5–8 px tolerance punishes.
+Mismatches are few: a blue-roofed shed and a stone yard SAM finds but OSM lacks, an OSM
+footprint on what is now a cleared lot, and a few footprints shifted a few metres sideways
+from their masks.
 
 ## Sanity check: search only the Chamaa village
 
