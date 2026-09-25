@@ -1,0 +1,59 @@
+{
+  "warning": "DIAGNOSTIC - includes the ground-truth pose",
+  "truth_S": 17.845878278216077,
+  "fixed": [
+    {
+      "pose": "TRUE pose",
+      "error_m": 6.651305228134181,
+      "S": 17.845878278216077
+    },
+    {
+      "pose": "A crossings only search, seed 41",
+      "error_m": 911.9133628183506,
+      "S": 6.15120435260236
+    },
+    {
+      "pose": "A crossings only search, seed 7",
+      "error_m": 380.05869466762647,
+      "S": 5.581313394999425
+    },
+    {
+      "pose": "B houses+crossings search, seed 41",
+      "error_m": 565.9734880578228,
+      "S": 7.550066870444157
+    },
+    {
+      "pose": "B houses+crossings search, seed 19",
+      "error_m": 577.2965535137693,
+      "S": 7.39180817349628
+    },
+    {
+      "pose": "J search winner (2x2 km)",
+      "error_m": 443.11758996936845,
+      "S": 13.186866509893829
+    },
+    {
+      "pose": "houses-F1 blind winner (zoomed)",
+      "error_m": 603.5466317629349,
+      "S": 5.401175781910933
+    }
+  ],
+  "blind": [
+    {
+      "seed": 7,
+      "S": 11.411623575244285,
+      "error_m": 849.4623094215084
+    },
+    {
+      "seed": 19,
+      "S": 8.16751088017488,
+      "error_m": 456.5823397061715
+    },
+    {
+      "seed": 41,
+      "S": 12.205980614506572,
+      "error_m": 867.6220335775664
+    }
+  ],
+  "beat_truth": 0
+}

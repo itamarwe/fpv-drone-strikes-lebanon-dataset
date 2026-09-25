@@ -306,6 +306,71 @@ out. Caveat: for the full houses + roads + crossings objective, no search has ye
 that beats the truth, but the searches there were too weak to be sure none exists. The proposed
 method is unchanged: crossing pairs generate candidate poses; the full objective with roads ranks them.
 
+## Why wrong poses "beat the truth", and a score that fixes it
+
+*Added 25 Sep 2026 in response to review questions.* Three questions: it cannot make sense for a
+wrong pose to beat the ground truth; are more features penalised or rewarded; and can the score
+be simpler and less narrow?
+
+**1. Part of it was an unfair comparison** (`fair_compare.py`). The wrong poses had been optimised
+for the score; the true pose had not (it is a fixed estimate from the alignment). With every pose
+given the same local refinement:
+
+| Objective | True pose | Best wrong pose | Verdict |
+|---|---:|---:|---|
+| Crossings only (1 − F1) | 0.579 | **0.500** (920 m off) | wrong still wins: genuinely ambiguous |
+| Houses + crossings | 0.960 | 0.953 (570 m off) | a tie — the "beat" was mostly unfairness |
+| Houses + roads + crossings | **0.937** | 1.266 | truth wins clearly |
+
+Figures: [overview of footprints](figures/fair_compare/overview_footprints.jpg), and per pose the
+photo with every layer projected beside the photo orthorectified onto the map:
+[truth](figures/fair_compare/pose_0.jpg), [houses + crossings, 570 m](figures/fair_compare/pose_3.jpg), and
+[the others](figures/fair_compare/). Nearly every wrong pose puts the footprint on the dense compound.
+
+**2. The other part: the house score rewarded chance.** The inherited house term charges only for
+*detected* houses left unmatched; OSM buildings projected into the frame with nothing there cost
+nothing. The 570 m pose floods the frame with ~150 projected compound buildings, so every
+detection finds one by chance: its house score (3.17) beats the truth's (3.63), and only road F1
+(0.12 vs 0.65) exposes it. Scoring houses symmetrically (F1: matched ÷ detected and matched ÷ in
+frame) stops the flooding, but blind search then found a different loophole: a **zoomed-in, low
+pose** (focal 2,447 px, 93 m up) where the tolerance circles become so large that "38 of 38"
+houses match along 50–120 px lines ([figure](figures/fair_compare/houses_f1_wrong.jpg)). Houses-F1
+and houses + crossings-F1 were beaten this way in 3 of 3 blind runs each (`symmetric_houses.py`).
+
+**3. A chance-corrected score** (`significance.py`). What matters is not how many features match but
+how many would match *by chance* for that pose. q = fraction of the image covered by the tolerance
+discs of the map features projected into the frame; k = one-to-one matches; n = detections. Under
+chance each detection lands in the covered area with probability q, so the significance is
+S = −log₁₀ P(Binomial(n, q) ≥ k). It rewards more matches and automatically penalises dense map
+areas, loose tolerances and zoomed-in poses. Layers add. **Houses + crossings only — no roads:**
+
+| Pose (all refined identically) | Error | Houses matched (by chance) | Crossings | Total S |
+|---|---:|---:|---:|---:|
+| **True pose** | 7 m | 30 / 51 (6.9) | 4 / 10 | **17.8** |
+| Earlier house-cost winner | 443 m | 37 (14.2) | 5 | 13.2 |
+| Houses + crossings winners | ~570 m | 41 (29.5–32.2) | 4–5 | 7.4–7.6 |
+| Zoomed "38 of 38" pose | 604 m | 32 (**22.2**) | 3 | 5.4 |
+| Crossings-only winners | 380–912 m | 7–26 | 3–4 | 5.6–6.2 |
+| **Blind search on S, 3 runs** | 457–868 m | 15–23 (4.5–6.3) | 4–8 | 8.2–12.2 |
+
+The truth is the most significant pose of every one found, fixed or blind; no blind run beats it
+(12.2 vs 17.8). The zoomed pose matched 32 houses where 22 were expected — no evidence — while
+the truth matched 30 where 7 were expected. **This is the first score here that judges correctly
+without roads.** It does not *find* the truth: blind search still ends 457–868 m away, because the
+basin is still narrow. That is the job for correspondence-driven proposals.
+
+**Simpler, convex, or gradient-descent-friendly?** No formulation with unknown correspondences is
+convex: which map feature each detection belongs to is combinatorial, and perspective projection is
+non-linear. The measured trade-off is fundamental: tolerances wide enough to create a slope from
+hundreds of metres away already prefer wrong basins (τ ≥ 120 px above). Gradient descent works well
+once correspondences are fixed — then pose fitting is a small, well-behaved least-squares problem
+(PnP). So: propose poses from matched feature pairs, refine each by gradient descent, and judge the
+results with S.
+
+**Partial roads.** Roads are only partly visible (at the true pose 41% of projected OSM road length is
+not on the SAM road mask) and still separated the truth from every wrong pose. But the chance-corrected
+house + crossing score does that without roads, which avoids relying on visible road coverage.
+
 ## Sanity overlay: do SAM and OSM agree on this photo?
 
 *Added 25 Sep 2026 on request.* Before trusting any score built on SAM and OSM, check that
