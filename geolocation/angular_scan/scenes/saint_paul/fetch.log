@@ -1,0 +1,19 @@
+[   6.6 s] buildings: 5000 (page at 0)
+[  11.1 s] buildings: 10000 (page at 5000)
+[  13.0 s] buildings: 15000 (page at 10000)
+[  15.8 s] buildings: 20000 (page at 15000)
+[  18.9 s] buildings: 25000 (page at 20000)
+[  21.4 s] buildings: 30000 (page at 25000)
+[  23.4 s] buildings: 35000 (page at 30000)
+[  25.2 s] buildings: 40000 (page at 35000)
+[  27.1 s] buildings: 45000 (page at 40000)
+[  28.9 s] buildings: 50000 (page at 45000)
+[  38.4 s] buildings: 55000 (page at 50000)
+[  44.9 s] buildings: 60000 (page at 55000)
+[  46.5 s] buildings: 65000 (page at 60000)
+[  52.5 s] buildings: 70000 (page at 65000)
+[  54.5 s] buildings: 75000 (page at 70000)
+[  56.8 s] buildings: 76942 (page at 75000)
+[  58.3 s] buildings cached: /Users/itamarwe/Documents/code/constellation-wt/geolocation/angular_scan/scenes/saint_paul/ign_buildings.geojson
+[  58.3 s] downloading SRTM N43E007
+[  59.8 s] DEM tile /Users/itamarwe/Documents/code/constellation-wt/geolocation/angular_scan/scenes/saint_paul/dem/N43E007.hgt

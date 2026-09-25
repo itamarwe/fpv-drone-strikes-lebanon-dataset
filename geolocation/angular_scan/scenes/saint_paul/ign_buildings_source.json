@@ -1,0 +1,15 @@
+{
+  "service": "https://data.geopf.fr/wfs BDTOPO_V3:batiment",
+  "bounds_l93": [
+    1027259,
+    6292305,
+    1037259,
+    6302305
+  ],
+  "centre_lonlat": [
+    7.1225,
+    43.6967
+  ],
+  "count": 76942,
+  "attribution": "IGN / Geoplateforme / BD TOPO"
+}

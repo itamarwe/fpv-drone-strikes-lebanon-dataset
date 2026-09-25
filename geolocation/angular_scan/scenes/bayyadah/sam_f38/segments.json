@@ -1,0 +1,297 @@
+{
+  "ground": {
+    "name": "ground",
+    "image": "scenes/bayyadah/pinhole_f_000038.jpg",
+    "original_size": [
+      660,
+      280
+    ],
+    "processed_size": [
+      660,
+      280
+    ],
+    "scale": 1.0,
+    "threshold": 0.3,
+    "prompt_counts": {
+      "building": 6,
+      "house": 6,
+      "roof": 12
+    },
+    "tiles": {
+      "size": 660,
+      "overlap": 0
+    },
+    "features": [
+      {
+        "id": "building_000",
+        "semantic": "building",
+        "prompt": "house",
+        "score": 0.9124644994735718,
+        "area_px": 4924,
+        "centroid_xy": [
+          514.9199837530463,
+          80.85377741673436
+        ],
+        "bbox_xyxy": [
+          464.0,
+          48.0,
+          573.0,
+          114.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_001",
+        "semantic": "building",
+        "prompt": "house",
+        "score": 0.8745877146720886,
+        "area_px": 5356,
+        "centroid_xy": [
+          264.61370425690814,
+          96.75560119492158
+        ],
+        "bbox_xyxy": [
+          189.0,
+          68.0,
+          340.0,
+          142.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_002",
+        "semantic": "building",
+        "prompt": "house",
+        "score": 0.8372683525085449,
+        "area_px": 7410,
+        "centroid_xy": [
+          59.786099865047234,
+          173.5531713900135
+        ],
+        "bbox_xyxy": [
+          0.0,
+          135.0,
+          133.0,
+          222.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_003",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.7214118838310242,
+        "area_px": 1465,
+        "centroid_xy": [
+          260.09965870307167,
+          80.47508532423208
+        ],
+        "bbox_xyxy": [
+          211.0,
+          68.0,
+          303.0,
+          96.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_004",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.6198341250419617,
+        "area_px": 775,
+        "centroid_xy": [
+          44.51741935483871,
+          154.03354838709677
+        ],
+        "bbox_xyxy": [
+          18.0,
+          145.0,
+          76.0,
+          164.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_005",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.5897578001022339,
+        "area_px": 302,
+        "centroid_xy": [
+          523.864238410596,
+          27.456953642384107
+        ],
+        "bbox_xyxy": [
+          510.0,
+          21.0,
+          538.0,
+          34.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_006",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.5036364197731018,
+        "area_px": 699,
+        "centroid_xy": [
+          38.91416309012875,
+          188.620886981402
+        ],
+        "bbox_xyxy": [
+          7.0,
+          182.0,
+          76.0,
+          195.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_007",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.40108722448349,
+        "area_px": 481,
+        "centroid_xy": [
+          411.5135135135135,
+          91.4948024948025
+        ],
+        "bbox_xyxy": [
+          394.0,
+          82.0,
+          427.0,
+          100.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_008",
+        "semantic": "building",
+        "prompt": "house",
+        "score": 0.39669159054756165,
+        "area_px": 721,
+        "centroid_xy": [
+          522.0374479889043,
+          33.2246879334258
+        ],
+        "bbox_xyxy": [
+          503.0,
+          20.0,
+          540.0,
+          48.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_009",
+        "semantic": "building",
+        "prompt": "house",
+        "score": 0.3723973333835602,
+        "area_px": 1131,
+        "centroid_xy": [
+          425.14942528735634,
+          92.59681697612731
+        ],
+        "bbox_xyxy": [
+          378.0,
+          79.0,
+          459.0,
+          104.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_010",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.3322961926460266,
+        "area_px": 4300,
+        "centroid_xy": [
+          142.33023255813953,
+          261.1597674418605
+        ],
+        "bbox_xyxy": [
+          16.0,
+          246.0,
+          244.0,
+          278.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_011",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.3198116421699524,
+        "area_px": 208,
+        "centroid_xy": [
+          40.06730769230769,
+          132.35096153846155
+        ],
+        "bbox_xyxy": [
+          28.0,
+          127.0,
+          53.0,
+          137.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_012",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.31693336367607117,
+        "area_px": 156,
+        "centroid_xy": [
+          437.62820512820514,
+          72.07051282051282
+        ],
+        "bbox_xyxy": [
+          428.0,
+          68.0,
+          447.0,
+          76.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_013",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.3154747486114502,
+        "area_px": 1108,
+        "centroid_xy": [
+          309.21660649819495,
+          102.96389891696751
+        ],
+        "bbox_xyxy": [
+          278.0,
+          79.0,
+          341.0,
+          134.0
+        ],
+        "tile": "tile_0_0"
+      },
+      {
+        "id": "building_014",
+        "semantic": "building",
+        "prompt": "roof",
+        "score": 0.3071237802505493,
+        "area_px": 2059,
+        "centroid_xy": [
+          39.92472073822244,
+          154.83924235065567
+        ],
+        "bbox_xyxy": [
+          0.0,
+          138.0,
+          80.0,
+          171.0
+        ],
+        "tile": "tile_0_0"
+      }
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+[   0.0 s] querying https://overpass-api.de/api/interpreter
+[   9.6 s] failed: HTTPError 504 Server Error: Gateway Timeout for url: https://overpass-api.de/api/interpreter
+[  14.6 s] querying https://overpass.kumi.systems/api/interpreter
+[  77.8 s] 31176 building ways -> /Users/itamarwe/Documents/code/constellation-wt/geolocation/angular_scan/scenes/bint_jbeil/osm_buildings.json

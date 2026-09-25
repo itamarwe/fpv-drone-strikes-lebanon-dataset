@@ -1,0 +1,40 @@
+[    1.4 s] loading SAM 3; 9 tiles of 1000 px over 2576x1932
+[transformers] `memory_attention_rope_theta` is deprecated and will be removed in v5.0. Use `rope_parameters['rope_theta']` instead.
+Loading weights:   0%|          | 0/1468 [00:00<?, ?it/s]Loading weights: 100%|██████████| 1468/1468 [00:00<00:00, 40614.22it/s]
+    'building': 37 instances
+    'house': 61 instances
+    'roof': 51 instances
+[   58.8 s] tile_0_0: 108 masks (running total 96)
+    'building': 53 instances
+    'house': 70 instances
+    'roof': 47 instances
+[  200.8 s] tile_800_0: 115 masks (running total 200)
+    'building': 52 instances
+    'house': 60 instances
+    'roof': 50 instances
+[  354.4 s] tile_1576_0: 101 masks (running total 293)
+    'building': 94 instances
+    'house': 106 instances
+    'roof': 96 instances
+[  379.0 s] tile_0_800: 201 masks (running total 481)
+    'building': 91 instances
+    'house': 95 instances
+    'roof': 97 instances
+[  400.5 s] tile_800_800: 188 masks (running total 630)
+    'building': 81 instances
+    'house': 82 instances
+    'roof': 78 instances
+[  419.1 s] tile_1576_800: 156 masks (running total 768)
+    'building': 78 instances
+    'house': 93 instances
+    'roof': 89 instances
+[  438.6 s] tile_0_932: 173 masks (running total 925)
+    'building': 80 instances
+    'house': 87 instances
+    'roof': 77 instances
+[  456.4 s] tile_800_932: 154 masks (running total 1042)
+    'building': 71 instances
+    'house': 72 instances
+    'roof': 71 instances
+[  472.1 s] tile_1576_932: 138 masks (running total 1162)
+[  472.2 s] 570 buildings after cross-tile dedup -> scenes/saint_paul/sam/segments.json

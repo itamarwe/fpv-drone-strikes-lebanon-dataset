@@ -1,0 +1,7 @@
+# large map caches (re-fetch with fetch_france_scene.py / fetch_osm_buildings.py)
+scenes/*/ign_buildings.geojson
+scenes/*/osm_buildings.json
+scenes/*/dem/
+scenes/*/sam*/tiles/
+scenes/*/sam*/*_masks/
+results/*/scan_raw.json
