@@ -1,0 +1,134 @@
+{
+  "fixed_poses": [
+    {
+      "pose": "TRUE pose",
+      "error_m": 0.0,
+      "crossing_f1": 0.380952380952381,
+      "matched": 4,
+      "in_frame": 11,
+      "A": 0.6190476190476191,
+      "B": 1.032310489604748
+    },
+    {
+      "pose": "winner 2x2km house-only",
+      "error_m": 481.95851862621726,
+      "crossing_f1": 0.04651162790697675,
+      "matched": 1,
+      "in_frame": 33,
+      "A": 0.9534883720930233,
+      "B": 1.3451453705613368
+    },
+    {
+      "pose": "winner 2x2km bimodal",
+      "error_m": 480.42256461587425,
+      "crossing_f1": 0.14492753623188406,
+      "matched": 5,
+      "in_frame": 59,
+      "A": 0.855072463768116,
+      "B": 1.3594779377431807
+    },
+    {
+      "pose": "winner 2x2km bimodal_stratified",
+      "error_m": 639.8641454754778,
+      "crossing_f1": 0.1971830985915493,
+      "matched": 7,
+      "in_frame": 61,
+      "A": 0.8028169014084507,
+      "B": 1.2913046943568338
+    },
+    {
+      "pose": "winner 4x4km bimodal",
+      "error_m": 367.55635483573474,
+      "crossing_f1": 0.16216216216216214,
+      "matched": 6,
+      "in_frame": 64,
+      "A": 0.8378378378378378,
+      "B": 1.3435355695559041
+    },
+    {
+      "pose": "winner village bimodal",
+      "error_m": 436.37162270711053,
+      "crossing_f1": 0.1728395061728395,
+      "matched": 7,
+      "in_frame": 71,
+      "A": 0.8271604938271605,
+      "B": 1.4098454042311834
+    }
+  ],
+  "blind": {
+    "A_crossings_only": {
+      "truth_score": 0.6190476190476191,
+      "runs": [
+        {
+          "seed": 7,
+          "score": 0.6470588235294118,
+          "error_m": 391.4711428155808,
+          "crossing_f1": 0.3529411764705882,
+          "matched": 3,
+          "in_frame": 7,
+          "yaw": 38.27852575859254
+        },
+        {
+          "seed": 19,
+          "score": 0.6666666666666666,
+          "error_m": 994.2027017764506,
+          "crossing_f1": 0.33333333333333337,
+          "matched": 2,
+          "in_frame": 2,
+          "yaw": 259.76903712205785
+        },
+        {
+          "seed": 41,
+          "score": 0.5789473684210527,
+          "error_m": 912.2712078131317,
+          "crossing_f1": 0.4210526315789474,
+          "matched": 4,
+          "in_frame": 9,
+          "yaw": 264.19678732945385
+        }
+      ],
+      "better_than_truth": 1
+    },
+    "B_houses_plus_crossings": {
+      "truth_score": 1.032310489604748,
+      "runs": [
+        {
+          "seed": 7,
+          "score": 1.1983320087477534,
+          "error_m": 522.9468499064857,
+          "crossing_f1": 0.27586206896551724,
+          "matched": 4,
+          "in_frame": 19,
+          "yaw": 63.12219390874216
+        },
+        {
+          "seed": 19,
+          "score": 1.0152239961976228,
+          "error_m": 571.9746353932466,
+          "crossing_f1": 0.34782608695652173,
+          "matched": 4,
+          "in_frame": 13,
+          "yaw": 47.887403116233145
+        },
+        {
+          "seed": 41,
+          "score": 0.9546907014358929,
+          "error_m": 570.4178024665626,
+          "crossing_f1": 0.4,
+          "matched": 5,
+          "in_frame": 15,
+          "yaw": 48.821548943919964
+        }
+      ],
+      "better_than_truth": 2
+    }
+  },
+  "random_poses": {
+    "n": 3000,
+    "A_min": 0.7647058823529411,
+    "A_at_or_below_truth": 0,
+    "B_min": 1.4345805504522555,
+    "B_at_or_below_truth": 0
+  },
+  "warning": "DIAGNOSTIC - fixed-pose rows include the ground-truth pose"
+}

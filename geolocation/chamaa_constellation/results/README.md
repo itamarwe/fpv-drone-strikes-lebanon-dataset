@@ -267,6 +267,45 @@ small sets of matched features (e.g. pairs of crossings with their branch direct
 directly in the needle-sized basin, then rank the proposals with this objective (the RANSAC pattern,
 and what collapsed the search in the simulation's object-grouping step).
 
+## Crossings only, and houses + crossings (no road lines)
+
+*Added 25 Sep 2026 on request* (`diagnose_crossings_only.py`). Crossings are scored by **F1**:
+one-to-one matches within 30 px between the 10 detected crossings and the OSM crossings projected
+into the frame; precision = matched ÷ OSM crossings in frame, recall = matched ÷ detected. Unlike
+the earlier recall-only term, a pose cannot win by filling the frame with OSM crossings.
+A = 1 − crossing F1; B = house cost / 9 + (1 − crossing F1). Lower is better.
+
+**At fixed poses, crossings prefer the truth:**
+
+| Pose | Error | Crossing F1 | Matched / in frame | A | B |
+|---|---:|---:|---:|---:|---:|
+| True pose (uses the truth) | 0 m | **0.38** | 4 / 11 | **0.619** | **1.032** |
+| Winner 2 × 2 km, house-only | 482 m | 0.05 | 1 / 33 | 0.953 | 1.345 |
+| Winner 2 × 2 km, bimodal | 480 m | 0.14 | 5 / 59 | 0.855 | 1.359 |
+| Winner 2 × 2 km, stratified | 640 m | 0.20 | 7 / 61 | 0.803 | 1.291 |
+| Winner 4 × 4 km, bimodal | 368 m | 0.16 | 6 / 64 | 0.838 | 1.344 |
+| Winner village, bimodal | 436 m | 0.17 | 7 / 71 | 0.827 | 1.410 |
+
+None of 3,000 random poses reaches the truth's score on either objective.
+
+**But blind search finds wrong poses that beat the truth** (2 × 2 km, same DE protocol):
+
+| Objective | Runs finding a wrong pose scoring better than the truth | Error of those poses |
+|---|---:|---:|
+| A: crossings only | 1 of 3 (0.579 vs 0.619) | 912 m |
+| B: houses + crossings | 2 of 3 (0.955 and 1.015 vs 1.032) | ~570 m |
+
+The crossings-only winner matches 4 of 9 crossings in frame, as good as the truth, at a spot 912 m
+away. With 10 detected crossings, 6 of them wrong, the crossing evidence is **ambiguous**: other
+places match as well as the right one. The crossing score is also *easy* to search — DE reaches good
+values quickly — so this is a genuine property of the objective, not a search failure.
+
+**Conclusion.** Crossings are the right tool for **proposing** poses (cheap; a correct pairing lands in
+the right basin) but not for **judging** them. The road lines are what make the right answer stand
+out. Caveat: for the full houses + roads + crossings objective, no search has yet found a wrong pose
+that beats the truth, but the searches there were too weak to be sure none exists. The proposed
+method is unchanged: crossing pairs generate candidate poses; the full objective with roads ranks them.
+
 ## Sanity overlay: do SAM and OSM agree on this photo?
 
 *Added 25 Sep 2026 on request.* Before trusting any score built on SAM and OSM, check that
