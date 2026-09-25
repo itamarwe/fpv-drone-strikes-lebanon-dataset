@@ -1,0 +1,18 @@
+2x2km observed 51 train 36 check 15 map 316
+  global {'seed': 7, 'seconds': 5.429592000000412, 'cost': 5.9472618656788425, 'evaluations': 30848}
+  global {'seed': 19, 'seconds': 5.141948374999629, 'cost': 6.677300576295309, 'evaluations': 30848}
+  global {'seed': 41, 'seconds': 5.532030082998972, 'cost': 5.668176011080624, 'evaluations': 30848}
+{
+ "seconds": {
+  "global_de_s": 16.103849833998538,
+  "powell_s": 0.6443155410015606,
+  "local_refine_s": 11.49944145900372,
+  "total_s": 28.268281124997884
+ },
+ "top_train_cost": 4.367097594677711,
+ "top_footprint": [
+  705066.4400018583,
+  3669985.2129962193
+ ],
+ "top_matches": 27
+}

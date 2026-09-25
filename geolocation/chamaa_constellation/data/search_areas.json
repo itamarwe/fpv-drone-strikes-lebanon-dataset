@@ -1,0 +1,26 @@
+{
+  "epsg": 32636,
+  "note": "Box bounds only. The constellation search reads nothing else about location.",
+  "areas": [
+    {
+      "name": "2x2km",
+      "side_m": 2000.0,
+      "bounds_utm": [
+        704050.75,
+        3668623.06,
+        706050.75,
+        3670623.06
+      ]
+    },
+    {
+      "name": "4x4km",
+      "side_m": 4000.0,
+      "bounds_utm": [
+        703556.92,
+        3667564.24,
+        707556.92,
+        3671564.24
+      ]
+    }
+  ]
+}

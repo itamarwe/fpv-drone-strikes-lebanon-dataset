@@ -1,0 +1,651 @@
+{
+  "warning": "ORACLE DIAGNOSTIC - camera recovered from the ground-truth alignment; not a blind result",
+  "pnp": {
+    "points": 117,
+    "focal_px": 1593.9681414841768,
+    "rms_px": 3.6458427240417093,
+    "camera_utm_xyz": [
+      705842.2173207884,
+      3670386.6105518024,
+      611.4168325242647
+    ],
+    "reparametrisation_camera_mismatch_m": 2.069944080711748
+  },
+  "true_pose": {
+    "yaw_pitch_roll_deg": [
+      222.88527396087034,
+      -30.635130040646512,
+      1.3967233102200818
+    ],
+    "focal_px": 1593.9681414841768,
+    "height_above_ground_m": 274.06034770761295
+  },
+  "constellation_cost_at_true_pose": {
+    "train_cost": 4.729823981152195,
+    "check_cost": 7.477887253260875,
+    "inlier_buildings": 27,
+    "train_matches": 23,
+    "check_matches": 4,
+    "coarse_cost": 6.085340068310918,
+    "map_points_in_view": 46
+  },
+  "median_pixel_distance_of_assigned_pairs": 13.198532887497016,
+  "pairs": [
+    {
+      "observed_index": 0,
+      "observed_id": "building_000",
+      "map_index": 149,
+      "osm_id": 1329437585,
+      "observed_xy": [
+        864.024515466564,
+        695.9041201386215
+      ],
+      "projected_xy": [
+        839.4294500051847,
+        685.3030486099447
+      ],
+      "observed_width_px": 108.0,
+      "projected_width_px": 111.38925102580785,
+      "cost": 2.165006324018571,
+      "pixel_distance": 26.782456246686152
+    },
+    {
+      "observed_index": 1,
+      "observed_id": "building_001",
+      "map_index": 153,
+      "osm_id": 1329437591,
+      "observed_xy": [
+        285.24089337942036,
+        514.0925285828237
+      ],
+      "projected_xy": [
+        307.20343701177046,
+        535.3594863156902
+      ],
+      "observed_width_px": 73.0,
+      "projected_width_px": 27.70602455860439,
+      "cost": 5.502703025884062,
+      "pixel_distance": 30.571830400131667
+    },
+    {
+      "observed_index": 2,
+      "observed_id": "building_002",
+      "map_index": 158,
+      "osm_id": 1329437597,
+      "observed_xy": [
+        60.69950738916256,
+        557.4289997858214
+      ],
+      "projected_xy": [
+        57.4862597928543,
+        545.9317555941241
+      ],
+      "observed_width_px": 90.0,
+      "projected_width_px": 63.727839827608584,
+      "cost": 0.43985952039794196,
+      "pixel_distance": 11.937821581791962
+    },
+    {
+      "observed_index": 3,
+      "observed_id": "building_003",
+      "map_index": 145,
+      "osm_id": 1329437578,
+      "observed_xy": [
+        342.479155086159,
+        230.52473596442468
+      ],
+      "projected_xy": [
+        344.11976840074925,
+        223.80095009016054
+      ],
+      "observed_width_px": 53.0,
+      "projected_width_px": 46.04647772412571,
+      "cost": 0.3677691530890281,
+      "pixel_distance": 6.92104822486918
+    },
+    {
+      "observed_index": 4,
+      "observed_id": "building_004",
+      "map_index": 88,
+      "osm_id": 1056286030,
+      "observed_xy": [
+        755.0233918128655,
+        370.32163742690057
+      ],
+      "projected_xy": [
+        747.1093668860148,
+        355.4562059471512
+      ],
+      "observed_width_px": 61.0,
+      "projected_width_px": 51.58906547672549,
+      "cost": 2.1414042768980477,
+      "pixel_distance": 16.840808876711897
+    },
+    {
+      "observed_index": 5,
+      "observed_id": "building_005",
+      "map_index": 185,
+      "osm_id": 1329437640,
+      "observed_xy": [
+        207.73634782608696,
+        331.4678260869565
+      ],
+      "projected_xy": [
+        204.24448983263534,
+        322.4280292960623
+      ],
+      "observed_width_px": 77.0,
+      "projected_width_px": 65.56895437940952,
+      "cost": 0.5927902698799735,
+      "pixel_distance": 9.690768713940786
+    },
+    {
+      "observed_index": 6,
+      "observed_id": "building_006",
+      "map_index": 107,
+      "osm_id": 1160242578,
+      "observed_xy": [
+        547.3771076523994,
+        423.1883916990921
+      ],
+      "projected_xy": [
+        538.4785417632397,
+        413.44073580146096
+      ],
+      "observed_width_px": 60.0,
+      "projected_width_px": 53.30805876728198,
+      "cost": 1.120671328342707,
+      "pixel_distance": 13.198532887497016
+    },
+    {
+      "observed_index": 7,
+      "observed_id": "building_007",
+      "map_index": 18,
+      "osm_id": 796259970,
+      "observed_xy": [
+        72.67183176535694,
+        312.6142778085224
+      ],
+      "projected_xy": [
+        80.15068527148685,
+        300.0210682725443
+      ],
+      "observed_width_px": 61.0,
+      "projected_width_px": 60.790314744842036,
+      "cost": 1.9468331214689367,
+      "pixel_distance": 14.64657557872149
+    },
+    {
+      "observed_index": 10,
+      "observed_id": "building_010",
+      "map_index": 147,
+      "osm_id": 1329437583,
+      "observed_xy": [
+        593.1153146598763,
+        627.7690069116043
+      ],
+      "projected_xy": [
+        586.46075255403,
+        622.2050239190874
+      ],
+      "observed_width_px": 65.0,
+      "projected_width_px": 43.64149528901857,
+      "cost": 0.6841591777020224,
+      "pixel_distance": 8.674162989106348
+    },
+    {
+      "observed_index": 12,
+      "observed_id": "building_012",
+      "map_index": 103,
+      "osm_id": 1056286047,
+      "observed_xy": [
+        1081.9272486772486,
+        323.3806878306878
+      ],
+      "projected_xy": [
+        1069.4409205080078,
+        308.23016510601934
+      ],
+      "observed_width_px": 94.0,
+      "projected_width_px": 86.06458582916663,
+      "cost": 1.428359668687704,
+      "pixel_distance": 19.63279730401838
+    },
+    {
+      "observed_index": 14,
+      "observed_id": "building_014",
+      "map_index": 164,
+      "osm_id": 1329437608,
+      "observed_xy": [
+        56.283202394313506,
+        410.7744107744108
+      ],
+      "projected_xy": [
+        61.572154831281296,
+        393.7889920906005
+      ],
+      "observed_width_px": 70.0,
+      "projected_width_px": 61.730072813251425,
+      "cost": 1.3772841601746497,
+      "pixel_distance": 17.789813538787833
+    },
+    {
+      "observed_index": 17,
+      "observed_id": "building_019",
+      "map_index": 151,
+      "osm_id": 1329437587,
+      "observed_xy": [
+        945.236261682243,
+        511.7506542056075
+      ],
+      "projected_xy": [
+        936.5685948807752,
+        490.737556907948
+      ],
+      "observed_width_px": 82.0,
+      "projected_width_px": 76.06822899861696,
+      "cost": 2.8638953684924435,
+      "pixel_distance": 22.73056765288039
+    },
+    {
+      "observed_index": 18,
+      "observed_id": "building_020",
+      "map_index": 241,
+      "osm_id": 1329553930,
+      "observed_xy": [
+        1092.3412244897959,
+        115.84163265306123
+      ],
+      "projected_xy": [
+        1072.4548364775121,
+        119.98915668821729
+      ],
+      "observed_width_px": 77.0,
+      "projected_width_px": 72.68467387011225,
+      "cost": 2.940079385778953,
+      "pixel_distance": 20.31429013766665
+    },
+    {
+      "observed_index": 20,
+      "observed_id": "building_022",
+      "map_index": 154,
+      "osm_id": 1329437592,
+      "observed_xy": [
+        281.64977973568284,
+        497.05653450807637
+      ],
+      "projected_xy": [
+        266.6212266230235,
+        497.00376453626654
+      ],
+      "observed_width_px": 61.0,
+      "projected_width_px": 47.38061218854055,
+      "cost": 2.4239305184693483,
+      "pixel_distance": 15.028645758349189
+    },
+    {
+      "observed_index": 21,
+      "observed_id": "building_024",
+      "map_index": 152,
+      "osm_id": 1329437589,
+      "observed_xy": [
+        745.9907016060862,
+        492.69061707523247
+      ],
+      "projected_xy": [
+        725.3010071971314,
+        489.87923449452524
+      ],
+      "observed_width_px": 49.0,
+      "projected_width_px": 73.98133337381667,
+      "cost": 7.202466729871297,
+      "pixel_distance": 20.879830620745913
+    },
+    {
+      "observed_index": 22,
+      "observed_id": "building_025",
+      "map_index": 40,
+      "osm_id": 1056284932,
+      "observed_xy": [
+        1087.306702775897,
+        139.43872714962762
+      ],
+      "projected_xy": [
+        1071.0001809920582,
+        139.08015751529263
+      ],
+      "observed_width_px": 69.0,
+      "projected_width_px": 64.04563356259361,
+      "cost": 2.1877329212547707,
+      "pixel_distance": 16.310463662001744
+    },
+    {
+      "observed_index": 24,
+      "observed_id": "building_030",
+      "map_index": 19,
+      "osm_id": 796259971,
+      "observed_xy": [
+        320.3412271259419,
+        296.8923573735199
+      ],
+      "projected_xy": [
+        318.04648321073415,
+        299.5503894022683
+      ],
+      "observed_width_px": 44.0,
+      "projected_width_px": 43.41953509188905,
+      "cost": 0.20652413376580864,
+      "pixel_distance": 3.511550071155919
+    },
+    {
+      "observed_index": 26,
+      "observed_id": "building_032",
+      "map_index": 246,
+      "osm_id": 1329553940,
+      "observed_xy": [
+        1138.2366167023554,
+        151.24946466809422
+      ],
+      "projected_xy": [
+        1149.347355983956,
+        155.70515732576172
+      ],
+      "observed_width_px": 41.0,
+      "projected_width_px": 22.414583363243214,
+      "cost": 3.5236747894489824,
+      "pixel_distance": 11.970869828182757
+    },
+    {
+      "observed_index": 27,
+      "observed_id": "building_035",
+      "map_index": 20,
+      "osm_id": 796259972,
+      "observed_xy": [
+        413.7751196172249,
+        289.22607655502395
+      ],
+      "projected_xy": [
+        408.61738036131464,
+        290.4457200082069
+      ],
+      "observed_width_px": 48.0,
+      "projected_width_px": 56.303620766971044,
+      "cost": 0.5178948410335438,
+      "pixel_distance": 5.299981545708406
+    },
+    {
+      "observed_index": 32,
+      "observed_id": "building_042",
+      "map_index": 108,
+      "osm_id": 1160242579,
+      "observed_xy": [
+        620.1595677050223,
+        407.2670057215512
+      ],
+      "projected_xy": [
+        608.3175169903404,
+        393.1634197431095
+      ],
+      "observed_width_px": 57.0,
+      "projected_width_px": 59.38373864375098,
+      "cost": 3.3018234335850005,
+      "pixel_distance": 18.415898093234365
+    },
+    {
+      "observed_index": 34,
+      "observed_id": "building_046",
+      "map_index": 89,
+      "osm_id": 1056286031,
+      "observed_xy": [
+        676.1086092715232,
+        261.73245033112585
+      ],
+      "projected_xy": [
+        672.8179321527587,
+        258.17207742698713
+      ],
+      "observed_width_px": 44.0,
+      "projected_width_px": 41.60095610795393,
+      "cost": 0.5732090527101443,
+      "pixel_distance": 4.848176060797033
+    },
+    {
+      "observed_index": 35,
+      "observed_id": "building_047",
+      "map_index": 184,
+      "osm_id": 1329437638,
+      "observed_xy": [
+        152.5751879699248,
+        360.71804511278197
+      ],
+      "projected_xy": [
+        147.8525275614296,
+        355.64103963934053
+      ],
+      "observed_width_px": 24.0,
+      "projected_width_px": 22.360715802009388,
+      "cost": 2.5168658192973914,
+      "pixel_distance": 6.9339387011511855
+    },
+    {
+      "observed_index": 36,
+      "observed_id": "building_050",
+      "map_index": 245,
+      "osm_id": 1329553939,
+      "observed_xy": [
+        1093.9247104247104,
+        155.9903474903475
+      ],
+      "projected_xy": [
+        1087.7539738237724,
+        154.70162642595216
+      ],
+      "observed_width_px": 39.0,
+      "projected_width_px": 26.840883639570368,
+      "cost": 1.1354155481872636,
+      "pixel_distance": 6.3038712058521424
+    },
+    {
+      "observed_index": 38,
+      "observed_id": "building_052",
+      "map_index": 146,
+      "osm_id": 1329437582,
+      "observed_xy": [
+        534.7405063291139,
+        521.493670886076
+      ],
+      "projected_xy": [
+        523.2591659352609,
+        502.1964892100746
+      ],
+      "observed_width_px": 47.0,
+      "projected_width_px": 40.87110935980874,
+      "cost": 4.933192278763927,
+      "pixel_distance": 22.45445162715235
+    },
+    {
+      "observed_index": 41,
+      "observed_id": "building_058",
+      "map_index": 240,
+      "osm_id": 1329553929,
+      "observed_xy": [
+        1167.7864077669904,
+        118.13915857605178
+      ],
+      "projected_xy": [
+        1167.5905603547267,
+        126.53288124882545
+      ],
+      "observed_width_px": 31.0,
+      "projected_width_px": 36.07619193866275,
+      "cost": 4.424020711016323,
+      "pixel_distance": 8.39600717700533
+    },
+    {
+      "observed_index": 44,
+      "observed_id": "building_062",
+      "map_index": 243,
+      "osm_id": 1329553932,
+      "observed_xy": [
+        1031.7404844290656,
+        136.40484429065745
+      ],
+      "projected_xy": [
+        1023.5153535582217,
+        131.10367438535803
+      ],
+      "observed_width_px": 44.0,
+      "projected_width_px": 29.250760165385064,
+      "cost": 2.8908883087509203,
+      "pixel_distance": 9.785457588041668
+    },
+    {
+      "observed_index": 46,
+      "observed_id": "building_065",
+      "map_index": 38,
+      "osm_id": 1056284930,
+      "observed_xy": [
+        1084.8330804248862,
+        179.0576631259484
+      ],
+      "projected_xy": [
+        1079.1119783351644,
+        169.67886673079596
+      ],
+      "observed_width_px": 41.0,
+      "projected_width_px": 41.65508960141067,
+      "cost": 3.204184027661884,
+      "pixel_distance": 10.98602889777486
+    }
+  ],
+  "parameters": [
+    1477.0600000000559,
+    1426.4799999999814,
+    222.88527396087034,
+    -30.635130040646512,
+    1.3967233102200818,
+    7.373981872628581,
+    5.613348329245313
+  ],
+  "joint_offset_alpha_sweep_at_true_pose": [
+    {
+      "alpha": 0.0,
+      "train_cost": 4.729823981152195,
+      "check_cost": 7.477887253260875,
+      "train_matches": 23,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.05,
+      "train_cost": 4.6649370518782645,
+      "check_cost": 7.447523801513498,
+      "train_matches": 23,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.1,
+      "train_cost": 4.612123167323297,
+      "check_cost": 7.420363963674862,
+      "train_matches": 23,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.15,
+      "train_cost": 4.566975729991979,
+      "check_cost": 7.396401104125414,
+      "train_matches": 23,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.2,
+      "train_cost": 4.533567208337835,
+      "check_cost": 7.375628601074195,
+      "train_matches": 23,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.25,
+      "train_cost": 4.508120780722971,
+      "check_cost": 7.356493309647482,
+      "train_matches": 23,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.3,
+      "train_cost": 4.488244405748565,
+      "check_cost": 7.333720840397569,
+      "train_matches": 23,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.35,
+      "train_cost": 4.4762674146650365,
+      "check_cost": 7.313238147099371,
+      "train_matches": 24,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.4,
+      "train_cost": 4.472263784964395,
+      "check_cost": 7.295040520149524,
+      "train_matches": 24,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.45,
+      "train_cost": 4.479762954215384,
+      "check_cost": 7.279123259707401,
+      "train_matches": 24,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.5,
+      "train_cost": 4.498745441087789,
+      "check_cost": 7.265481675672471,
+      "train_matches": 24,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.55,
+      "train_cost": 4.513885643055771,
+      "check_cost": 7.254111087661773,
+      "train_matches": 24,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.6,
+      "train_cost": 4.538728611057408,
+      "check_cost": 7.245006824987396,
+      "train_matches": 24,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.65,
+      "train_cost": 4.558656273608482,
+      "check_cost": 7.238164226634043,
+      "train_matches": 24,
+      "check_matches": 4
+    },
+    {
+      "alpha": 0.7,
+      "train_cost": 4.585772444325006,
+      "check_cost": 7.22032543900064,
+      "train_matches": 24,
+      "check_matches": 5
+    },
+    {
+      "alpha": 0.75,
+      "train_cost": 4.624278032253518,
+      "check_cost": 7.188552599711995,
+      "train_matches": 24,
+      "check_matches": 5
+    }
+  ],
+  "joint_offset_best_at_true_pose": {
+    "alpha": 0.4,
+    "train_cost": 4.472263784964395,
+    "check_cost": 7.295040520149524,
+    "train_matches": 24,
+    "check_matches": 4
+  }
+}

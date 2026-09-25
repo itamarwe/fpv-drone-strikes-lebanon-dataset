@@ -1,0 +1,98 @@
+{
+  "date": "2026-09-23",
+  "status": "positive_local_geolocation",
+  "coordinate_system": "EPSG:32636",
+  "coordinate_interpretation": {
+    "supplied_text": "705674:669964",
+    "easting": 705674.0,
+    "northing": 3669964.0,
+    "reason": "The leading 3 is locally omitted; literal northing 669964 falls near 6 degrees north and outside the orthophoto.",
+    "lon": 35.2051962596662,
+    "lat": 33.1489437305904
+  },
+  "orthophoto": {
+    "bounds_utm": [705174.0, 3669464.0, 706174.0, 3670464.0],
+    "gsd_m_per_px": 0.4,
+    "size_px": [2500, 2500],
+    "winning_tile": "northwest_500m_quadrant",
+    "winning_rotation_deg": 180
+  },
+  "consensus_photo1_center": {
+    "easting": 705528.75,
+    "northing": 3670049.74,
+    "lon": 35.2036592627587,
+    "lat": 33.1497446436425,
+    "conservative_uncertainty_m": 10.0,
+    "matcher_spread_m": 1.3
+  },
+  "supplied_coordinate_in_photo1_px": [81.34, 502.53],
+  "matchers": [
+    {
+      "name": "sift",
+      "proposed_matches": 362,
+      "used_matches": 362,
+      "homography_inliers": 18,
+      "inlier_ratio": 0.0497,
+      "runtime_seconds": 0.37,
+      "outcome": "abstain",
+      "reason": "Inlier ratio below 0.10 and fitted location is wrong."
+    },
+    {
+      "name": "superpoint+lightglue",
+      "proposed_matches": 681,
+      "used_matches": 681,
+      "homography_inliers": 231,
+      "inlier_ratio": 0.3392,
+      "runtime_seconds": 9.24,
+      "center_utm": [705529.94, 3670050.0],
+      "outcome": "success"
+    },
+    {
+      "name": "loftr",
+      "proposed_matches": 718,
+      "used_matches": 420,
+      "confidence_floor": 0.3,
+      "homography_inliers": 179,
+      "inlier_ratio": 0.4262,
+      "runtime_seconds": 13.31,
+      "center_utm": [705528.0, 3670049.8],
+      "median_inlier_residual_m": 1.1,
+      "p90_inlier_residual_m": 1.7,
+      "outcome": "success"
+    },
+    {
+      "name": "roma",
+      "proposed_matches": 5000,
+      "used_matches": 5000,
+      "homography_inliers": 3341,
+      "inlier_ratio": 0.6682,
+      "runtime_seconds": 15.48,
+      "one_time_model_load_seconds": 35.44,
+      "center_utm": [705528.3, 3670049.4],
+      "median_inlier_residual_m": 1.0,
+      "p90_inlier_residual_m": 1.7,
+      "outcome": "success"
+    }
+  ],
+  "photo2_validation": {
+    "matcher": "loftr",
+    "proposed_matches": 632,
+    "used_matches": 372,
+    "homography_inliers": 118,
+    "inlier_ratio": 0.3172,
+    "center_utm": [705551.0, 3670017.5],
+    "note": "Same scene and tile; centre differs because attachment framing differs."
+  },
+  "loftr_query_to_northwest_tile_homography": [
+    [-1.1731856668890792, 3.650132605280312, 672.3565240792713],
+    [-1.0052710979651576, -0.18529468084841969, 2586.132451707218],
+    [-4.4622623578451884e-7, 0.0018486892293107025, 1.0]
+  ],
+  "limitations": [
+    "The search is local to the supplied 1 km prior, not country-scale blind retrieval.",
+    "Homography is a 2D approximation; relief and roof height cause parallax.",
+    "Internal residuals are not surveyed absolute geolocation errors.",
+    "Photo 2 is an overlapping observation, not an independent scene.",
+    "Full camera pose requires intrinsics and metric 3D map points."
+  ]
+}

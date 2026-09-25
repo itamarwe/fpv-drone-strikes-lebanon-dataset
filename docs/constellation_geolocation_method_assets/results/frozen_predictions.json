@@ -1,0 +1,9 @@
+{
+  "primary": "joint",
+  "policy": "Literal roof centres, jointly estimated focal length; selected before reference evaluation",
+  "sha256": {
+    "fixed": "67ba1c43a7929c6cde3b50bc2de5124bd6f441b3d8c5412c2c4b7c083a1935a5",
+    "joint": "0a98c65dfff62612f0af6cacd8bbf2c97a4ce73b0937206928b8fdda69cf19b7",
+    "joint_offset": "0b93331ef843604a9be917d30b6eacd1c62ab17d1741d5e29948bbd980bdbec1"
+  }
+}

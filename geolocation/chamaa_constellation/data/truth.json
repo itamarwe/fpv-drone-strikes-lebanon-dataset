@@ -1,0 +1,57 @@
+{
+  "epsg": 32636,
+  "use": "EVALUATION ONLY - never read by the search",
+  "source": "LoFTR photo->orthophoto homography, data/alignment_results.json (225 inliers at 180 deg; control tile abstained; ~10 m conservative uncertainty)",
+  "footprint_centre_utm": [
+    705527.81,
+    3670049.54
+  ],
+  "footprint_centre_lonlat": [
+    35.20364916340997,
+    33.14974248633121
+  ],
+  "image_centre_px": [
+    596.5,
+    452.5
+  ],
+  "footprint_corners_utm_caveat": "planar-homography extrapolation; unsafe at the far edge (relief)",
+  "footprint_corners_utm": {
+    "top_left": [
+      705442.9,
+      3669429.5
+    ],
+    "top_right": [
+      704882.9,
+      3669909.0
+    ],
+    "bottom_right": [
+      705559.6,
+      3670281.5
+    ],
+    "bottom_left": [
+      705768.9,
+      3670102.1
+    ]
+  },
+  "random_seed": 20260925,
+  "offsets": [
+    {
+      "name": "2x2km",
+      "box_centre_minus_truth_m": [
+        -477.1,
+        -426.5
+      ],
+      "offset_norm_m": 639.9,
+      "truth_distance_to_nearest_edge_m": 522.9
+    },
+    {
+      "name": "4x4km",
+      "box_centre_minus_truth_m": [
+        29.1,
+        -485.3
+      ],
+      "offset_norm_m": 486.2,
+      "truth_distance_to_nearest_edge_m": 1514.7
+    }
+  ]
+}

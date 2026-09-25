@@ -1,0 +1,202 @@
+{
+  "area": "4x4km",
+  "mode": "joint_offset",
+  "bounds_utm": [
+    703556.92,
+    3667564.24,
+    707556.92,
+    3671564.24
+  ],
+  "offset": {
+    "name": "4x4km",
+    "box_centre_minus_truth_m": [
+      29.1,
+      -485.3
+    ],
+    "offset_norm_m": 486.2,
+    "truth_distance_to_nearest_edge_m": 1514.7
+  },
+  "reference_buildings": 859,
+  "detections": 51,
+  "runtime_s": {
+    "global_de_s": 20.484898583999893,
+    "powell_s": 1.1027328749987646,
+    "local_refine_s": 20.532387708000897,
+    "total_s": 42.15450862500438
+  },
+  "objective_evaluations": 92582,
+  "global_de_converged": [
+    false,
+    false,
+    false
+  ],
+  "n_distinct_candidates": 5,
+  "correct_threshold_m": 50.0,
+  "rank_of_correct": null,
+  "rank_within_100m": null,
+  "best_error_m": 508.882009050198,
+  "min_error_any_candidate_m": 460.174456706218,
+  "margin_train_cost": 0.23879307262043437,
+  "best_train_cost": 4.197406191523872,
+  "best_check_cost": 7.807493658179369,
+  "descriptive_null": {
+    "type": "100 x-shuffled controls at the frozen best pose, not re-optimised",
+    "heldout_cost_median": 7.260689542595523,
+    "heldout_cost_min": 5.449682286819527,
+    "real_heldout_cost": 7.807493658179369
+  },
+  "top5": [
+    {
+      "rank": 1,
+      "lat": 33.14997466043627,
+      "lon": 35.1982022200757,
+      "footprint_centre_utm": [
+        705019.2,
+        3670064.6
+      ],
+      "train_cost": 4.197406191523872,
+      "check_cost": 7.807493658179369,
+      "inlier_buildings": 30,
+      "train_matches": 25,
+      "check_matches": 4,
+      "focal_px": 1381.3984702179923,
+      "yaw_pitch_roll_deg": [
+        75.55700284007938,
+        -19.002290569487226,
+        -0.9351371271558846
+      ],
+      "height_above_ground_m": 184.9532528106796,
+      "error_m": 508.882009050198,
+      "stage": "local_refine"
+    },
+    {
+      "rank": 2,
+      "lat": 33.1498224597245,
+      "lon": 35.197662708154944,
+      "footprint_centre_utm": [
+        704969.2,
+        3670046.7
+      ],
+      "train_cost": 4.436199264144307,
+      "check_cost": 7.753008108218774,
+      "inlier_buildings": 27,
+      "train_matches": 23,
+      "check_matches": 4,
+      "focal_px": 1655.5294856784071,
+      "yaw_pitch_roll_deg": [
+        76.44903314140754,
+        -15.698718926749892,
+        0.6568821808787024
+      ],
+      "height_above_ground_m": 154.8713052765884,
+      "error_m": 558.6405063270239,
+      "stage": "local_refine"
+    },
+    {
+      "rank": 3,
+      "lat": 33.149210625569594,
+      "lon": 35.1984742816934,
+      "footprint_centre_utm": [
+        705046.3,
+        3669980.4
+      ],
+      "train_cost": 5.312854209020885,
+      "check_cost": 7.499485067664468,
+      "inlier_buildings": 25,
+      "train_matches": 21,
+      "check_matches": 4,
+      "focal_px": 1355.6029615977186,
+      "yaw_pitch_roll_deg": [
+        82.45584113909655,
+        -22.348670361295582,
+        -0.10758364276788113
+      ],
+      "height_above_ground_m": 354.3288055009699,
+      "error_m": 486.4375368650039,
+      "stage": "global+powell"
+    },
+    {
+      "rank": 4,
+      "lat": 33.150500251073204,
+      "lon": 35.19724584757807,
+      "footprint_centre_utm": [
+        704928.7,
+        3670121.0
+      ],
+      "train_cost": 5.407143406118627,
+      "check_cost": 6.567063568013052,
+      "inlier_buildings": 26,
+      "train_matches": 19,
+      "check_matches": 7,
+      "focal_px": 1378.7528006052385,
+      "yaw_pitch_roll_deg": [
+        84.72815732065487,
+        -21.333616530625743,
+        -4.235125799708793
+      ],
+      "height_above_ground_m": 292.8011061869638,
+      "error_m": 603.346718216921,
+      "stage": "global+powell"
+    },
+    {
+      "rank": 5,
+      "lat": 33.14973985795329,
+      "lon": 35.198717258609065,
+      "footprint_centre_utm": [
+        705067.7,
+        3670039.6
+      ],
+      "train_cost": 5.496340218832096,
+      "check_cost": 6.753234114711666,
+      "inlier_buildings": 26,
+      "train_matches": 20,
+      "check_matches": 7,
+      "focal_px": 1718.9386835471244,
+      "yaw_pitch_roll_deg": [
+        81.00306400711,
+        -21.96749909483609,
+        -5.0957526541737455
+      ],
+      "height_above_ground_m": 405.0146876799351,
+      "error_m": 460.174456706218,
+      "stage": "global+powell"
+    }
+  ],
+  "all_candidates": [
+    {
+      "rank": 1,
+      "error_m": 508.882009050198,
+      "train_cost": 4.197406191523872,
+      "check_cost": 7.807493658179369,
+      "inlier_buildings": 30
+    },
+    {
+      "rank": 2,
+      "error_m": 558.6405063270239,
+      "train_cost": 4.436199264144307,
+      "check_cost": 7.753008108218774,
+      "inlier_buildings": 27
+    },
+    {
+      "rank": 3,
+      "error_m": 486.4375368650039,
+      "train_cost": 5.312854209020885,
+      "check_cost": 7.499485067664468,
+      "inlier_buildings": 25
+    },
+    {
+      "rank": 4,
+      "error_m": 603.346718216921,
+      "train_cost": 5.407143406118627,
+      "check_cost": 6.567063568013052,
+      "inlier_buildings": 26
+    },
+    {
+      "rank": 5,
+      "error_m": 460.174456706218,
+      "train_cost": 5.496340218832096,
+      "check_cost": 6.753234114711666,
+      "inlier_buildings": 26
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "reference_lat": 43.3170973,
+  "reference_lon": 6.6452751,
+  "reference_use": "post-fit evaluation only",
+  "primary_mode": "joint",
+  "results": [
+    {
+      "mode": "fixed",
+      "error_m": 156.519055080703,
+      "camera_lat": 43.31605676820773,
+      "camera_lon": 6.646575867619632,
+      "focal_px": 2084.352670328932,
+      "train_cost": 2.85484875380839,
+      "check_cost": 4.450147441443449,
+      "train_matches": 42,
+      "check_matches": 16,
+      "overall_matches": 58,
+      "global_seconds": 14.736158624999916,
+      "refinement_seconds": 25.75407591700059,
+      "height_fraction": 0.0
+    },
+    {
+      "mode": "joint",
+      "error_m": 3.1462988388699484,
+      "camera_lat": 43.31712526249352,
+      "camera_lon": 6.645268958355506,
+      "focal_px": 2543.1237116808006,
+      "train_cost": 1.838239918127484,
+      "check_cost": 1.181573897846917,
+      "train_matches": 44,
+      "check_matches": 21,
+      "overall_matches": 65,
+      "global_seconds": 24.670461458999853,
+      "refinement_seconds": 32.91768887499984,
+      "height_fraction": 0.0
+    },
+    {
+      "mode": "joint_offset",
+      "error_m": 8.277710303324339,
+      "camera_lat": 43.317169531231364,
+      "camera_lon": 6.645300130576694,
+      "focal_px": 2547.5984917808373,
+      "train_cost": 1.8330949885791465,
+      "check_cost": 1.3956677166237876,
+      "train_matches": 44,
+      "check_matches": 21,
+      "overall_matches": 65,
+      "global_seconds": 34.054763916999946,
+      "refinement_seconds": 42.99524874999952,
+      "height_fraction": 0.014082084283387752
+    }
+  ],
+  "all_refined_hypotheses": [
+    {
+      "mode": "fixed",
+      "training_rank": 1,
+      "train_cost": 2.85484875380839,
+      "check_cost": 4.450147441443449,
+      "error_m": 156.519055080703,
+      "focal_px": 2084.352670328932
+    },
+    {
+      "mode": "fixed",
+      "training_rank": 2,
+      "train_cost": 3.2294617389970504,
+      "check_cost": 4.953643716688924,
+      "error_m": 169.4740545809777,
+      "focal_px": 2084.352670328932
+    },
+    {
+      "mode": "joint",
+      "training_rank": 1,
+      "train_cost": 1.838239918127484,
+      "check_cost": 1.181573897846917,
+      "error_m": 3.1462988388699484,
+      "focal_px": 2543.1237116808006
+    },
+    {
+      "mode": "joint",
+      "training_rank": 2,
+      "train_cost": 2.6459051525771375,
+      "check_cost": 3.836952845376886,
+      "error_m": 182.02671887296688,
+      "focal_px": 2429.004098500382
+    },
+    {
+      "mode": "joint_offset",
+      "training_rank": 1,
+      "train_cost": 1.8330949885791465,
+      "check_cost": 1.3956677166237876,
+      "error_m": 8.277710303324339,
+      "focal_px": 2547.5984917808373
+    },
+    {
+      "mode": "joint_offset",
+      "training_rank": 2,
+      "train_cost": 2.3788913973903223,
+      "check_cost": 4.008545545930301,
+      "error_m": 244.44680732355383,
+      "focal_px": 2481.9703760575394
+    }
+  ],
+  "descriptive_null": {
+    "type": "100 shuffled x-coordinate controls at fixed fitted pose, not reoptimized; not a false-positive rate",
+    "heldout_cost_median": 5.4693985932996005,
+    "heldout_cost_min": 3.7303383996612944,
+    "real_heldout_cost": 1.181573897846917
+  },
+  "independent_silhouette": {
+    "source": "SRTM ~30 m, not used in constellation fitting",
+    "peak_in_image_region_xy": [
+      920.9194340344325,
+      191.49934382149365
+    ],
+    "observed_crest_region_xyxy": [
+      899,
+      182,
+      924,
+      191
+    ],
+    "caveat": "Canopy/DEM/datum uncertainty; no correction or pose fitting applied"
+  },
+  "caveat": "One previously disclosed development scene. Not a validated accuracy guarantee; individual false matches remain."
+}
