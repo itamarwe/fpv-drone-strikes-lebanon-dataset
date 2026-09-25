@@ -1,0 +1,77 @@
+{
+  "warning": "research feasibility check; the truth is used only to score",
+  "vp": {
+    "detected": [
+      2.469051404372869,
+      5475.615362254696
+    ],
+    "true": [
+      662.604968480547,
+      3143.685526750157
+    ],
+    "inliers": 16,
+    "segments": 159,
+    "implied_pitch_roll_at_true_focal": [
+      -17.492630954863728,
+      -6.750749982140075
+    ],
+    "true_pitch_roll": [
+      -30.635130040646512,
+      1.3967233102200818
+    ]
+  },
+  "runs": [
+    {
+      "label": "true focal, true pitch/roll",
+      "focal": 1593.9681414841768,
+      "pitch": -30.635130040646512,
+      "roll": 1.3967233102200818,
+      "best_z": 11.95447826385498,
+      "best_error_m": 14.966429099783086,
+      "best_heading": 220.0,
+      "best_height": 246.23595323882728,
+      "truth_area_z": 11.95447826385498,
+      "distinct_places_above_truth": 0,
+      "seconds": 211.1625645000022
+    },
+    {
+      "label": "true focal, pitch/roll from VP",
+      "focal": 1593.9681414841768,
+      "pitch": -17.492630954863728,
+      "roll": -6.750749982140075,
+      "best_z": 9.280740737915039,
+      "best_error_m": 680.9481580854258,
+      "best_heading": 144.0,
+      "best_height": 59.999999999999986,
+      "truth_area_z": 8.096369743347168,
+      "distinct_places_above_truth": 10,
+      "seconds": 197.34439066699997
+    },
+    {
+      "label": "focal x0.9, pitch/roll from VP",
+      "focal": 1434.5713273357592,
+      "pitch": -15.835545157613433,
+      "roll": -6.750755762671633,
+      "best_z": 9.310625076293945,
+      "best_error_m": 225.45454974337798,
+      "best_heading": 196.0,
+      "best_height": 62.4,
+      "truth_area_z": 8.311478614807129,
+      "distinct_places_above_truth": 6,
+      "seconds": 183.8628282080026
+    },
+    {
+      "label": "focal x1.1, pitch/roll from VP",
+      "focal": 1753.3649556325947,
+      "pitch": -19.1200580581434,
+      "roll": -6.750732277090055,
+      "best_z": 9.468093872070312,
+      "best_error_m": 677.0009113730453,
+      "best_heading": 136.0,
+      "best_height": 62.4,
+      "truth_area_z": 8.225944519042969,
+      "distinct_places_above_truth": 14,
+      "seconds": 205.24678691600275
+    }
+  ]
+}

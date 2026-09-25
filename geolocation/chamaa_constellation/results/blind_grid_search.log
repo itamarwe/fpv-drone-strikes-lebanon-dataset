@@ -1,0 +1,21 @@
+  20/198 combos, 98 s
+  40/198 combos, 216 s
+  60/198 combos, 342 s
+  80/198 combos, 470 s
+  100/198 combos, 607 s
+  120/198 combos, 741 s
+  140/198 combos, 874 s
+  160/198 combos, 1002 s
+  180/198 combos, 1124 s
+
+198 camera combos searched in 20.6 min
+rank       z  error m  heading  height  pitch  roll  focal
+   1   10.98        7      222     243    -33     0   1344
+   2   10.57      447      309      80    -75     0    450
+   3   10.19      674      111      90    -51     0    648
+   4    9.80     1086      117      76    -69    -6    450
+   5    9.01     1404      141      90    -75    -6    450
+   6    8.87     1691      342     435    -75     0   1935
+   7    8.79     1562      177     307    -51    -6   1935
+   8    8.72      160      336     136    -51     6    933
+rank of the first place within 50 m of the truth: 1

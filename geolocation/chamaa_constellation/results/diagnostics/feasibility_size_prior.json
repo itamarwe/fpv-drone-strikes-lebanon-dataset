@@ -1,0 +1,152 @@
+[
+  {
+    "label": "exact (h est 236 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -30.635130040646512,
+    "roll": 1.3967233102200818,
+    "best_error_m": 7.104505612587059,
+    "places_above_truth": 0,
+    "seconds": 6.471951917003025,
+    "height_estimate_m": 236.24325591752705
+  },
+  {
+    "label": "pitch -8 (h est 298 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -38.635130040646516,
+    "roll": 1.3967233102200818,
+    "best_error_m": 669.1036945047706,
+    "places_above_truth": 1,
+    "seconds": 6.7728182499995455,
+    "height_estimate_m": 298.2678647809139
+  },
+  {
+    "label": "pitch -6 (h est 284 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -36.635130040646516,
+    "roll": 1.3967233102200818,
+    "best_error_m": 59.99661657130383,
+    "places_above_truth": 1,
+    "seconds": 6.861714208003832,
+    "height_estimate_m": 284.22814177889325
+  },
+  {
+    "label": "pitch -3 (h est 261 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -33.635130040646516,
+    "roll": 1.3967233102200818,
+    "best_error_m": 1.8531055016310023,
+    "places_above_truth": 0,
+    "seconds": 6.703172541994718,
+    "height_estimate_m": 261.11575587366417
+  },
+  {
+    "label": "pitch +3 (h est 206 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -27.635130040646512,
+    "roll": 1.3967233102200818,
+    "best_error_m": 7.104505612587059,
+    "places_above_truth": 0,
+    "seconds": 6.82337166700745,
+    "height_estimate_m": 206.11979516271424
+  },
+  {
+    "label": "pitch +6 (h est 185 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -24.635130040646512,
+    "roll": 1.3967233102200818,
+    "best_error_m": 41.278493189515736,
+    "places_above_truth": 0,
+    "seconds": 6.830593250007951,
+    "height_estimate_m": 184.70226289733014
+  },
+  {
+    "label": "pitch +8 (h est 166 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -22.635130040646512,
+    "roll": 1.3967233102200818,
+    "best_error_m": 47.08029311723689,
+    "places_above_truth": 0,
+    "seconds": 6.819174666001345,
+    "height_estimate_m": 165.57124000361267
+  },
+  {
+    "label": "roll -6 (h est 235 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -30.635130040646512,
+    "roll": -4.603276689779918,
+    "best_error_m": 7.104505612587059,
+    "places_above_truth": 0,
+    "seconds": 6.740619417003472,
+    "height_estimate_m": 235.35175053811506
+  },
+  {
+    "label": "roll -4 (h est 233 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -30.635130040646512,
+    "roll": -2.603276689779918,
+    "best_error_m": 7.104505612587059,
+    "places_above_truth": 0,
+    "seconds": 6.716422415993293,
+    "height_estimate_m": 233.35695946698675
+  },
+  {
+    "label": "roll +4 (h est 241 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -30.635130040646512,
+    "roll": 5.396723310220082,
+    "best_error_m": 15.017123559403343,
+    "places_above_truth": 0,
+    "seconds": 6.3285954169987235,
+    "height_estimate_m": 240.55962110710146
+  },
+  {
+    "label": "roll +6 (h est 243 m)",
+    "focal": 1593.9681414841768,
+    "pitch": -30.635130040646512,
+    "roll": 7.396723310220082,
+    "best_error_m": 7.104505612587059,
+    "places_above_truth": 0,
+    "seconds": 6.703212332999101,
+    "height_estimate_m": 243.22826121743384
+  },
+  {
+    "label": "focal x0.8 (h est 181 m)",
+    "focal": 1275.1745131873415,
+    "pitch": -30.635130040646512,
+    "roll": 1.3967233102200818,
+    "best_error_m": 15.017123559403343,
+    "places_above_truth": 0,
+    "seconds": 6.738399750000099,
+    "height_estimate_m": 181.3741602167768
+  },
+  {
+    "label": "focal x0.9 (h est 206 m)",
+    "focal": 1434.5713273357592,
+    "pitch": -30.635130040646512,
+    "roll": 1.3967233102200818,
+    "best_error_m": 11.781086537309665,
+    "places_above_truth": 0,
+    "seconds": 6.724890209006844,
+    "height_estimate_m": 205.66600071285933
+  },
+  {
+    "label": "focal x1.1 (h est 265 m)",
+    "focal": 1753.3649556325947,
+    "pitch": -30.635130040646512,
+    "roll": 1.3967233102200818,
+    "best_error_m": 15.017123559403343,
+    "places_above_truth": 0,
+    "seconds": 6.713526874998934,
+    "height_estimate_m": 265.0316599945528
+  },
+  {
+    "label": "focal x1.2 (h est 291 m)",
+    "focal": 1912.7617697810122,
+    "pitch": -30.635130040646512,
+    "roll": 1.3967233102200818,
+    "best_error_m": 7.104505612587059,
+    "places_above_truth": 0,
+    "seconds": 6.72064129098726,
+    "height_estimate_m": 290.69210879349936
+  }
+]

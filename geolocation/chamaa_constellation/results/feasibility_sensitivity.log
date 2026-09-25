@@ -1,0 +1,16 @@
+VP from building walls only: (544, 4321) from 15 of 91 segments; true (663, 3144)
+  implied at the true focal: pitch -22.4, roll -0.8 (true -30.6, 1.4)
+
+sensitivity (coarse settings):
+  exact                          best peak  1298 m from truth (heading 282, h 60) | places above the truth:  1 | 19 s
+  pitch -6 deg                   best peak   497 m from truth (heading 234, h 60) | places above the truth: 18 | 19 s
+  pitch -3 deg                   best peak  1310 m from truth (heading 291, h 60) | places above the truth:  6 | 19 s
+  pitch +3 deg                   best peak   639 m from truth (heading 132, h 60) | places above the truth:  1 | 19 s
+  pitch +6 deg                   best peak  1578 m from truth (heading 207, h 64) | places above the truth:  3 | 20 s
+  roll -4 deg                    best peak     7 m from truth (heading 222, h 258) | places above the truth:  0 | 20 s
+  roll +4 deg                    best peak  1298 m from truth (heading 270, h 60) | places above the truth:  2 | 19 s
+  focal x0.85                    best peak     7 m from truth (heading 219, h 204) | places above the truth:  0 | 19 s
+  focal x0.93                    best peak   650 m from truth (heading 132, h 60) | places above the truth:  1 | 19 s
+  focal x1.07                    best peak  1298 m from truth (heading 282, h 60) | places above the truth:  1 | 19 s
+  focal x1.15                    best peak  1304 m from truth (heading 279, h 60) | places above the truth:  3 | 20 s
+  building-wall VP               best peak   677 m from truth (heading 120, h 67) | places above the truth:  1 | 20 s

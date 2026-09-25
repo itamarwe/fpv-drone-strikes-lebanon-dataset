@@ -3,7 +3,13 @@
 **Test date:** 25 September 2026
 **Method under test:** the Sainte-Maxime building-constellation camera search
 ([write-up](../../../docs/constellation_geolocation_method.md))
-**Verdict: the method did not succeed.** In both search areas every candidate was
+**Update — a fully blind search now finds the photo (rank 1, 5 m error).** The original
+Sainte-Maxime method, reproduced as written, failed (below). A redesigned search — a grid over
+camera tilt/roll/focal, an exhaustive heading × height × position scan in bird's-eye view, then
+full 3D refinement scored by chance-corrected significance — ranks the true location first in the
+2 × 2 km box with a wide margin. See [Blind decomposed search](#blind-decomposed-search-the-one-that-works).
+
+**Verdict on the original method: it did not succeed.** In both search areas every candidate was
 at least 300 m from the truth, and none was within the 50 m "correct" threshold.
 Diagnostics show the reason is the **objective function**, not the search budget:
 the method's cost scores the *true* camera pose **worse** than a wrong pose 480 m
@@ -14,7 +20,59 @@ needle-sized basin; see [Bimodal search](#bimodal-search-houses--roads--crossing
 mask 3–5× better at the true pose than at any wrong winner (road F1 0.62 vs 0.12–0.20),
 tested on fixed poses rather than yet as a search.
 
-## Summary
+## Blind decomposed search: the one that works
+
+The earlier sections show two separate problems: the original cost scores the truth
+worse than wrong poses (a **model** problem), and the houses + crossings significance score
+fixes that but blind optimisation cannot find its narrow basin (a **search** problem). This
+search fixes the second problem by not running an optimiser over all 7 parameters at once.
+
+**Pipeline (the truth is read only to compute the final error column):**
+
+1. **Camera grid.** Pitch −15° to −75° in 6° steps × roll −6°, 0°, +6° × 6 focal lengths
+   (450 × 1.44^k, i.e. 450–2,800 px) = 198 combinations. A feasibility sweep using the truth showed
+   the scan tolerates about −6/+8° of pitch, ±6° of roll and ±20% of focal length, which set these steps.
+2. **Bird's-eye view.** For each combination, the photo's house detections (51) and road crossings (10)
+   are projected onto a flat ground plane at unit camera height.
+3. **Height from house size.** The median OSM footprint length (16.5 m) and each detection's pixel
+   width give a camera-height estimate. The scan covers 0.6–1.7× that estimate.
+4. **Exhaustive scan.** Heading in 3° steps × height in 6% steps × every map position, computed
+   with shifted raster sums over OSM house centres and OSM crossings. Each layer's score is
+   z = (hits − expected) / √(expected + 1), where the expected count comes from the local map
+   density in a 200 m window, so dense areas get no free credit. z_houses + z_crossings are summed and
+   the top 3 peaks per combination (≥150 m apart) are kept.
+5. **Verify.** The 8 best peaks overall are refined in the full 3D camera model
+   (`fair_compare.refine`) and re-scored with the exact significance S from
+   [the section above](#why-wrong-poses-beat-the-truth-and-a-score-that-fixes-it).
+
+**Result (2 × 2 km box, 316 OSM buildings, 20.6 min on a laptop CPU plus about 1 min to verify):**
+
+| final rank | grid rank | S | houses matched (chance) | crossings | heading | height m | focal px | error m |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **1** | 1 | **17.8** | 30 (6.9) | 4 | 220 | 279 | 1540 | **5** |
+| 2 | 2 | 4.4 | 6 (2.6) | 2 | 306 | 98 | 439 | 437 |
+| 3 | 3 | 4.1 | 13 (7.8) | 3 | 115 | 110 | 531 | 647 |
+| 4 | 8 | 2.8 | 9 (6.7) | 2 | 331 | 164 | 865 | 142 |
+| 5 | 5 | 2.0 | 6 (1.8) | 0 | 140 | 105 | 453 | 1429 |
+
+True pose: heading 223°, height 274 m, focal 1594 px, pitch −30.6°. **Rank of the correct location: 1.**
+The grid stage alone also ranks it first, but narrowly (z 10.98 vs 10.57). After verification the
+margin is decisive: S 17.8 vs 4.4, i.e. the winner's match count has a chance probability of about
+10⁻¹⁸, against about 10⁻⁴ for the runner-up. The refined winner's S equals that of the refined true
+pose (17.8), so the search reached the same basin.
+
+**Caveats.** This is one photo in one 2 × 2 km box. The 4 × 4 km box has not been run yet (about 4×
+the scan cost, and more chance peaks). The grid stage's small margin shows the coarse z-score is
+only a proposal generator; the 3D verification is what decides. Low, steep, wide-angle poses at
+the grid's edges (pitch −75°, focal 450) produce most of the false peaks.
+
+Code: `feasibility_bev_search.py` (BEV projection, rasters, scan), `feasibility_sensitivity.py`
+and `feasibility_size_prior.py` (tolerance and height-prior studies, which use the truth),
+`blind_grid_search.py` (blind grid), `verify_top.py` (3D refinement + S). Outputs:
+`blind_grid_search.json/.log`, `blind_grid_verified.json`, `diagnostics/feasibility_*.json`,
+`figures/feasibility_bev_heatmap.jpg`.
+
+## Summary (original Sainte-Maxime method)
 
 | | 2 × 2 km | 4 × 4 km |
 |---|---:|---:|
@@ -596,6 +654,7 @@ python3 chamaa_constellation.py --area 2x2km --mode joint_offset
 python3 chamaa_constellation.py --area 4x4km --mode joint_offset
 python3 evaluate.py && python3 evaluate.py --mode joint_offset
 python3 diagnose_oracle.py && python3 diagnose_true_pose.py   # use the truth; not blind
+python3 blind_grid_search.py && python3 verify_top.py      # the blind search that works
 ```
 
 Dependencies: numpy, scipy, opencv, pyproj, rasterio. Regenerating detections needs SAM 3
