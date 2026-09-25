@@ -8,6 +8,8 @@ at least 300 m from the truth, and none was within the 50 m "correct" threshold.
 Diagnostics show the reason is the **objective function**, not the search budget:
 the method's cost scores the *true* camera pose **worse** than a wrong pose 480 m
 away. Confining the search to the Chamaa village does not fix it (421 m off).
+**A houses + roads objective prefers the truth, but blind search cannot find it** (a
+needle-sized basin; see [Bimodal search](#bimodal-search-houses--roads--crossings)).
 **Roads look like the missing signal:** projected OSM roads agree with the photo's road
 mask 3–5× better at the true pose than at any wrong winner (road F1 0.62 vs 0.12–0.20),
 tested on fixed poses rather than yet as a search.
@@ -198,6 +200,72 @@ It helps: from 2 m on, the true pose beats three of the four wrong winners. But 
 wrong candidate still wins at every tolerance. With a realistic tolerance, houses alone are still
 not distinctive enough here, while roads separate the truth from every winner 3–5×. The next step is
 a bimodal search (houses with a metre-based tolerance, plus road-line agreement and crossings).
+
+## Bimodal search: houses + roads + crossings
+
+*Added 25 Sep 2026 on request.* `bimodal.py` keeps the camera model, search boxes and protocol,
+and replaces the objective. Everything was fixed before any run, and the search reads only the
+box bounds:
+
+J = house cost / 9 + 1.0 × (1 − road F1) + 0.3 × (1 − crossing match), lower is better.
+
+* **Houses:** the original one-to-one assignment, with the tolerance widened by 4 m of map error
+  (typical OSM accuracy) projected to pixels at each building's distance.
+* **Roads:** F1 between projected OSM road centrelines (DEM-lifted, every 4 m) and the photo's SAM
+  road mask, at an 8 px tolerance.
+* **Crossings:** the share of detected crossings with an OSM crossing within 30 px, weighted lower
+  because as points they match only ~40%.
+
+At the true pose J = **1.01**; at the old house-only winner J = 1.53. So the objective now prefers
+the truth. The blind searches still missed it:
+
+| Area | Search | Winner J | Winner error | Closest candidate | Road F1 | Crossings | Heading | Runtime |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| 2x2km | bimodal | 1.307 | 480 m | 223 m | 0.35 | 5/10 | 76° | 181 s |
+| 2x2km | bimodal, heading-stratified | 1.244 | 640 m | 206 m | 0.33 | 7/10 | 164° | 406 s |
+| 4x4km | bimodal | 1.220 | 368 m | 368 m | 0.33 | 8/10 | 99° | 227 s |
+| village | bimodal | 1.292 | 436 m | 259 m | 0.37 | 7/10 | 86° | 169 s |
+
+(True pose: J 1.01, road F1 0.59, 4/10 crossings, heading 223°.) **Every winner scores worse than the
+truth**, so this is now a *search* failure, not a model failure. The winners also match more
+crossings than the truth does (up to 8 of 10), because poses that put many OSM crossings in frame can
+game that term.
+
+**Why the search misses it: the good basin is a needle.** Perturbing one parameter at a time from the
+true pose (`coarse` score; truth 1.27, best DE ever found 1.45):
+
+| Offset from the truth | Score | vs. best found |
+|---|---:|---|
+| 10 m position | 1.72 | already worse |
+| ±2° heading | 1.41–1.44 | edge of the basin |
+| ±1° roll | 1.38 | edge |
+| ±2° pitch | 1.90–1.94 | outside |
+| ±5% focal | 1.60–1.62 | outside |
+| ±10% height | 1.85–1.96 | outside |
+
+The score only rewards a pose once roads and houses align within ~8 px, about 2.5 m at this range,
+and it is flat outside that. Even with DE confined to the correct 45° heading sector, it reached only
+1.68 against the truth's 1.27.
+
+**Coarse-to-fine does not rescue it** (`bimodal_c2f.py`, checked at fixed poses before running): soft
+scores with tolerance τ.
+
+| τ | Truth | Best wrong winner | Prefers | Funnel |
+|---:|---:|---:|---|---|
+| 60 px | 0.868 | 0.945 | **truth** | ~15 m, ±5° |
+| 120 px | 0.614 | 0.564 | wrong | wider |
+| 250 px | 0.331 | 0.273 | wrong | wider |
+| 400 px | 0.207 | 0.171 | wrong | ~200 m |
+
+No tolerance both funnels and discriminates: loose enough to create a slope from hundreds of metres
+away, the score already prefers wrong basins. A blind optimiser over the 7-parameter camera has no
+path to the truth here, so the coarse-to-fine search was not run.
+
+**Conclusion.** Houses + roads + crossings *identify* the right answer; blind global optimisation
+cannot *find* it. The search has to be driven by correspondences instead: propose camera poses from
+small sets of matched features (e.g. pairs of crossings with their branch directions), which land
+directly in the needle-sized basin, then rank the proposals with this objective (the RANSAC pattern,
+and what collapsed the search in the simulation's object-grouping step).
 
 ## Sanity overlay: do SAM and OSM agree on this photo?
 

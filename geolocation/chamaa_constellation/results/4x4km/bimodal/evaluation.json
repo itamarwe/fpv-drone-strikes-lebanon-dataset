@@ -1,0 +1,151 @@
+{
+  "area": "4x4km",
+  "mode": "bimodal",
+  "bounds_utm": [
+    703556.92,
+    3667564.24,
+    707556.92,
+    3671564.24
+  ],
+  "offset": {
+    "name": "4x4km",
+    "box_centre_minus_truth_m": [
+      29.1,
+      -485.3
+    ],
+    "offset_norm_m": 486.2,
+    "truth_distance_to_nearest_edge_m": 1514.7
+  },
+  "reference_buildings": 859,
+  "detections": 51,
+  "runtime_s": {
+    "global_de_s": 160.63561383300112,
+    "powell_s": 1.348495999998704,
+    "local_refine_s": 65.02096633299516,
+    "total_s": 227.049975832997
+  },
+  "objective_evaluations": 162010,
+  "global_de_converged": [
+    false,
+    false,
+    false
+  ],
+  "n_distinct_candidates": 3,
+  "correct_threshold_m": 50.0,
+  "rank_of_correct": null,
+  "rank_within_100m": null,
+  "best_error_m": 367.55635483573474,
+  "min_error_any_candidate_m": 367.55635483573474,
+  "margin_train_cost": 0.044897249070486867,
+  "best_train_cost": 1.2201290737393156,
+  "best_check_cost": 6.0360426922835595,
+  "descriptive_null": {
+    "type": "100 x-shuffled controls at the frozen best pose, not re-optimised",
+    "heldout_cost_median": 6.500719438424866,
+    "heldout_cost_min": 4.292408811598995,
+    "real_heldout_cost": 6.0360426922835595
+  },
+  "top5": [
+    {
+      "rank": 1,
+      "road_f1": 0.3323269566269422,
+      "crossings_matched": 8,
+      "house_train_cost": 4.4321042732963205,
+      "lat": 33.150993340054775,
+      "lon": 35.20000129686124,
+      "footprint_centre_utm": [
+        705184.6,
+        3670181.1
+      ],
+      "train_cost": 1.2201290737393156,
+      "check_cost": 6.0360426922835595,
+      "inlier_buildings": 36,
+      "train_matches": 26,
+      "check_matches": 10,
+      "focal_px": 1977.4206032949223,
+      "yaw_pitch_roll_deg": [
+        99.30857921202842,
+        -13.501747145958788,
+        3.327171074811666
+      ],
+      "height_above_ground_m": 243.60104107020163,
+      "error_m": 367.55635483573474,
+      "stage": "local_refine"
+    },
+    {
+      "rank": 2,
+      "road_f1": 0.3586287832064468,
+      "crossings_matched": 7,
+      "house_train_cost": 4.8028959541462415,
+      "lat": 33.1505503997813,
+      "lon": 35.19890354810595,
+      "footprint_centre_utm": [
+        705083.2,
+        3670129.8
+      ],
+      "train_cost": 1.2650263228098024,
+      "check_cost": 6.134400390378589,
+      "inlier_buildings": 29,
+      "train_matches": 21,
+      "check_matches": 7,
+      "focal_px": 1716.1602530452471,
+      "yaw_pitch_roll_deg": [
+        90.47424652486815,
+        -15.483054599094922,
+        1.6171792070826763
+      ],
+      "height_above_ground_m": 245.4583530346097,
+      "error_m": 451.7678211452364,
+      "stage": "local_refine"
+    },
+    {
+      "rank": 3,
+      "road_f1": 0.41258645062265425,
+      "crossings_matched": 8,
+      "house_train_cost": 7.72754444731075,
+      "lat": 33.15280551240854,
+      "lon": 35.21071801505829,
+      "footprint_centre_utm": [
+        706180.1,
+        3670403.1
+      ],
+      "train_cost": 1.5060295990785404,
+      "check_cost": 7.30307486254666,
+      "inlier_buildings": 13,
+      "train_matches": 7,
+      "check_matches": 6,
+      "focal_px": 429.61713518572265,
+      "yaw_pitch_roll_deg": [
+        41.86108907590696,
+        -24.99792120840406,
+        -5.1106660728694795
+      ],
+      "height_above_ground_m": 660.7931106587407,
+      "error_m": 741.9255264696067,
+      "stage": "global+powell"
+    }
+  ],
+  "all_candidates": [
+    {
+      "rank": 1,
+      "error_m": 367.55635483573474,
+      "train_cost": 1.2201290737393156,
+      "check_cost": 6.0360426922835595,
+      "inlier_buildings": 36
+    },
+    {
+      "rank": 2,
+      "error_m": 451.7678211452364,
+      "train_cost": 1.2650263228098024,
+      "check_cost": 6.134400390378589,
+      "inlier_buildings": 29
+    },
+    {
+      "rank": 3,
+      "error_m": 741.9255264696067,
+      "train_cost": 1.5060295990785404,
+      "check_cost": 7.30307486254666,
+      "inlier_buildings": 13
+    }
+  ]
+}

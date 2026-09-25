@@ -1,0 +1,20 @@
+4x4km detections 51 map 859 road samples 14540 osm crossings 174 photo crossings 10
+  global {'seed': 7, 'seconds': 51.14872016699519, 'cost': 1.490700284761423, 'evaluations': 26992}
+  global {'seed': 19, 'seconds': 58.29985645799752, 'cost': 1.5974920573009956, 'evaluations': 26992}
+  global {'seed': 41, 'seconds': 51.1867180410045, 'cost': 1.4482572121781352, 'evaluations': 26992}
+{
+ "seconds": {
+  "global_de_s": 160.63561383300112,
+  "powell_s": 1.348495999998704,
+  "local_refine_s": 65.02096633299516,
+  "total_s": 227.049975832997
+ },
+ "J": 1.2201290737393156,
+ "house": 4.4321042732963205,
+ "road_f1": 0.3323269566269422,
+ "crossings": 8,
+ "footprint": [
+  705184.6054016334,
+  3670181.100927483
+ ]
+}

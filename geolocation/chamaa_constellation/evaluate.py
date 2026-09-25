@@ -153,7 +153,12 @@ def evaluate(name, truth_doc, mode="joint"):
     near100 = [i for i, c in enumerate(cands, 1) if c["error_m"] <= 100]
     best = cands[0]
     # Descriptive null, as in the original review: shuffle detection x-coordinates at the frozen pose.
-    pr = cc.Problem(run["area"], mode); p = np.array(best["parameters"])
+    if mode in ("bimodal", "bimodal_stratified"):
+        import bimodal
+        pr = bimodal.Bimodal(run["area"])
+    else:
+        pr = cc.Problem(run["area"], mode)
+    p = np.array(best["parameters"])
     rng = np.random.default_rng(119); original = pr.uv.copy(); controls = []
     used = {q["map_index"] for q in best["train_pairs"]}
     for _ in range(100):
@@ -180,7 +185,8 @@ def evaluate(name, truth_doc, mode="joint"):
               descriptive_null=dict(type="100 x-shuffled controls at the frozen best pose, not re-optimised",
                                     heldout_cost_median=float(np.median(controls)),
                                     heldout_cost_min=float(min(controls)), real_heldout_cost=best["check_cost"]),
-              top5=[dict(rank=i, lat=c["footprint_centre_lat"], lon=c["footprint_centre_lon"],
+              top5=[dict(rank=i, road_f1=c.get("road_f1"), crossings_matched=c.get("crossings_matched"),
+                         house_train_cost=c.get("house_train_cost", c["train_cost"]), lat=c["footprint_centre_lat"], lon=c["footprint_centre_lon"],
                          footprint_centre_utm=[round(v, 1) for v in c["footprint_centre_utm"]],
                          train_cost=c["train_cost"], check_cost=c["check_cost"],
                          inlier_buildings=c["overall_matches"], train_matches=c["train_matches"],
@@ -203,7 +209,7 @@ def evaluate(name, truth_doc, mode="joint"):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--areas", default="2x2km,4x4km")
-    ap.add_argument("--mode", choices=cc.MODES, default="joint"); args = ap.parse_args()
+    ap.add_argument("--mode", choices=cc.MODES + ("bimodal", "bimodal_stratified"), default="joint"); args = ap.parse_args()
     truth_doc = json.loads((cc.DATA / "truth.json").read_text())
     for name in args.areas.split(","):
         ev = evaluate(name, truth_doc, args.mode)

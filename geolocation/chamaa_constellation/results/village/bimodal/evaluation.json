@@ -1,0 +1,151 @@
+{
+  "area": "village",
+  "mode": "bimodal",
+  "bounds_utm": [
+    704635,
+    3669467,
+    706203,
+    3670556
+  ],
+  "offset": {
+    "name": "village",
+    "box_centre_minus_truth_m": [
+      -108.8,
+      -38.0
+    ],
+    "truth_distance_to_nearest_edge_m": 506.5,
+    "note": "box defined from OSM (place node + building cluster), not drawn around the truth"
+  },
+  "reference_buildings": 306,
+  "detections": 51,
+  "runtime_s": {
+    "global_de_s": 117.35866250000254,
+    "powell_s": 1.5705048750023707,
+    "local_refine_s": 50.38831216700055,
+    "total_s": 169.36194708300172
+  },
+  "objective_evaluations": 162014,
+  "global_de_converged": [
+    false,
+    false,
+    false
+  ],
+  "n_distinct_candidates": 3,
+  "correct_threshold_m": 50.0,
+  "rank_of_correct": null,
+  "rank_within_100m": null,
+  "best_error_m": 436.37162270711053,
+  "min_error_any_candidate_m": 259.4745330960976,
+  "margin_train_cost": 0.051692909327396785,
+  "best_train_cost": 1.292376868917018,
+  "best_check_cost": 5.789077529070918,
+  "descriptive_null": {
+    "type": "100 x-shuffled controls at the frozen best pose, not re-optimised",
+    "heldout_cost_median": 6.88698109486144,
+    "heldout_cost_min": 5.266841963543876,
+    "real_heldout_cost": 5.789077529070918
+  },
+  "top5": [
+    {
+      "rank": 1,
+      "road_f1": 0.37207771663238093,
+      "crossings_matched": 7,
+      "house_train_cost": 5.170091269944592,
+      "lat": 33.15058448491521,
+      "lon": 35.19908071287594,
+      "footprint_centre_utm": [
+        705099.7,
+        3670134.0
+      ],
+      "train_cost": 1.292376868917018,
+      "check_cost": 5.789077529070918,
+      "inlier_buildings": 28,
+      "train_matches": 20,
+      "check_matches": 8,
+      "focal_px": 1874.877483594827,
+      "yaw_pitch_roll_deg": [
+        86.239311343431,
+        -17.576527980734557,
+        3.693168487849626
+      ],
+      "height_above_ground_m": 402.053542229181,
+      "error_m": 436.37162270711053,
+      "stage": "local_refine"
+    },
+    {
+      "rank": 2,
+      "road_f1": 0.2932238834462831,
+      "crossings_matched": 8,
+      "house_train_cost": 5.195642955216281,
+      "lat": 33.14887559533795,
+      "lon": 35.2010662471081,
+      "footprint_centre_utm": [
+        705288.9,
+        3669948.3
+      ],
+      "train_cost": 1.3440697782444149,
+      "check_cost": 7.227556175622173,
+      "inlier_buildings": 26,
+      "train_matches": 20,
+      "check_matches": 6,
+      "focal_px": 1900.4625134194532,
+      "yaw_pitch_roll_deg": [
+        72.49562231277929,
+        -19.678530597200172,
+        7.168469727309661
+      ],
+      "height_above_ground_m": 512.0697614828159,
+      "error_m": 259.4745330960976,
+      "stage": "local_refine"
+    },
+    {
+      "rank": 3,
+      "road_f1": 0.2620098102479798,
+      "crossings_matched": 7,
+      "house_train_cost": 6.3744733470821355,
+      "lat": 33.15290836844348,
+      "lon": 35.19652596244676,
+      "footprint_centre_utm": [
+        704856.0,
+        3670386.7
+      ],
+      "train_cost": 1.5362650060944798,
+      "check_cost": 7.506135155001489,
+      "inlier_buildings": 22,
+      "train_matches": 15,
+      "check_matches": 6,
+      "focal_px": 1077.8961834407792,
+      "yaw_pitch_roll_deg": [
+        222.8393396957514,
+        -62.50890775816398,
+        -3.1659251778872823
+      ],
+      "height_above_ground_m": 1003.8810367500172,
+      "error_m": 751.6907800212056,
+      "stage": "global+powell"
+    }
+  ],
+  "all_candidates": [
+    {
+      "rank": 1,
+      "error_m": 436.37162270711053,
+      "train_cost": 1.292376868917018,
+      "check_cost": 5.789077529070918,
+      "inlier_buildings": 28
+    },
+    {
+      "rank": 2,
+      "error_m": 259.4745330960976,
+      "train_cost": 1.3440697782444149,
+      "check_cost": 7.227556175622173,
+      "inlier_buildings": 26
+    },
+    {
+      "rank": 3,
+      "error_m": 751.6907800212056,
+      "train_cost": 1.5362650060944798,
+      "check_cost": 7.506135155001489,
+      "inlier_buildings": 22
+    }
+  ]
+}
