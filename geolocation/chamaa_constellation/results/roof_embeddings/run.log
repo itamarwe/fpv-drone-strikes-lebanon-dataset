@@ -1,0 +1,91 @@
+[    0.0 s] loading detections, OSM buildings, DEM
+[    0.1 s] pairing photo roofs with OSM footprints (truth homography)
+[    0.5 s] 51 photo roofs, 27 paired with an OSM building; gallery 859 (4x4 km)
+[    0.5 s] reading the 4x4 km ortho
+[    2.0 s] ortho (10400, 10400, 3)
+[    2.0 s] cutting roof crops
+[    2.9 s] cutting context crops
+[    3.8 s] crops done; sanity sheet -> /Users/itamarwe/Documents/code/constellation-wt/geolocation/chamaa_constellation/results/roof_embeddings/true_pairs_sanity.jpg
+[    3.9 s] loading dinov2-b
+Loading weights:   0%|          | 0/223 [00:00<?, ?it/s]Loading weights: 100%|██████████| 223/223 [00:00<00:00, 6889.33it/s]
+[    8.4 s] dinov2-b: embedding setting A roof (27 queries, 6872 gallery crops)
+dinov2-b      A  roof    4x4km  gallery  859 | median rank    129 (15.0% ; chance 50%) | top1  0/27 top10  4 top5% 10
+dinov2-b      A  roof    2x2km  gallery  316 | median rank     32 (10.1% ; chance 50%) | top1  1/27 top10  9 top5% 10
+[  330.5 s] dinov2-b: embedding setting B roof (27 queries, 859 gallery crops)
+dinov2-b      B  roof    4x4km  gallery  859 | median rank    124 (14.4% ; chance 50%) | top1  0/27 top10  3 top5% 10
+dinov2-b      B  roof    2x2km  gallery  316 | median rank     33 (10.4% ; chance 50%) | top1  1/27 top10 10 top5% 11
+[  371.5 s] dinov2-b: embedding setting C roof (27 queries, 859 gallery crops)
+dinov2-b      C  roof    4x4km  gallery  859 | median rank    308 (35.9% ; chance 50%) | top1  0/27 top10  2 top5%  4
+dinov2-b      C  roof    2x2km  gallery  316 | median rank    110 (34.8% ; chance 50%) | top1  2/27 top10  3 top5%  3
+[  412.8 s] dinov2-b: embedding setting A context (27 queries, 6872 gallery crops)
+dinov2-b      A  context 4x4km  gallery  859 | median rank     34 ( 4.0% ; chance 50%) | top1  2/27 top10  6 top5% 14
+dinov2-b      A  context 2x2km  gallery  316 | median rank     12 ( 3.8% ; chance 50%) | top1  2/27 top10 13 top5% 15
+[  735.1 s] dinov2-b: embedding setting B context (27 queries, 859 gallery crops)
+dinov2-b      B  context 4x4km  gallery  859 | median rank     45 ( 5.2% ; chance 50%) | top1  2/27 top10  3 top5% 13
+dinov2-b      B  context 2x2km  gallery  316 | median rank      9 ( 2.8% ; chance 50%) | top1  3/27 top10 14 top5% 16
+[  776.2 s] dinov2-b: embedding setting C context (27 queries, 859 gallery crops)
+dinov2-b      C  context 4x4km  gallery  859 | median rank    239 (27.8% ; chance 50%) | top1  2/27 top10  4 top5%  7
+dinov2-b      C  context 2x2km  gallery  316 | median rank     62 (19.6% ; chance 50%) | top1  2/27 top10  7 top5%  7
+[  817.4 s] loading dinov3-l-web
+Loading weights:   0%|          | 0/415 [00:00<?, ?it/s]Loading weights: 100%|██████████| 415/415 [00:00<00:00, 5823.80it/s]
+[  820.1 s] dinov3-l-web: embedding setting A roof (27 queries, 6872 gallery crops)
+dinov3-l-web  A  roof    4x4km  gallery  859 | median rank     27 ( 3.1% ; chance 50%) | top1  0/27 top10  5 top5% 15
+dinov3-l-web  A  roof    2x2km  gallery  316 | median rank     12 ( 3.8% ; chance 50%) | top1  2/27 top10 13 top5% 16
+[ 1699.2 s] dinov3-l-web: embedding setting B roof (27 queries, 859 gallery crops)
+dinov3-l-web  B  roof    4x4km  gallery  859 | median rank     32 ( 3.7% ; chance 50%) | top1  1/27 top10  5 top5% 16
+dinov3-l-web  B  roof    2x2km  gallery  316 | median rank     14 ( 4.4% ; chance 50%) | top1  3/27 top10 12 top5% 15
+[ 1811.5 s] dinov3-l-web: embedding setting C roof (27 queries, 859 gallery crops)
+dinov3-l-web  C  roof    4x4km  gallery  859 | median rank    351 (40.9% ; chance 50%) | top1  2/27 top10  2 top5%  3
+dinov3-l-web  C  roof    2x2km  gallery  316 | median rank     96 (30.4% ; chance 50%) | top1  2/27 top10  3 top5%  3
+[ 1924.5 s] dinov3-l-web: embedding setting A context (27 queries, 6872 gallery crops)
+dinov3-l-web  A  context 4x4km  gallery  859 | median rank     32 ( 3.7% ; chance 50%) | top1  3/27 top10  7 top5% 17
+dinov3-l-web  A  context 2x2km  gallery  316 | median rank      9 ( 2.8% ; chance 50%) | top1  6/27 top10 15 top5% 18
+[ 2786.2 s] dinov3-l-web: embedding setting B context (27 queries, 859 gallery crops)
+dinov3-l-web  B  context 4x4km  gallery  859 | median rank     24 ( 2.8% ; chance 50%) | top1  3/27 top10  8 top5% 17
+dinov3-l-web  B  context 2x2km  gallery  316 | median rank      7 ( 2.2% ; chance 50%) | top1  5/27 top10 15 top5% 20
+[ 2894.8 s] dinov3-l-web: embedding setting C context (27 queries, 859 gallery crops)
+dinov3-l-web  C  context 4x4km  gallery  859 | median rank     37 ( 4.3% ; chance 50%) | top1  4/27 top10  6 top5% 15
+dinov3-l-web  C  context 2x2km  gallery  316 | median rank      8 ( 2.5% ; chance 50%) | top1  6/27 top10 14 top5% 14
+[ 3003.3 s] loading dinov3-l-sat
+Loading weights:   0%|          | 0/415 [00:00<?, ?it/s]Loading weights: 100%|██████████| 415/415 [00:00<00:00, 5650.02it/s]
+[ 3005.6 s] dinov3-l-sat: embedding setting A roof (27 queries, 6872 gallery crops)
+dinov3-l-sat  A  roof    4x4km  gallery  859 | median rank    393 (45.8% ; chance 50%) | top1  0/27 top10  0 top5%  0
+dinov3-l-sat  A  roof    2x2km  gallery  316 | median rank    180 (57.0% ; chance 50%) | top1  0/27 top10  0 top5%  0
+[ 3855.1 s] dinov3-l-sat: embedding setting B roof (27 queries, 859 gallery crops)
+dinov3-l-sat  B  roof    4x4km  gallery  859 | median rank    315 (36.7% ; chance 50%) | top1  0/27 top10  0 top5%  1
+dinov3-l-sat  B  roof    2x2km  gallery  316 | median rank    123 (38.9% ; chance 50%) | top1  0/27 top10  1 top5%  2
+[ 3963.8 s] dinov3-l-sat: embedding setting C roof (27 queries, 859 gallery crops)
+dinov3-l-sat  C  roof    4x4km  gallery  859 | median rank    587 (68.3% ; chance 50%) | top1  0/27 top10  1 top5%  2
+dinov3-l-sat  C  roof    2x2km  gallery  316 | median rank    211 (66.8% ; chance 50%) | top1  0/27 top10  2 top5%  2
+[ 4072.2 s] dinov3-l-sat: embedding setting A context (27 queries, 6872 gallery crops)
+dinov3-l-sat  A  context 4x4km  gallery  859 | median rank    415 (48.3% ; chance 50%) | top1  0/27 top10  1 top5%  1
+dinov3-l-sat  A  context 2x2km  gallery  316 | median rank    152 (48.1% ; chance 50%) | top1  1/27 top10  1 top5%  2
+[ 4919.0 s] dinov3-l-sat: embedding setting B context (27 queries, 859 gallery crops)
+dinov3-l-sat  B  context 4x4km  gallery  859 | median rank    445 (51.8% ; chance 50%) | top1  0/27 top10  0 top5%  0
+dinov3-l-sat  B  context 2x2km  gallery  316 | median rank    189 (59.8% ; chance 50%) | top1  0/27 top10  0 top5%  0
+[ 5027.6 s] dinov3-l-sat: embedding setting C context (27 queries, 859 gallery crops)
+dinov3-l-sat  C  context 4x4km  gallery  859 | median rank    632 (73.6% ; chance 50%) | top1  0/27 top10  0 top5%  0
+dinov3-l-sat  C  context 2x2km  gallery  316 | median rank    242 (76.6% ; chance 50%) | top1  0/27 top10  0 top5%  0
+[ 5135.5 s] loading siglip2-b
+[transformers] Model config: bos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49406. This may result in unexpected behavior.
+[transformers] Model config: eos_token_id must be `None` or an integer within the vocabulary (between 0 and 31999), got 49407. This may result in unexpected behavior.
+Loading weights:   0%|          | 0/408 [00:00<?, ?it/s]Loading weights: 100%|██████████| 408/408 [00:00<00:00, 7619.62it/s]
+[ 5137.9 s] siglip2-b: embedding setting A roof (27 queries, 6872 gallery crops)
+siglip2-b     A  roof    4x4km  gallery  859 | median rank    171 (19.9% ; chance 50%) | top1  0/27 top10  0 top5%  5
+siglip2-b     A  roof    2x2km  gallery  316 | median rank     68 (21.5% ; chance 50%) | top1  0/27 top10  7 top5%  7
+[ 5375.8 s] siglip2-b: embedding setting B roof (27 queries, 859 gallery crops)
+siglip2-b     B  roof    4x4km  gallery  859 | median rank    132 (15.4% ; chance 50%) | top1  0/27 top10  3 top5%  8
+siglip2-b     B  roof    2x2km  gallery  316 | median rank     42 (13.3% ; chance 50%) | top1  2/27 top10  7 top5%  9
+[ 5406.1 s] siglip2-b: embedding setting C roof (27 queries, 859 gallery crops)
+siglip2-b     C  roof    4x4km  gallery  859 | median rank    429 (49.9% ; chance 50%) | top1  0/27 top10  2 top5%  3
+siglip2-b     C  roof    2x2km  gallery  316 | median rank    143 (45.3% ; chance 50%) | top1  0/27 top10  2 top5%  3
+[ 5436.4 s] siglip2-b: embedding setting A context (27 queries, 6872 gallery crops)
+siglip2-b     A  context 4x4km  gallery  859 | median rank     57 ( 6.6% ; chance 50%) | top1  0/27 top10  3 top5%  9
+siglip2-b     A  context 2x2km  gallery  316 | median rank     21 ( 6.6% ; chance 50%) | top1  0/27 top10  9 top5% 12
+[ 5673.1 s] siglip2-b: embedding setting B context (27 queries, 859 gallery crops)
+siglip2-b     B  context 4x4km  gallery  859 | median rank    106 (12.3% ; chance 50%) | top1  1/27 top10  5 top5%  9
+siglip2-b     B  context 2x2km  gallery  316 | median rank     24 ( 7.6% ; chance 50%) | top1  2/27 top10 10 top5% 13
+[ 5703.2 s] siglip2-b: embedding setting C context (27 queries, 859 gallery crops)
+siglip2-b     C  context 4x4km  gallery  859 | median rank    275 (32.0% ; chance 50%) | top1  0/27 top10  1 top5%  2
+siglip2-b     C  context 2x2km  gallery  316 | median rank     76 (24.1% ; chance 50%) | top1  0/27 top10  2 top5%  5
+best (4x4 km): dinov3-l-web setting B context median rank 24.0

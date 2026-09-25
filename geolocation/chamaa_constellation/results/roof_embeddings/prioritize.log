@@ -1,0 +1,27 @@
+4x4 km gallery, 859 buildings, 27 true photo-roof pairs; chance: recall@K% = K%, bits 1.4
+model                    set     size  med %  r@1%  r@5%  r@10%  r@20%  bits  3-seed x
+dinov3-l-web               B  context    2.8   30%   63%    85%    89%  5.54       618
+dinov3-l-web               A  context    3.7   26%   63%    81%    93%  5.39       541
+dinov3-l-web               C  context    4.3   22%   56%    67%    93%  5.04       296
+dinov3-l-web               B     roof    3.7   15%   59%    78%    81%  4.68       471
+dinov3-l-web               A     roof    3.1   15%   56%    67%    89%  4.56       296
+dinov2-b                   A  context    4.0   19%   52%    59%    85%  4.50       208
+dinov2-b                   B  context    5.2   11%   48%    59%    70%  4.13       208
+siglip2-b                  A  context    6.6    7%   33%    52%    67%  3.70       139
+siglip2-b                  B  context   12.3    7%   33%    48%    70%  3.65       112
+dinov2-b                   B     roof   14.4   11%   37%    44%    59%  3.48        88
+dinov2-b                   A     roof   15.0    7%   37%    44%    63%  3.33        88
+siglip2-b                  B     roof   15.4    7%   30%    44%    56%  3.18        88
+dinov2-b                   C  context   27.8   11%   26%    30%    41%  3.07        26
+siglip2-b                  A     roof   19.9    0%   19%    37%    52%  2.70        51
+dinov2-b                   C     roof   35.9    7%   15%    19%    33%  2.27         6
+siglip2-b                  C  context   32.0    0%    7%    22%    37%  2.24        11
+dinov3-l-web               C     roof   40.9    7%   11%    19%    26%  2.17         6
+dinov3-l-sat               B     roof   36.7    0%    4%    22%    30%  1.90        11
+control: footprint area    -        -   33.9    0%    7%    11%    26%  1.75         1
+siglip2-b                  C     roof   49.9    7%   11%    11%    26%  1.73         1
+dinov3-l-sat               A  context   48.3    4%    4%    15%    30%  1.73         3
+dinov3-l-sat               A     roof   45.8    0%    0%     7%    26%  1.45         0
+dinov3-l-sat               C     roof   68.3    0%    7%    15%    22%  1.40         3
+dinov3-l-sat               B  context   51.8    0%    0%     0%    15%  1.19         0
+dinov3-l-sat               C  context   73.6    0%    0%     4%     4%  0.70         0

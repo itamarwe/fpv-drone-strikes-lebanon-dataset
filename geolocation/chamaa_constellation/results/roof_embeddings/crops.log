@@ -1,0 +1,8 @@
+[    0.0 s] loading detections, OSM buildings, DEM
+[    0.1 s] pairing photo roofs with OSM footprints (truth homography)
+[    0.5 s] 51 photo roofs, 27 paired with an OSM building; gallery 859 (4x4 km)
+[    0.5 s] reading the 4x4 km ortho
+[    2.1 s] ortho (10400, 10400, 3)
+[    2.1 s] cutting roof crops
+[    3.0 s] cutting context crops
+[    4.1 s] crops done; sanity sheet -> /Users/itamarwe/Documents/code/constellation-wt/geolocation/chamaa_constellation/results/roof_embeddings/true_pairs_sanity.jpg
