@@ -7,7 +7,10 @@
 at least 300 m from the truth, and none was within the 50 m "correct" threshold.
 Diagnostics show the reason is the **objective function**, not the search budget:
 the method's cost scores the *true* camera pose **worse** than a wrong pose 480 m
-away.
+away. Confining the search to the Chamaa village does not fix it (421 m off).
+**Roads look like the missing signal:** projected OSM roads agree with the photo's road
+mask 3–5× better at the true pose than at any wrong winner (road F1 0.62 vs 0.12–0.20),
+tested on fixed poses rather than yet as a search.
 
 ## Summary
 
@@ -119,7 +122,9 @@ not score it best.
 
 Three mechanisms, all visible in the figures:
 
-1. **A density attractor.** The blind winner maps the photo's scattered villas
+1. **A density attractor — where the winner lands, but not why it fails** (see the
+   [village sanity check](#sanity-check-search-only-the-chamaa-village): removing the dense
+   complex does not help). The blind winner maps the photo's scattered villas
    onto buildings inside a dense fenced compound north-west of the truth
    ([figure](figures/2x2km_image_vs_constellation.jpg)). With dozens of buildings
    packed together, a map point falls within tolerance of almost any detection. The
@@ -144,8 +149,88 @@ Three mechanisms, all visible in the figures:
    buildings are not visible (one is now a cleared lot). Each unmatched detection
    costs the maximum 9, which flattens the difference between right and wrong poses.
 
+Of the three, the second and third are the root cause: they make the true pose fit
+poorly (4.73), so some wrong location always scores as well or better. The compound
+merely supplies one such location, and removing it moves the winner elsewhere.
+
 The missing heading prior is **not** the cause. It makes the search space about
 6.5× larger than Sainte-Maxime's, but the true pose already loses on cost.
+
+## Sanity check: search only the Chamaa village
+
+*Added 25 Sep 2026 on request.* The question: with the search confined to the village,
+does the method find the right place?
+
+"The village" was defined from the map, not from the truth: OSM's place node for
+شمع (Shama, 33.14631 N, 35.20731 E) plus the connected cluster of OSM buildings chained
+within 80 m of each other around it, a 1.57 × 1.09 km box (`data/village_definition.json`).
+Two findings shaped the test:
+
+* The village's **core** (buildings chained within 60 m) is 569 × 587 m, and the photo
+  footprint lies **just outside it to the west**. The photo shows Chamaa's western outskirts,
+  so a tight "village" box would exclude the answer.
+* Loosening to 80 m takes in the outskirts **and merges with the dense complex** that
+  captured the wide search. OSM tags the complex's 179 buildings only as `building=yes`,
+  so it cannot be excluded by tag. A map-only density rule does isolate its packed core
+  (groups of ≥ 50 buildings chained within 30 m: 168 buildings), though it misses the
+  complex's outer ring.
+
+| Village search | Reference buildings | Top error | Closest candidate | Correct found? | Held-out vs shuffled |
+|---|---:|---:|---:|---|---:|
+| A: village as mapped | 306 | 421 m | 299 m | no | 7.36 vs 7.48 |
+| B: village minus the dense complex | 214 | 517 m | 455 m | no | 7.97 vs 7.88 |
+
+**No: even confined to the village, the method does not find the photo.** Removing the
+dense complex made it slightly worse; the winner moved to a different wrong place (heading
+275°). This corrects the emphasis above: the complex is where the wide-area winner landed,
+not the reason the method fails. The reason is that the house cost fits the true pose poorly.
+
+## Road crossings, and roads as a second modality
+
+*Added 25 Sep 2026 on request:* road crossings as a second anchor type alongside houses.
+
+**Detection.** Image side (`road_junctions.py`): SAM 3 road instances (the original
+segmentation script's road prompts, threshold 0.3; 18 instances) are unioned, closed 9 × 9
+(SAM fragments roads at trees, so a crossing otherwise shows as two facing ends),
+skeletonised, and crossings of degree ≥ 3 extracted: **10 found**. Map side: OSM highway
+ways (footways, paths and steps excluded), where ≥ 3 road segments meet: **174 in the
+4 × 4 km box**, 44 of them involving only service roads or tracks.
+
+| | |
+|---|---|
+| ![Crossings detected in the photo](figures/roads_image_junctions.jpg) | ![OSM roads and crossings](figures/roads_osm_junctions.jpg) |
+
+**Checked against the true pose (a diagnostic that uses the truth):**
+![OSM roads and crossings projected at the true pose](figures/roads_diagnostic_true_pose.jpg)
+
+* **Road geometry aligns within a few pixels.** Roads lie on the ground, so they have none
+  of the height parallax that displaced the house centroids by 10–20 px.
+* **Crossings as points agree only partly:** 4 of 10 detections are within 30 px of one of
+  the 11 OSM crossings in frame (precision 0.40, recall 0.36). The misses have clear causes.
+  OSM maps driveway junctions too narrow for SAM to segment. SAM finds real tracks and
+  connectors that OSM lacks (top-left track; the northward connector at detection #5). Four
+  detections are spurious, where the road mask frays around sheds.
+
+**Does road evidence prefer the truth where houses did not?** (`diagnose_road_score.py`)
+Road F1 is the agreement between projected OSM centrelines and the photo's road mask
+within 8 px; crossings are one-to-one matches within 30 px.
+
+| Pose | Error | House cost (lower better) | Road F1 (higher better) | Crossings matched |
+|---|---:|---:|---:|---:|
+| **True pose** (uses the truth) | 0 m | 4.73 | **0.62** | **4 / 11** |
+| Blind winner 2 × 2 km | 482 m | 4.23 | 0.16 | 1 / 29 |
+| Blind winner 4 × 4 km | 455 m | 4.43 | 0.14 | 0 / 46 |
+| Blind winner, village | 421 m | 4.51 | 0.15 | 1 / 28 |
+| Blind winner, village minus complex | 517 m | 4.92 | 0.20 | 2 / 59 |
+| Blind winner 2 × 2 km, `joint_offset` | 466 m | 4.37 | 0.14 | 0 / 49 |
+| Blind winner 4 × 4 km, `joint_offset` | 509 m | 4.20 | 0.12 | 0 / 69 |
+
+The house cost ranks the truth below every wrong winner; road agreement ranks it **3–5×
+above all six**. **Caveat:** these are seven poses, not a search. The wrong poses were
+chosen by the house cost, never by roads, so a search that optimises road overlap could
+still find its own wrong answers, for example by aligning any long straight road with
+another. This shows roads carry the discriminating signal the houses lacked. It does not
+yet show that a bimodal search will find the truth; that is the next experiment.
 
 ## Comparison with Sainte-Maxime
 

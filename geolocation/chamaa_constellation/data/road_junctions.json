@@ -1,0 +1,2263 @@
+{
+ "image": {
+  "road_instances": 18,
+  "junctions_deg3plus": 10,
+  "junctions": [
+   {
+    "id": 1,
+    "xy": [
+     497.6666666666667,
+     595.3333333333334
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      -0.9277795759357073,
+      -0.3731287424958832
+     ],
+     [
+      0.9719981360565628,
+      -0.23498856036532423
+     ],
+     [
+      0.17134117475124735,
+      0.9852117548196746
+     ]
+    ]
+   },
+   {
+    "id": 2,
+    "xy": [
+     254.75,
+     138.0
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      0.958477856666115,
+      -0.2851669656196706
+     ],
+     [
+      0.10426726674330875,
+      0.9945493135515603
+     ],
+     [
+      -0.9916453075518484,
+      0.12899451155145997
+     ]
+    ]
+   },
+   {
+    "id": 3,
+    "xy": [
+     1021.6666666666666,
+     558.6666666666666
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      -0.15968884391337254,
+      -0.9871673987372206
+     ],
+     [
+      0.9940162220065717,
+      0.10923255186885514
+     ],
+     [
+      -0.9971178953679497,
+      0.07586766595191054
+     ]
+    ]
+   },
+   {
+    "id": 4,
+    "xy": [
+     993.6666666666666,
+     140.66666666666666
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      0.7182402227891744,
+      -0.6957952158270111
+     ],
+     [
+      0.873688554627978,
+      0.4864856724633056
+     ],
+     [
+      -0.9941444630694566,
+      0.10805918076841964
+     ]
+    ]
+   },
+   {
+    "id": 5,
+    "xy": [
+     456.0,
+     581.75
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      0.03250314254558158,
+      -0.9994716332766336
+     ],
+     [
+      0.9802754415232852,
+      0.19763617772646877
+     ],
+     [
+      -0.9973763862350912,
+      0.0723902215815792
+     ]
+    ]
+   },
+   {
+    "id": 6,
+    "xy": [
+     930.0,
+     569.25
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      0.9859607530538724,
+      -0.16697722430751066
+     ],
+     [
+      0.12899451155145997,
+      0.9916453075518484
+     ],
+     [
+      -0.9984104059633084,
+      0.05636187775599322
+     ]
+    ]
+   },
+   {
+    "id": 7,
+    "xy": [
+     39.75,
+     617.0
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      0.939793423488437,
+      -0.3417430630867044
+     ],
+     [
+      0.8839655539686402,
+      0.46755202854539646
+     ],
+     [
+      -0.9543322002063351,
+      0.2987474713689397
+     ]
+    ]
+   },
+   {
+    "id": 8,
+    "xy": [
+     603.25,
+     373.75
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      -0.04061686157707317,
+      -0.999174794796
+     ],
+     [
+      0.9486832980505138,
+      0.31622776601683794
+     ],
+     [
+      -0.9902742047886496,
+      0.13912943373063671
+     ]
+    ]
+   },
+   {
+    "id": 9,
+    "xy": [
+     123.33333333333333,
+     609.3333333333334
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      -0.9848923215704538,
+      -0.17316788071568545
+     ],
+     [
+      0.9941444630694565,
+      -0.1080591807684204
+     ],
+     [
+      -0.7468445938706142,
+      0.6649986109806828
+     ]
+    ]
+   },
+   {
+    "id": 10,
+    "xy": [
+     221.0,
+     605.0
+    ],
+    "degree": 3,
+    "branch_dirs": [
+     [
+      -0.9994801143396995,
+      -0.03224129401095805
+     ],
+     [
+      0.9872411207126471,
+      -0.1592324388246205
+     ],
+     [
+      0.0,
+      1.0
+     ]
+    ]
+   }
+  ],
+  "method": "union of SAM 3 road masks, 9x9 close, skeletonize, junctions_from_mask(walk 20, merge 10, min branch 10)"
+ },
+ "osm": {
+  "road_ways": 173,
+  "junctions_deg3plus": 174,
+  "junctions_minor_only": 44,
+  "junctions": [
+   {
+    "utm": [
+     707369.6160660824,
+     3670374.181185712
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     703450.186422203,
+     3671250.6772377393
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     703801.9486853498,
+     3670939.216338546
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704482.194628001,
+     3670929.3963789954
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704559.9497576724,
+     3670755.9768335386
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704565.0839885676,
+     3670723.3779672463
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704745.3157074946,
+     3670630.6445140215
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704933.4723211818,
+     3670562.898781505
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705063.8255313996,
+     3670431.713647889
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705107.5034783564,
+     3670412.472193108
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705341.4927343716,
+     3670241.5857407562
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705388.8398207861,
+     3670222.344929334
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705499.0279359843,
+     3670163.398829371
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705546.655114522,
+     3670129.9969377387
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705603.5339961234,
+     3670083.165937672
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705769.8253850334,
+     3669967.9008810273
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705930.461167354,
+     3669748.341471621
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705988.0894696125,
+     3669709.982285799
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706181.2808963424,
+     3669688.019042707
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706389.2914950426,
+     3669477.121482573
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706521.3805346037,
+     3669316.2235189267
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706594.4248747125,
+     3669221.300461402
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706628.0443699751,
+     3669177.6108954926
+    ],
+    "degree": 3,
+    "classes": [
+     "secondary",
+     "track"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     708007.9788495775,
+     3668138.9396903105
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "secondary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706850.5202523778,
+     3671182.256126028
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706662.3683283584,
+     3671390.1679913905
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706926.8787790253,
+     3671382.7344883187
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704869.2793226338,
+     3670178.826275923
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704884.0814395003,
+     3670215.2714245874
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704900.373700349,
+     3670257.6390267285
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704912.4828284706,
+     3670291.653526795
+    ],
+    "degree": 4,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704981.898879322,
+     3670268.9020489827
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705031.8170602659,
+     3670384.9773485283
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     705986.534941691,
+     3667624.135343193
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706036.7352521352,
+     3667657.9664341877
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706227.1230822259,
+     3667651.7740941364
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706306.8214654702,
+     3667687.3606305798
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704030.2062663551,
+     3667706.4666798813
+    ],
+    "degree": 3,
+    "classes": [
+     "tertiary",
+     "track"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704308.6343205262,
+     3667703.850282217
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704345.632940476,
+     3667691.121789378
+    ],
+    "degree": 3,
+    "classes": [
+     "tertiary",
+     "track"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704533.9584014128,
+     3667587.411559052
+    ],
+    "degree": 3,
+    "classes": [
+     "tertiary",
+     "track"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705135.2900377146,
+     3667534.465616714
+    ],
+    "degree": 3,
+    "classes": [
+     "tertiary",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705627.4653891695,
+     3667629.3455785387
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705660.7163982347,
+     3667649.327260694
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705691.6444487843,
+     3667655.48084427
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705829.3145736845,
+     3667645.841826399
+    ],
+    "degree": 3,
+    "classes": [
+     "tertiary",
+     "track"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705885.8249631091,
+     3667636.7139649442
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705943.4886103999,
+     3667625.5804246436
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707246.1334867211,
+     3667657.8586254595
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707264.4228572594,
+     3667662.1738749603
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707310.3375634352,
+     3667668.5616501155
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707335.1957819285,
+     3667672.13986939
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707431.2322067404,
+     3667678.0159762716
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707483.7463670156,
+     3667675.624540266
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707551.8598927823,
+     3667687.2886289093
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707568.6846040607,
+     3667696.388431981
+    ],
+    "degree": 3,
+    "classes": [
+     "tertiary",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707630.8441208629,
+     3667729.4946342073
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707676.3463648743,
+     3667751.7629274703
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706938.6085528538,
+     3667678.947120531
+    ],
+    "degree": 3,
+    "classes": [
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706997.0635651548,
+     3667755.2728835484
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707208.29023923,
+     3667829.9879619447
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706003.3402324603,
+     3669253.175721031
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705958.679373782,
+     3669410.3533898117
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705897.6526779031,
+     3669488.1044565435
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705896.5606806129,
+     3669493.861690741
+    ],
+    "degree": 3,
+    "classes": [
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705918.4244828372,
+     3669561.7994423867
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705946.1435525874,
+     3669606.096218068
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705316.5038905838,
+     3670183.258084109
+    ],
+    "degree": 3,
+    "classes": [
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705318.7608823905,
+     3670180.665039944
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705470.3758898316,
+     3670047.657267591
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705492.2182936887,
+     3670015.532211119
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705535.6228470234,
+     3669960.1852110582
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705610.8300321077,
+     3669898.828854847
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705902.0411449987,
+     3669734.6619353155
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705173.6158103807,
+     3669950.7771988083
+    ],
+    "degree": 3,
+    "classes": [
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705633.212567525,
+     3669587.477693416
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706015.6392172901,
+     3669251.5267922515
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "track"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706992.8424733538,
+     3667767.2544081328
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706982.7711682717,
+     3667809.522313581
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706989.2922612273,
+     3667845.862029946
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706955.119288944,
+     3667942.3159199823
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706595.5289846705,
+     3668357.1787638296
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706396.5452173288,
+     3668565.468377487
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707270.4795360204,
+     3670172.1844017925
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service",
+     "track"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707496.7527915774,
+     3670236.278728576
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707421.2607962933,
+     3670216.0583610544
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707428.0445498931,
+     3670148.436230062
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707421.904408769,
+     3670137.4108752073
+    ],
+    "degree": 4,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707403.5620965604,
+     3670085.7085667155
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706821.1904014496,
+     3670387.836597916
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706909.4700632939,
+     3670348.900451392
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706944.0232309564,
+     3670333.290156089
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706983.1734729063,
+     3670313.9053738974
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707060.3072068677,
+     3670260.200323477
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707277.3670649282,
+     3670250.9028849495
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707376.6491716143,
+     3670212.6036545103
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707330.8232884308,
+     3670443.0764185973
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707319.4886980338,
+     3670454.740367771
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707079.5034536631,
+     3670632.599472424
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707023.7422022935,
+     3670681.065720407
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706968.1663146266,
+     3670848.0601809775
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706957.4944239205,
+     3670882.2162739206
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706700.5773605343,
+     3671350.2263103505
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706576.4788467841,
+     3671489.4998935075
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706559.9486527629,
+     3671510.429606439
+    ],
+    "degree": 3,
+    "classes": [
+     "service",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706663.2141142562,
+     3667738.1463404153
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     703772.0897100215,
+     3671478.75679186
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     703543.9459600538,
+     3671520.216668189
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     703728.4988409908,
+     3671478.5459792376
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     703711.452456169,
+     3670595.0997036514
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     703779.7054284709,
+     3670747.6624487694
+    ],
+    "degree": 4,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707489.1061213746,
+     3667936.3510510507
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707553.0382801539,
+     3667920.2010361985
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706980.998841207,
+     3670638.000054739
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707503.9442216213,
+     3670616.412972379
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706684.8025257658,
+     3671339.419021966
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706633.2260857192,
+     3671228.790129146
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706743.1553232254,
+     3670949.713219609
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706807.8666321039,
+     3670861.860581457
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706921.3109446445,
+     3670853.3023684965
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705946.7296442457,
+     3669573.8678599615
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704939.1641242583,
+     3670049.255706651
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705041.4816288619,
+     3669989.5070078494
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705079.3051076857,
+     3669975.82278094
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705184.198663264,
+     3670205.362668196
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704838.7619609671,
+     3670086.2686471576
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     705027.8467180025,
+     3670256.697361205
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705089.6582364996,
+     3670251.6823703106
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     703747.7967378043,
+     3670284.405566638
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     705284.9498379759,
+     3670127.7880419544
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "unclassified"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707596.1066495957,
+     3670369.8508351003
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "tertiary"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     704968.987913032,
+     3670085.883044475
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     705696.8826730235,
+     3669660.2002267023
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705546.9860346091,
+     3667706.257348158
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "service"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     705037.1925051046,
+     3670400.089930794
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     705021.8361905665,
+     3670432.3187342356
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704981.2473252327,
+     3670452.0136966873
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704944.9967667584,
+     3670378.384433925
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704885.4416508143,
+     3670331.0484685185
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704867.5348063764,
+     3670355.868349271
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704862.353173814,
+     3670368.4295311696
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704844.0209616951,
+     3670416.649835243
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704806.1415907945,
+     3670619.993443374
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704719.7188258155,
+     3670587.416421678
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704674.3596642052,
+     3670440.717884624
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704683.6850661009,
+     3670431.6938404297
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704712.0604892625,
+     3670385.580953399
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704781.6942459985,
+     3670316.3358391197
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704758.2699228055,
+     3670402.2483092686
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704977.0744710366,
+     3670454.300330347
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704884.1599403166,
+     3670587.869518041
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     705006.199730444,
+     3670404.542763832
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     705033.853144298,
+     3670390.6782757905
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704832.8646893314,
+     3670638.8708834182
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704869.6392933786,
+     3670715.5284593524
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704786.9372801197,
+     3670658.2105171685
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704842.0731607075,
+     3670726.62155237
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704823.5481740667,
+     3670734.232084495
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704898.1458736184,
+     3670804.161178116
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704770.0696788349,
+     3670746.545915417
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704921.9295904072,
+     3670678.471736579
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704801.441108217,
+     3670742.2223961824
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704994.5060201241,
+     3670169.79349769
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     705023.3020238971,
+     3670154.4329783185
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704604.5172794304,
+     3670729.3408393613
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704599.4848752059,
+     3670729.013510482
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     704654.2076255452,
+     3670721.4399738023
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     703519.3220611451,
+     3671369.7739396268
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     703547.2499010597,
+     3671391.735022575
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     703747.104188931,
+     3671466.075856545
+    ],
+    "degree": 3,
+    "classes": [
+     "service"
+    ],
+    "minor_only": true
+   },
+   {
+    "utm": [
+     707522.0804844727,
+     3670206.029132255
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706509.2444007089,
+     3671072.218252714
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "track"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     706606.1381724495,
+     3671041.272647628
+    ],
+    "degree": 3,
+    "classes": [
+     "residential",
+     "track"
+    ],
+    "minor_only": false
+   },
+   {
+    "utm": [
+     707048.2750406992,
+     3670231.698308373
+    ],
+    "degree": 3,
+    "classes": [
+     "residential"
+    ],
+    "minor_only": false
+   }
+  ],
+  "excluded_highway": [
+   "corridor",
+   "cycleway",
+   "footway",
+   "path",
+   "pedestrian",
+   "steps"
+  ]
+ },
+ "diagnostic_true_pose": {
+  "osm_junctions_in_frame": 11,
+  "osm_junctions_in_frame_major": 11,
+  "detections_matched_within_px": 30.0,
+  "detections_matched": 4,
+  "detections_total": 10,
+  "precision": 0.4,
+  "recall": 0.36363636363636365
+ }
+}

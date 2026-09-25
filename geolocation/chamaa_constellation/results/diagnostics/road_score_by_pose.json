@@ -1,0 +1,76 @@
+{
+  "warning": "DIAGNOSTIC - the first row uses the ground-truth pose",
+  "tolerance_px": 8.0,
+  "rows": [
+    {
+      "pose": "TRUE pose (uses the truth)",
+      "error_m": 0.0,
+      "house_train_cost": 4.729823981152195,
+      "road_precision": 0.5909926470588235,
+      "road_recall": 0.653472603994869,
+      "road_f1": 0.6206641827698368,
+      "junction_matches": 4,
+      "osm_junctions_in_frame": 11
+    },
+    {
+      "pose": "blind winner 2x2km",
+      "error_m": 481.95851862621726,
+      "house_train_cost": 4.22681031584876,
+      "road_precision": 0.1619454836985569,
+      "road_recall": 0.15063221550302364,
+      "road_f1": 0.1560841164454964,
+      "junction_matches": 1,
+      "osm_junctions_in_frame": 29
+    },
+    {
+      "pose": "blind winner 4x4km",
+      "error_m": 455.1754498891535,
+      "house_train_cost": 4.425260084222327,
+      "road_precision": 0.1448732718894009,
+      "road_recall": 0.14110317024005864,
+      "road_f1": 0.14296336995052517,
+      "junction_matches": 0,
+      "osm_junctions_in_frame": 46
+    },
+    {
+      "pose": "blind winner village",
+      "error_m": 420.98908719409883,
+      "house_train_cost": 4.505682954722994,
+      "road_precision": 0.15867944621938232,
+      "road_recall": 0.13395638629283488,
+      "road_f1": 0.1452735641566333,
+      "junction_matches": 1,
+      "osm_junctions_in_frame": 28
+    },
+    {
+      "pose": "blind winner village_no_dense_complex",
+      "error_m": 516.5341707700336,
+      "house_train_cost": 4.916613732837019,
+      "road_precision": 0.23508055366462446,
+      "road_recall": 0.18050210738501007,
+      "road_f1": 0.20420743846496425,
+      "junction_matches": 2,
+      "osm_junctions_in_frame": 59
+    },
+    {
+      "pose": "blind winner 2x2km joint_offset",
+      "error_m": 465.83284405540735,
+      "house_train_cost": 4.367097594677711,
+      "road_precision": 0.1359781121751026,
+      "road_recall": 0.15063221550302364,
+      "road_f1": 0.14293053891524227,
+      "junction_matches": 0,
+      "osm_junctions_in_frame": 49
+    },
+    {
+      "pose": "blind winner 4x4km joint_offset",
+      "error_m": 508.882009050198,
+      "house_train_cost": 4.197406191523872,
+      "road_precision": 0.09796705222572731,
+      "road_recall": 0.1513652189847902,
+      "road_f1": 0.11894813488400192,
+      "junction_matches": 0,
+      "osm_junctions_in_frame": 69
+    }
+  ]
+}

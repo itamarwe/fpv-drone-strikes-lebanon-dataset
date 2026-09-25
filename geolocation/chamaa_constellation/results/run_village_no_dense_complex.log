@@ -1,0 +1,18 @@
+village_no_dense_complex observed 51 train 36 check 15 map 214
+  global {'seed': 7, 'seconds': 4.125178083995706, 'cost': 6.684663954983568, 'evaluations': 26992}
+  global {'seed': 19, 'seconds': 4.417290290999517, 'cost': 6.206210585523871, 'evaluations': 26992}
+  global {'seed': 41, 'seconds': 4.105642458998773, 'cost': 6.450702386494907, 'evaluations': 26992}
+{
+ "seconds": {
+  "global_de_s": 12.648410875000991,
+  "powell_s": 0.32136479199834866,
+  "local_refine_s": 6.691209208998771,
+  "total_s": 19.678217125001538
+ },
+ "top_train_cost": 4.916613732837019,
+ "top_footprint": [
+  705993.0082348505,
+  3669825.044672955
+ ],
+ "top_matches": 24
+}

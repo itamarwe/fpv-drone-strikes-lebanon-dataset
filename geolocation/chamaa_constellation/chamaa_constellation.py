@@ -127,15 +127,16 @@ def load_terrain(bounds, margin=300.0):
     return RegularGridInterpolator((ys, xs), z, bounds_error=False, fill_value=float(np.nanmedian(z)))
 
 
-def load_map(bounds, terrain):
+def load_map(bounds, terrain, exclude_ids=()):
     """OSM building footprints whose centroid lies in the box -> roof-centre points."""
     data = json.loads((DATA / "osm_buildings.json").read_text())
+    exclude_ids = set(exclude_ids)
     tf = Transformer.from_crs(4326, 32636, always_xy=True)
     e0, n0, e1, n1 = bounds
     rows, xyz, axes = [], [], []
     for el in data["elements"]:
         g = el.get("geometry")
-        if el["type"] != "way" or not g or len(g) < 4:
+        if el["type"] != "way" or not g or len(g) < 4 or el["id"] in exclude_ids:
             continue
         v = np.array([tf.transform(p["lon"], p["lat"]) for p in g])
         local = (v - v[0]).astype(np.float32); m = cv2.moments(local)
@@ -162,7 +163,7 @@ class Problem:
         self.area = area; self.bounds_utm = area["bounds_utm"]; self.mode = mode
         self.observed, self.uv, self.wh, self.train, self.check = load_detections()
         self.terrain = load_terrain(self.bounds_utm)
-        self.map, xyz, self.axes = load_map(self.bounds_utm, self.terrain)
+        self.map, xyz, self.axes = load_map(self.bounds_utm, self.terrain, area.get("exclude_osm_ids", ()))
         self.origin = np.array([self.bounds_utm[0], self.bounds_utm[1], 0.])
         self.xyz = xyz - self.origin
         self.heights = np.array([m["height_m"] for m in self.map])

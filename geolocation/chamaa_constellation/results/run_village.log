@@ -1,0 +1,18 @@
+village observed 51 train 36 check 15 map 306
+  global {'seed': 7, 'seconds': 4.789627375001146, 'cost': 5.343161682410221, 'evaluations': 26992}
+  global {'seed': 19, 'seconds': 4.454856208001729, 'cost': 6.7046557915308, 'evaluations': 26992}
+  global {'seed': 41, 'seconds': 4.597690832997614, 'cost': 6.731279490534803, 'evaluations': 26992}
+{
+ "seconds": {
+  "global_de_s": 13.842536124997423,
+  "powell_s": 0.528488666001067,
+  "local_refine_s": 8.398276375002752,
+  "total_s": 22.790431540997815
+ },
+ "top_train_cost": 4.505682954722994,
+ "top_footprint": [
+  705106.8245872818,
+  3670047.7810756257
+ ],
+ "top_matches": 28
+}

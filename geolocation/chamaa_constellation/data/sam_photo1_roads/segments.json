@@ -1,0 +1,330 @@
+{
+  "ground": {
+    "name": "ground",
+    "image": "/Users/itamarwe/Documents/code/constellation-wt/geolocation/chamaa_constellation/data/chamaa_photo1.png",
+    "original_size": [
+      1194,
+      906
+    ],
+    "processed_size": [
+      1194,
+      906
+    ],
+    "scale": 1.0,
+    "threshold": 0.3,
+    "prompt_counts": {
+      "road": 19,
+      "street": 8,
+      "driveway": 3,
+      "golf cart path": 0
+    },
+    "features": [
+      {
+        "id": "road_000",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.7423361539840698,
+        "area_px": 8209,
+        "centroid_xy": [
+          910.2589840419053,
+          744.158119137532
+        ],
+        "bbox_xyxy": [
+          796.0,
+          576.0,
+          982.0,
+          896.0
+        ]
+      },
+      {
+        "id": "road_001",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.6622382998466492,
+        "area_px": 8329,
+        "centroid_xy": [
+          558.4957377836475,
+          736.0995317565134
+        ],
+        "bbox_xyxy": [
+          480.0,
+          594.0,
+          629.0,
+          891.0
+        ]
+      },
+      {
+        "id": "road_002",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.6578435897827148,
+        "area_px": 15182,
+        "centroid_xy": [
+          606.2505598735345,
+          377.62923198524567
+        ],
+        "bbox_xyxy": [
+          3.0,
+          343.0,
+          1193.0,
+          411.0
+        ]
+      },
+      {
+        "id": "road_003",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.5707165598869324,
+        "area_px": 7026,
+        "centroid_xy": [
+          1061.39097637347,
+          183.6187019641332
+        ],
+        "bbox_xyxy": [
+          904.0,
+          45.0,
+          1193.0,
+          308.0
+        ]
+      },
+      {
+        "id": "road_004",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.5470359325408936,
+        "area_px": 34531,
+        "centroid_xy": [
+          602.6959543598506,
+          653.0755263386523
+        ],
+        "bbox_xyxy": [
+          3.0,
+          523.0,
+          1193.0,
+          895.0
+        ]
+      },
+      {
+        "id": "road_005",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.5435500144958496,
+        "area_px": 4770,
+        "centroid_xy": [
+          1099.3895178197065,
+          226.16687631027253
+        ],
+        "bbox_xyxy": [
+          971.0,
+          128.0,
+          1193.0,
+          310.0
+        ]
+      },
+      {
+        "id": "road_006",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.5004289746284485,
+        "area_px": 1441,
+        "centroid_xy": [
+          93.30326162387232,
+          119.10964607911173
+        ],
+        "bbox_xyxy": [
+          4.0,
+          101.0,
+          182.0,
+          131.0
+        ]
+      },
+      {
+        "id": "road_007",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.48512396216392517,
+        "area_px": 19287,
+        "centroid_xy": [
+          536.5997822367398,
+          585.7293513765749
+        ],
+        "bbox_xyxy": [
+          3.0,
+          522.0,
+          1193.0,
+          637.0
+        ]
+      },
+      {
+        "id": "road_008",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.4775122404098511,
+        "area_px": 1596,
+        "centroid_xy": [
+          927.3345864661654,
+          83.92230576441102
+        ],
+        "bbox_xyxy": [
+          904.0,
+          44.0,
+          953.0,
+          122.0
+        ]
+      },
+      {
+        "id": "road_009",
+        "semantic": "road",
+        "prompt": "street",
+        "score": 0.4625382423400879,
+        "area_px": 75003,
+        "centroid_xy": [
+          626.0642640961029,
+          514.945015532712
+        ],
+        "bbox_xyxy": [
+          3.0,
+          44.0,
+          1193.0,
+          895.0
+        ]
+      },
+      {
+        "id": "road_010",
+        "semantic": "road",
+        "prompt": "driveway",
+        "score": 0.4207632541656494,
+        "area_px": 1309,
+        "centroid_xy": [
+          272.26508785332317,
+          561.8861726508785
+        ],
+        "bbox_xyxy": [
+          253.0,
+          537.0,
+          293.0,
+          584.0
+        ]
+      },
+      {
+        "id": "road_011",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.4152659773826599,
+        "area_px": 1515,
+        "centroid_xy": [
+          460.31881188118814,
+          528.8726072607261
+        ],
+        "bbox_xyxy": [
+          448.0,
+          479.0,
+          476.0,
+          575.0
+        ]
+      },
+      {
+        "id": "road_012",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.40794456005096436,
+        "area_px": 1489,
+        "centroid_xy": [
+          615.9355271994627,
+          330.3599731363331
+        ],
+        "bbox_xyxy": [
+          590.0,
+          293.0,
+          665.0,
+          376.0
+        ]
+      },
+      {
+        "id": "road_013",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.3752913475036621,
+        "area_px": 4559,
+        "centroid_xy": [
+          240.53674051327044,
+          142.78262776924765
+        ],
+        "bbox_xyxy": [
+          2.0,
+          114.0,
+          512.0,
+          178.0
+        ]
+      },
+      {
+        "id": "road_014",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.374000608921051,
+        "area_px": 1797,
+        "centroid_xy": [
+          1114.696716750139,
+          112.41569282136895
+        ],
+        "bbox_xyxy": [
+          974.0,
+          83.0,
+          1193.0,
+          128.0
+        ]
+      },
+      {
+        "id": "road_015",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.3537130355834961,
+        "area_px": 2288,
+        "centroid_xy": [
+          640.3881118881119,
+          323.0270979020979
+        ],
+        "bbox_xyxy": [
+          589.0,
+          290.0,
+          739.0,
+          377.0
+        ]
+      },
+      {
+        "id": "road_016",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.3386082947254181,
+        "area_px": 866,
+        "centroid_xy": [
+          10.106235565819862,
+          684.9699769053118
+        ],
+        "bbox_xyxy": [
+          4.0,
+          638.0,
+          20.0,
+          717.0
+        ]
+      },
+      {
+        "id": "road_017",
+        "semantic": "road",
+        "prompt": "road",
+        "score": 0.32175159454345703,
+        "area_px": 2103,
+        "centroid_xy": [
+          605.545411317166,
+          475.4184498335711
+        ],
+        "bbox_xyxy": [
+          519.0,
+          437.0,
+          671.0,
+          501.0
+        ]
+      }
+    ]
+  }
+}

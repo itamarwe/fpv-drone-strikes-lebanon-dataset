@@ -160,7 +160,13 @@ def evaluate(name, truth_doc, mode="joint"):
         pr.uv[:, 0] = original[rng.permutation(len(original)), 0]
         controls.append(pr.assignment(p, pr.check, used)[0])
     pr.uv = original
-    offsets = next(o for o in truth_doc["offsets"] if o["name"] == name)
+    offsets = next((o for o in truth_doc["offsets"] if o["name"] == name), None)
+    if offsets is None:   # map-defined areas (village sanity check): derive the same numbers here
+        b = run["area"]["bounds_utm"]; cx, cy = (b[0] + b[2]) / 2, (b[1] + b[3]) / 2
+        offsets = dict(name=name, box_centre_minus_truth_m=[round(cx - truth[0], 1), round(cy - truth[1], 1)],
+                       truth_distance_to_nearest_edge_m=round(min(truth[0] - b[0], b[2] - truth[0],
+                                                                  truth[1] - b[1], b[3] - truth[1]), 1),
+                       note="box defined from OSM (place node + building cluster), not drawn around the truth")
     ev = dict(area=name, mode=mode, bounds_utm=run["area"]["bounds_utm"], offset=offsets,
               reference_buildings=run["map_buildings"], detections=run["detections"],
               runtime_s=run["seconds"], objective_evaluations=run["objective_evaluations"],
