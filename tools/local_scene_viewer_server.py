@@ -13,6 +13,8 @@ import json
 import mimetypes
 import re
 import shutil
+import threading
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlparse
@@ -21,6 +23,26 @@ ROOT = Path(__file__).resolve().parents[1]
 SCENES_ROOT = ROOT / "scenes"
 VIEWER_RE = re.compile(r"^/scenes/(.+)/viewer(?:/index\.html)?/?$")
 GROUNDING_VIEWER_RE = re.compile(r"^/scenes/(.+)/viewer_grounding(?:/index\.html)?/?$")
+SELECTION_RE = re.compile(r"^/api/selection/([A-Za-z0-9_-]+)$")  # review picks for a batch: benchmarks/<batch>/review_selection.json
+SELECTION_LOCK = threading.Lock()
+
+
+def selection_path(batch: str) -> Path:
+    return ensure_child(ROOT / "benchmarks", batch, "review_selection.json")
+
+
+def read_selection(batch: str) -> dict:
+    data = load_json(selection_path(batch))
+    sel = data.get("selected") if isinstance(data.get("selected"), list) else []
+    return {"batch": batch, "selected": sorted(str(v) for v in sel), "updated_utc": data.get("updated_utc")}
+
+
+def write_selection(batch: str, selected: set[str]) -> dict:
+    path = selection_path(batch)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"batch": batch, "selected": sorted(selected), "updated_utc": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+    tmp = path.with_suffix(".tmp"); tmp.write_text(json.dumps(payload, indent=2) + "\n"); tmp.replace(path)
+    return payload
 
 
 def ensure_child(root: Path, *parts: str) -> Path:
@@ -71,11 +93,35 @@ class SceneViewerHandler(BaseHTTPRequestHandler):
     def do_HEAD(self) -> None:  # noqa: N802
         self.do_GET()
 
+    def do_POST(self) -> None:  # noqa: N802
+        """Update a batch's review selection. Body: {"selected": [...]} replaces it; {"toggle": id, "on": bool} edits one."""
+        path = unquote(urlparse(self.path).path)
+        match = SELECTION_RE.match(path)
+        if not match:
+            write_json(self, {"error": "not found"}, status=404)
+            return
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+            body = json.loads(self.rfile.read(length) or b"{}")
+            batch = match.group(1)
+            with SELECTION_LOCK:
+                current = set(read_selection(batch)["selected"])
+                if isinstance(body.get("selected"), list):
+                    current = {str(v) for v in body["selected"]}
+                if body.get("toggle"):
+                    (current.add if body.get("on") else current.discard)(str(body["toggle"]))
+                write_json(self, write_selection(batch, current))
+        except Exception as exc:
+            write_json(self, {"error": str(exc)}, status=400)
+
     def do_GET(self) -> None:  # noqa: N802
         path = unquote(urlparse(self.path).path)
         try:
             if path == "/api/scenes":
                 self.serve_scene_list()
+            elif SELECTION_RE.match(path):
+                with SELECTION_LOCK:
+                    write_json(self, read_selection(SELECTION_RE.match(path).group(1)))
             elif path in {"", "/"}:
                 self.serve_text("Scene viewer server is running. Open /scenes/<video>/<scene>/viewer/.\n")
             elif path.startswith("/tools/scene_viewer/"):

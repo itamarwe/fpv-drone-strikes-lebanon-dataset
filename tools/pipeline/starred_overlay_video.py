@@ -25,9 +25,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from render_before_after import font  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = ROOT / "benchmarks" / "starred_undistort" / "starred_scenes.json"
-SCENES = ROOT / "scenes" / "starred_undistort"
-REPORTS = ROOT / "reports" / "starred_undistort"
+BATCH = __import__("os").environ.get("FPV_UNDISTORT_BATCH", "starred_undistort")  # batch name: benchmarks/<BATCH>, scenes/<BATCH>, reports/<BATCH>
+SPEC = ROOT / "benchmarks" / BATCH / "starred_scenes.json"
+SCENES = ROOT / "scenes" / BATCH
+REPORTS = ROOT / "reports" / BATCH
 RED, CYAN = (255, 77, 109), (54, 228, 255)
 
 

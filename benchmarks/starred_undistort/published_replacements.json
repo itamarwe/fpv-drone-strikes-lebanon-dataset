@@ -1,0 +1,385 @@
+{
+  "tag": "lenscorr1",
+  "utc": "2026-09-15T10:55:58+00:00",
+  "published": true,
+  "scenes": [
+    {
+      "video_id": "2026-05-02_strike_on_namer_apc_in_bint_jbeil",
+      "scene_id": "2026-05-02_strike_on_namer_apc_in_bint_jbeil_seg01_seg02_seg03",
+      "viewer": "scenes/2026-05-02_strike_on_namer_apc_in_bint_jbeil/2026-05-02_strike_on_namer_apc_in_bint_jbeil_seg01_seg02_seg03/viewer",
+      "default_scale_m_per_unit": 113.26505009262051,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T10:55:58+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.02465356467552449,
+          "lens_corrected": 0.013498625386240906
+        },
+        "local_scale_std": {
+          "published": 0.07448991543967758,
+          "lens_corrected": 0.10633260236710303
+        },
+        "focal_ratio_vggt_over_calibrated": 1.306353013405578,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 423.70073841415905 460.27713896233843 330 140 -0.18675618315201004 0.33733964365985786 -0.45623732926317478 0.24000487555245759"
+      }
+    },
+    {
+      "video_id": "2026-05-22_merkava_tank_markaba",
+      "scene_id": "2026-05-22_merkava_tank_markaba_seg02",
+      "viewer": "scenes/2026-05-22_merkava_tank_markaba/2026-05-22_merkava_tank_markaba_seg02/viewer",
+      "default_scale_m_per_unit": 106.95218520905786,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T10:56:27+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.040407006942187434,
+          "lens_corrected": 0.008632045131805046
+        },
+        "local_scale_std": {
+          "published": 0.22105314350190938,
+          "lens_corrected": 0.07557005027804528
+        },
+        "focal_ratio_vggt_over_calibrated": 1.1614081813385742,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 282 492.16460062725332 487.40280242195797 330 141 -0.054855812982847356 -0.24062645921325232 0.43034411302320336 -0.25762064128051471"
+      }
+    },
+    {
+      "video_id": "2026-05-24_humvee_manara_mmirleb_16823",
+      "scene_id": "2026-05-24_humvee_manara_mmirleb_16823_seg02_seg03",
+      "viewer": "scenes/2026-05-24_humvee_manara_mmirleb_16823/2026-05-24_humvee_manara_mmirleb_16823_seg02_seg03/viewer",
+      "default_scale_m_per_unit": 114.41368684554145,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T10:56:53+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.009669821385910389,
+          "lens_corrected": 0.0024300254176822223
+        },
+        "local_scale_std": {
+          "published": 0.05745747356926021,
+          "lens_corrected": 0.01659014170782959
+        },
+        "focal_ratio_vggt_over_calibrated": 1.261832193997336,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 473.77584778407777 492.92423180407383 330 140 -0.042385300935199807 -0.26239524763609595 0.57502578352618217 -0.40714740761416035"
+      }
+    },
+    {
+      "video_id": "2026-05-24_namer_apc_taybeh",
+      "scene_id": "2026-05-24_namer_apc_taybeh_seg01_seg02",
+      "viewer": "scenes/2026-05-24_namer_apc_taybeh/2026-05-24_namer_apc_taybeh_seg01_seg02/viewer",
+      "default_scale_m_per_unit": 112.06814721923966,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T10:57:26+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.04569694840379947,
+          "lens_corrected": 0.0128128083514585
+        },
+        "local_scale_std": {
+          "published": 0.17911146792523844,
+          "lens_corrected": 0.06094815017371209
+        },
+        "focal_ratio_vggt_over_calibrated": 1.220083813322263,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 282 438.29034978145893 447.90383052551499 330 141 -0.075214934130543878 -0.13034774273953209 0.32063057397192496 -0.22905051211033303"
+      }
+    },
+    {
+      "video_id": "2026-05-26_anti_drone_platform_biranit",
+      "scene_id": "2026-05-26_anti_drone_platform_biranit_seg04_seg05",
+      "viewer": "scenes/2026-05-26_anti_drone_platform_biranit/2026-05-26_anti_drone_platform_biranit_seg04_seg05/viewer",
+      "default_scale_m_per_unit": 98.36867974997716,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T10:58:00+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.012434159325050612,
+          "lens_corrected": 0.006586704799389062
+        },
+        "local_scale_std": {
+          "published": 0.10496827938407906,
+          "lens_corrected": 0.04896458524348901
+        },
+        "focal_ratio_vggt_over_calibrated": 1.1536975768196778,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 282 485.57048974663189 489.16335737587855 330 141 -0.2076761129908164 0.28016234194946638 -0.21347590389866467 0.032430901267494663"
+      }
+    },
+    {
+      "video_id": "2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16993",
+      "scene_id": "2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16993_seg03_seg04",
+      "viewer": "scenes/2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16993/2026-05-28_iron_dome_launcher_vehicle_khiam_mmirleb_16993_seg03_seg04/viewer",
+      "default_scale_m_per_unit": 115.44122472253517,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T10:58:29+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.016156490737660366,
+          "lens_corrected": 0.012433530804448834
+        },
+        "local_scale_std": {
+          "published": 0.15802494696959557,
+          "lens_corrected": 0.09610825790170559
+        },
+        "focal_ratio_vggt_over_calibrated": 1.4079925071101886,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 445.9591994508898 657.88101344098595 330 140 -0.21542492307109959 0.32525175319206862 -0.18663850865109838 -0.044499800436799346"
+      }
+    },
+    {
+      "video_id": "2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154",
+      "scene_id": "2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154_seg02_seg03_seg04_seg05",
+      "viewer": "scenes/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154/2026-05-28_merkava_tank_zawtar_al_sharqiyah_mmirleb_17154_seg02_seg03_seg04_seg05/viewer",
+      "default_scale_m_per_unit": 95.27077804348868,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T10:58:54+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.038329335001595265,
+          "lens_corrected": 0.02191428188430164
+        },
+        "local_scale_std": {
+          "published": 0.1372858288413369,
+          "lens_corrected": 0.16360814053155914
+        },
+        "focal_ratio_vggt_over_calibrated": 1.226267362674515,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 444.46312108858717 456.19677166013383 330 140 -0.18915756055596458 0.43350814707565333 -0.74888991764354618 0.47816375082423118"
+      }
+    },
+    {
+      "video_id": "2026-06-01_merkava_tank_near_yahmor_al_shqif",
+      "scene_id": "2026-06-01_merkava_tank_near_yahmor_al_shqif_seg01_seg02",
+      "viewer": "scenes/2026-06-01_merkava_tank_near_yahmor_al_shqif/2026-06-01_merkava_tank_near_yahmor_al_shqif_seg01_seg02/viewer",
+      "default_scale_m_per_unit": 121.40356851471152,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T10:59:22+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.021589908192527096,
+          "lens_corrected": 0.00945269168546601
+        },
+        "local_scale_std": {
+          "published": 0.10714726529804561,
+          "lens_corrected": 0.05459460400345979
+        },
+        "focal_ratio_vggt_over_calibrated": 1.0993654515941211,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 282 524.90179502095884 517.59270226422404 330 141 -0.32732628609389075 1.1940247024382853 -2.7028830220777009 2.5082492924059525"
+      }
+    },
+    {
+      "video_id": "2026-06-04_merkava_tank_beaufort_castle_02",
+      "scene_id": "2026-06-04_merkava_tank_beaufort_castle_02_seg01_seg02",
+      "viewer": "scenes/2026-06-04_merkava_tank_beaufort_castle_02/2026-06-04_merkava_tank_beaufort_castle_02_seg01_seg02/viewer",
+      "default_scale_m_per_unit": 214.01666532487297,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T10:59:46+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.010693719722755424,
+          "lens_corrected": 0.004149610522145721
+        },
+        "local_scale_std": {
+          "published": 0.07656772294504029,
+          "lens_corrected": 0.03478660353823517
+        },
+        "focal_ratio_vggt_over_calibrated": 1.3682264607284598,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 282 663.91875613676507 672.93351710060722 330 141 -0.26951114090370182 1.6243593125213047 -6.4360361251076244 9.1958750855105471"
+      }
+    },
+    {
+      "video_id": "2026-06-06_artillery_vehicle_adaissah_mmirleb_17504",
+      "scene_id": "2026-06-06_artillery_vehicle_adaissah_mmirleb_17504_seg02_seg03",
+      "viewer": "scenes/2026-06-06_artillery_vehicle_adaissah_mmirleb_17504/2026-06-06_artillery_vehicle_adaissah_mmirleb_17504_seg02_seg03/viewer",
+      "default_scale_m_per_unit": 94.18037857485723,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T11:00:16+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.028421117335522172,
+          "lens_corrected": 0.005550132183879861
+        },
+        "local_scale_std": {
+          "published": 0.0813937464324609,
+          "lens_corrected": 0.04495000776030719
+        },
+        "focal_ratio_vggt_over_calibrated": 1.1950223418417742,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 438.83300265733067 446.12861597395602 330 140 0.047577989323929301 -0.52807479664017554 0.81349718150073713 -0.44758964783865096"
+      }
+    },
+    {
+      "video_id": "2026-06-07_command_namer_vehicle_yahmor_al_shqif",
+      "scene_id": "2026-06-07_command_namer_vehicle_yahmor_al_shqif_seg01_seg02",
+      "viewer": "scenes/2026-06-07_command_namer_vehicle_yahmor_al_shqif/2026-06-07_command_namer_vehicle_yahmor_al_shqif_seg01_seg02/viewer",
+      "default_scale_m_per_unit": 143.8310803048154,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T11:00:41+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.019317482763437043,
+          "lens_corrected": 0.007154391601015684
+        },
+        "local_scale_std": {
+          "published": 0.08863612045464535,
+          "lens_corrected": 0.049063876056338905
+        },
+        "focal_ratio_vggt_over_calibrated": 1.1218214577983776,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 512.87092102684949 504.21625477045893 330 140 -0.1836624489824831 0.21360589406683272 -0.50507184293442842 0.73707728758317603"
+      }
+    },
+    {
+      "video_id": "2026-06-07_merkava_tank_beaufort_castle",
+      "scene_id": "2026-06-07_merkava_tank_beaufort_castle_seg01_seg02",
+      "viewer": "scenes/2026-06-07_merkava_tank_beaufort_castle/2026-06-07_merkava_tank_beaufort_castle_seg01_seg02/viewer",
+      "default_scale_m_per_unit": 107.34336661197105,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T11:01:07+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.028621892610830178,
+          "lens_corrected": 0.012624559217628685
+        },
+        "local_scale_std": {
+          "published": 0.1593068480444766,
+          "lens_corrected": 0.09133523723567107
+        },
+        "focal_ratio_vggt_over_calibrated": 1.2452574781022017,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 427.58086746569109 418.07222722117746 330 140 -0.14698842385230038 0.19499591704639585 -0.27625391053156134 0.16515786175835087"
+      }
+    },
+    {
+      "video_id": "2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif",
+      "scene_id": "2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif_seg01_seg02",
+      "viewer": "scenes/2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif/2026-06-08_strike_on_enemy_vehicles_near_yahmor_al_shqif_seg01_seg02/viewer",
+      "default_scale_m_per_unit": 109.65246834499276,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T11:01:36+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.09349279412662301,
+          "lens_corrected": 0.0935838181793619
+        },
+        "local_scale_std": {
+          "published": 1.0452158674466003,
+          "lens_corrected": 0.8789470572452744
+        },
+        "focal_ratio_vggt_over_calibrated": 1.1042209129631295,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 510.23476753969868 490.67724406475332 330 140 -0.35727171539920061 1.0944369838470225 -2.0740930851758055 1.5242315970068294"
+      }
+    },
+    {
+      "video_id": "2026-06-09_namer_apc_metula_southern_outskirts_khiam",
+      "scene_id": "2026-06-09_namer_apc_metula_southern_outskirts_khiam_seg02_seg03",
+      "viewer": "scenes/2026-06-09_namer_apc_metula_southern_outskirts_khiam/2026-06-09_namer_apc_metula_southern_outskirts_khiam_seg02_seg03/viewer",
+      "default_scale_m_per_unit": 72.24159066806152,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T11:02:02+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.051510776767414494,
+          "lens_corrected": 0.006614499913659624
+        },
+        "local_scale_std": {
+          "published": 0.247194303073957,
+          "lens_corrected": 0.04906172778813693
+        },
+        "focal_ratio_vggt_over_calibrated": 1.2028401175790289,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 455.89291902020358 447.50093623051265 330 140 -0.092896851037976888 -0.012667383620677807 0.048913134659429848 -0.015461317411110245"
+      }
+    },
+    {
+      "video_id": "2026-06-13_command_center_beaufort_castle_mmirleb_17580",
+      "scene_id": "2026-06-13_command_center_beaufort_castle_mmirleb_17580_seg02_seg03",
+      "viewer": "scenes/2026-06-13_command_center_beaufort_castle_mmirleb_17580/2026-06-13_command_center_beaufort_castle_mmirleb_17580_seg02_seg03/viewer",
+      "default_scale_m_per_unit": 173.1863012041029,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T11:02:31+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.029089847662157126,
+          "lens_corrected": 0.009002836324063651
+        },
+        "local_scale_std": {
+          "published": 0.06658123927312004,
+          "lens_corrected": 0.04682240897915809
+        },
+        "focal_ratio_vggt_over_calibrated": 1.1214301887262255,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 459.32630186585629 483.87616732851279 330 140 -0.21295356729385931 0.43459363974535109 -0.66247706283625518 0.43521337138440058"
+      }
+    },
+    {
+      "video_id": "2026-06-13_logistics_position_bayyadah_mmirleb_17434",
+      "scene_id": "2026-06-13_logistics_position_bayyadah_mmirleb_17434_seg03_seg04",
+      "viewer": "scenes/2026-06-13_logistics_position_bayyadah_mmirleb_17434/2026-06-13_logistics_position_bayyadah_mmirleb_17434_seg03_seg04/viewer",
+      "default_scale_m_per_unit": 145.99982791385722,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T11:03:04+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.010620272704466112,
+          "lens_corrected": 0.007422050845498292
+        },
+        "local_scale_std": {
+          "published": 0.07737568193507093,
+          "lens_corrected": 0.056292393742986245
+        },
+        "focal_ratio_vggt_over_calibrated": 1.0809899483466168,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 566.54629692991125 562.12940888543301 330 140 0.076865287291602941 -1.5277300559067217 4.2272952415292053 -4.0501673897310146"
+      }
+    },
+    {
+      "video_id": "2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586",
+      "scene_id": "2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586_seg01",
+      "viewer": "scenes/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586/2026-06-13_namer_vehicle_hamammas_hill_khiam_mmirleb_17586_seg01/viewer",
+      "default_scale_m_per_unit": 110.38466503693162,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T11:03:34+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.007084588661032515,
+          "lens_corrected": 0.006162027264417949
+        },
+        "local_scale_std": {
+          "published": 0.050420224952737125,
+          "lens_corrected": 0.03770112339064798
+        },
+        "focal_ratio_vggt_over_calibrated": 1.1457560088831744,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 534.74106648382769 512.130539386907 330 140 -0.53484076298752103 1.8029887205569652 -3.1765293879153549 2.189499358960556"
+      }
+    },
+    {
+      "video_id": "2026-06-14_engineering_vehicle_arnoun_ababil_drone",
+      "scene_id": "2026-06-14_engineering_vehicle_arnoun_ababil_drone_seg02_seg03",
+      "viewer": "scenes/2026-06-14_engineering_vehicle_arnoun_ababil_drone/2026-06-14_engineering_vehicle_arnoun_ababil_drone_seg02_seg03/viewer",
+      "default_scale_m_per_unit": 115.93632568935509,
+      "pipeline": {
+        "tag": "lenscorr1",
+        "lens": "per-video self-calibration (GLOMAP OPENCV_FISHEYE) and remap to a pinhole before VGGT-Omega",
+        "replaced_published_product_utc": "2026-09-15T11:04:02+00:00",
+        "path_disagreement_vs_sfm": {
+          "published": 0.010758166898404859,
+          "lens_corrected": 0.007355238423777641
+        },
+        "local_scale_std": {
+          "published": 0.062224260818859976,
+          "lens_corrected": 0.042555297565117674
+        },
+        "focal_ratio_vggt_over_calibrated": 1.0863390633578565,
+        "calibration_camera": "1 OPENCV_FISHEYE 660 280 597.72071066580588 595.90908370390059 330 140 -0.16602046325206737 -0.094698248969285095 0.98895162139667891 -1.5880251873017854"
+      }
+    }
+  ]
+}
