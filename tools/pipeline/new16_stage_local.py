@@ -120,7 +120,11 @@ def _write_pinhole_meta(base: Path, video_id: str, scene_id: str, rows: list[dic
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         for r in rows:
-            w.writerow({c: r.get(c, "") for c in cols})
+            # rows are path dicts keyed frame/frame_image; frames.csv needs frame_index/file.
+            out = {c: r.get(c, "") for c in cols}
+            out["frame_index"] = r.get("frame_index", r.get("frame", ""))
+            out["file"] = r.get("file") or Path(r.get("frame_image", "")).name
+            w.writerow(out)
     md = {"scene_id": f"{video_id}_pinhole", "source_scene": scene_id, "published_scene_path": f"{video_id}/{scene_id}",
           "frame_count_target": len(rows), "default_scale_m_per_unit": scale,
           "calibration": calibration, "sample_fps": sample_fps,
