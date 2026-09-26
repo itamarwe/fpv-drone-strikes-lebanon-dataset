@@ -140,13 +140,30 @@ echo "[direct] frames=$(find {shlex.quote(remote_target_dir)}/images -maxdepth 1
 . /workspace/vggt-omega-venv/bin/activate
 export HF_TOKEN="$(cat /root/.cache/huggingface/token)"
 export HUGGINGFACE_HUB_TOKEN="$HF_TOKEN"
+# Sky segmentation (skyseg.onnx) runs under onnxruntime. The stock wheel is CPU-only and takes ~8 min
+# for 125 frames; the CUDA execution provider does it in seconds on the A100. Ensure a CUDA-12 build of
+# onnxruntime-gpu (1.22.x matches this pod's CUDA 12.8; newer wheels require CUDA 13), put the CUDA/cuDNN
+# runtime libs on the loader path, and ask visual_util for the CUDA provider (it falls back to CPU on its own).
+export LD_LIBRARY_PATH="$(ls -d /usr/local/cuda-*/targets/*/lib /usr/local/lib/python*/dist-packages/nvidia/*/lib 2>/dev/null | tr '\n' ':')${{LD_LIBRARY_PATH:-}}"
+python -c "import onnxruntime as ort,sys; sys.exit(0 if 'CUDAExecutionProvider' in ort.get_available_providers() else 1)" \
+  || pip install -q 'onnxruntime-gpu==1.22.0'
+grep -q 'CUDAExecutionProvider' visual_util.py \
+  || sed -i 's/onnxruntime.InferenceSession("skyseg.onnx")/onnxruntime.InferenceSession("skyseg.onnx", providers=["CUDAExecutionProvider", "CPUExecutionProvider"])/' visual_util.py
 python - <<'PY'
 from huggingface_hub import hf_hub_download
 from pathlib import Path
-import shutil
-p = hf_hub_download(repo_id="facebook/vggt-omega", repo_type="space", filename="skyseg.onnx")
-shutil.copy2(p, "skyseg.onnx")
-print("[direct] skyseg_size=" + str(Path("skyseg.onnx").stat().st_size), flush=True)
+import shutil, os
+# copy2 preserves the HF cache's read-only (0444) mode; on the MooseFS volume even root
+# cannot overwrite a 0444 file, so the SECOND scene's copy fails with PermissionError.
+# Copy only when missing, and always leave it writable so re-runs never hit that.
+dst = Path("skyseg.onnx")
+if dst.exists():
+    os.chmod(dst, 0o644)
+else:
+    p = hf_hub_download(repo_id="facebook/vggt-omega", repo_type="space", filename="skyseg.onnx")
+    shutil.copyfile(p, dst)  # copyfile (not copy2) does not carry the source's 0444 mode
+    os.chmod(dst, 0o644)
+print("[direct] skyseg_size=" + str(dst.stat().st_size), flush=True)
 PY
 # The demo's CPU stages (sky segmentation, export) size their thread pools to every core. On a big pod that is
 # also running lens calibration this oversubscribes and turns a 3 min scene into 15-25 min: give inference its own
