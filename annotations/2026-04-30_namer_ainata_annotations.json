@@ -1,0 +1,83 @@
+{
+  "video_file": "2026-04-30_namer_ainata.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-04-30_namer_ainata.mp4",
+  "description": "Hezbollah dive-drone strike on an IDF Namer APC, Aainata (Bint Jbeil)",
+  "date": "2026-04-30",
+  "town": "Ainata",
+  "annotated_at": "2026-09-26T17:08:29Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 8.072,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 13.338,
+      "time_formatted": "0:13.3",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 13.572,
+      "time_formatted": "0:13.6",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 17.805,
+      "time_formatted": "0:17.8",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 21.872,
+      "time_formatted": "0:21.9",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 22.105,
+      "time_formatted": "0:22.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 34.805,
+      "time_formatted": "0:34.8",
+      "type": "new_flight_start",
+      "label": "New Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 48.405,
+      "time_formatted": "0:48.4",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
+    }
+  ],
+  "exclusion_masks": []
+}
