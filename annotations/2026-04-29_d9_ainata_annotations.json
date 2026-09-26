@@ -1,0 +1,83 @@
+{
+  "video_file": "2026-04-29_d9_ainata.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-04-29_d9_ainata.mp4",
+  "description": "Hezbollah dive-drone strike on an IDF D9 bulldozer, Aainata (Bint Jbeil)",
+  "date": "2026-04-29",
+  "town": "Ainata",
+  "annotated_at": "2026-09-26T17:11:09Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 8.056,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 19.523,
+      "time_formatted": "0:19.5",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 23.39,
+      "time_formatted": "0:23.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 40.993,
+      "time_formatted": "0:41.0",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 45.027,
+      "time_formatted": "0:45.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 58.393,
+      "time_formatted": "0:58.4",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 62.993,
+      "time_formatted": "1:03.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 66.527,
+      "time_formatted": "1:06.5",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
+    }
+  ],
+  "exclusion_masks": []
+}

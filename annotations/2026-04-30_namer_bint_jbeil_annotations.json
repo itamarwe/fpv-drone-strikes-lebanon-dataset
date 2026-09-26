@@ -1,0 +1,51 @@
+{
+  "video_file": "2026-04-30_namer_bint_jbeil.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-04-30_namer_bint_jbeil.mp4",
+  "description": "Hezbollah dive-drone strike on a parked IDF Namer APC, Bint Jbeil",
+  "date": "2026-04-30",
+  "town": "Bint Jbeil",
+  "annotated_at": "2026-09-26T17:06:47Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 8.05,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 20.01,
+      "time_formatted": "0:20.0",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 25.376,
+      "time_formatted": "0:25.4",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 56.222,
+      "time_formatted": "0:56.2",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
+    }
+  ],
+  "exclusion_masks": []
+}

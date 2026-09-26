@@ -1,0 +1,75 @@
+{
+  "video_file": "2026-04-15_two_merkava_meiss_el_jabal.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-04-15_two_merkava_meiss_el_jabal.mp4",
+  "description": "Hezbollah dive-drone strike on two IDF Merkava tanks, Mays al-Jabal",
+  "date": "2026-04-15",
+  "town": "Mays al-Jabal",
+  "annotated_at": "2026-09-26T17:20:30Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 8.067,
+      "time_formatted": "0:08.1",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 25.282,
+      "time_formatted": "0:25.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 54.494,
+      "time_formatted": "0:54.5",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 66.574,
+      "time_formatted": "1:06.6",
+      "type": "other",
+      "label": "Other",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 73.941,
+      "time_formatted": "1:13.9",
+      "type": "new_flight_start",
+      "label": "New Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 86.741,
+      "time_formatted": "1:26.7",
+      "type": "new_flight_start",
+      "label": "New Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 109.641,
+      "time_formatted": "1:49.6",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
+    }
+  ],
+  "exclusion_masks": []
+}

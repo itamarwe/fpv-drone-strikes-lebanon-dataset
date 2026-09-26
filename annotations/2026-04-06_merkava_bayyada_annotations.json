@@ -1,0 +1,51 @@
+{
+  "video_file": "2026-04-06_merkava_bayyada.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-04-06_merkava_bayyada.mp4",
+  "description": "Hezbollah dive-drone strike on an IDF Merkava tank, Al-Bayyada",
+  "date": "2026-04-06",
+  "town": "Al Bayada / Bayyadah",
+  "annotated_at": "2026-09-26T17:28:18Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 8.048,
+      "time_formatted": "0:08.0",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 25.282,
+      "time_formatted": "0:25.3",
+      "type": "pause_start",
+      "label": "Pause Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 29.315,
+      "time_formatted": "0:29.3",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 30.448,
+      "time_formatted": "0:30.4",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
+    }
+  ],
+  "exclusion_masks": []
+}

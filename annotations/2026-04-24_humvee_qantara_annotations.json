@@ -1,0 +1,35 @@
+{
+  "video_file": "2026-04-24_humvee_qantara.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-04-24_humvee_qantara.mp4",
+  "description": "Hezbollah dive-drone strike on an IDF Humvee, Al-Qantara",
+  "date": "2026-04-24",
+  "town": "Qantara",
+  "annotated_at": "2026-09-26T17:14:55Z",
+  "segments": [
+    {
+      "time": 0,
+      "time_formatted": "0:00.0",
+      "type": "banner_start",
+      "label": "Banner Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 8.063,
+      "time_formatted": "0:08.1",
+      "type": "flight_start",
+      "label": "Flight Start",
+      "comment": "",
+      "enabled": true
+    },
+    {
+      "time": 45.529,
+      "time_formatted": "0:45.5",
+      "type": "replay_start",
+      "label": "Replay Start",
+      "comment": "",
+      "enabled": true
+    }
+  ],
+  "exclusion_masks": []
+}
