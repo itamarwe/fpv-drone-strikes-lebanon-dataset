@@ -150,20 +150,20 @@ python -c "import onnxruntime as ort,sys; sys.exit(0 if 'CUDAExecutionProvider' 
 grep -q 'CUDAExecutionProvider' visual_util.py \
   || sed -i 's/onnxruntime.InferenceSession("skyseg.onnx")/onnxruntime.InferenceSession("skyseg.onnx", providers=["CUDAExecutionProvider", "CPUExecutionProvider"])/' visual_util.py
 python - <<'PY'
-from huggingface_hub import hf_hub_download
+import os, urllib.request
 from pathlib import Path
-import shutil, os
-# copy2 preserves the HF cache's read-only (0444) mode; on the MooseFS volume even root
-# cannot overwrite a 0444 file, so the SECOND scene's copy fails with PermissionError.
-# Copy only when missing, and always leave it writable so re-runs never hit that.
-dst = Path("skyseg.onnx")
-if dst.exists():
-    os.chmod(dst, 0o644)
-else:
-    p = hf_hub_download(repo_id="facebook/vggt-omega", repo_type="space", filename="skyseg.onnx")
-    shutil.copyfile(p, dst)  # copyfile (not copy2) does not carry the source's 0444 mode
-    os.chmod(dst, 0o644)
-print("[direct] skyseg_size=" + str(dst.stat().st_size), flush=True)
+# Download skyseg.onnx from the model's own direct URL (the demo's source). hf_hub_download from the
+# SPACE repo sometimes returns a ~134-byte Git-LFS POINTER instead of the 176 MB model, which makes
+# onnxruntime fail with INVALID_PROTOBUF. Re-fetch whenever the file is missing or suspiciously small,
+# and leave it writable (0644) so re-runs never hit the read-only-on-MooseFS overwrite problem.
+dst = Path("skyseg.onnx"); MIN = 1_000_000
+if (not dst.exists()) or dst.stat().st_size < MIN:
+    urllib.request.urlretrieve("https://huggingface.co/JianyuanWang/skyseg/resolve/main/skyseg.onnx", "skyseg.onnx.tmp")
+    os.replace("skyseg.onnx.tmp", "skyseg.onnx")
+os.chmod(dst, 0o644)
+sz = dst.stat().st_size
+print("[direct] skyseg_size=" + str(sz), flush=True)
+assert sz >= MIN, "skyseg.onnx download too small (LFS pointer?)"
 PY
 # The demo's CPU stages (sky segmentation, export) size their thread pools to every core. On a big pod that is
 # also running lens calibration this oversubscribes and turns a 3 min scene into 15-25 min: give inference its own
