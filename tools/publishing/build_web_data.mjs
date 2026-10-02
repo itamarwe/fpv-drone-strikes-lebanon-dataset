@@ -111,6 +111,18 @@ const thumbs = readThumbManifest();
 const existingVideos = readExistingVideos();
 const previousVideoFiles = readPreviousVideoFiles();
 
+// Curated "starred" scenes surfaced by the ★ Starred filter on the public viewer
+// (the app reads video.sceneStarred). Source of truth: data/starred.json.
+const starredSlugs = new Set(
+  (() => {
+    try {
+      return JSON.parse(fs.readFileSync(path.join(repoRoot, "data/starred.json"), "utf8")).starred ?? [];
+    } catch {
+      return [];
+    }
+  })(),
+);
+
 const seen = new Set();
 const videos = [];
 for (const raw of readCatalogVideos()) {
@@ -136,6 +148,7 @@ for (const raw of readCatalogVideos()) {
     thumbWidths: thumb?.widths ?? existing?.thumbWidths ?? null,
     blur: thumb?.blurDataURL ?? existing?.blur ?? null,
     scenePath,
+    sceneStarred: starredSlugs.has(slug) && Boolean(scenePath),
     segments: ann?.segments ?? null,
     annotationAuto: ann ? Boolean(ann.auto_generated) : null,
   });
@@ -147,7 +160,8 @@ fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, JSON.stringify({ generated_at: new Date().toISOString(), videos }));
 const withScenes = videos.filter((v) => v.scenePath).length;
 const withAnn = videos.filter((v) => v.segments).length;
+const starred = videos.filter((v) => v.sceneStarred).length;
 console.log(
   `wrote ${path.relative(repoRoot, outFile)}: ${videos.length} videos, ` +
-    `${withAnn} annotated, ${withScenes} with 3D scenes`,
+    `${withAnn} annotated, ${withScenes} with 3D scenes, ${starred} starred`,
 );

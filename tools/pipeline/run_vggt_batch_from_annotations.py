@@ -159,6 +159,7 @@ def request_body(annotation: dict[str, Any], selected: list[dict[str, Any]], arg
         ),
         "exclusion_masks": None if args.no_masks else (annotation.get("exclusion_masks") or None),
         "client_sky_seg": args.client_sky_seg,
+        "skip_vggt": args.skip_vggt,
     }
 
 
@@ -211,6 +212,9 @@ def run_batch(args: argparse.Namespace) -> int:
                 print(f"[{batch_index}/{len(paths)}] skip auto-generated {path.name}", flush=True)
             continue
         intervals = build_flight_intervals(annotation)
+        # Take the last flight (the attack) and, within that same flight, concat the legs across any
+        # internal pause_start markers. A new_flight_start marks a separate flight (discontinuous) and
+        # is never concatenated across.
         selected = select_attack_pause_chain(intervals)
         if not selected:
             print(f"[{batch_index}/{len(paths)}] skip {path.name}: no flight intervals", flush=True)
@@ -314,6 +318,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-refresh-vggt", action="store_true")
     parser.add_argument("--continue-on-error", action="store_true")
     parser.add_argument("--skip-existing", action="store_true")
+    parser.add_argument("--skip-vggt", action="store_true",
+                        help="extract frames only (HF-free); the server skips the run-vggt step. Frames + frames.csv are written; the job then errors at extract_vggt, which is expected and harmless for frames-only staging.")
     parser.add_argument("--manual-only", action="store_true",
                         help="skip annotations flagged auto_generated (process only hand-tagged videos)")
     parser.add_argument("--quiet", action="store_true")

@@ -37,6 +37,8 @@ DEFAULT_OUT_DIR = ROOT
 DEFAULT_VIDEO_CACHE = Path("/tmp/fpv-model-benchmark/videos")
 GENERIC_VIEWER_INDEX = ROOT / "tools" / "apps" / "scene-viewer" / "index.html"
 SCENE_VIEWER_INDEX_RE = re.compile(r"^/scenes/(.+)/viewer(?:/index\.html)?/?$")
+GROUNDED_VIEWER_INDEX = ROOT / "tools" / "grounded_scene_viewer" / "index.html"
+SCENE_GROUNDING_VIEWER_RE = re.compile(r"^/scenes/(.+)/viewer_grounding(?:/index\.html)?/?$")
 # Soft advisory only: above this many frames VGGT reconstruction gets slow/heavy.
 # This is NOT a hard cap -- frames are capped only when max_vggt_frames > 0.
 VGGT_FRAME_WARN_THRESHOLD = 125
@@ -376,6 +378,16 @@ def scene_viewer_dir(scenes_root: Path, path: str) -> Path | None:
         return None
     viewer_dir = ensure_child(scenes_root, match.group(1), "viewer")
     if not (viewer_dir / "scene_meta.json").exists():
+        return None
+    return viewer_dir
+
+
+def scene_grounding_viewer_dir(scenes_root: Path, path: str) -> Path | None:
+    match = SCENE_GROUNDING_VIEWER_RE.match(path)
+    if not match:
+        return None
+    viewer_dir = ensure_child(scenes_root, match.group(1), "viewer_grounding")
+    if not (viewer_dir / "grounded_scene_meta.json").exists():
         return None
     return viewer_dir
 
@@ -773,7 +785,22 @@ class FPVRequestHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def serve_grounding_scene_viewer(self, viewer_dir: Path) -> None:
+        rel_scene = viewer_dir.parent.relative_to(self.state.scenes_dir).as_posix()
+        scene_base = f"/scenes/{rel_scene}/viewer_grounding/"  # grounding data is local-only, served from scenes_dir
+        data = GROUNDED_VIEWER_INDEX.read_text().replace("__SCENE_BASE__", scene_base).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(data)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(data)
+
     def serve_static(self, path: str) -> None:
+        grounding_dir = scene_grounding_viewer_dir(self.state.scenes_dir, path)
+        if grounding_dir is not None:
+            self.serve_grounding_scene_viewer(grounding_dir)
+            return
         viewer_dir = scene_viewer_dir(self.state.scenes_dir, path)
         if viewer_dir is not None:
             self.serve_generic_scene_viewer(viewer_dir)
