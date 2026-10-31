@@ -14,9 +14,13 @@ function handler(event) {
   if (newUri.indexOf("/annotations/") === 0) {
     newUri = newUri.replace(/^\/annotations\/(\d{4})_(\d{2})_(\d{2})_/, "/annotations/$1-$2-$3_");
   }
+  // Match whole IDs only: one ID can be a prefix of another (strike_on_soldiers vs
+  // strike_on_soldiers_near_shlomi), so require a path delimiter, an extension,
+  // the annotation suffix, or a scene segment suffix right after it.
   for (var from in redirects) {
     if (Object.prototype.hasOwnProperty.call(redirects, from)) {
-      newUri = newUri.split(from).join(redirects[from]);
+      var pattern = new RegExp("/" + from.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?=$|[/.]|_annotations|_seg\\d)", "g");
+      newUri = newUri.replace(pattern, "/" + redirects[from]);
     }
   }
   if (newUri === oldUri) return request;
