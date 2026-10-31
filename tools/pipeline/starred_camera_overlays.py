@@ -9,8 +9,8 @@ scene_meta.json). This script gives every starred scene both versions in the loc
   pinhole/viewer/     the undistorted re-run, with renders and overlays generated from its predictions
 
 Open them side by side with tools/local_scene_viewer_server.py:
-  http://127.0.0.1:8766/scenes/starred_undistort/<video_id>/published/viewer/
-  http://127.0.0.1:8766/scenes/starred_undistort/<video_id>/pinhole/viewer/
+  /scenes/<batch>/<video_id>/published/viewer/
+  /scenes/<batch>/<video_id>/pinhole/viewer/
 
   starred_camera_overlays.py [--only <video_id> ...] [--force]
 """
@@ -31,8 +31,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from starred_overlay_video import load_cloud, render_frame  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = ROOT / "benchmarks" / "starred_undistort" / "starred_scenes.json"
-SCENES = ROOT / "scenes" / "starred_undistort"
+BATCH = __import__("os").environ.get("FPV_UNDISTORT_BATCH", "starred_undistort")  # batch name: benchmarks/<BATCH>, scenes/<BATCH>, reports/<BATCH>
+SPEC = ROOT / "benchmarks" / BATCH / "starred_scenes.json"
+SCENES = ROOT / "scenes" / BATCH
 
 
 def fetch(url: str, dest: Path) -> None:

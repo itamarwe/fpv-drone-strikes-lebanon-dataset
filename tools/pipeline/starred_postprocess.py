@@ -33,10 +33,15 @@ from starred_overlay_video import make as make_overlay_video  # noqa: E402
 from starred_camera_overlays import published_viewer, pinhole_overlays  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEC = ROOT / "benchmarks" / "starred_undistort" / "starred_scenes.json"
-SCENES = ROOT / "scenes" / "starred_undistort"
-REPORTS = ROOT / "reports" / "starred_undistort"
+BATCH = __import__("os").environ.get("FPV_UNDISTORT_BATCH", "starred_undistort")  # batch name: benchmarks/<BATCH>, scenes/<BATCH>, reports/<BATCH>
+SPEC = ROOT / "benchmarks" / BATCH / "starred_scenes.json"
+SCENES = ROOT / "scenes" / BATCH
+REPORTS = ROOT / "reports" / BATCH
 BG = (10, 11, 13); WHITE = (255, 255, 255); RED = (255, 77, 109); CYAN = (54, 228, 255); ORANGE = (255, 176, 0)
+GATE = __import__("os").environ.get("FPV_UNDISTORT_GATE", "0") == "1"  # only build media for scenes that improved
+GATE_MAX_FX_RATIO = 1.45
+STILLS_ONLY = __import__("os").environ.get("FPV_UNDISTORT_STILLS_ONLY", "0") == "1"  # before/after stills only: no videos, no camera overlays
+GROUND_WARN_DEG = 10.0  # ground normals of the two runs further apart than this get a "check ground" flag (not a rejection)
 TAGS = {"before": ("BEFORE  raw frames", RED), "after": ("AFTER  undistorted to pinhole", CYAN)}
 
 
@@ -144,7 +149,7 @@ def compose(state_im, W, H, header, footer, title, sub, tag, tag_col, lines, alp
     return cv
 
 
-def make_video(vid: str, before: dict, after: dict, grid, ref_path, title, lines, out_dir: Path, cycles=3, hold_s=1.8, fade_s=1.2, fps=30, size=(1600, 1000)) -> None:
+def make_video(vid: str, before: dict, after: dict, grid, ref_path, title, lines, out_dir: Path, cycles=3, hold_s=1.8, fade_s=1.2, fps=30, size=(1600, 1000), stills_only=False) -> None:
     W, H = size; header, footer = 100, 150
     view = shared_view(np.array([c["position"] for c in before["cams"]]))
     b_im = render_panel(before["P"], before["C"], before["cams"], grid, ref_path, view, W, H)
@@ -153,6 +158,8 @@ def make_video(vid: str, before: dict, after: dict, grid, ref_path, title, lines
     out_dir.mkdir(parents=True, exist_ok=True)
     compose(b_im, W, H, header, footer, title, sub, *TAGS["before"], lines).save(out_dir / "before.jpg", quality=93)
     compose(a_im, W, H, header, footer, title, sub, *TAGS["after"], lines).save(out_dir / "after.jpg", quality=93)
+    if stills_only:
+        return
     frames_dir = out_dir / "frames"; frames_dir.mkdir(exist_ok=True)
     for f in frames_dir.glob("*.png"):
         f.unlink()
@@ -234,7 +241,40 @@ def process(scene: dict, rng, skip_video: bool) -> dict | None:
         metrics["after_focal"] = focal_ratio(base / "pinhole")
     except Exception as exc:
         metrics["after_focal_error"] = str(exc)
+    # ground agreement: each run fits its own ground plane; map the new run's normal into the published frame through
+    # the camera-path alignment and measure the angle between the two. A large angle means the two reconstructions
+    # disagree about which way is down, and one of the fits (not necessarily the new one) should be inspected.
+    gn, gp = after_raw["meta"].get("ground_grid"), before["meta"].get("ground_grid")
+    if gn and gp:
+        n_new = R @ np.asarray(gn["normal"], float); n_new /= np.linalg.norm(n_new)
+        n_pub = np.asarray(gp["normal"], float) / np.linalg.norm(gp["normal"])
+        metrics["ground"] = {"angle_to_published_deg": float(np.degrees(np.arccos(np.clip(abs(n_new @ n_pub), -1, 1)))),
+                             "inliers_new": gn.get("inlier_count"), "inliers_published": gp.get("inlier_count"),
+                             "warn": bool(np.degrees(np.arccos(np.clip(abs(n_new @ n_pub), -1, 1))) > GROUND_WARN_DEG)}
+    # improvement gate: the expensive media is only produced when the lens correction demonstrably helped
+    bvr0, avr0 = metrics.get("before_vs_reference", {}), metrics.get("after_vs_reference", {})
+    fx0 = metrics.get("after_focal", {}).get("fx_ratio_vggt_over_reference")
+    reasons = []
+    if "rmse_fraction_of_path_length" not in bvr0 or "rmse_fraction_of_path_length" not in avr0:
+        reasons.append("no independent SfM reference to compare against")
+    else:
+        if not avr0["rmse_fraction_of_path_length"] < bvr0["rmse_fraction_of_path_length"]:
+            reasons.append("camera path disagreement did not decrease")
+        if avr0["local_scale_std"] > 1.2 * bvr0["local_scale_std"]:
+            reasons.append("local scale drift got more than 20% worse")
+    if fx0 is not None and fx0 > GATE_MAX_FX_RATIO:
+        reasons.append(f"VGGT focal estimate {fx0:.2f}x the calibrated lens (calibration suspect)")
+    try:
+        u = json.loads((base / "pinhole" / "frames" / "undistortion.json").read_text())
+        metrics["calibration"] = {"model": u["source_camera"]["model"], "fx_px": u["output_pinhole"]["fx"], "hfov_deg": u["output_pinhole"]["hfov_deg"],
+                                  "distortion_params": u["source_camera"]["params"][4:], "image_size": [u["output_pinhole"]["width"], u["output_pinhole"]["height"]]}
+    except Exception:
+        pass
+    metrics["improved"] = not reasons; metrics["gate_reasons"] = reasons
     (base / "metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
+    # scenes the gate rejects still get their before/after stills (seconds); only the videos and the per-frame
+    # camera overlays are skipped for them (starred_media_sweep.py renders those on request)
+    stills_only = STILLS_ONLY or bool(GATE and reasons)
     # everything below lives in the published viewer frame rotated by its alignment quaternion (grounded like the viewer)
     Rq = quat_to_R(before["meta"]["scene_alignment_quaternion"])
     rot = lambda run: sim3_apply(1.0, Rq, np.zeros(3), run)
@@ -249,7 +289,9 @@ def process(scene: dict, rng, skip_video: bool) -> dict | None:
         if "after_focal" in metrics:
             lines.append(f"VGGT focal estimate vs calibrated lens (after):  {metrics['after_focal']['fx_ratio_vggt_over_reference']:.2f}x")
         ref_rot = (ref_path @ Rq.T) if ref_path is not None else None
-        make_video(vid, rot(before), rot(after), grid, ref_rot, scene["title"], lines, REPORTS / vid)
+        make_video(vid, rot(before), rot(after), grid, ref_rot, scene["title"], lines, REPORTS / vid, stills_only=stills_only)
+        if stills_only:
+            return metrics
         if not (REPORTS / vid / "overlay.mp4").exists():
             try:
                 make_overlay_video(scene, json.loads(SPEC.read_text())["cdn_base"], 10.0, 4.0)
@@ -274,9 +316,9 @@ def write_index(rows: list[dict]) -> None:
         ls = f"{b['local_scale_std']:.3f} -> {a['local_scale_std']:.3f}" if "local_scale_std" in a and "local_scale_std" in b else "n/a"
         fr = f"{m['after_focal']['fx_ratio_vggt_over_reference']:.2f}" if "after_focal" in m else "n/a"
         vid = m["video_id"]
-        viewer = f"http://127.0.0.1:8766/scenes/starred_undistort/{vid}/overlay/index.html"
+        viewer = f"/scenes/{BATCH}/{vid}/overlay/index.html"
         md.append(f"| {m['title']} | {m['frames_published']} | {m.get('reference_registered', 'n/a')} | {pd} | {ls} | {fr} | [overlay]({viewer}) | [transition]({vid}/transition.mp4) · [reprojection]({vid}/overlay.mp4) |")
-        html.append(f"<tr><td>{m['title']}</td><td>{m['frames_published']}</td><td>{m.get('reference_registered', 'n/a')}</td><td>{pd}</td><td>{ls}</td><td>{fr}</td><td><a href='{viewer}'>overlay</a></td><td><a href='http://127.0.0.1:8766/scenes/starred_undistort/{vid}/published/viewer/'>camera view published</a> · <a href='http://127.0.0.1:8766/scenes/starred_undistort/{vid}/pinhole/viewer/'>camera view undistorted</a> · <a href='{vid}/transition.mp4'>transition</a> · <a href='{vid}/overlay.mp4'>reprojection</a> · <a href='{vid}/before.jpg'>before</a> · <a href='{vid}/after.jpg'>after</a></td></tr>")
+        html.append(f"<tr><td>{m['title']}</td><td>{m['frames_published']}</td><td>{m.get('reference_registered', 'n/a')}</td><td>{pd}</td><td>{ls}</td><td>{fr}</td><td><a href='{viewer}'>overlay</a></td><td><a href='/scenes/{BATCH}/{vid}/published/viewer/'>camera view published</a> · <a href='/scenes/{BATCH}/{vid}/pinhole/viewer/'>camera view undistorted</a> · <a href='{vid}/transition.mp4'>transition</a> · <a href='{vid}/overlay.mp4'>reprojection</a> · <a href='{vid}/before.jpg'>before</a> · <a href='{vid}/after.jpg'>after</a></td></tr>")
     md += ["", "Path disagreement: Sim(3) residual of the VGGT camera centres against the GLOMAP self-calibration path, as a fraction of its length. ",
            "Local scale: 20-frame window scale over the global scale. Focal ratio: VGGT's estimated focal over the calibrated pinhole focal (1.0 = consistent)."]
     (REPORTS / "SUMMARY.md").write_text("\n".join(md) + "\n")
