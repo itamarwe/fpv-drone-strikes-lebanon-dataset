@@ -1,10 +1,10 @@
 {
-  "video_file": "2026-05-12_strike_on_humvee.mp4",
-  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-12_strike_on_humvee.mp4",
-  "description": "Humvee on the Naqoura-Iskandaroun road (dive drone)",
-  "date": "2026-05-12",
-  "town": "Naqoura",
-  "annotated_at": "2026-07-13T08:50:21Z",
+  "video_file": "2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.mp4",
+  "video_url": "https://d2fioemadmrru3.cloudfront.net/videos/2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988.mp4",
+  "description": "Soldier gathering, Jal al-Alam site on the Lebanese border (dive drone)",
+  "date": "2026-05-09",
+  "town": "Jal al-Alam site, border",
+  "annotated_at": "2026-07-13T09:13:54Z",
   "segments": [
     {
       "time": 0,
@@ -15,7 +15,7 @@
       "enabled": true
     },
     {
-      "time": 8.086,
+      "time": 8.091,
       "time_formatted": "0:08.1",
       "type": "flight_start",
       "label": "Flight Start",
@@ -23,24 +23,24 @@
       "enabled": true
     },
     {
-      "time": 20.226,
-      "time_formatted": "0:20.2",
-      "type": "pause_start",
-      "label": "Pause Start",
+      "time": 20.913,
+      "time_formatted": "0:20.9",
+      "type": "other",
+      "label": "Other",
       "comment": "",
       "enabled": true
     },
     {
-      "time": 25.56,
-      "time_formatted": "0:25.6",
+      "time": 21.879,
+      "time_formatted": "0:21.9",
       "type": "flight_start",
       "label": "Flight Start",
       "comment": "",
       "enabled": true
     },
     {
-      "time": 47.939,
-      "time_formatted": "0:47.9",
+      "time": 50.113,
+      "time_formatted": "0:50.1",
       "type": "replay_start",
       "label": "Replay Start",
       "comment": "",

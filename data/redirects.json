@@ -19,6 +19,30 @@
       "to": "2026-05-26_humvee_zawtar_al_sharqiyah_riverbed_mmirleb_17068",
       "created_at": "2026-07-26",
       "reason": "Duplicate filed under the wrong town; on-screen labels read Zawtar al-Sharqiyah"
+    },
+    {
+      "from": "2026-05-06_strike_on_enemy_position",
+      "to": "2026-05-06_position_point_taybeh_mmirleb_16210",
+      "created_at": "2026-10-31",
+      "reason": "Low-resolution duplicate; superseded by the 1080p official upload of the same footage"
+    },
+    {
+      "from": "2026-05-09_strike_on_soldiers",
+      "to": "2026-05-09_soldiers_gathering_jal_al_alam_mmirleb_15988",
+      "created_at": "2026-10-31",
+      "reason": "Low-resolution duplicate; superseded by the 1080p official upload of the same footage"
+    },
+    {
+      "from": "2026-05-09_strike_on_soldiers_near_shlomi",
+      "to": "2026-05-09_soldiers_gathering_shlomi_mmirleb_15970",
+      "created_at": "2026-10-31",
+      "reason": "Low-resolution duplicate; superseded by the 1080p official upload of the same footage"
+    },
+    {
+      "from": "2026-05-12_strike_on_humvee",
+      "to": "2026-05-12_humvee_naqoura_naqoura_iskandarounah_road_mmirleb_16261",
+      "created_at": "2026-10-31",
+      "reason": "Low-resolution duplicate; superseded by the 1080p official upload of the same footage"
     }
   ]
 }
